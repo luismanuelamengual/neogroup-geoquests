@@ -11,6 +11,8 @@ import { DB, SqliteDataSource } from '@neogroup/neorm'
 
 process.env.DB_DRIVER = 'sqlite'
 process.env.DB_URL = 'sqlite://:memory:'
+// Key material for the encrypted game tokens (services/gameTokens.ts).
+process.env.AUTH_SECRET = 'test-secret-for-game-tokens'
 ;(globalThis as any).__neorm = { sources: new Map(), activeSourceName: undefined }
 DB.register(new SqliteDataSource())
 

@@ -1,6 +1,7 @@
 /** Payload of /api/submitGuess. */
 export interface GuessInput {
-  gameId: number
+  /** Current game token (see GameSession). */
+  token: string
   roundNumber: number
   latitude: number
   longitude: number

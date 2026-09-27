@@ -51,9 +51,11 @@ El proveedor de imágenes está detrás de la interfaz `StreetImageryProvider`, 
 
    ```bash
    yarn db:local:up
-   yarn db:migrate
+   yarn db:migrate      # crea la base si no existe
    yarn db:seed
    ```
+
+   Para recrear la base local desde cero: `yarn db:reset` (borra todas las tablas y vuelve a correr las migraciones) y después `yarn db:seed`.
 
 4. Levantar el servidor de desarrollo:
 
@@ -118,17 +120,19 @@ Mismo contrato que TeamUp: siempre `POST` con body JSON, nombre `verbNoun` (`/ap
 Toda la lógica principal del juego vive en este módulo:
 
 ```
-models/     Place, PlaceLocation, Game, GameRound (entidades) · GameMode (catálogo de modos + puntaje)
-            GameView / RoundView (lo que ve el cliente) · PlaceArea, LatLng, GuessInput...
+models/     Place, PlaceLocation, Game (entidades) · GameMode (catálogo de modos + puntaje)
+            GameState (estado completo, viaja cifrado) · GameView / RoundView (lo que ve el cliente)
 services/   places.ts     lugares habilitados de un modo
             locations.ts  rutina que obtiene una imagen aleatoria dentro de un lugar
             games.ts      crear partida, registrar respuestas, puntaje, historial, estadísticas
+            gameTokens.ts cifrado / descifrado del estado de la partida (AES-256-GCM)
             imagery/      StreetImageryProvider (interfaz) + MapillaryProvider
 utils/      geo.ts        haversine, puntos aleatorios en círculo/polígono, bounding boxes
             score.ts      fórmula de puntaje y formateos
+            gameStorage.ts partidas guardadas en el navegador (localStorage)
 components/ StreetView (MapillaryJS), GuessMap / ResultMap (MapLibre), GuessPanel, RoundHud,
             RoundResult, GameSummary, GameModeCard, RecentGames
-(api)/api/  startGame, getGame, submitGuess, getRecentGames
+(api)/api/  startGame, getGame, submitGuess, getGameResult, getRecentGames
 (pages)/    /game/[id] (jugar) · /game/[id]/summary (resumen)
 ```
 
@@ -143,7 +147,17 @@ Cada lugar pertenece a un modo de juego y define un área: un **círculo** (`lat
 3. Si no hay imágenes se reintenta con otro punto (hasta 6 veces).
 4. Cada imagen encontrada se guarda en `place_locations` (caché). Si Mapillary falla o no hay cobertura, se usa una ubicación de la caché.
 
-`startGame` baraja los lugares y busca las 5 ubicaciones en paralelo (una por ronda, cada una en un lugar distinto). Las coordenadas reales **nunca se envían al cliente** antes de responder cada ronda: `RoundView` sólo trae el `imageId` hasta que la ronda se juega. (Un usuario técnico podría consultar la posición del `imageId` directamente en Mapillary; es un límite aceptado de la versión gratuita).
+`startGame` baraja los lugares y busca las 5 ubicaciones en paralelo (una por ronda, cada una en un lugar distinto). La caché guarda como máximo 100 ubicaciones por lugar.
+
+### Dónde viven las rondas: token cifrado + tabla `games` mínima
+
+Para que la base (Supabase free) sea lo más chica posible, **las rondas no se guardan en la base**:
+
+- El estado completo de la partida (imágenes, respuestas correctas, lo que marcó el jugador y los puntajes) se serializa, se comprime y se **cifra con AES-256-GCM** en el servidor (`services/gameTokens.ts`, clave derivada de `AUTH_SECRET`). Ese *token* es lo único que recibe el navegador, junto con una vista que sólo revela las rondas ya jugadas.
+- El navegador guarda token + vista en **localStorage** (`utils/gameStorage.ts`, últimas 5 partidas) y manda el token en cada respuesta; el servidor lo descifra, calcula el puntaje y devuelve un token nuevo. GCM detecta cualquier modificación del token.
+- La tabla `games` guarda sólo el progreso y el resultado (≈ 100 bytes por partida). `games.playedRounds` impide reutilizar un token viejo (p. ej. volver a responder una ronda después de ver la respuesta): un token cuyas rondas jugadas no coinciden con la base se rechaza, y la actualización es condicional para que cada ronda se puntúe una sola vez.
+- Consecuencias: una partida sin terminar sólo se puede seguir en el dispositivo donde empezó; el detalle por ronda del resumen sólo está en ese dispositivo (en otro se ve el resultado final). Las partidas sin terminar de más de 24 h se borran solas.
+- Cambiar `AUTH_SECRET` invalida las partidas en curso.
 
 ### Puntaje (`utils/score.ts`)
 
@@ -178,4 +192,4 @@ yarn test
 ```
 
 - `tests/unit` — geometría, puntaje, elección de imágenes y el cliente de Mapillary (con `fetch` falso).
-- `tests/flows` — el flujo completo del juego (crear partida, 5 respuestas, resumen, caché) contra SQLite en memoria con un proveedor de imágenes falso, usando las migraciones reales.
+- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un proveedor de imágenes falso y las migraciones reales: partida de 5 rondas, tokens cifrados (reutilización, modificación, otro usuario), limpieza de partidas abandonadas y límite de la caché.

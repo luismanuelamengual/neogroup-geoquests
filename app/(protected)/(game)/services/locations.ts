@@ -10,6 +10,8 @@ import { pickRandom } from '@/app/(protected)/(game)/utils/random'
 const MAX_SEARCH_ATTEMPTS = 6
 /** Search radius around each random point. */
 const SEARCH_RADIUS_METERS = 250
+/** Cached locations kept per place: plenty of variety for the fallback, bounded database size. */
+export const MAX_CACHED_LOCATIONS_PER_PLACE = 100
 
 export interface FindLocationOptions {
   random?: RandomFn
@@ -52,9 +54,16 @@ export function pickBestImage(
   )
 }
 
-/** Stores a found image in the place cache (ignored if it was already there). */
+/**
+ * Stores a found image in the place cache (ignored if it was already there),
+ * up to MAX_CACHED_LOCATIONS_PER_PLACE locations per place.
+ */
 async function cacheLocation(place: Place, image: StreetImage): Promise<void> {
   try {
+    if ((await PlaceLocation.where('placeId', place.id).count()) >= MAX_CACHED_LOCATIONS_PER_PLACE) {
+      return
+    }
+
     await PlaceLocation.upsert(
       [
         {

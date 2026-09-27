@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
+import { saveGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
 
@@ -19,9 +20,10 @@ export default function GameModeCard({ mode }: { mode: GameModeConfig }) {
     setStarting(true)
 
     try {
-      const game = await startGame(mode.mode)
+      const session = await startGame(mode.mode)
 
-      router.push(`/game/${game.id}`)
+      saveGameSession(session)
+      router.push(`/game/${session.game.id}`)
     } catch {
       setStarting(false)
     }

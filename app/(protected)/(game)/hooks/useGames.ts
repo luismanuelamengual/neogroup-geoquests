@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
-import { GameListItem, GameView } from '@/app/(protected)/(game)/models/GameView'
+import { GameListItem, GameSession } from '@/app/(protected)/(game)/models/GameView'
 import { GuessInput } from '@/app/(protected)/(game)/models/GuessInput'
 import { useRequests } from '@/app/hooks/useRequests'
 
@@ -10,15 +10,19 @@ import { useRequests } from '@/app/hooks/useRequests'
 export function useGames() {
   const executeRequest = useRequests()
   const startGame = useCallback(
-    (mode: GameMode): Promise<GameView> => executeRequest<GameView>('/startGame', { mode }),
+    (mode: GameMode): Promise<GameSession> => executeRequest<GameSession>('/startGame', { mode }),
     [executeRequest]
   )
   const getGame = useCallback(
-    (gameId: number): Promise<GameView> => executeRequest<GameView>('/getGame', { gameId }),
+    (token: string): Promise<GameSession> => executeRequest<GameSession>('/getGame', { token }, false),
     [executeRequest]
   )
   const submitGuess = useCallback(
-    (input: GuessInput): Promise<GameView> => executeRequest<GameView>('/submitGuess', input),
+    (input: GuessInput): Promise<GameSession> => executeRequest<GameSession>('/submitGuess', input),
+    [executeRequest]
+  )
+  const getGameResult = useCallback(
+    (gameId: number): Promise<GameListItem> => executeRequest<GameListItem>('/getGameResult', { gameId }, false),
     [executeRequest]
   )
   const getRecentGames = useCallback(
@@ -26,5 +30,5 @@ export function useGames() {
     [executeRequest]
   )
 
-  return { startGame, getGame, submitGuess, getRecentGames }
+  return { startGame, getGame, submitGuess, getGameResult, getRecentGames }
 }

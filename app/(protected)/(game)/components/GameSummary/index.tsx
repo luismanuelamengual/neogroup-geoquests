@@ -13,21 +13,28 @@ import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { getGameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
-import { GameView } from '@/app/(protected)/(game)/models/GameView'
+import { GameListItem, GameView } from '@/app/(protected)/(game)/models/GameView'
+import { loadGameSession, saveGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatDistance, formatScore, getGameStars } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
 
-/** End of game screen: stars, total score, every answer on the map and the per-round breakdown. */
+/**
+ * End of game screen: stars, total score, every answer on the map and the
+ * per-round breakdown. The rounds are not stored on the server: the breakdown
+ * comes from this device's storage; elsewhere (or once it was pruned) only the
+ * final result from the database is shown.
+ */
 export default function GameSummary({ gameId }: { gameId: number }) {
   const router = useRouter()
-  const { getGame, startGame } = useGames()
+  const { getGameResult, startGame } = useGames()
   const [game, setGame] = useState<GameView | null>(null)
+  const [result, setResult] = useState<GameListItem | null>(null)
   const [loadError, setLoadError] = useState(false)
   const [starting, setStarting] = useState(false)
-  const animatedTotal = useCountUp(game?.totalScore ?? 0, 1800, 300)
+  const animatedTotal = useCountUp(result?.totalScore ?? 0, 1800, 300)
   const pairs = useMemo<ResultPair[]>(
     () =>
       (game?.rounds ?? []).flatMap((round) =>
@@ -37,18 +44,36 @@ export default function GameSummary({ gameId }: { gameId: number }) {
   )
 
   useEffect(() => {
-    getGame(gameId)
-      .then((loadedGame) => {
-        if (loadedGame.status !== GameStatus.FINISHED) {
+    const stored = loadGameSession(gameId)
+
+    if (stored?.game.status === GameStatus.FINISHED) {
+      setGame(stored.game)
+      setResult({
+        id: stored.game.id,
+        mode: stored.game.mode,
+        status: stored.game.status,
+        roundsCount: stored.game.roundsCount,
+        playedRounds: stored.game.roundsCount,
+        totalScore: stored.game.totalScore,
+        maxScore: stored.game.maxScore,
+        createdAt: stored.game.createdAt
+      })
+
+      return
+    }
+
+    getGameResult(gameId)
+      .then((gameResult) => {
+        if (gameResult.status !== GameStatus.FINISHED) {
           router.replace(`/game/${gameId}`)
 
           return
         }
 
-        setGame(loadedGame)
+        setResult(gameResult)
       })
       .catch(() => setLoadError(true))
-  }, [gameId, getGame, router])
+  }, [gameId, getGameResult, router])
 
   if (loadError) {
     return (
@@ -61,20 +86,21 @@ export default function GameSummary({ gameId }: { gameId: number }) {
     )
   }
 
-  if (!game) {
+  if (!result) {
     return <Loading message="Contando puntos..." />
   }
 
-  const mode = getGameModeConfig(game.mode)
-  const stars = getGameStars(game.totalScore, game.maxScore)
+  const mode = getGameModeConfig(result.mode)
+  const stars = getGameStars(result.totalScore, result.maxScore)
 
   const handlePlayAgain = async () => {
     setStarting(true)
 
     try {
-      const newGame = await startGame(game.mode)
+      const session = await startGame(result.mode)
 
-      router.push(`/game/${newGame.id}`)
+      saveGameSession(session)
+      router.push(`/game/${session.game.id}`)
     } catch {
       setStarting(false)
     }
@@ -92,9 +118,9 @@ export default function GameSummary({ gameId }: { gameId: number }) {
         </div>
         <div className="total">
           <span className="value">{formatScore(animatedTotal)}</span>
-          <span className="max">/ {formatScore(game.maxScore)} pts</span>
+          <span className="max">/ {formatScore(result.maxScore)} pts</span>
         </div>
-        <ScoreBar value={animatedTotal} max={game.maxScore} />
+        <ScoreBar value={animatedTotal} max={result.maxScore} />
         <div className="actions">
           <GameButton size="large" startIcon={<ReplayIcon />} loading={starting} onClick={handlePlayAgain}>
             Jugar de nuevo
@@ -104,32 +130,39 @@ export default function GameSummary({ gameId }: { gameId: number }) {
           </GameButton>
         </div>
       </GamePanel>
-      <div className="details">
-        <GamePanel className="map-panel" title="Tus respuestas" accent="cyan">
-          <ResultMap pairs={pairs} className="summary-map" />
-        </GamePanel>
-        <GamePanel className="rounds-panel" title="Rondas" accent="gold">
-          <ol className="rounds">
-            {game.rounds.map((round) => (
-              <li key={round.roundNumber} className="round">
-                <span className="number">{round.roundNumber}</span>
-                <div className="info">
-                  <span className="place">
-                    {countryFlag(round.countryCode)} {round.placeName}
-                  </span>
-                  <span className="distance">{formatDistance(round.distanceMeters ?? 0)}</span>
-                  <ScoreBar value={round.score ?? 0} max={mode.score.maxScore} className="bar" />
-                </div>
-                <span className="score">{formatScore(round.score ?? 0)}</span>
-              </li>
-            ))}
-          </ol>
-          <div className="rounds-total">
-            <span>Total</span>
-            <span>{formatScore(game.totalScore)}</span>
-          </div>
-        </GamePanel>
-      </div>
+      {!game && (
+        <p className="no-details">
+          El detalle de cada ronda solo queda guardado en el dispositivo donde jugaste la partida.
+        </p>
+      )}
+      {game && (
+        <div className="details">
+          <GamePanel className="map-panel" title="Tus respuestas" accent="cyan">
+            <ResultMap pairs={pairs} className="summary-map" />
+          </GamePanel>
+          <GamePanel className="rounds-panel" title="Rondas" accent="gold">
+            <ol className="rounds">
+              {game.rounds.map((round) => (
+                <li key={round.roundNumber} className="round">
+                  <span className="number">{round.roundNumber}</span>
+                  <div className="info">
+                    <span className="place">
+                      {countryFlag(round.countryCode)} {round.placeName}
+                    </span>
+                    <span className="distance">{formatDistance(round.distanceMeters ?? 0)}</span>
+                    <ScoreBar value={round.score ?? 0} max={mode.score.maxScore} className="bar" />
+                  </div>
+                  <span className="score">{formatScore(round.score ?? 0)}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="rounds-total">
+              <span>Total</span>
+              <span>{formatScore(game.totalScore)}</span>
+            </div>
+          </GamePanel>
+        </div>
+      )}
     </div>
   )
 }

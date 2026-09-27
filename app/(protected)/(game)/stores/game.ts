@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { GameView } from '@/app/(protected)/(game)/models/GameView'
+import { GameSession, GameView } from '@/app/(protected)/(game)/models/GameView'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 
 /** Phase of the play screen: looking at the image / placing the pin, or watching the round result. */
@@ -7,14 +7,16 @@ export type PlayPhase = 'guessing' | 'result'
 
 interface GameState {
   game: GameView | null
+  /** Encrypted game token: sent with every guess (see services/gameTokens.ts). */
+  token: string | null
   phase: PlayPhase
   /** Pin placed by the player on the guess map for the current round. */
   guess: LatLng | null
   /** Round whose result is being shown (phase "result"). */
   resultRoundNumber: number | null
-  setGame: (game: GameView | null) => void
+  setSession: (session: GameSession) => void
   setGuess: (guess: LatLng | null) => void
-  showResult: (game: GameView, roundNumber: number) => void
+  showResult: (session: GameSession, roundNumber: number) => void
   nextRound: () => void
   reset: () => void
 }
@@ -25,12 +27,13 @@ interface GameState {
  */
 export const useGameStore = create<GameState>()((set) => ({
   game: null,
+  token: null,
   phase: 'guessing',
   guess: null,
   resultRoundNumber: null,
-  setGame: (game) => set({ game, phase: 'guessing', guess: null, resultRoundNumber: null }),
+  setSession: ({ game, token }) => set({ game, token, phase: 'guessing', guess: null, resultRoundNumber: null }),
   setGuess: (guess) => set({ guess }),
-  showResult: (game, roundNumber) => set({ game, phase: 'result', resultRoundNumber: roundNumber }),
+  showResult: ({ game, token }, roundNumber) => set({ game, token, phase: 'result', resultRoundNumber: roundNumber }),
   nextRound: () => set({ phase: 'guessing', guess: null, resultRoundNumber: null }),
-  reset: () => set({ game: null, phase: 'guessing', guess: null, resultRoundNumber: null })
+  reset: () => set({ game: null, token: null, phase: 'guessing', guess: null, resultRoundNumber: null })
 }))

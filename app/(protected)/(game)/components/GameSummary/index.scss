@@ -80,6 +80,12 @@
     }
   }
 
+  .no-details {
+    margin: -12px 0 0;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
   .details {
     display: grid;
     grid-template-columns: 1.3fr 1fr;

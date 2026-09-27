@@ -11,49 +11,74 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { getGameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { loadGameSession, removeGameSession, saveGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
+
+const NOT_ON_THIS_DEVICE =
+  'Esta partida se empezó en otro dispositivo o navegador: solo se puede seguir jugando desde ahí.'
 
 /**
  * Play screen of a game: full-screen street view, HUD, guess panel and the
  * result overlay after each guess. Covers the app shell (immersive mode).
+ *
+ * The game comes from this device's storage (its encrypted token): the server
+ * does not keep the rounds, so a game can only be played where it started.
  */
 export default function GamePlay({ gameId }: { gameId: number }) {
   const router = useRouter()
   const { getGame, submitGuess } = useGames()
-  const { game, phase, guess, resultRoundNumber, setGame, showResult, nextRound, reset } = useGameStore()
-  const [loadError, setLoadError] = useState(false)
+  const { game, token, phase, guess, resultRoundNumber, setSession, showResult, nextRound, reset } = useGameStore()
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
+    const stored = loadGameSession(gameId)
+
     reset()
-    getGame(gameId)
-      .then((loadedGame) => {
-        if (loadedGame.status === GameStatus.FINISHED) {
+
+    if (!stored) {
+      setLoadError(NOT_ON_THIS_DEVICE)
+
+      return
+    }
+
+    // Validate the stored token with the server (it rejects outdated tokens).
+    getGame(stored.token)
+      .then((session) => {
+        saveGameSession(session)
+
+        if (session.game.status === GameStatus.FINISHED) {
           router.replace(`/game/${gameId}/summary`)
 
           return
         }
 
-        setGame(loadedGame)
+        setSession(session)
       })
-      .catch(() => setLoadError(true))
+      .catch((error: Error) => {
+        if (error.message.includes('desactualizada')) {
+          removeGameSession(gameId)
+        }
+
+        setLoadError(error.message || 'No pudimos cargar la partida.')
+      })
 
     return () => reset()
-  }, [gameId, getGame, router, setGame, reset])
+  }, [gameId, getGame, router, setSession, reset])
 
   if (loadError) {
     return (
       <div className="game-play">
         <div className="game-play-error">
-          <p>No pudimos cargar la partida.</p>
+          <p>{loadError}</p>
           <GameButton href="/home">Volver al menú</GameButton>
         </div>
       </div>
     )
   }
 
-  if (!game || game.id !== gameId) {
+  if (!game || !token || game.id !== gameId) {
     return (
       <div className="game-play">
         <Loading message="Preparando la partida..." />
@@ -75,9 +100,10 @@ export default function GamePlay({ gameId }: { gameId: number }) {
     setSubmitting(true)
 
     try {
-      const updatedGame = await submitGuess({ gameId: game.id, roundNumber, ...guess })
+      const session = await submitGuess({ token, roundNumber, ...guess })
 
-      showResult(updatedGame, roundNumber)
+      saveGameSession(session)
+      showResult(session, roundNumber)
     } catch {
       // The error toast is shown by useRequests.
     } finally {

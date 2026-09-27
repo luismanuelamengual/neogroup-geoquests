@@ -8,8 +8,13 @@ import { DB, Schema } from '@neogroup/neorm'
  *
  *   - users / email_verification_tokens / password_reset_tokens → authentication
  *   - places          → playable areas (a circle or a GeoJSON polygon) per game mode
- *   - place_locations → cache of street-level images already found inside a place
- *   - games / game_rounds → the matches played and their rounds
+ *   - place_locations → small cache of street-level images already found inside a place
+ *   - games           → one row per game: progress and final score (the history)
+ *
+ * The rounds of a game are NOT stored: they travel with the player inside an
+ * encrypted game token (see app/(protected)/(game)/services/gameTokens.ts).
+ * `games.playedRounds` is what makes that safe — a token for a round that was
+ * already played is rejected, so it cannot be replayed to re-guess an answer.
  *
  * Coordinates are stored as plain `double` columns (no PostGIS) so the schema
  * stays portable; the geometry lives in app/(protected)/(game)/utils/geo.ts.
@@ -86,36 +91,17 @@ export default {
       await Schema.createIfNotExists('games', (table) => {
         table.increments('id')
         table.integer('userId')
-        table.integer('mode')
-        table.integer('status')
-        table.integer('roundsCount')
+        table.smallInteger('mode')
+        table.smallInteger('status')
+        table.smallInteger('roundsCount')
+        // Rounds already guessed. The next token accepted must be for round playedRounds + 1.
+        table.smallInteger('playedRounds').default(0)
         table.integer('totalScore').default(0)
         table.timestamp('createdAt').useCurrent()
         table.timestamp('finishedAt').nullable()
 
-        table.index('userId', 'idx_games_user')
+        table.index(['userId', 'id'], 'idx_games_user')
         table.foreign('userId').references('id').on('users').cascadeOnDelete()
-      })
-
-      await Schema.createIfNotExists('game_rounds', (table) => {
-        table.increments('id')
-        table.integer('gameId')
-        table.integer('roundNumber')
-        table.integer('placeId')
-        // The street-level image shown in the round and its real position.
-        table.string('imageId', 64)
-        table.double('latitude')
-        table.double('longitude')
-        // The player's guess (null until the round is played).
-        table.double('guessLatitude').nullable()
-        table.double('guessLongitude').nullable()
-        table.double('distanceMeters').nullable()
-        table.integer('score').nullable()
-        table.timestamp('guessedAt').nullable()
-
-        table.unique(['gameId', 'roundNumber'])
-        table.foreign('gameId').references('id').on('games').cascadeOnDelete()
-        table.foreign('placeId').references('id').on('places')
       })
     })
   }

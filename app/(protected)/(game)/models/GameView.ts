@@ -34,7 +34,14 @@ export interface GameView {
   rounds: RoundView[]
 }
 
-/** Row of the "recent games" list. */
+/** Response of /api/startGame, /api/getGame and /api/submitGuess. */
+export interface GameSession {
+  game: GameView
+  /** Encrypted game state: sent back with every request of this game. */
+  token: string
+}
+
+/** Row of the "recent games" list (and summary of a game whose details are gone). */
 export interface GameListItem {
   id: number
   mode: GameMode

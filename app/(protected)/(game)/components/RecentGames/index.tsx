@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { getGameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
+import { hasGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GamePanel from '@/app/components/GamePanel'
 import { useLoadingData } from '@/app/hooks/useLoadingData'
@@ -17,7 +18,10 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
   minute: '2-digit'
 })
 
-/** Latest games of the player: finished ones open their summary, unfinished ones can be resumed. */
+/**
+ * Latest games of the player: finished ones open their summary; unfinished
+ * ones can be resumed only on the device where they were started (its token).
+ */
 export default function RecentGames() {
   const { getRecentGames } = useGames()
   const { data: games, loading } = useLoadingData(getRecentGames, [getRecentGames], [])
@@ -29,23 +33,33 @@ export default function RecentGames() {
       <ul className="list">
         {games.map((game) => {
           const finished = game.status === GameStatus.FINISHED
+          const resumable = !finished && hasGameSession(game.id)
+          const content = (
+            <>
+              <div className="info">
+                <span className="mode">{getGameModeConfig(game.mode).name}</span>
+                <span className="date">{dateFormatter.format(new Date(game.createdAt))}</span>
+              </div>
+              {finished && <span className="score">{formatScore(game.totalScore)}</span>}
+              {resumable && (
+                <span className="resume">
+                  Seguir ({game.playedRounds}/{game.roundsCount})
+                </span>
+              )}
+              {!finished && !resumable && <span className="unfinished">Sin terminar</span>}
+            </>
+          )
 
           return (
             <li key={game.id}>
-              <Link href={finished ? `/game/${game.id}/summary` : `/game/${game.id}`} className="item">
-                <div className="info">
-                  <span className="mode">{getGameModeConfig(game.mode).name}</span>
-                  <span className="date">{dateFormatter.format(new Date(game.createdAt))}</span>
-                </div>
-                {finished ? (
-                  <span className="score">{formatScore(game.totalScore)}</span>
-                ) : (
-                  <span className="resume">
-                    Seguir ({game.playedRounds}/{game.roundsCount})
-                  </span>
-                )}
-                <ChevronRightIcon className="chevron" />
-              </Link>
+              {finished || resumable ? (
+                <Link href={finished ? `/game/${game.id}/summary` : `/game/${game.id}`} className="item">
+                  {content}
+                  <ChevronRightIcon className="chevron" />
+                </Link>
+              ) : (
+                <div className="item disabled">{content}</div>
+              )}
             </li>
           )
         })}

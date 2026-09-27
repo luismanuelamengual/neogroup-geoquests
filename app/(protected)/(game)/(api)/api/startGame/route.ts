@@ -2,7 +2,7 @@ import { StartGameInput } from '@/app/(protected)/(game)/models/StartGameInput'
 import { startGame } from '@/app/(protected)/(game)/services/games'
 import { withAuth } from '@/app/utils/api-server'
 
-/** POST /api/startGame — creates a new game (with its rounds already chosen) for the signed-in player. */
+/** POST /api/startGame — creates a new game for the signed-in player: returns its view and its encrypted token. */
 export const POST = withAuth(async (request, _context, userId) => {
   const input = (await request.json()) as StartGameInput
 
