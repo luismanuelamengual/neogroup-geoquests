@@ -1,0 +1,32 @@
+.street-view {
+  position: absolute;
+  inset: 0;
+  background: #000;
+
+  .viewer {
+    position: absolute;
+    inset: 0;
+  }
+
+  // Leave room for the HUD (top) and the guess panel (bottom-right) around the
+  // viewer's own controls.
+  .mapillary-attribution-container {
+    bottom: calc(4px + var(--safe-bottom));
+  }
+
+  .street-view-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: min(90vw, 420px);
+    padding: 18px 22px;
+    transform: translate(-50%, -50%);
+    border: 3px solid var(--color-panel-border);
+    border-radius: 16px;
+    background: var(--color-panel);
+    color: var(--color-text);
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.45);
+  }
+}
