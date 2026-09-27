@@ -1,11 +1,11 @@
 import { BaseEntity, Column, Entity } from '@neogroup/neorm'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
-import { PolygonGeometry } from '@/app/(protected)/(game)/models/PlaceArea'
+import { PlaceGeometry } from '@/app/(protected)/(game)/models/PlaceGeometry'
 
 /**
- * A playable area of a game mode (e.g. a city in "Ciudades del mundo"). The
- * area is either a circle (`latitude`/`longitude` + `radiusMeters`) or a
- * GeoJSON polygon; the game draws random street-level locations inside it.
+ * A playable area of a game mode (e.g. a city in "Ciudades del mundo"). Its
+ * `geometry` (GeoJSON: a circle or a polygon, see PlaceGeometry) is the area
+ * the game draws random street-level locations from.
  */
 @Entity({ table: 'places' })
 export class Place extends BaseEntity {
@@ -22,19 +22,9 @@ export class Place extends BaseEntity {
   @Column({ cast: 'number' })
   mode!: GameMode
 
-  @Column({ cast: 'number' })
-  latitude!: number
-
-  @Column({ cast: 'number' })
-  longitude!: number
-
-  /** Circle radius in meters. Null when the area is described by `polygon`. */
-  @Column({ cast: 'number' })
-  radiusMeters!: number | null
-
-  /** GeoJSON polygon of the area. Null for circles. */
+  /** Area of the place as a GeoJSON geometry (circle or polygon). */
   @Column({ cast: 'json' })
-  polygon!: PolygonGeometry | null
+  geometry!: PlaceGeometry
 
   @Column({ cast: 'boolean' })
   enabled!: boolean

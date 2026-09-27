@@ -6,10 +6,7 @@ function circlePlace(): Place {
   const place = new Place()
 
   place.id = 1
-  place.latitude = 0
-  place.longitude = 0
-  place.radiusMeters = 5000
-  place.polygon = null
+  place.geometry = { type: 'Point', coordinates: [0, 0], radius: 5000 }
 
   return place
 }

@@ -16,9 +16,10 @@ import { DB, Schema } from '@neogroup/neorm'
  * `games.playedRounds` is what makes that safe — a token for a round that was
  * already played is rejected, so it cannot be replayed to re-guess an answer.
  *
- * Coordinates are stored as plain `double` columns (no PostGIS) so the schema
- * stays portable; the geometry lives in app/(protected)/(game)/utils/geo.ts.
- * `places.polygon` is a GeoJSON Polygon stored in a `jsonb` column (TEXT on SQLite).
+ * `places.geometry` holds the area of a place as a GeoJSON geometry in a
+ * `jsonb` column (TEXT on SQLite): a circle (Point + `radius` in meters) or a
+ * Polygon — see app/(protected)/(game)/models/PlaceGeometry.ts. No PostGIS, so
+ * the schema stays portable; the geometry math lives in utils/geo.ts.
  * Enum-like columns (`mode`, `status`) are INTEGERs mapped to the numeric enums
  * GameMode and GameStatus.
  */
@@ -62,13 +63,9 @@ export default {
         table.string('name', 120)
         table.char('countryCode', 2)
         table.integer('mode')
-        // Center of the place: the circle center, or a reference point for polygons.
-        table.double('latitude')
-        table.double('longitude')
-        // Circle radius in meters. Null when the area is described by `polygon`.
-        table.integer('radiusMeters').nullable()
-        // GeoJSON Polygon ({ type: 'Polygon', coordinates: [[[lng, lat], ...]] }). Null for circles.
-        table.jsonb('polygon').nullable()
+        // GeoJSON geometry of the area: { type: 'Point', coordinates: [lng, lat], radius: meters }
+        // for a circle, or { type: 'Polygon', coordinates: [[[lng, lat], ...]] }.
+        table.jsonb('geometry')
         table.boolean('enabled').default(true)
         table.timestamp('createdAt').useCurrent()
 

@@ -1,5 +1,10 @@
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
-import { PlaceArea, PolygonGeometry } from '@/app/(protected)/(game)/models/PlaceArea'
+import {
+  CircleGeometry,
+  isCircleGeometry,
+  PlaceGeometry,
+  PolygonGeometry
+} from '@/app/(protected)/(game)/models/PlaceGeometry'
 
 /**
  * Pure geographic helpers (no dependencies). Distances use a spherical Earth,
@@ -144,13 +149,50 @@ export function randomPointInPolygon(
   return null
 }
 
-/** Random position inside a place area (circle or polygon). */
-export function randomPointInArea(area: PlaceArea, random: RandomFn = Math.random): LatLng {
-  if (area.type === 'circle') {
-    return randomPointInCircle(area.center, area.radiusMeters, random)
+/** Center of a circle geometry. */
+export function circleCenter(circle: CircleGeometry): LatLng {
+  return { latitude: circle.coordinates[1], longitude: circle.coordinates[0] }
+}
+
+/** Throws when a place geometry is not a supported, well-formed circle or polygon. */
+export function assertValidGeometry(geometry: PlaceGeometry | null | undefined): asserts geometry is PlaceGeometry {
+  if (geometry?.type === 'Point') {
+    if (geometry.coordinates?.length === 2 && geometry.radius > 0) {
+      return
+    }
+  } else if (geometry?.type === 'Polygon') {
+    if ((geometry.coordinates?.[0]?.length ?? 0) >= 4) {
+      return
+    }
   }
 
-  return randomPointInPolygon(area.polygon, random) ?? area.center
+  throw new Error(`Unsupported or invalid place geometry: ${JSON.stringify(geometry)}`)
+}
+
+/** Whether a position lies inside a place geometry (circles get a small `tolerance` factor). */
+export function isPointInGeometry(point: LatLng, geometry: PlaceGeometry, tolerance = 1): boolean {
+  if (isCircleGeometry(geometry)) {
+    return haversineDistance(circleCenter(geometry), point) <= geometry.radius * tolerance
+  }
+
+  return isPointInPolygon(point, geometry)
+}
+
+/** Random position inside a place geometry (circle or polygon). */
+export function randomPointInGeometry(geometry: PlaceGeometry, random: RandomFn = Math.random): LatLng {
+  assertValidGeometry(geometry)
+
+  if (isCircleGeometry(geometry)) {
+    return randomPointInCircle(circleCenter(geometry), geometry.radius, random)
+  }
+
+  const point = randomPointInPolygon(geometry, random)
+
+  if (!point) {
+    throw new Error('Could not draw a point inside the polygon')
+  }
+
+  return point
 }
 
 /** Square bounding box of side `2 · halfSizeMeters` centered on `center`. */

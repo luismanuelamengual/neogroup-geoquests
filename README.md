@@ -138,11 +138,20 @@ components/ StreetView (MapillaryJS), GuessMap / ResultMap (MapLibre), GuessPane
 
 ### Lugares (`places`)
 
-Cada lugar pertenece a un modo de juego y define un área: un **círculo** (`latitude`, `longitude`, `radiusMeters`) o un **polígono** GeoJSON (`polygon`, columna `jsonb`). Las 20 ciudades de "Ciudades del mundo" se cargan en la migración `002-seed-world-cities` (17 círculos y 3 polígonos: Buenos Aires, Manhattan y París). No se usa PostGIS: la geometría está en `utils/geo.ts`, así el esquema es portable (y testeable con SQLite).
+Cada lugar pertenece a un modo de juego y define su área en una sola columna `geometry` (`jsonb`) con una **geometría GeoJSON** (RFC 7946, coordenadas `[longitud, latitud]`):
+
+```jsonc
+// Círculo: GeoJSON no tiene círculos, así que es un Point (centro) + `radius` en metros
+{ "type": "Point", "coordinates": [-68.8458, -32.8895], "radius": 5000 }
+// Polígono (el primer anillo es el borde; los siguientes, huecos)
+{ "type": "Polygon", "coordinates": [[[-58.46, -34.535], [-58.413, -34.56], ..., [-58.46, -34.535]]] }
+```
+
+`radius` es un *foreign member* permitido por el RFC: cualquier herramienta GeoJSON lo sigue leyendo como un Point válido. Los tipos están en `models/PlaceGeometry.ts`; para soportar otra geometría (p. ej. `MultiPolygon`) se agrega al tipo `PlaceGeometry` y a `randomPointInGeometry` / `isPointInGeometry` en `utils/geo.ts`. Las 20 ciudades de "Ciudades del mundo" se cargan en la migración `002-seed-world-cities` (17 círculos y 3 polígonos: Buenos Aires, Manhattan y París). No se usa PostGIS: la geometría está en `utils/geo.ts`, así el esquema es portable (y testeable con SQLite).
 
 ### Cómo se obtiene una ubicación aleatoria (`services/locations.ts`)
 
-1. Se sortea un punto uniforme dentro del área (círculo: `R·√u`; polígono: muestreo por rechazo sobre su bounding box).
+1. Se sortea un punto uniforme dentro de la geometría (círculo: `R·√u`; polígono: muestreo por rechazo sobre su bounding box).
 2. Se le piden a Mapillary las imágenes en un cuadrado de ~500 m alrededor del punto; se prefieren las panorámicas 360° y, entre ellas, la más cercana al punto (descartando las que caen fuera del área).
 3. Si no hay imágenes se reintenta con otro punto (hasta 6 veces).
 4. Cada imagen encontrada se guarda en `place_locations` (caché). Si Mapillary falla o no hay cobertura, se usa una ubicación de la caché.

@@ -2,8 +2,12 @@ import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { PlaceLocation } from '@/app/(protected)/(game)/models/PlaceLocation'
 import { StreetImage, StreetImageryProvider } from '@/app/(protected)/(game)/services/imagery/StreetImageryProvider'
-import { haversineDistance, isPointInPolygon, RandomFn, randomPointInArea } from '@/app/(protected)/(game)/utils/geo'
-import { getPlaceArea } from '@/app/(protected)/(game)/utils/places'
+import {
+  haversineDistance,
+  isPointInGeometry,
+  RandomFn,
+  randomPointInGeometry
+} from '@/app/(protected)/(game)/utils/geo'
 import { pickRandom } from '@/app/(protected)/(game)/utils/random'
 
 /** Random points tried against the provider before falling back to the cache. */
@@ -30,20 +34,11 @@ export function pickBestImage(
   place: Place,
   excludeImageIds: Set<string> = new Set()
 ): StreetImage | null {
-  const area = getPlaceArea(place)
-  const candidates = images.filter((image) => {
-    if (excludeImageIds.has(image.id)) {
-      return false
-    }
-
-    if (area.type === 'polygon') {
-      return isPointInPolygon(image, area.polygon)
-    }
-
-    // Small tolerance: the search box around a point close to the edge can
-    // return images slightly outside the circle.
-    return haversineDistance(area.center, image) <= area.radiusMeters * 1.05
-  })
+  // Small tolerance for circles: the search box around a point close to the
+  // edge can return images slightly outside it.
+  const candidates = images.filter(
+    (image) => !excludeImageIds.has(image.id) && isPointInGeometry(image, place.geometry, 1.05)
+  )
   const panoramas = candidates.filter((image) => image.isPano)
   const pool = panoramas.length > 0 ? panoramas : candidates
 
@@ -98,7 +93,7 @@ async function findCachedLocation(place: Place, options: FindLocationOptions): P
 /**
  * Finds a random street-level location inside a place:
  *
- *   1. draws a random point inside the place area (circle or polygon),
+ *   1. draws a random point inside the place geometry (circle or polygon),
  *   2. asks the imagery provider for images around it and keeps the best one,
  *   3. retries with a new random point up to MAX_SEARCH_ATTEMPTS times,
  *   4. falls back to a location found in a previous game (place_locations cache).
@@ -110,10 +105,8 @@ export async function findRandomLocation(
   provider: StreetImageryProvider,
   options: FindLocationOptions = {}
 ): Promise<StreetImage | null> {
-  const area = getPlaceArea(place)
-
   for (let attempt = 0; attempt < MAX_SEARCH_ATTEMPTS; attempt++) {
-    const target = randomPointInArea(area, options.random)
+    const target = randomPointInGeometry(place.geometry, options.random)
 
     try {
       const images = await provider.findImagesNear(target, SEARCH_RADIUS_METERS)

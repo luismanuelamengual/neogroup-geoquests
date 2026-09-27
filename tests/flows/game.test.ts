@@ -32,8 +32,13 @@ describe('game flow', () => {
     const places = await getPlaces(GameMode.WORLD_CITIES)
 
     expect(places).toHaveLength(20)
-    expect(places.filter((place) => place.polygon)).toHaveLength(3)
-    expect(places.find((place) => place.name === 'París')?.polygon?.type).toBe('Polygon')
+    expect(places.filter((place) => place.geometry.type === 'Polygon')).toHaveLength(3)
+    expect(places.filter((place) => place.geometry.type === 'Point')).toHaveLength(17)
+    expect(places.find((place) => place.name === 'Mendoza')?.geometry).toEqual({
+      type: 'Point',
+      coordinates: [-68.8458, -32.8895],
+      radius: 5000
+    })
   })
 
   it('starts a game with 5 rounds in 5 different places, hiding the answers', async () => {
@@ -147,8 +152,8 @@ describe('game flow', () => {
       Array.from({ length: MAX_CACHED_LOCATIONS_PER_PLACE }, (_, index) => ({
         placeId: place.id,
         imageId: `old-${index}`,
-        latitude: place.latitude,
-        longitude: place.longitude,
+        latitude: 0,
+        longitude: 0,
         isPano: true
       }))
     )

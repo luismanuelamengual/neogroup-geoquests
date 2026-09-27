@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { PolygonGeometry } from '@/app/(protected)/(game)/models/PlaceArea'
+import { CircleGeometry, PolygonGeometry } from '@/app/(protected)/(game)/models/PlaceGeometry'
 import {
   boundingBoxAround,
   destinationPoint,
   haversineDistance,
+  isPointInGeometry,
   isPointInPolygon,
   randomPointInCircle,
+  randomPointInGeometry,
   randomPointInPolygon
 } from '@/app/(protected)/(game)/utils/geo'
 
@@ -109,6 +111,38 @@ describe('polygons', () => {
       expect(point).not.toBeNull()
       expect(isPointInPolygon(point!, SQUARE)).toBe(true)
     }
+  })
+})
+
+describe('place geometries (GeoJSON)', () => {
+  const circle: CircleGeometry = {
+    type: 'Point',
+    coordinates: [BUENOS_AIRES.longitude, BUENOS_AIRES.latitude],
+    radius: 2000
+  }
+
+  it('draws random points inside a circle geometry (Point + radius)', () => {
+    const random = seeded(3)
+
+    for (let i = 0; i < 300; i++) {
+      const point = randomPointInGeometry(circle, random)
+
+      expect(haversineDistance(BUENOS_AIRES, point)).toBeLessThanOrEqual(2000.001)
+      expect(isPointInGeometry(point, circle)).toBe(true)
+    }
+  })
+
+  it('draws random points inside a polygon geometry', () => {
+    const random = seeded(5)
+
+    for (let i = 0; i < 300; i++) {
+      expect(isPointInGeometry(randomPointInGeometry(SQUARE, random), SQUARE)).toBe(true)
+    }
+  })
+
+  it('rejects unsupported or malformed geometries', () => {
+    expect(() => randomPointInGeometry({ type: 'Point', coordinates: [0, 0], radius: 0 })).toThrow()
+    expect(() => randomPointInGeometry({ type: 'LineString', coordinates: [] } as unknown as PolygonGeometry)).toThrow()
   })
 })
 
