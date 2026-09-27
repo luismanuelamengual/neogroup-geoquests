@@ -10,7 +10,7 @@ import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { decryptGameState, encryptGameState } from '@/app/(protected)/(game)/services/gameTokens'
 import { getStreetImageryProvider } from '@/app/(protected)/(game)/services/imagery'
 import { StreetImage, StreetImageryProvider } from '@/app/(protected)/(game)/services/imagery/StreetImageryProvider'
-import { findRandomLocation } from '@/app/(protected)/(game)/services/locations'
+import { findCachedLocation, findLiveLocation } from '@/app/(protected)/(game)/services/locations'
 import { getPlaces } from '@/app/(protected)/(game)/services/places'
 import { haversineDistance, normalizeLongitude, RandomFn } from '@/app/(protected)/(game)/utils/geo'
 import { shuffle } from '@/app/(protected)/(game)/utils/random'
@@ -31,11 +31,15 @@ export interface StartGameOptions {
 }
 
 /**
- * Chooses the places and locations of a new game. Places are shuffled and
- * consumed in order, so every round is in a different place while the mode has
- * enough of them (with fewer places than rounds, places repeat). A place with
- * no coverage is skipped and the next one is tried. Searches run in parallel,
- * one per round, to keep the "loading game" wait short.
+ * Chooses the places and locations of a new game.
+ *
+ *   1. Live images only: places are shuffled and consumed in order (so every
+ *      round is in a different place while the mode has enough of them); a
+ *      place where no live image is found is simply skipped for another one.
+ *      Searches run in parallel, one per round, to keep the wait short.
+ *   2. Only if that could not fill the game (in practice: the provider is
+ *      failing), the missing rounds come from the fallback cache — preferably
+ *      from places not used yet.
  */
 async function planRounds(
   places: Place[],
@@ -51,10 +55,10 @@ async function planRounds(
 
   const usedImageIds = new Set<string>()
 
-  const findForSlot = async (): Promise<PlannedRound | null> => {
+  const findLiveForSlot = async (): Promise<PlannedRound | null> => {
     while (queue.length > 0) {
       const place = queue.shift()!
-      const image = await findRandomLocation(place, provider, { random, excludeImageIds: usedImageIds })
+      const { image } = await findLiveLocation(place, provider, { random, excludeImageIds: usedImageIds })
 
       if (image && !usedImageIds.has(image.id)) {
         usedImageIds.add(image.id)
@@ -66,9 +70,35 @@ async function planRounds(
     return null
   }
 
-  const planned = await Promise.all(Array.from({ length: roundsCount }, findForSlot))
+  const planned = (await Promise.all(Array.from({ length: roundsCount }, findLiveForSlot))).filter(
+    (round): round is PlannedRound => round !== null
+  )
 
-  return planned.filter((round): round is PlannedRound => round !== null)
+  if (planned.length < roundsCount) {
+    const usedPlaceIds = new Set(planned.map((round) => round.place.id))
+    const fallbackPlaces = [
+      ...shuffle(
+        places.filter((place) => !usedPlaceIds.has(place.id)),
+        random
+      ),
+      ...shuffle(places, random)
+    ]
+
+    for (const place of fallbackPlaces) {
+      if (planned.length >= roundsCount) {
+        break
+      }
+
+      const image = await findCachedLocation(place, { random, excludeImageIds: usedImageIds })
+
+      if (image) {
+        usedImageIds.add(image.id)
+        planned.push({ place, image })
+      }
+    }
+  }
+
+  return planned
 }
 
 /** Deletes the unfinished games older than ABANDONED_GAME_MAX_AGE_MS (keeps the table small). */

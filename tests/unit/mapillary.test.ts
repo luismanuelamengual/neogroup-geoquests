@@ -38,6 +38,21 @@ describe('MapillaryProvider', () => {
     expect((init.headers as Record<string, string>).Authorization).toBe('OAuth MLY|token')
   })
 
+  it('keeps big searches (and high latitudes) under the Mapillary bbox limit', async () => {
+    const fetchFn = vi.fn(async () => jsonResponse({ data: [] }))
+    const provider = new MapillaryProvider('MLY|token', fetchFn as unknown as typeof fetch)
+
+    await provider.findImagesNear({ latitude: 60.17, longitude: 24.94 }, 3000)
+
+    const [url] = fetchFn.mock.calls[0] as unknown as [string]
+    const [minLongitude, minLatitude, maxLongitude, maxLatitude] = new URL(url).searchParams
+      .get('bbox')!
+      .split(',')
+      .map(Number)
+
+    expect((maxLongitude - minLongitude) * (maxLatitude - minLatitude)).toBeLessThan(0.01)
+  })
+
   it('throws on HTTP errors', async () => {
     const provider = new MapillaryProvider('MLY|token', (async () => jsonResponse({}, 429)) as unknown as typeof fetch)
 

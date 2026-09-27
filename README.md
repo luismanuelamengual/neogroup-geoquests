@@ -152,11 +152,12 @@ Cada lugar pertenece a un modo de juego y define su área en una sola columna `g
 ### Cómo se obtiene una ubicación aleatoria (`services/locations.ts`)
 
 1. Se sortea un punto uniforme dentro de la geometría (círculo: `R·√u`; polígono: muestreo por rechazo sobre su bounding box).
-2. Se le piden a Mapillary las imágenes en un cuadrado de ~500 m alrededor del punto; se prefieren las panorámicas 360° y, entre ellas, la más cercana al punto (descartando las que caen fuera del área).
-3. Si no hay imágenes se reintenta con otro punto (hasta 6 veces).
-4. Cada imagen encontrada se guarda en `place_locations` (caché). Si Mapillary falla o no hay cobertura, se usa una ubicación de la caché.
+2. Se le piden a Mapillary las imágenes alrededor del punto; se prefieren las panorámicas 360° y, entre ellas, la más cercana al punto (descartando las que caen fuera de la geometría).
+3. Si no hay imágenes se reintenta con otro punto y un radio cada vez mayor (250 m, 500 m, 1 km, 2 km, 3 km, 3 km — siempre dentro del límite de 0,01°² de Mapillary).
 
-`startGame` baraja los lugares y busca las 5 ubicaciones en paralelo (una por ronda, cada una en un lugar distinto). La caché guarda como máximo 100 ubicaciones por lugar.
+`startGame` (`planRounds` en `services/games.ts`) baraja los lugares y busca las 5 ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
+
+**Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada imagen encontrada en vivo se guarda ahí, pero sólo se *lee* si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Mapillary falla o limita la búsqueda), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada imagen nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria. (Si Mapillary está caído del todo la caché tampoco alcanza, porque el visor también descarga las imágenes de Mapillary.)
 
 ### Dónde viven las rondas: token cifrado + tabla `games` mínima
 

@@ -13,7 +13,11 @@ import {
   submitGuess
 } from '@/app/(protected)/(game)/services/games'
 import { decryptGameState } from '@/app/(protected)/(game)/services/gameTokens'
-import { findRandomLocation, MAX_CACHED_LOCATIONS_PER_PLACE } from '@/app/(protected)/(game)/services/locations'
+import {
+  findLiveLocation,
+  MAX_CACHED_LOCATIONS_PER_PLACE,
+  SEARCH_RADII_METERS
+} from '@/app/(protected)/(game)/services/locations'
 import { getPlaces } from '@/app/(protected)/(game)/services/places'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakeImageryProvider } from '@/tests/setup/fakeProvider'
@@ -132,20 +136,61 @@ describe('game flow', () => {
     expect(await Game.count()).toBe(0)
   })
 
-  it('falls back to cached locations when the provider fails', async () => {
-    await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
-    await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
+  /** Fills the fallback cache of every place with one "cached-<placeId>" location. */
+  async function fillCache() {
+    const places = await getPlaces(GameMode.WORLD_CITIES)
 
-    const cachedPlaces = new Set((await PlaceLocation.get()).map((location) => location.placeId))
+    await DB.table('place_locations').insert(
+      places.map((place) => {
+        const [longitude, latitude] =
+          place.geometry.type === 'Point' ? place.geometry.coordinates : place.geometry.coordinates[0][0]
 
-    if (cachedPlaces.size >= 5) {
-      const { game } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider('error') })
+        return { placeId: place.id, imageId: `cached-${place.id}`, latitude, longitude, isPano: true }
+      })
+    )
 
-      expect(game.rounds).toHaveLength(5)
-    }
+    return places
+  }
+
+  it('uses live images first, even when the cache is full', async () => {
+    await fillCache()
+
+    const { game } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
+
+    expect(game.rounds.every((round) => round.imageId.startsWith('img-'))).toBe(true)
   })
 
-  it('caps the location cache of each place', async () => {
+  it('skips a place without live coverage for another place instead of using the cache', async () => {
+    await fillCache()
+
+    // No coverage anywhere in the southern hemisphere.
+    const provider = new FakeImageryProvider((point) => (point.latitude < 0 ? 'empty' : 'found'))
+    const session = await startGame(userId, GameMode.WORLD_CITIES, { provider })
+    const rounds = decryptGameState(session.token).rounds
+
+    expect(session.game.rounds.every((round) => round.imageId.startsWith('img-'))).toBe(true)
+    expect(rounds.every((round) => round.latitude > 0)).toBe(true)
+  })
+
+  it('widens the search radius on every attempt', async () => {
+    const [place] = await getPlaces(GameMode.WORLD_CITIES)
+    const provider = new FakeImageryProvider('empty')
+
+    expect((await findLiveLocation(place, provider)).image).toBeNull()
+    expect(provider.calls.map((call) => call.radius)).toEqual(SEARCH_RADII_METERS)
+  })
+
+  it('uses the cache only as a last resort, when the provider is failing', async () => {
+    await fillCache()
+
+    const { game } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider('error') })
+
+    expect(game.rounds).toHaveLength(5)
+    expect(game.rounds.every((round) => round.imageId.startsWith('cached-'))).toBe(true)
+    expect(new Set(game.rounds.map((round) => round.imageId)).size).toBe(5)
+  })
+
+  it('keeps the cache of each place bounded but rotating', async () => {
     const [place] = await getPlaces(GameMode.WORLD_CITIES)
 
     await DB.table('place_locations').insert(
@@ -157,9 +202,11 @@ describe('game flow', () => {
         isPano: true
       }))
     )
-    await findRandomLocation(place, new FakeImageryProvider())
+
+    const { image } = await findLiveLocation(place, new FakeImageryProvider())
 
     expect(await PlaceLocation.where('placeId', place.id).count()).toBe(MAX_CACHED_LOCATIONS_PER_PLACE)
+    expect(await PlaceLocation.where('imageId', image!.id).first()).not.toBeNull()
   })
 
   it('fails with a clear message when no imagery is available at all', async () => {

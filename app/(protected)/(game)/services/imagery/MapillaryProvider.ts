@@ -4,8 +4,8 @@ import { boundingBoxAround } from '@/app/(protected)/(game)/utils/geo'
 
 const GRAPH_API_URL = 'https://graph.mapillary.com/images'
 const REQUEST_TIMEOUT_MS = 8000
-/** Mapillary rejects bounding boxes larger than 0.01 square degrees. */
-const MAX_BBOX_HALF_SIZE_METERS = 500
+/** Mapillary rejects bounding boxes of 0.01 square degrees or more: stay safely below. */
+const MAX_BBOX_AREA_SQUARE_DEGREES = 0.009
 
 interface MapillaryPoint {
   type: 'Point'
@@ -36,7 +36,15 @@ export class MapillaryProvider implements StreetImageryProvider {
   ) {}
 
   async findImagesNear(point: LatLng, radiusMeters: number): Promise<StreetImage[]> {
-    const box = boundingBoxAround(point, Math.min(radiusMeters, MAX_BBOX_HALF_SIZE_METERS))
+    let box = boundingBoxAround(point, radiusMeters)
+    const area = (box.maxLatitude - box.minLatitude) * (box.maxLongitude - box.minLongitude)
+
+    // Shrink big searches (or searches far from the equator, where degrees of
+    // longitude get short) to the largest box Mapillary accepts.
+    if (area > MAX_BBOX_AREA_SQUARE_DEGREES) {
+      box = boundingBoxAround(point, radiusMeters * Math.sqrt(MAX_BBOX_AREA_SQUARE_DEGREES / area))
+    }
+
     const params = new URLSearchParams({
       fields: 'id,is_pano,geometry,computed_geometry',
       bbox: [box.minLongitude, box.minLatitude, box.maxLongitude, box.maxLatitude].map((n) => n.toFixed(6)).join(','),
