@@ -44,6 +44,7 @@
   "devDependencies": {
     "@serwist/turbopack": "^9.5.11",
     "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",

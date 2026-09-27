@@ -7,6 +7,8 @@
  * that has not been applied yet. Applied migrations are tracked in the
  * `migrations` table.
  *
+ * The database itself is created first when it does not exist (PostgreSQL).
+ *
  * Usage: yarn db:migrate
  */
 import { config } from 'dotenv'
@@ -17,6 +19,7 @@ config({ path: '.env.local' })
 config({ path: '.env' })
 
 import { DB } from '@neogroup/neorm'
+import { ensureDatabaseExists } from './utils/ensure-database'
 
 interface Migration {
   name: string
@@ -64,6 +67,7 @@ async function loadMigrations(): Promise<Migration[]> {
 }
 
 async function run(): Promise<void> {
+  await ensureDatabaseExists()
   await ensureMigrationsTable()
 
   const applied = await getAppliedMigrations()
