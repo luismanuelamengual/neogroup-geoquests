@@ -39,19 +39,27 @@ export default function GuessMap({ guess, onGuessChange, disabled }: GuessMapPro
     }
 
     let zoomControl: NavigationControl | null = null
+    let disposed = false
 
     map.getCanvas().style.cursor = 'crosshair'
     map.on('click', handleClick)
 
     import('maplibre-gl').then(({ default: maplibregl }) => {
+      if (disposed) {
+        return
+      }
+
       zoomControl = new maplibregl.NavigationControl({ showCompass: false, showZoom: true })
       map.addControl(zoomControl, 'top-right')
     })
 
     return () => {
+      disposed = true
       map.off('click', handleClick)
 
-      if (zoomControl) {
+      // On unmount the map is usually already removed (useMapLibre disposes it
+      // first), and map.remove() already detaches its controls.
+      if (zoomControl && map.hasControl(zoomControl)) {
         map.removeControl(zoomControl)
       }
     }

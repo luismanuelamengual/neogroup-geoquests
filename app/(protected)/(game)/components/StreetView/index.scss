@@ -1,13 +1,36 @@
+/*
+ * Cropping of the embed's own controls: the iframe is made bigger than the
+ * visible area and the container clips (overflow: hidden) the excess, so the
+ * controls anchored to the iframe's edges fall outside. Adjust these values
+ * (px) to taste:
+ *
+ *   --crop-top     hides the address card (top-left)
+ *   --crop-left    keeps the address card / left edge controls out
+ *   --crop-right   hides the zoom / compass buttons (bottom-right)
+ *   --crop-bottom  leave at 0 so Google's logo and terms stay visible
+ *
+ * Note: cropping asymmetrically shifts the panorama's center; using the same
+ * value for left and right avoids a horizontal shift.
+ */
 .street-view {
+  --crop-top: 80px;
+  --crop-right: 60px;
+  --crop-bottom: 0px;
+  --crop-left: 60px;
+
   position: absolute;
   inset: 0;
+  overflow: hidden;
   background: #000;
 
   .viewer {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: calc(var(--crop-top) * -1);
+    right: calc(var(--crop-right) * -1);
+    bottom: calc(var(--crop-bottom) * -1);
+    left: calc(var(--crop-left) * -1);
+    width: calc(100% + var(--crop-left) + var(--crop-right));
+    height: calc(100% + var(--crop-top) + var(--crop-bottom));
     border: 0;
   }
 

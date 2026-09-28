@@ -1,8 +1,6 @@
 .round-hud {
-  // Height of the bar. It is an opaque strip on purpose: it also hides the
-  // address card that the Street View embed shows in its top-left corner
-  // (about 78px tall), which would give the answer away. Keep it at least
-  // that tall if you tune it.
+  // Height of the bar. It is transparent: the chips float over the Street
+  // View. The embed's own address card is cropped out by StreetView.
   --hud-height: 78px;
 
   position: absolute;
@@ -16,12 +14,16 @@
   gap: 10px;
   height: calc(var(--hud-height) + var(--safe-top));
   padding: var(--safe-top) calc(12px + var(--safe-right)) 0 calc(12px + var(--safe-left));
-  border-bottom: 3px solid var(--color-panel-border);
-  background: linear-gradient(135deg, var(--color-panel) 0%, var(--color-night) 100%);
-  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
+  // Let drags / clicks through the empty parts of the bar to the panorama.
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
 
   .spacer {
     flex: 1;
+    pointer-events: none;
   }
 
   .exit {

@@ -17,7 +17,7 @@ interface GuessPanelProps {
 
 /**
  * The guess map + "Adivinar" button, laid out per device:
- *  - desktop: a small map docked bottom-right that grows while hovered;
+ *  - desktop: a small map floating bottom-right that grows while hovered;
  *  - phone/tablet: a floating "Mapa" button that opens the map as a bottom sheet.
  */
 export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
