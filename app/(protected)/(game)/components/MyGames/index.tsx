@@ -5,13 +5,19 @@ import { useCallback, useEffect, useState } from 'react'
 import GameListRow from '@/app/(protected)/(game)/components/GameListRow'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameListItem } from '@/app/(protected)/(game)/models/GameView'
+import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
+import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 
 const PAGE_SIZE = 20
 
 /** "Mis partidas": the player's whole history, newest first, loaded 20 at a time. */
-export default function MyGames() {
+interface MyGamesProps {
+  stats: PlayerStats
+}
+
+export default function MyGames({ stats }: MyGamesProps) {
   const { getGames } = useGames()
   const [games, setGames] = useState<GameListItem[]>([])
   const [hasMore, setHasMore] = useState(false)
@@ -41,6 +47,20 @@ export default function MyGames() {
   return (
     <div className="my-games">
       <GamePanel title="Mis partidas" accent="cyan">
+        <div className="stats">
+          <div className="stat">
+            <span className="value">{stats.gamesPlayed}</span>
+            <span className="label">Partidas</span>
+          </div>
+          <div className="stat">
+            <span className="value">{formatScore(stats.bestScore)}</span>
+            <span className="label">Mejor puntaje</span>
+          </div>
+          <div className="stat">
+            <span className="value">{formatScore(stats.averageScore)}</span>
+            <span className="label">Promedio</span>
+          </div>
+        </div>
         {!loading && games.length === 0 && (
           <div className="empty">
             <p>Todavía no jugaste ninguna partida.</p>

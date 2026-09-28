@@ -432,7 +432,7 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
   return { items: games.slice(0, safeLimit).map(toListItem), hasMore: games.length > safeLimit }
 }
 
-/** Aggregated stats over the finished games of the user (account screen). */
+/** Aggregated stats over the finished games of the user (games screen). */
 export async function getPlayerStats(userId: number): Promise<PlayerStats> {
   const games = await Game.where('userId', userId).where('status', GameStatus.FINISHED).get()
   const scores = games.map((game) => game.totalScore)
