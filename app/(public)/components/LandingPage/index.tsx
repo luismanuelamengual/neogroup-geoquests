@@ -20,9 +20,6 @@ export default function LandingPage() {
           <GameButton size="large" href="/login">
             Jugar gratis
           </GameButton>
-          <GameButton size="large" color="ghost" href="/register">
-            Crear cuenta
-          </GameButton>
         </div>
       </section>
       <section className="steps">
