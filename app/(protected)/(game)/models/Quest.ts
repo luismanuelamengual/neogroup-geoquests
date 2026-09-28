@@ -20,7 +20,7 @@ export class Quest extends BaseEntity {
   @Column({ cast: 'number' })
   rounds!: number
 
-  /** Time limit of each round, in minutes. Null = no time limit. */
+  /** Time limit of each round, in seconds. Null = no time limit. */
   @Column({ cast: 'number' })
   time!: number | null
 

@@ -250,7 +250,7 @@ export async function startGame(
     userId,
     questId: quest.id,
     questName: quest.name,
-    timeLimitSeconds: quest.time != null && quest.time > 0 ? Math.round(quest.time * 60) : null,
+    timeLimitSeconds: quest.time != null && quest.time > 0 ? Math.round(quest.time) : null,
     rounds: rounds.map(({ place, panorama }) => ({
       placeName: place.name,
       countryCode: place.countryCode,

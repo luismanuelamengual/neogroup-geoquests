@@ -153,7 +153,7 @@ Cada modo de juego es una fila de `quests`:
 | --- | --- |
 | `name`, `description` | Lo que muestra la tarjeta del menú principal |
 | `rounds` | Cantidad de rondas de cada partida |
-| `time` | Tiempo por ronda en **minutos**; `null` = sin límite |
+| `time` | Tiempo por ronda en **segundos** (p. ej. `90` = minuto y medio); `null` = sin límite |
 | `image` | Imagen de la tarjeta: ruta bajo `/public` (p. ej. `/quests/ciudades-del-mundo.png`) o URL absoluta; sin imagen se dibuja una ilustración por defecto |
 | `enabled` | Para ocultar un quest sin borrarlo |
 

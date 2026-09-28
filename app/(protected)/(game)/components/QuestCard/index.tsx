@@ -53,7 +53,7 @@ export default function QuestCard({ quest }: { quest: QuestView }) {
         <p className="description">{quest.description}</p>
         <div className="tags">
           <span className="tag">{quest.rounds} rondas</span>
-          <span className="tag">{quest.time ? `${formatTimeLimit(quest.time * 60)} por ronda` : 'Sin tiempo'}</span>
+          <span className="tag">{quest.time ? `${formatTimeLimit(quest.time)} por ronda` : 'Sin tiempo'}</span>
           <span className="tag">{quest.placesCount} lugares</span>
         </div>
         <GameButton size="large" fullWidth startIcon={<PlayArrowIcon />} loading={starting} onClick={handlePlay}>

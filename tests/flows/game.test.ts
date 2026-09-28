@@ -57,7 +57,7 @@ describe('game flow', () => {
     expect(quests[0]).toMatchObject({
       name: 'Ciudades del mundo',
       rounds: 5,
-      time: 2,
+      time: 120,
       image: '/quests/ciudades-del-mundo.png',
       placesCount: 20,
       maxScore: 25000

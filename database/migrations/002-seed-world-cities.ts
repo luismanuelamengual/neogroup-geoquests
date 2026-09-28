@@ -1,7 +1,7 @@
 import { DB } from '@neogroup/neorm'
 
 /**
- * Seeds the "Ciudades del mundo" quest (5 rounds, 2 minutes per round) and its
+ * Seeds the "Ciudades del mundo" quest (5 rounds, 120 seconds per round) and its
  * 20 places, linked through `quest_place`.
  *
  * Each place gets a GeoJSON `geometry` (see models/PlaceGeometry.ts). Most
@@ -17,7 +17,7 @@ const QUEST = {
   name: 'Ciudades del mundo',
   description: 'Aparecés en una calle de una de 20 grandes ciudades. ¿Sabés cuál es y dónde estás?',
   rounds: 5,
-  time: 2,
+  time: 120,
   image: '/quests/ciudades-del-mundo.png'
 }
 

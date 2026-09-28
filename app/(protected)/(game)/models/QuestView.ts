@@ -4,7 +4,7 @@ export interface QuestView {
   name: string
   description: string
   rounds: number
-  /** Time limit of each round, in minutes (null = no limit). */
+  /** Time limit of each round, in seconds (null = no limit). */
   time: number | null
   image: string | null
   placesCount: number

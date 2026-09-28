@@ -65,7 +65,7 @@ export default {
         table.text('description')
         // Rounds of every game of the quest.
         table.smallInteger('rounds')
-        // Time limit of each round, in minutes. Null = no time limit.
+        // Time limit of each round, in seconds. Null = no time limit.
         table.smallInteger('time').nullable()
         // Image of the quest card in the main menu (a path under /public or an absolute URL).
         table.string('image', 255).nullable()
