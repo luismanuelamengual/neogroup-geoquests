@@ -1,35 +1,34 @@
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
-import { StreetImage, StreetImageryProvider } from '@/app/(protected)/(game)/services/imagery/StreetImageryProvider'
+import { Panorama, PanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 
 export type FakeBehaviour = 'found' | 'empty' | 'error'
 
 /**
- * Imagery provider for tests: "finds" one panorama exactly at the searched
+ * Street View finder for tests: "finds" a panorama exactly at the searched
  * point, finds nothing, or fails — always, or decided per searched point —
  * and records the calls.
  */
-export class FakeImageryProvider implements StreetImageryProvider {
-  readonly name = 'fake'
+export class FakePanoramaFinder implements PanoramaFinder {
   calls: { point: LatLng; radius: number }[] = []
   private counter = 0
 
   constructor(private readonly behaviour: FakeBehaviour | ((point: LatLng) => FakeBehaviour) = 'found') {}
 
-  async findImagesNear(point: LatLng, radius: number): Promise<StreetImage[]> {
+  async findNear(point: LatLng, radius: number): Promise<Panorama | null> {
     this.calls.push({ point, radius })
 
     const behaviour = typeof this.behaviour === 'function' ? this.behaviour(point) : this.behaviour
 
     if (behaviour === 'error') {
-      throw new Error('provider down')
+      throw new Error('street view down')
     }
 
     if (behaviour === 'empty') {
-      return []
+      return null
     }
 
     this.counter++
 
-    return [{ id: `img-${this.counter}`, latitude: point.latitude, longitude: point.longitude, isPano: true }]
+    return { id: `pano-${this.counter}`, latitude: point.latitude, longitude: point.longitude }
   }
 }

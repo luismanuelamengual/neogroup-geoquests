@@ -3,12 +3,13 @@ import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 
 /**
  * Client view of a round. While the round has not been played it only carries
- * the image to show: the real position and the place are revealed (non-null)
+ * the panorama to show: the real position and the place are revealed (non-null)
  * once the player has guessed, so they never reach the browser beforehand.
  */
 export interface RoundView {
   roundNumber: number
-  imageId: string
+  /** Google Street View panorama to show. */
+  panoId: string
   guessed: boolean
   placeName: string | null
   countryCode: string | null

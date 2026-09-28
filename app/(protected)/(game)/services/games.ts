@@ -7,10 +7,9 @@ import { GuessInput } from '@/app/(protected)/(game)/models/GuessInput'
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { decryptGameState, encryptGameState } from '@/app/(protected)/(game)/services/gameTokens'
-import { getStreetImageryProvider } from '@/app/(protected)/(game)/services/imagery'
-import { StreetImage, StreetImageryProvider } from '@/app/(protected)/(game)/services/imagery/StreetImageryProvider'
 import { findCachedLocation, findLiveLocation } from '@/app/(protected)/(game)/services/locations'
 import { findQuest, getQuestPlaces } from '@/app/(protected)/(game)/services/quests'
+import { getPanoramaFinder, Panorama, PanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { haversineDistance, normalizeLongitude, RandomFn } from '@/app/(protected)/(game)/utils/geo'
 import { shuffle } from '@/app/(protected)/(game)/utils/random'
 import { calculateRoundScore, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
@@ -26,11 +25,12 @@ export const ROUND_TIME_GRACE_MS = 5000
 
 interface PlannedRound {
   place: Place
-  image: StreetImage
+  panorama: Panorama
 }
 
 export interface GameServiceOptions {
-  provider?: StreetImageryProvider
+  /** Street View search (tests inject a fake one). */
+  finder?: PanoramaFinder
   random?: RandomFn
   /** Current time (tests). */
   now?: () => Date
@@ -39,18 +39,18 @@ export interface GameServiceOptions {
 /**
  * Chooses the places and locations of a new game.
  *
- *   1. Live images only: places are shuffled and consumed in order (so every
- *      round is in a different place while the quest has enough of them); a
- *      place where no live image is found is simply skipped for another one.
+ *   1. Live panoramas only: places are shuffled and consumed in order (so
+ *      every round is in a different place while the quest has enough of
+ *      them); a place where no live panorama is found is skipped for another.
  *      Searches run in parallel, one per round, to keep the wait short.
- *   2. Only if that could not fill the game (in practice: the provider is
+ *   2. Only if that could not fill the game (in practice: Street View is
  *      failing), the missing rounds come from the fallback cache — preferably
  *      from places not used yet.
  */
 async function planRounds(
   places: Place[],
   roundsCount: number,
-  provider: StreetImageryProvider,
+  finder: PanoramaFinder,
   random?: RandomFn
 ): Promise<PlannedRound[]> {
   const queue: Place[] = []
@@ -59,17 +59,17 @@ async function planRounds(
     queue.push(...shuffle(places, random))
   }
 
-  const usedImageIds = new Set<string>()
+  const usedPanoIds = new Set<string>()
 
   const findLiveForSlot = async (): Promise<PlannedRound | null> => {
     while (queue.length > 0) {
       const place = queue.shift()!
-      const { image } = await findLiveLocation(place, provider, { random, excludeImageIds: usedImageIds })
+      const { panorama } = await findLiveLocation(place, finder, { random, excludePanoIds: usedPanoIds })
 
-      if (image && !usedImageIds.has(image.id)) {
-        usedImageIds.add(image.id)
+      if (panorama && !usedPanoIds.has(panorama.id)) {
+        usedPanoIds.add(panorama.id)
 
-        return { place, image }
+        return { place, panorama }
       }
     }
 
@@ -95,11 +95,11 @@ async function planRounds(
         break
       }
 
-      const image = await findCachedLocation(place, { random, excludeImageIds: usedImageIds })
+      const panorama = await findCachedLocation(place, { random, excludePanoIds: usedPanoIds })
 
-      if (image) {
-        usedImageIds.add(image.id)
-        planned.push({ place, image })
+      if (panorama) {
+        usedPanoIds.add(panorama.id)
+        planned.push({ place, panorama })
       }
     }
   }
@@ -124,7 +124,7 @@ function toRoundView(round: GameStateRound, index: number): RoundView {
 
   return {
     roundNumber: index + 1,
-    imageId: round.imageId,
+    panoId: round.panoId,
     guessed: played,
     placeName: played ? round.placeName : null,
     countryCode: played ? round.countryCode : null,
@@ -220,8 +220,8 @@ export async function startGame(
     throw new ApiException('Este modo de juego todavía no tiene lugares cargados')
   }
 
-  const provider = options.provider ?? getStreetImageryProvider()
-  const rounds = await planRounds(places, quest.rounds, provider, options.random)
+  const finder = options.finder ?? getPanoramaFinder()
+  const rounds = await planRounds(places, quest.rounds, finder, options.random)
 
   if (rounds.length < quest.rounds) {
     throw new ApiException('No pudimos encontrar imágenes para armar la partida. Intentá de nuevo en un momento.', 503)
@@ -245,18 +245,18 @@ export async function startGame(
   await game.save()
 
   const state: GameState = {
-    v: 2,
+    v: 3,
     gameId: game.id,
     userId,
     questId: quest.id,
     questName: quest.name,
     timeLimitSeconds: quest.time != null && quest.time > 0 ? Math.round(quest.time * 60) : null,
-    rounds: rounds.map(({ place, image }) => ({
+    rounds: rounds.map(({ place, panorama }) => ({
       placeName: place.name,
       countryCode: place.countryCode,
-      imageId: image.id,
-      latitude: image.latitude,
-      longitude: image.longitude
+      panoId: panorama.id,
+      latitude: panorama.latitude,
+      longitude: panorama.longitude
     }))
   }
 

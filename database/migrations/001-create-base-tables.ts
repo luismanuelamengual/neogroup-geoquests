@@ -10,7 +10,7 @@ import { DB, Schema } from '@neogroup/neorm'
  *   - quests          → the game modes shown in the main menu (rounds, time per round, image)
  *   - places          → playable areas (a circle or a GeoJSON polygon)
  *   - quest_place     → which places each quest draws its rounds from (many-to-many)
- *   - place_locations → small cache of street-level images already found inside a place
+ *   - place_locations → small fallback cache of Street View panoramas already found inside a place
  *   - games           → one row per game: progress and final score (the history)
  *
  * The rounds of a game are NOT stored: they travel with the player inside an
@@ -97,10 +97,10 @@ export default {
       await Schema.createIfNotExists('place_locations', (table) => {
         table.increments('id')
         table.integer('placeId')
-        table.string('imageId', 64).unique()
+        // Google Street View panorama id.
+        table.string('panoId', 128).unique()
         table.double('latitude')
         table.double('longitude')
-        table.boolean('isPano').default(false)
         table.timestamp('createdAt').useCurrent()
 
         table.index('placeId', 'idx_place_locations_place')

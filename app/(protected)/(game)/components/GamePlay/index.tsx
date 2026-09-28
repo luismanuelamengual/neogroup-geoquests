@@ -146,7 +146,7 @@ export default function GamePlay({ gameId }: { gameId: number }) {
 
   return (
     <div className="game-play">
-      <StreetView imageId={round.imageId} />
+      <StreetView panoId={round.panoId} />
       <RoundHud
         game={game}
         roundNumber={displayedRoundNumber}

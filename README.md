@@ -12,20 +12,29 @@ Los modos de juego (*quests*) se cargan en la base de datos. Por ahora hay uno, 
 - **@neogroup/neorm** para el acceso a datos (PostgreSQL; SQLite en memoria en los tests)
 - **zustand** para los stores del cliente
 - **Serwist** para PWA / offline
-- **Mapillary** (imágenes a nivel de calle, gratis) + **MapLibre GL** con tiles de **OpenFreeMap** (mapa, gratis y sin API key)
+- **Google Street View** (imágenes de calles: Street View Image Metadata + Maps Embed API, ambos gratuitos) + **MapLibre GL** con tiles de **OpenFreeMap** (mapa, gratis y sin API key)
 - Tipografías self-hosted (`@fontsource`) para que funcionen también offline dentro de la PWA
 - UI sólo en español
+
+### Imágenes de calles: Google Street View
+
+Se usan dos servicios de Google que su documentación declara **sin costo**:
+
+- *Street View Image Metadata* (servidor, `services/streetView.ts` → `GoogleStreetViewFinder`): busca la panorámica exterior más cercana a un punto. No consume cuota.
+- *Maps Embed API* (navegador, componente `StreetView`): muestra la panorámica en un iframe, arrancando hacia una dirección al azar. Uso ilimitado.
+
+Hay que habilitar "Street View Static API" y "Maps Embed API" en Google Cloud y crear dos keys (ver `.env.example`): una de servidor (`GOOGLE_MAPS_API_KEY`) y otra de navegador restringida al dominio (`NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`). Google puede pedir una cuenta de facturación aunque estos servicios no cobren.
+
+El iframe de Google muestra arriba a la izquierda un cartel con la dirección (¡la respuesta!). No se puede ocultar desde afuera, así que se tapa con un panel propio (`.address-cover`, tamaño ajustable con las variables `--cover-width` / `--cover-height` en `components/StreetView/index.scss`). El logo y los términos de Google, abajo, quedan visibles.
 
 ### Costos (APIs gratuitas)
 
 | Necesidad | Servicio | Costo |
 | --- | --- | --- |
-| Imágenes a nivel de calle | Mapillary Graph API v4 + MapillaryJS | Gratis (token de cliente; licencia CC BY-SA, la atribución la muestra el visor) |
+| Imágenes de calles | Google Street View Image Metadata + Maps Embed API | Gratis (API keys; sin cuota / ilimitado) |
 | Mapa para adivinar / resultados | OpenFreeMap + MapLibre GL | Gratis, sin API key ni límites |
 | Emails | Resend | Plan gratuito (~3.000 mails/mes) |
 | Hosting + DB | Vercel Hobby + Neon/Supabase free | Gratis para arrancar |
-
-El proveedor de imágenes está detrás de la interfaz `StreetImageryProvider`, así que migrar a Google Street View (de pago) es agregar una implementación nueva.
 
 ## Getting started
 
@@ -41,9 +50,9 @@ El proveedor de imágenes está detrás de la interfaz `StreetImageryProvider`, 
    cp .env.example .env
    ```
 
-   Completar `AUTH_SECRET` (`openssl rand -base64 32`), las credenciales OAuth de Google, `RESEND_API_KEY`, los `DB_*` y el token de Mapillary:
+   Completar `AUTH_SECRET` (`openssl rand -base64 32`), las credenciales OAuth de Google, `RESEND_API_KEY`, los `DB_*` y las keys de Google Street View:
 
-   - **Mapillary**: entrar a <https://www.mapillary.com/dashboard/developers>, crear una aplicación y copiar su **Client Token** (`MLY|...`) en `MAPILLARY_ACCESS_TOKEN` y `NEXT_PUBLIC_MAPILLARY_ACCESS_TOKEN`.
+   - **Google Street View**: en Google Cloud Console habilitar *Street View Static API* y *Maps Embed API* y crear dos API keys: `GOOGLE_MAPS_API_KEY` (servidor, restringida a Street View Static API) y `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` (navegador, restringida a Maps Embed API y a los dominios del sitio, p. ej. `http://localhost:3000/*`).
    - **Google OAuth**: en Google Cloud Console crear un OAuth Client (Web) con redirect URI `http://localhost:3000/api/auth/callback/google` (y la del dominio productivo).
    - Sin `RESEND_API_KEY` los mails no se envían: el link de verificación / reseteo se imprime en la consola del servidor.
 
@@ -126,11 +135,11 @@ services/   quests.ts     quests del menú y lugares de cada quest (quest_place)
             locations.ts  rutina que obtiene una imagen aleatoria dentro de un lugar
             games.ts      crear partida, registrar respuestas, puntaje, historial, estadísticas
             gameTokens.ts cifrado / descifrado del estado de la partida (AES-256-GCM)
-            imagery/      StreetImageryProvider (interfaz) + MapillaryProvider
+            streetView.ts búsqueda de panorámicas en Google Street View (Image Metadata)
 utils/      geo.ts        haversine, puntos aleatorios en círculo/polígono, bounding boxes
             score.ts      fórmula de puntaje y formateos
             gameStorage.ts partidas guardadas en el navegador (localStorage)
-components/ StreetView (MapillaryJS), GuessMap / ResultMap (MapLibre), GuessPanel, RoundHud,
+components/ StreetView (iframe de Google), GuessMap / ResultMap (MapLibre), GuessPanel, RoundHud,
             RoundTimer, RoundResult, GameSummary, QuestCard, RecentGames, MyGames, GameListRow
 (api)/api/  startGame, getGame, startRound, submitGuess, getGameResult, getGames
 (pages)/    /game/[id] (jugar) · /game/[id]/summary (resumen) · /games (Mis partidas)
@@ -177,12 +186,12 @@ Cada lugar define su área en una sola columna `geometry` (`jsonb`) con una **ge
 ### Cómo se obtiene una ubicación aleatoria (`services/locations.ts`)
 
 1. Se sortea un punto uniforme dentro de la geometría (círculo: `R·√u`; polígono: muestreo por rechazo sobre su bounding box).
-2. Se le piden a Mapillary las imágenes alrededor del punto; se prefieren las panorámicas 360° y, entre ellas, la más cercana al punto (descartando las que caen fuera de la geometría).
-3. Si no hay imágenes se reintenta con otro punto y un radio cada vez mayor (250 m, 500 m, 1 km, 2 km, 3 km, 3 km — siempre dentro del límite de 0,01°² de Mapillary).
+2. Se le pide a Street View (Image Metadata) la panorámica exterior más cercana al punto; se descarta si cae fuera de la geometría del lugar.
+3. Si no hay panorámica se reintenta con otro punto y un radio cada vez mayor (250 m, 500 m, 1 km, 2 km, 3 km, 3 km).
 
 `startGame` (`planRounds` en `services/games.ts`) baraja los lugares del quest y busca las ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
 
-**Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada imagen encontrada en vivo se guarda ahí, pero sólo se *lee* si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Mapillary falla o limita la búsqueda), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada imagen nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria. (Si Mapillary está caído del todo la caché tampoco alcanza, porque el visor también descarga las imágenes de Mapillary.)
+**Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada panorámica encontrada en vivo se guarda ahí, pero sólo se *lee* si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Street View falla o la key está mal configurada), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada panorámica nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria.
 
 ### Dónde viven las rondas: token cifrado + tabla `games` mínima
 
@@ -223,5 +232,5 @@ Manifest en `/manifest.webmanifest`, service worker de Serwist en `/serwist/sw.j
 yarn test
 ```
 
-- `tests/unit` — geometría, puntaje, elección de imágenes y el cliente de Mapillary (con `fetch` falso).
-- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un proveedor de imágenes falso y las migraciones reales: quests y sus lugares, partida completa, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), tokens cifrados (reutilización, modificación, otro usuario), historial paginado, limpieza de partidas abandonadas y caché.
+- `tests/unit` — geometría, puntaje, el cliente de Street View (con `fetch` falso) y la validación de panorámicas.
+- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: quests y sus lugares, partida completa, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), tokens cifrados (reutilización, modificación, otro usuario), historial paginado, limpieza de partidas abandonadas y caché.

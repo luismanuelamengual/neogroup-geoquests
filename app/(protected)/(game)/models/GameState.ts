@@ -2,7 +2,8 @@
 export interface GameStateRound {
   placeName: string
   countryCode: string
-  imageId: string
+  /** Google Street View panorama of the round. */
+  panoId: string
   latitude: number
   longitude: number
   /** Set once the round was played. */
@@ -21,7 +22,7 @@ export interface GameStateRound {
  */
 export interface GameState {
   /** Payload format version. */
-  v: 2
+  v: 3
   gameId: number
   userId: number
   questId: number

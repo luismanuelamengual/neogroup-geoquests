@@ -1,10 +1,8 @@
 import { BaseEntity, Column, Entity } from '@neogroup/neorm'
 
 /**
- * Cache of the street-level images already found inside a place. Every image
- * the location finder discovers is stored here, so a place whose live search
- * fails (no coverage around the random points, provider down, rate limits)
- * can still be played from previously found locations.
+ * Fallback cache of the Street View panoramas already found inside a place.
+ * Only read when live searches can't fill a game (see services/locations.ts).
  */
 @Entity({ table: 'place_locations' })
 export class PlaceLocation extends BaseEntity {
@@ -14,18 +12,15 @@ export class PlaceLocation extends BaseEntity {
   @Column({ cast: 'number' })
   placeId!: number
 
-  /** Id of the image in the imagery provider (Mapillary image key). */
+  /** Google Street View panorama id. */
   @Column()
-  imageId!: string
+  panoId!: string
 
   @Column({ cast: 'number' })
   latitude!: number
 
   @Column({ cast: 'number' })
   longitude!: number
-
-  @Column({ cast: 'boolean' })
-  isPano!: boolean
 
   @Column({ cast: 'date' })
   createdAt!: Date

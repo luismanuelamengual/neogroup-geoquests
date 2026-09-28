@@ -38,9 +38,7 @@ export default function LandingPage() {
           </GamePanel>
         ))}
       </section>
-      <footer className="footer">
-        Imágenes a nivel de calle © Mapillary (CC BY-SA) · Mapas © OpenStreetMap / OpenFreeMap
-      </footer>
+      <footer className="footer">Imágenes de calles © Google Street View · Mapas © OpenStreetMap / OpenFreeMap</footer>
     </main>
   )
 }
