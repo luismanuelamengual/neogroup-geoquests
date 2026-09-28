@@ -31,8 +31,7 @@
     font-size: 0.9rem;
   }
 
-  &:hover,
-  &.pinned {
+  &:hover {
     width: min(640px, 55vw);
     opacity: 1;
 
@@ -51,10 +50,10 @@
   display: none !important;
 }
 
-// Desktop: pin button is shown in a small floating header while hovered.
+// Desktop.
 @media (min-width: 901px) {
   // The panel is an opaque container docked in the corner: it hides the
-  // Street View controls behind it and grows with the map on hover / pinned.
+  // Street View controls behind it and grows with the map on hover.
   .guess-panel {
     --panel-pad-left: 12px;
     --panel-pad-top: 12px;
@@ -79,8 +78,7 @@
         border-color 220ms ease;
     }
 
-    &:hover,
-    &.pinned {
+    &:hover {
       width: calc(min(640px, 55vw) + var(--panel-pad-left) + 16px + var(--safe-right));
 
       .map-wrapper,
@@ -100,15 +98,6 @@
       .close {
         display: none;
       }
-
-      .pin-toggle {
-        background: var(--color-panel);
-        border: 2px solid var(--color-panel-border);
-      }
-    }
-
-    &.pinned .pin-toggle {
-      color: var(--color-gold);
     }
   }
 }
@@ -130,8 +119,7 @@
     transform: translateY(105%);
     transition: transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1.1);
 
-    &:hover,
-    &.pinned {
+    &:hover {
       width: 100%;
 
       .map-wrapper {
@@ -151,10 +139,6 @@
       .sheet-title {
         font-family: var(--font-display);
         color: var(--color-gold);
-      }
-
-      .pin-toggle {
-        display: none;
       }
     }
 

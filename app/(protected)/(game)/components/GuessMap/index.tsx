@@ -2,7 +2,7 @@
 
 import 'maplibre-gl/dist/maplibre-gl.css'
 import './index.scss'
-import type { Marker } from 'maplibre-gl'
+import type { Marker, NavigationControl } from 'maplibre-gl'
 import { useEffect, useRef } from 'react'
 import { createMapPinElement } from '@/app/(protected)/(game)/components/MapPin'
 import { useMapLibre } from '@/app/(protected)/(game)/hooks/useMapLibre'
@@ -38,11 +38,22 @@ export default function GuessMap({ guess, onGuessChange, disabled }: GuessMapPro
       }
     }
 
+    let zoomControl: NavigationControl | null = null
+
     map.getCanvas().style.cursor = 'crosshair'
     map.on('click', handleClick)
 
+    import('maplibre-gl').then(({ default: maplibregl }) => {
+      zoomControl = new maplibregl.NavigationControl({ showCompass: false, showZoom: true })
+      map.addControl(zoomControl, 'top-right')
+    })
+
     return () => {
       map.off('click', handleClick)
+
+      if (zoomControl) {
+        map.removeControl(zoomControl)
+      }
     }
   }, [map])
 
