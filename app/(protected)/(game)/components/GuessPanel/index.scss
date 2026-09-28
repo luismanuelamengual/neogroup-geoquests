@@ -53,11 +53,46 @@
 
 // Desktop: pin button is shown in a small floating header while hovered.
 @media (min-width: 901px) {
+  // The panel is an opaque container docked in the corner: it hides the
+  // Street View controls behind it and grows with the map on hover / pinned.
   .guess-panel {
+    --panel-pad-left: 12px;
+    --panel-pad-top: 12px;
+
+    box-sizing: border-box;
+    right: 0;
+    bottom: 0;
+    width: calc(340px + var(--panel-pad-left) + 16px + var(--safe-right));
+    padding: var(--panel-pad-top) calc(16px + var(--safe-right)) calc(24px + var(--safe-bottom)) var(--panel-pad-left);
+    border-top: 3px solid var(--color-panel-border);
+    border-left: 3px solid var(--color-panel-border);
+    border-radius: 22px 0 0;
+    background: linear-gradient(315deg, var(--color-panel) 0%, var(--color-night) 100%);
+    opacity: 1;
+
+    .map-wrapper,
+    .guess-button {
+      opacity: 0.85;
+      transition:
+        opacity 220ms ease,
+        height 220ms ease,
+        border-color 220ms ease;
+    }
+
+    &:hover,
+    &.pinned {
+      width: calc(min(640px, 55vw) + var(--panel-pad-left) + 16px + var(--safe-right));
+
+      .map-wrapper,
+      .guess-button {
+        opacity: 1;
+      }
+    }
+
     .sheet-header {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: calc(var(--panel-pad-top) + 8px);
+      right: calc(16px + var(--safe-right) + 8px);
       z-index: 2;
       display: flex;
 

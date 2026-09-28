@@ -13,9 +13,14 @@ const EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY
  *
  * The embed shows a card with the address (and a "view on Google Maps" link)
  * in its top-left corner, which would give the answer away. It can't be
- * hidden — the iframe belongs to Google — so a panel of ours is laid over it
- * (`.address-cover`, sized with the --cover-* CSS variables). Google's logo
- * and terms at the bottom stay visible, as the terms of service require.
+ * hidden — the iframe belongs to Google — so the opaque top bar of the HUD
+ * (RoundHud) is laid over it. Google's logo and terms at the bottom stay
+ * visible, as the terms of service require.
+ *
+ * The embed's controls (compass, zoom and the extra button) in the
+ * bottom-right corner can't be hidden either: on desktop the docked
+ * GuessPanel is an opaque container that covers them. Zooming still works
+ * with the wheel / pinch.
  */
 export default function StreetView({ panoId }: { panoId: string }) {
   // A new random heading per panorama (not per render).
@@ -44,7 +49,6 @@ export default function StreetView({ panoId }: { panoId: string }) {
             loading="eager"
             referrerPolicy="no-referrer-when-downgrade"
           />
-          <div className="address-cover" aria-hidden="true" />
         </>
       ) : (
         <div className="street-view-error">
