@@ -1,4 +1,22 @@
-import { ScoreSettings } from '@/app/(protected)/(game)/models/GameMode'
+/** Scoring curve — see calculateRoundScore. */
+export interface ScoreSettings {
+  /** Points of a perfect round. */
+  maxScore: number
+  /** Guesses closer than this (meters) get `maxScore`. */
+  perfectDistanceMeters: number
+  /** Distance (meters) at which the score decays to ~37% (1/e) of `maxScore`. */
+  scaleMeters: number
+}
+
+/**
+ * Scoring used by every quest. Tuned for city-sized places whose city is not
+ * revealed: finding the right city already gives a good score, and
+ * pinpointing the street inside it is what completes the 5000.
+ */
+export const SCORE_SETTINGS: ScoreSettings = { maxScore: 5000, perfectDistanceMeters: 25, scaleMeters: 15000 }
+
+/** Points of a perfect round. */
+export const MAX_ROUND_SCORE = SCORE_SETTINGS.maxScore
 
 /**
  * Score of a round from the distance between the guess and the real location:
@@ -9,7 +27,7 @@ import { ScoreSettings } from '@/app/(protected)/(game)/models/GameMode'
  * Exponential decay (the same shape GeoGuessr uses) rewards precision close
  * to the target and quickly drops to 0 for guesses in the wrong region.
  */
-export function calculateRoundScore(distanceMeters: number, settings: ScoreSettings): number {
+export function calculateRoundScore(distanceMeters: number, settings: ScoreSettings = SCORE_SETTINGS): number {
   if (!Number.isFinite(distanceMeters) || distanceMeters < 0) {
     return 0
   }
@@ -39,6 +57,25 @@ export function formatDistance(distanceMeters: number): string {
 /** Integer score with thousands separator ("12.345"). */
 export function formatScore(score: number): string {
   return Math.round(score).toLocaleString('es-AR')
+}
+
+/** "2 min", "1 min 30 s", "45 s" — time limit of a round. */
+export function formatTimeLimit(seconds: number): string {
+  const minutes = Math.floor(seconds / 60)
+  const rest = seconds % 60
+
+  if (minutes === 0) {
+    return `${rest} s`
+  }
+
+  return rest === 0 ? `${minutes} min` : `${minutes} min ${rest} s`
+}
+
+/** Countdown clock: "1:05", "0:09". */
+export function formatClock(milliseconds: number): string {
+  const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000))
+
+  return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`
 }
 
 /** Short verdict of a round, used by the result screen. */

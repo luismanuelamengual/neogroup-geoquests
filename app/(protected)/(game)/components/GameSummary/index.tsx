@@ -1,6 +1,7 @@
 'use client'
 
 import './index.scss'
+import HistoryIcon from '@mui/icons-material/History'
 import HomeIcon from '@mui/icons-material/Home'
 import ReplayIcon from '@mui/icons-material/Replay'
 import StarIcon from '@mui/icons-material/Star'
@@ -11,12 +12,11 @@ import ResultMap, { ResultPair } from '@/app/(protected)/(game)/components/Resul
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
-import { getGameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameListItem, GameView } from '@/app/(protected)/(game)/models/GameView'
 import { loadGameSession, saveGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
-import { formatDistance, formatScore, getGameStars } from '@/app/(protected)/(game)/utils/score'
+import { formatDistance, formatScore, getGameStars, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
@@ -50,7 +50,8 @@ export default function GameSummary({ gameId }: { gameId: number }) {
       setGame(stored.game)
       setResult({
         id: stored.game.id,
-        mode: stored.game.mode,
+        questId: stored.game.questId,
+        questName: stored.game.questName,
         status: stored.game.status,
         roundsCount: stored.game.roundsCount,
         playedRounds: stored.game.roundsCount,
@@ -90,14 +91,13 @@ export default function GameSummary({ gameId }: { gameId: number }) {
     return <Loading message="Contando puntos..." />
   }
 
-  const mode = getGameModeConfig(result.mode)
   const stars = getGameStars(result.totalScore, result.maxScore)
 
   const handlePlayAgain = async () => {
     setStarting(true)
 
     try {
-      const session = await startGame(result.mode)
+      const session = await startGame(result.questId)
 
       saveGameSession(session)
       router.push(`/game/${session.game.id}`)
@@ -110,7 +110,7 @@ export default function GameSummary({ gameId }: { gameId: number }) {
     <div className="game-summary">
       {starting && <Loading message="Buscando lugares por el mundo..." />}
       <GamePanel className="hero" title="¡Partida terminada!" accent="magenta">
-        <div className="mode">{mode.name}</div>
+        <div className="mode">{result.questName}</div>
         <div className="stars">
           {[1, 2, 3].map((star) => (
             <StarIcon key={star} className={classNames('star', { earned: star <= stars })} />
@@ -127,6 +127,9 @@ export default function GameSummary({ gameId }: { gameId: number }) {
           </GameButton>
           <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/home">
             Menú
+          </GameButton>
+          <GameButton color="cyan" size="large" startIcon={<HistoryIcon />} href="/games">
+            Mis partidas
           </GameButton>
         </div>
       </GamePanel>
@@ -149,8 +152,12 @@ export default function GameSummary({ gameId }: { gameId: number }) {
                     <span className="place">
                       {countryFlag(round.countryCode)} {round.placeName}
                     </span>
-                    <span className="distance">{formatDistance(round.distanceMeters ?? 0)}</span>
-                    <ScoreBar value={round.score ?? 0} max={mode.score.maxScore} className="bar" />
+                    <span className="distance">
+                      {round.distanceMeters != null
+                        ? formatDistance(round.distanceMeters)
+                        : 'Sin respuesta: se acabó el tiempo'}
+                    </span>
+                    <ScoreBar value={round.score ?? 0} max={MAX_ROUND_SCORE} className="bar" />
                   </div>
                   <span className="score">{formatScore(round.score ?? 0)}</span>
                 </li>

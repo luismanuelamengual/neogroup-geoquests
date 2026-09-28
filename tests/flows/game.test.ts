@@ -1,15 +1,18 @@
 import { DB } from '@neogroup/neorm'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { Game } from '@/app/(protected)/(game)/models/Game'
-import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
+import { GameSession } from '@/app/(protected)/(game)/models/GameView'
+import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 import { PlaceLocation } from '@/app/(protected)/(game)/models/PlaceLocation'
 import {
   deleteAbandonedGames,
   getGame,
   getGameResult,
-  getRecentGames,
+  getGames,
+  ROUND_TIME_GRACE_MS,
   startGame,
+  startRound,
   submitGuess
 } from '@/app/(protected)/(game)/services/games'
 import { decryptGameState } from '@/app/(protected)/(game)/services/gameTokens'
@@ -18,26 +21,52 @@ import {
   MAX_CACHED_LOCATIONS_PER_PLACE,
   SEARCH_RADII_METERS
 } from '@/app/(protected)/(game)/services/locations'
-import { getPlaces } from '@/app/(protected)/(game)/services/places'
+import { getQuestPlaces, getQuests } from '@/app/(protected)/(game)/services/quests'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakeImageryProvider } from '@/tests/setup/fakeProvider'
 
 const ATLANTIC = { latitude: 0, longitude: -30 }
+const TWO_MINUTES_MS = 2 * 60 * 1000
 
 describe('game flow', () => {
   let userId: number
+  let questId: number
 
   beforeEach(async () => {
     await resetDatabase()
     userId = await createUser()
+    questId = (await getQuests())[0].id
   })
 
-  it('seeds the 20 cities of "Ciudades del mundo"', async () => {
-    const places = await getPlaces(GameMode.WORLD_CITIES)
+  /** Starts the current round and guesses it (the normal flow of a timed quest). */
+  async function play(session: GameSession, guess: LatLng | null): Promise<GameSession> {
+    const started = await startRound(userId, session.token)
+
+    return submitGuess(userId, {
+      token: started.token,
+      roundNumber: started.game.currentRoundNumber!,
+      latitude: guess?.latitude ?? null,
+      longitude: guess?.longitude ?? null
+    })
+  }
+
+  it('seeds the "Ciudades del mundo" quest with its 20 cities', async () => {
+    const quests = await getQuests()
+
+    expect(quests).toHaveLength(1)
+    expect(quests[0]).toMatchObject({
+      name: 'Ciudades del mundo',
+      rounds: 5,
+      time: 2,
+      image: '/quests/ciudades-del-mundo.png',
+      placesCount: 20,
+      maxScore: 25000
+    })
+
+    const places = await getQuestPlaces(questId)
 
     expect(places).toHaveLength(20)
     expect(places.filter((place) => place.geometry.type === 'Polygon')).toHaveLength(3)
-    expect(places.filter((place) => place.geometry.type === 'Point')).toHaveLength(17)
     expect(places.find((place) => place.name === 'Mendoza')?.geometry).toEqual({
       type: 'Point',
       coordinates: [-68.8458, -32.8895],
@@ -45,47 +74,56 @@ describe('game flow', () => {
     })
   })
 
-  it('starts a game with 5 rounds in 5 different places, hiding the answers', async () => {
-    const provider = new FakeImageryProvider()
-    const { game, token } = await startGame(userId, GameMode.WORLD_CITIES, { provider })
+  it('starts a game with one round per place, hiding the answers', async () => {
+    const { game, token } = await startGame(userId, questId, { provider: new FakeImageryProvider() })
 
-    expect(game.status).toBe(GameStatus.IN_PROGRESS)
+    expect(game).toMatchObject({
+      status: GameStatus.IN_PROGRESS,
+      questName: 'Ciudades del mundo',
+      currentRoundNumber: 1,
+      timeLimitSeconds: 120,
+      roundTimeLeftMs: null
+    })
     expect(game.rounds).toHaveLength(5)
-    expect(game.currentRoundNumber).toBe(1)
     expect(new Set(game.rounds.map((round) => round.imageId)).size).toBe(5)
-
-    for (const round of game.rounds) {
-      expect(round.location).toBeNull()
-      expect(round.placeName).toBeNull()
-    }
-
+    expect(game.rounds.every((round) => round.location === null && round.placeName === null)).toBe(true)
     // The answers only travel inside the encrypted token, never in clear.
     expect(token).not.toContain(game.rounds[0].imageId)
     expect(decryptGameState(token).rounds[0].imageId).toBe(game.rounds[0].imageId)
-    // Only the game row is stored (plus the location cache).
     expect(await Game.count()).toBe(1)
-    expect(await PlaceLocation.count()).toBe(5)
+  })
+
+  it('only uses the places linked to the quest', async () => {
+    await DB.table('quests').insert({ name: 'Argentina', description: 'Solo Argentina', rounds: 2, time: null })
+
+    const argentina = (await DB.table('quests').where('name', 'Argentina').first())!
+    const places = (await getQuestPlaces(questId)).filter((place) => place.countryCode === 'AR')
+
+    // A quest with no places is not offered in the main menu.
+    expect((await getQuests()).map((quest) => quest.name)).not.toContain('Argentina')
+    await DB.table('quest_place').insert(places.map((place) => ({ questId: argentina.id, placeId: place.id })))
+    expect((await getQuests()).find((quest) => quest.name === 'Argentina')?.placesCount).toBe(2)
+
+    const session = await startGame(userId, Number(argentina.id), { provider: new FakeImageryProvider() })
+
+    expect(session.game.rounds).toHaveLength(2)
+    expect(decryptGameState(session.token).rounds.map((round) => round.countryCode)).toEqual(['AR', 'AR'])
   })
 
   it('plays the 5 rounds and finishes with the sum of the scores', async () => {
-    const provider = new FakeImageryProvider()
-    let session = await startGame(userId, GameMode.WORLD_CITIES, { provider })
+    let session = await startGame(userId, questId, { provider: new FakeImageryProvider() })
     const answers = decryptGameState(session.token).rounds
 
-    for (let roundNumber = 1; roundNumber <= 5; roundNumber++) {
+    for (let index = 0; index < 5; index++) {
       // Guess 1: exactly on the spot; the rest, in the middle of the Atlantic.
-      const guess = roundNumber === 1 ? answers[0] : ATLANTIC
+      session = await play(session, index === 0 ? answers[0] : ATLANTIC)
 
-      session = await submitGuess(userId, { token: session.token, roundNumber, ...guess })
-
-      const round = session.game.rounds[roundNumber - 1]
+      const round = session.game.rounds[index]
 
       expect(round.guessed).toBe(true)
-      expect(round.location).toEqual({
-        latitude: answers[roundNumber - 1].latitude,
-        longitude: answers[roundNumber - 1].longitude
-      })
-      expect(round.placeName).toBe(answers[roundNumber - 1].placeName)
+      expect(round.timedOut).toBe(false)
+      expect(round.location).toEqual({ latitude: answers[index].latitude, longitude: answers[index].longitude })
+      expect(round.placeName).toBe(answers[index].placeName)
     }
 
     const { game } = session
@@ -94,29 +132,103 @@ describe('game flow', () => {
     expect(game.currentRoundNumber).toBeNull()
     expect(game.rounds[0].score).toBe(5000)
     expect(game.totalScore).toBe(game.rounds.reduce((total, round) => total + (round.score ?? 0), 0))
-    expect(game.maxScore).toBe(25000)
+    expect(await getGameResult(userId, game.id)).toMatchObject({
+      questName: 'Ciudades del mundo',
+      status: GameStatus.FINISHED,
+      playedRounds: 5,
+      totalScore: game.totalScore
+    })
+  })
 
-    const result = await getGameResult(userId, game.id)
+  describe('round time limit', () => {
+    it('requires the round to be started before guessing', async () => {
+      const { token } = await startGame(userId, questId, { provider: new FakeImageryProvider() })
 
-    expect(result).toMatchObject({ status: GameStatus.FINISHED, playedRounds: 5, totalScore: game.totalScore })
-    expect((await getRecentGames(userId))[0].id).toBe(game.id)
+      await expect(submitGuess(userId, { token, roundNumber: 1, ...ATLANTIC })).rejects.toThrow('no empezó')
+    })
+
+    it('keeps the original start time when the round is started again (reloading gives no extra time)', async () => {
+      const start = new Date('2026-01-01T10:00:00Z')
+      const { token } = await startGame(userId, questId, { provider: new FakeImageryProvider(), now: () => start })
+      const first = await startRound(userId, token, { now: () => start })
+      const later = await startRound(userId, token, { now: () => new Date(start.getTime() + 30_000) })
+
+      expect(first.game.roundTimeLeftMs).toBe(TWO_MINUTES_MS)
+      expect(later.game.roundTimeLeftMs).toBe(TWO_MINUTES_MS - 30_000)
+    })
+
+    it('accepts a guess sent right at the end of the countdown (grace period)', async () => {
+      const start = new Date('2026-01-01T10:00:00Z')
+      const session = await startGame(userId, questId, { provider: new FakeImageryProvider(), now: () => start })
+      const started = await startRound(userId, session.token, { now: () => start })
+      const answer = decryptGameState(started.token).rounds[0]
+      const result = await submitGuess(
+        userId,
+        { token: started.token, roundNumber: 1, ...answer },
+        { now: () => new Date(start.getTime() + TWO_MINUTES_MS + ROUND_TIME_GRACE_MS - 1000) }
+      )
+
+      expect(result.game.rounds[0]).toMatchObject({ score: 5000, timedOut: false })
+    })
+
+    it('scores 0 a guess that arrives after the time limit', async () => {
+      const start = new Date('2026-01-01T10:00:00Z')
+      const session = await startGame(userId, questId, { provider: new FakeImageryProvider(), now: () => start })
+      const started = await startRound(userId, session.token, { now: () => start })
+      const answer = decryptGameState(started.token).rounds[0]
+      const result = await submitGuess(
+        userId,
+        { token: started.token, roundNumber: 1, ...answer },
+        { now: () => new Date(start.getTime() + TWO_MINUTES_MS + ROUND_TIME_GRACE_MS + 1000) }
+      )
+
+      expect(result.game.rounds[0]).toMatchObject({ score: 0, timedOut: true, guess: null, distanceMeters: null })
+      expect(result.game.rounds[0].location).not.toBeNull()
+      expect(result.game.currentRoundNumber).toBe(2)
+      // The next round has not started yet: its clock starts when it is shown.
+      expect(result.game.roundTimeLeftMs).toBeNull()
+    })
+
+    it('scores 0 a round where the time ran out without a pin', async () => {
+      const session = await startGame(userId, questId, { provider: new FakeImageryProvider() })
+      const result = await play(session, null)
+
+      expect(result.game.rounds[0]).toMatchObject({ score: 0, timedOut: true, guess: null })
+    })
+
+    it('has no clock for quests without time limit', async () => {
+      await DB.table('quests').where('id', questId).update({ time: null })
+
+      const session = await startGame(userId, questId, { provider: new FakeImageryProvider() })
+
+      expect(session.game.timeLimitSeconds).toBeNull()
+      expect((await startRound(userId, session.token)).game.roundTimeLeftMs).toBeNull()
+      await expect(
+        submitGuess(userId, { token: session.token, roundNumber: 1, latitude: null, longitude: null })
+      ).rejects.toThrow('Marcá un lugar')
+
+      const result = await submitGuess(userId, { token: session.token, roundNumber: 1, ...ATLANTIC })
+
+      expect(result.game.rounds[0].timedOut).toBe(false)
+    })
   })
 
   it('rejects replaying an old token to guess a round again', async () => {
-    const start = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
-    const answer = decryptGameState(start.token).rounds[0]
+    const start = await startGame(userId, questId, { provider: new FakeImageryProvider() })
+    const started = await startRound(userId, start.token)
+    const answer = decryptGameState(started.token).rounds[0]
 
-    await submitGuess(userId, { token: start.token, roundNumber: 1, ...ATLANTIC })
+    await submitGuess(userId, { token: started.token, roundNumber: 1, ...ATLANTIC })
 
     // Same (valid) token again, now knowing the answer.
-    await expect(submitGuess(userId, { token: start.token, roundNumber: 1, ...answer })).rejects.toThrow(
+    await expect(submitGuess(userId, { token: started.token, roundNumber: 1, ...answer })).rejects.toThrow(
       'desactualizada'
     )
-    await expect(getGame(userId, start.token)).rejects.toThrow('desactualizada')
+    await expect(getGame(userId, started.token)).rejects.toThrow('desactualizada')
   })
 
   it('rejects tampered tokens and tokens of other users', async () => {
-    const { token } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
+    const { token } = await startGame(userId, questId, { provider: new FakeImageryProvider() })
     const otherUserId = await createUser('other@geoquests.test')
     const tampered = token.slice(0, -4) + (token.endsWith('AAAA') ? 'BBBB' : 'AAAA')
 
@@ -126,8 +238,24 @@ describe('game flow', () => {
     await expect(submitGuess(userId, { token, roundNumber: 2, ...ATLANTIC })).rejects.toThrow('Esa ronda ya fue jugada')
   })
 
+  it('lists the games of the player, newest first, a page at a time', async () => {
+    for (let index = 0; index < 3; index++) {
+      await startGame(userId, questId, { provider: new FakeImageryProvider() })
+    }
+
+    const firstPage = await getGames(userId, 0, 2)
+    const secondPage = await getGames(userId, 2, 2)
+
+    expect(firstPage.items).toHaveLength(2)
+    expect(firstPage.hasMore).toBe(true)
+    expect(firstPage.items[0].id).toBeGreaterThan(firstPage.items[1].id)
+    expect(firstPage.items[0].questName).toBe('Ciudades del mundo')
+    expect(secondPage).toMatchObject({ hasMore: false })
+    expect(secondPage.items).toHaveLength(1)
+  })
+
   it('deletes games abandoned for more than a day', async () => {
-    const { game } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
+    const { game } = await startGame(userId, questId, { provider: new FakeImageryProvider() })
 
     await DB.table('games')
       .where('id', game.id)
@@ -138,7 +266,7 @@ describe('game flow', () => {
 
   /** Fills the fallback cache of every place with one "cached-<placeId>" location. */
   async function fillCache() {
-    const places = await getPlaces(GameMode.WORLD_CITIES)
+    const places = await getQuestPlaces(questId)
 
     await DB.table('place_locations').insert(
       places.map((place) => {
@@ -148,14 +276,12 @@ describe('game flow', () => {
         return { placeId: place.id, imageId: `cached-${place.id}`, latitude, longitude, isPano: true }
       })
     )
-
-    return places
   }
 
   it('uses live images first, even when the cache is full', async () => {
     await fillCache()
 
-    const { game } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider() })
+    const { game } = await startGame(userId, questId, { provider: new FakeImageryProvider() })
 
     expect(game.rounds.every((round) => round.imageId.startsWith('img-'))).toBe(true)
   })
@@ -165,15 +291,14 @@ describe('game flow', () => {
 
     // No coverage anywhere in the southern hemisphere.
     const provider = new FakeImageryProvider((point) => (point.latitude < 0 ? 'empty' : 'found'))
-    const session = await startGame(userId, GameMode.WORLD_CITIES, { provider })
-    const rounds = decryptGameState(session.token).rounds
+    const session = await startGame(userId, questId, { provider })
 
     expect(session.game.rounds.every((round) => round.imageId.startsWith('img-'))).toBe(true)
-    expect(rounds.every((round) => round.latitude > 0)).toBe(true)
+    expect(decryptGameState(session.token).rounds.every((round) => round.latitude > 0)).toBe(true)
   })
 
   it('widens the search radius on every attempt', async () => {
-    const [place] = await getPlaces(GameMode.WORLD_CITIES)
+    const [place] = await getQuestPlaces(questId)
     const provider = new FakeImageryProvider('empty')
 
     expect((await findLiveLocation(place, provider)).image).toBeNull()
@@ -183,7 +308,7 @@ describe('game flow', () => {
   it('uses the cache only as a last resort, when the provider is failing', async () => {
     await fillCache()
 
-    const { game } = await startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider('error') })
+    const { game } = await startGame(userId, questId, { provider: new FakeImageryProvider('error') })
 
     expect(game.rounds).toHaveLength(5)
     expect(game.rounds.every((round) => round.imageId.startsWith('cached-'))).toBe(true)
@@ -191,7 +316,7 @@ describe('game flow', () => {
   })
 
   it('keeps the cache of each place bounded but rotating', async () => {
-    const [place] = await getPlaces(GameMode.WORLD_CITIES)
+    const [place] = await getQuestPlaces(questId)
 
     await DB.table('place_locations').insert(
       Array.from({ length: MAX_CACHED_LOCATIONS_PER_PLACE }, (_, index) => ({
@@ -210,8 +335,14 @@ describe('game flow', () => {
   })
 
   it('fails with a clear message when no imagery is available at all', async () => {
-    await expect(
-      startGame(userId, GameMode.WORLD_CITIES, { provider: new FakeImageryProvider('empty') })
-    ).rejects.toThrow('No pudimos encontrar imágenes')
+    await expect(startGame(userId, questId, { provider: new FakeImageryProvider('empty') })).rejects.toThrow(
+      'No pudimos encontrar imágenes'
+    )
+  })
+
+  it('rejects unknown or disabled quests', async () => {
+    await expect(startGame(userId, 999, { provider: new FakeImageryProvider() })).rejects.toThrow('no encontrado')
+    await DB.table('quests').where('id', questId).update({ enabled: false })
+    await expect(startGame(userId, questId, { provider: new FakeImageryProvider() })).rejects.toThrow('no encontrado')
   })
 })

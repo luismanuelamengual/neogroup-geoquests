@@ -1,9 +1,9 @@
 import { BaseEntity, Column, Entity } from '@neogroup/neorm'
-import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { PlaceGeometry } from '@/app/(protected)/(game)/models/PlaceGeometry'
 
 /**
- * A playable area of a game mode (e.g. a city in "Ciudades del mundo"). Its
+ * A playable area (e.g. a city), used by the quests linked to it through the
+ * `quest_place` table. Its
  * `geometry` (GeoJSON: a circle or a polygon, see PlaceGeometry) is the area
  * the game draws random street-level locations from.
  */
@@ -18,9 +18,6 @@ export class Place extends BaseEntity {
   /** ISO 3166-1 alpha-2 country code. */
   @Column()
   countryCode!: string
-
-  @Column({ cast: 'number' })
-  mode!: GameMode
 
   /** Area of the place as a GeoJSON geometry (circle or polygon). */
   @Column({ cast: 'json' })

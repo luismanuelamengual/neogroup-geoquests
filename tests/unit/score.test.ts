@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { GAME_MODES, GameMode } from '@/app/(protected)/(game)/models/GameMode'
-import { calculateRoundScore, formatDistance, getGameStars } from '@/app/(protected)/(game)/utils/score'
+import {
+  calculateRoundScore,
+  formatClock,
+  formatDistance,
+  formatTimeLimit,
+  getGameStars,
+  SCORE_SETTINGS
+} from '@/app/(protected)/(game)/utils/score'
 
-const settings = GAME_MODES[GameMode.WORLD_CITIES].score
+const settings = SCORE_SETTINGS
 
 describe('calculateRoundScore', () => {
   it('gives the max score for a perfect guess', () => {
@@ -43,5 +49,16 @@ describe('getGameStars', () => {
     expect(getGameStars(6000, 25000)).toBe(1)
     expect(getGameStars(13000, 25000)).toBe(2)
     expect(getGameStars(21000, 25000)).toBe(3)
+  })
+})
+
+describe('time formatting', () => {
+  it('formats round time limits and the countdown clock', () => {
+    expect(formatTimeLimit(120)).toBe('2 min')
+    expect(formatTimeLimit(90)).toBe('1 min 30 s')
+    expect(formatTimeLimit(45)).toBe('45 s')
+    expect(formatClock(65_000)).toBe('1:05')
+    expect(formatClock(8_200)).toBe('0:09')
+    expect(formatClock(-5)).toBe('0:00')
   })
 })

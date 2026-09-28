@@ -1,6 +1,6 @@
-import { BaseEntity, Column, Entity } from '@neogroup/neorm'
-import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
+import { BaseEntity, BelongsTo, Column, Entity } from '@neogroup/neorm'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
+import { Quest } from '@/app/(protected)/(game)/models/Quest'
 
 /**
  * A game played by a user. Only its progress and final score are stored: the
@@ -16,7 +16,7 @@ export class Game extends BaseEntity {
   userId!: number
 
   @Column({ cast: 'number' })
-  mode!: GameMode
+  questId!: number
 
   @Column({ cast: 'number' })
   status!: GameStatus
@@ -34,9 +34,19 @@ export class Game extends BaseEntity {
   @Column({ cast: 'number' })
   totalScore!: number
 
+  /**
+   * When the current round was shown to the player (timed quests only). The
+   * time limit is measured from here, server side. Reset after every guess.
+   */
+  @Column({ cast: 'date' })
+  roundStartedAt!: Date | null
+
   @Column({ cast: 'date' })
   createdAt!: Date
 
   @Column({ cast: 'date' })
   finishedAt!: Date | null
+
+  @BelongsTo(() => Quest, 'questId')
+  quest?: Quest
 }

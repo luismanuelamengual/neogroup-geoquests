@@ -56,7 +56,7 @@ export function decryptGameState(token: unknown): GameState {
     const plain = Buffer.concat([decipher.update(data.subarray(IV_LENGTH + TAG_LENGTH)), decipher.final()])
     const state = JSON.parse(inflateRawSync(plain).toString('utf8')) as GameState
 
-    if (state.v !== 1 || !Array.isArray(state.rounds)) {
+    if (state.v !== 2 || !Array.isArray(state.rounds)) {
       throw new Error('Unknown game token version')
     }
 

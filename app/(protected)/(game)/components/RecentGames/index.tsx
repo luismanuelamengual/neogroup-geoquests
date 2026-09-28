@@ -1,69 +1,37 @@
 'use client'
 
 import './index.scss'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import Link from 'next/link'
+import { useCallback } from 'react'
+import GameListRow from '@/app/(protected)/(game)/components/GameListRow'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
-import { getGameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
-import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
-import { hasGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
-import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GamePanel from '@/app/components/GamePanel'
 import { useLoadingData } from '@/app/hooks/useLoadingData'
 
-const dateFormatter = new Intl.DateTimeFormat('es-AR', {
-  day: '2-digit',
-  month: 'short',
-  hour: '2-digit',
-  minute: '2-digit'
-})
+const RECENT_GAMES = 5
 
-/**
- * Latest games of the player: finished ones open their summary; unfinished
- * ones can be resumed only on the device where they were started (its token).
- */
+/** Main menu panel with the latest games of the player and a link to the full history. */
 export default function RecentGames() {
-  const { getRecentGames } = useGames()
-  const { data: games, loading } = useLoadingData(getRecentGames, [getRecentGames], [])
+  const { getGames } = useGames()
+  const loadRecent = useCallback(() => getGames(0, RECENT_GAMES), [getGames])
+  const { data, loading } = useLoadingData(loadRecent, [loadRecent], { items: [], hasMore: false })
 
   return (
     <GamePanel className="recent-games" title="Últimas partidas" accent="cyan">
       {loading && <p className="empty">Cargando...</p>}
-      {!loading && games.length === 0 && <p className="empty">Todavía no jugaste ninguna partida. ¡Arrancá!</p>}
+      {!loading && data.items.length === 0 && <p className="empty">Todavía no jugaste ninguna partida. ¡Arrancá!</p>}
       <ul className="list">
-        {games.map((game) => {
-          const finished = game.status === GameStatus.FINISHED
-          const resumable = !finished && hasGameSession(game.id)
-          const content = (
-            <>
-              <div className="info">
-                <span className="mode">{getGameModeConfig(game.mode).name}</span>
-                <span className="date">{dateFormatter.format(new Date(game.createdAt))}</span>
-              </div>
-              {finished && <span className="score">{formatScore(game.totalScore)}</span>}
-              {resumable && (
-                <span className="resume">
-                  Seguir ({game.playedRounds}/{game.roundsCount})
-                </span>
-              )}
-              {!finished && !resumable && <span className="unfinished">Sin terminar</span>}
-            </>
-          )
-
-          return (
-            <li key={game.id}>
-              {finished || resumable ? (
-                <Link href={finished ? `/game/${game.id}/summary` : `/game/${game.id}`} className="item">
-                  {content}
-                  <ChevronRightIcon className="chevron" />
-                </Link>
-              ) : (
-                <div className="item disabled">{content}</div>
-              )}
-            </li>
-          )
-        })}
+        {data.items.map((game) => (
+          <li key={game.id}>
+            <GameListRow game={game} />
+          </li>
+        ))}
       </ul>
+      {data.items.length > 0 && (
+        <Link href="/games" className="text-link see-all">
+          Ver todas mis partidas →
+        </Link>
+      )}
     </GamePanel>
   )
 }

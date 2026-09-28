@@ -7,7 +7,9 @@ import { DB, Schema } from '@neogroup/neorm'
  * PostgreSQL in production and to SQLite in tests):
  *
  *   - users / email_verification_tokens / password_reset_tokens → authentication
- *   - places          → playable areas (a circle or a GeoJSON polygon) per game mode
+ *   - quests          → the game modes shown in the main menu (rounds, time per round, image)
+ *   - places          → playable areas (a circle or a GeoJSON polygon)
+ *   - quest_place     → which places each quest draws its rounds from (many-to-many)
  *   - place_locations → small cache of street-level images already found inside a place
  *   - games           → one row per game: progress and final score (the history)
  *
@@ -20,8 +22,7 @@ import { DB, Schema } from '@neogroup/neorm'
  * `jsonb` column (TEXT on SQLite): a circle (Point + `radius` in meters) or a
  * Polygon — see app/(protected)/(game)/models/PlaceGeometry.ts. No PostGIS, so
  * the schema stays portable; the geometry math lives in utils/geo.ts.
- * Enum-like columns (`mode`, `status`) are INTEGERs mapped to the numeric enums
- * GameMode and GameStatus.
+ * `games.status` is an INTEGER mapped to the GameStatus enum.
  */
 export default {
   name: '001-create-base-tables',
@@ -58,18 +59,39 @@ export default {
         table.foreign('userId').references('id').on('users').cascadeOnDelete()
       })
 
+      await Schema.createIfNotExists('quests', (table) => {
+        table.increments('id')
+        table.string('name', 120)
+        table.text('description')
+        // Rounds of every game of the quest.
+        table.smallInteger('rounds')
+        // Time limit of each round, in minutes. Null = no time limit.
+        table.smallInteger('time').nullable()
+        // Image of the quest card in the main menu (a path under /public or an absolute URL).
+        table.string('image', 255).nullable()
+        table.boolean('enabled').default(true)
+        table.timestamp('createdAt').useCurrent()
+      })
+
       await Schema.createIfNotExists('places', (table) => {
         table.increments('id')
         table.string('name', 120)
         table.char('countryCode', 2)
-        table.integer('mode')
         // GeoJSON geometry of the area: { type: 'Point', coordinates: [lng, lat], radius: meters }
         // for a circle, or { type: 'Polygon', coordinates: [[[lng, lat], ...]] }.
         table.jsonb('geometry')
         table.boolean('enabled').default(true)
         table.timestamp('createdAt').useCurrent()
+      })
 
-        table.index('mode', 'idx_places_mode')
+      await Schema.createIfNotExists('quest_place', (table) => {
+        table.integer('questId')
+        table.integer('placeId')
+
+        table.primary(['questId', 'placeId'])
+        table.index('placeId', 'idx_quest_place_place')
+        table.foreign('questId').references('id').on('quests').cascadeOnDelete()
+        table.foreign('placeId').references('id').on('places').cascadeOnDelete()
       })
 
       await Schema.createIfNotExists('place_locations', (table) => {
@@ -88,17 +110,22 @@ export default {
       await Schema.createIfNotExists('games', (table) => {
         table.increments('id')
         table.integer('userId')
-        table.smallInteger('mode')
+        table.integer('questId')
         table.smallInteger('status')
         table.smallInteger('roundsCount')
         // Rounds already guessed. The next token accepted must be for round playedRounds + 1.
         table.smallInteger('playedRounds').default(0)
         table.integer('totalScore').default(0)
+        // When the current round was shown to the player (timed quests): the
+        // server measures the time limit from here, so reloading the page or
+        // replaying a token can't restart the clock. Reset after every guess.
+        table.timestamp('roundStartedAt').nullable()
         table.timestamp('createdAt').useCurrent()
         table.timestamp('finishedAt').nullable()
 
         table.index(['userId', 'id'], 'idx_games_user')
         table.foreign('userId').references('id').on('users').cascadeOnDelete()
+        table.foreign('questId').references('id').on('quests').cascadeOnDelete()
       })
     })
   }

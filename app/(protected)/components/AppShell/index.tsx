@@ -1,6 +1,7 @@
 'use client'
 
 import './index.scss'
+import HistoryIcon from '@mui/icons-material/History'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports'
@@ -21,7 +22,7 @@ import PlayerAvatar from '@/app/components/PlayerAvatar'
 
 const NAV_ITEMS = [
   { href: '/home', label: 'Jugar', icon: <SportsEsportsIcon /> },
-  { href: '/account', label: 'Mi perfil', icon: <PersonIcon /> }
+  { href: '/games', label: 'Mis partidas', icon: <HistoryIcon /> }
 ]
 
 /**

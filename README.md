@@ -2,7 +2,7 @@
 
 Versión gratuita de un juego tipo *GeoGuessr*: aparecés en una calle de algún lugar del mundo y tenés que adivinar dónde estás marcando un punto en el mapa. Cuanto más cerca, más puntos.
 
-Por ahora hay un solo modo de juego, **Ciudades del mundo**: 5 rondas en 20 grandes ciudades (hasta 5.000 puntos por ronda, 25.000 por partida).
+Los modos de juego (*quests*) se cargan en la base de datos. Por ahora hay uno, **Ciudades del mundo**: 5 rondas de 2 minutos en 20 grandes ciudades (hasta 5.000 puntos por ronda, 25.000 por partida).
 
 ## Tech stack
 
@@ -90,7 +90,7 @@ tests/                    Tests (Vitest)
 app/(protected)/
   components/AppShell/    Barra superior (y tab bar en celulares) de las páginas autenticadas
   stores/users.ts         Store con el usuario logueado
-  (home)/                 Menú principal: modos de juego y últimas partidas
+  (home)/                 Menú principal: los quests (modos de juego) y últimas partidas
   (game)/                 ⭐ Módulo core del juego (ver abajo)
   (account)/              Perfil del jugador (nombre, estadísticas)
 ```
@@ -120,9 +120,9 @@ Mismo contrato que TeamUp: siempre `POST` con body JSON, nombre `verbNoun` (`/ap
 Toda la lógica principal del juego vive en este módulo:
 
 ```
-models/     Place, PlaceLocation, Game (entidades) · GameMode (catálogo de modos + puntaje)
+models/     Quest, Place, PlaceLocation, Game (entidades) · QuestView (tarjeta del menú)
             GameState (estado completo, viaja cifrado) · GameView / RoundView (lo que ve el cliente)
-services/   places.ts     lugares habilitados de un modo
+services/   quests.ts     quests del menú y lugares de cada quest (quest_place)
             locations.ts  rutina que obtiene una imagen aleatoria dentro de un lugar
             games.ts      crear partida, registrar respuestas, puntaje, historial, estadísticas
             gameTokens.ts cifrado / descifrado del estado de la partida (AES-256-GCM)
@@ -131,14 +131,39 @@ utils/      geo.ts        haversine, puntos aleatorios en círculo/polígono, bo
             score.ts      fórmula de puntaje y formateos
             gameStorage.ts partidas guardadas en el navegador (localStorage)
 components/ StreetView (MapillaryJS), GuessMap / ResultMap (MapLibre), GuessPanel, RoundHud,
-            RoundResult, GameSummary, GameModeCard, RecentGames
-(api)/api/  startGame, getGame, submitGuess, getGameResult, getRecentGames
-(pages)/    /game/[id] (jugar) · /game/[id]/summary (resumen)
+            RoundTimer, RoundResult, GameSummary, QuestCard, RecentGames, MyGames, GameListRow
+(api)/api/  startGame, getGame, startRound, submitGuess, getGameResult, getGames
+(pages)/    /game/[id] (jugar) · /game/[id]/summary (resumen) · /games (Mis partidas)
 ```
+
+### Quests (modos de juego)
+
+Cada modo de juego es una fila de `quests`:
+
+| Columna | |
+| --- | --- |
+| `name`, `description` | Lo que muestra la tarjeta del menú principal |
+| `rounds` | Cantidad de rondas de cada partida |
+| `time` | Tiempo por ronda en **minutos**; `null` = sin límite |
+| `image` | Imagen de la tarjeta: ruta bajo `/public` (p. ej. `/quests/ciudades-del-mundo.png`) o URL absoluta; sin imagen se dibuja una ilustración por defecto |
+| `enabled` | Para ocultar un quest sin borrarlo |
+
+Los lugares de cada quest se asocian en la tabla `quest_place` (`questId`, `placeId`): un mismo lugar puede estar en varios quests. El menú principal (`services/quests.ts` → `getQuests`) muestra todos los quests habilitados que tengan al menos un lugar habilitado.
+
+**Agregar un quest:** una migración que inserte la fila en `quests`, sus lugares en `places` (si no existen) y las filas de `quest_place`. Ver `002-seed-world-cities`.
+
+### Tiempo por ronda
+
+Cuando el quest tiene `time`, el tiempo lo controla el **servidor**:
+
+1. Al mostrar cada ronda el cliente llama a `/api/startRound`, que guarda la hora de inicio en `games.roundStartedAt`. Es idempotente: si se recarga la página, la ronda conserva su hora de inicio original (no se gana tiempo).
+2. El cliente muestra la cuenta regresiva (`RoundTimer`, en rojo los últimos 10 s) a partir del tiempo restante que informa el servidor.
+3. Al llegar a 0, el cliente envía automáticamente el pin marcado (o ninguno).
+4. En `/api/submitGuess`, una respuesta que llega después del límite (más 5 s de tolerancia por la latencia) o sin pin vale **0 puntos** y la ronda queda como "¡Se acabó el tiempo!".
 
 ### Lugares (`places`)
 
-Cada lugar pertenece a un modo de juego y define su área en una sola columna `geometry` (`jsonb`) con una **geometría GeoJSON** (RFC 7946, coordenadas `[longitud, latitud]`):
+Cada lugar define su área en una sola columna `geometry` (`jsonb`) con una **geometría GeoJSON** (RFC 7946, coordenadas `[longitud, latitud]`):
 
 ```jsonc
 // Círculo: GeoJSON no tiene círculos, así que es un Point (centro) + `radius` en metros
@@ -155,7 +180,7 @@ Cada lugar pertenece a un modo de juego y define su área en una sola columna `g
 2. Se le piden a Mapillary las imágenes alrededor del punto; se prefieren las panorámicas 360° y, entre ellas, la más cercana al punto (descartando las que caen fuera de la geometría).
 3. Si no hay imágenes se reintenta con otro punto y un radio cada vez mayor (250 m, 500 m, 1 km, 2 km, 3 km, 3 km — siempre dentro del límite de 0,01°² de Mapillary).
 
-`startGame` (`planRounds` en `services/games.ts`) baraja los lugares y busca las 5 ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
+`startGame` (`planRounds` en `services/games.ts`) baraja los lugares del quest y busca las ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
 
 **Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada imagen encontrada en vivo se guarda ahí, pero sólo se *lee* si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Mapillary falla o limita la búsqueda), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada imagen nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria. (Si Mapillary está caído del todo la caché tampoco alcanza, porque el visor también descarga las imágenes de Mapillary.)
 
@@ -175,14 +200,11 @@ Para que la base (Supabase free) sea lo más chica posible, **las rondas no se g
 puntos = 5000 · e^(−distancia / 15 km)      (5000 si la distancia es ≤ 25 m)
 ```
 
-La ciudad no se revela hasta responder: acertar la ciudad ya da muchos puntos (a 3 km ≈ 4.100) y la precisión dentro de ella completa los 5.000; una ciudad equivocada da prácticamente 0. Los parámetros están por modo en `GAME_MODES` (`models/GameMode.ts`).
+La ciudad no se revela hasta responder: acertar la ciudad ya da muchos puntos (a 3 km ≈ 4.100) y la precisión dentro de ella completa los 5.000; una ciudad equivocada da prácticamente 0. Los parámetros están en `SCORE_SETTINGS` (`utils/score.ts`) y son los mismos para todos los quests.
 
-### Agregar un modo de juego
+### Mis partidas
 
-1. Agregar el valor a `GameMode` y su configuración a `GAME_MODES` (nombre, descripción, rondas, curva de puntaje).
-2. Cargar sus lugares con una migración (`places.mode = <nuevo modo>`).
-
-El menú principal muestra automáticamente una tarjeta por modo.
+La página `/games` (menú principal → "Mis partidas") lista todas las partidas del jugador, de la más nueva a la más vieja, de a 20 (`/api/getGames`): quest, fecha, puntaje, estrellas y estado. Las terminadas abren su resumen; las que están en curso se pueden seguir sólo desde el dispositivo donde empezaron. El perfil (nombre y estadísticas) sigue disponible desde el menú del usuario.
 
 ## Diseño (look & feel de videojuego)
 
@@ -202,4 +224,4 @@ yarn test
 ```
 
 - `tests/unit` — geometría, puntaje, elección de imágenes y el cliente de Mapillary (con `fetch` falso).
-- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un proveedor de imágenes falso y las migraciones reales: partida de 5 rondas, tokens cifrados (reutilización, modificación, otro usuario), limpieza de partidas abandonadas y límite de la caché.
+- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un proveedor de imágenes falso y las migraciones reales: quests y sus lugares, partida completa, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), tokens cifrados (reutilización, modificación, otro usuario), historial paginado, limpieza de partidas abandonadas y caché.

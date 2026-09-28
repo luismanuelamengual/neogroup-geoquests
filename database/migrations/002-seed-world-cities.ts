@@ -1,7 +1,8 @@
 import { DB } from '@neogroup/neorm'
 
 /**
- * Seeds the 20 places of the "Ciudades del mundo" game mode (GameMode.WORLD_CITIES = 1).
+ * Seeds the "Ciudades del mundo" quest (5 rounds, 2 minutes per round) and its
+ * 20 places, linked through `quest_place`.
  *
  * Each place gets a GeoJSON `geometry` (see models/PlaceGeometry.ts). Most
  * cities are a circle (center + radius covering the urban core); three of them
@@ -10,9 +11,15 @@ import { DB } from '@neogroup/neorm'
  * falling on water or parks are simply discarded by the location finder when no
  * street-level image is found there.
  *
- * Idempotent: skipped when the mode already has places.
+ * Idempotent: skipped when the quest already exists.
  */
-const WORLD_CITIES_MODE = 1
+const QUEST = {
+  name: 'Ciudades del mundo',
+  description: 'Aparecés en una calle de una de 20 grandes ciudades. ¿Sabés cuál es y dónde estás?',
+  rounds: 5,
+  time: 2,
+  image: '/quests/ciudades-del-mundo.png'
+}
 
 interface SeedPlace {
   name: string
@@ -103,20 +110,32 @@ export default {
   name: '002-seed-world-cities',
 
   async up(): Promise<void> {
-    const existing = await DB.table('places').where('mode', WORLD_CITIES_MODE).first()
-
-    if (existing) {
+    if (await DB.table('quests').where('name', QUEST.name).first()) {
       return
     }
 
-    await DB.table('places').insert(
-      PLACES.map((place) => ({
-        name: place.name,
-        countryCode: place.countryCode,
-        mode: WORLD_CITIES_MODE,
-        geometry: JSON.stringify(place.geometry),
-        enabled: true
-      }))
-    )
+    await DB.transaction(async () => {
+      await DB.table('quests').insert({ ...QUEST, enabled: true })
+
+      const quest = await DB.table('quests').where('name', QUEST.name).first()
+
+      await DB.table('places').insert(
+        PLACES.map((place) => ({
+          name: place.name,
+          countryCode: place.countryCode,
+          geometry: JSON.stringify(place.geometry),
+          enabled: true
+        }))
+      )
+
+      const places = await DB.table('places')
+        .whereIn(
+          'name',
+          PLACES.map((place) => place.name)
+        )
+        .get()
+
+      await DB.table('quest_place').insert(places.map((place) => ({ questId: quest!.id, placeId: place.id })))
+    })
   }
 }

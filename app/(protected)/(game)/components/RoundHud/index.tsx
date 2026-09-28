@@ -8,25 +8,31 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { getGameModeConfig } from '@/app/(protected)/(game)/models/GameMode'
+import { ReactNode, useState } from 'react'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 
-/** Heads-up display of the play screen: exit, mode, round counter and total score. */
-export default function RoundHud({ game, roundNumber }: { game: GameView; roundNumber: number }) {
+interface RoundHudProps {
+  game: GameView
+  roundNumber: number
+  /** Countdown of the round (timed quests). */
+  timer?: ReactNode
+}
+
+/** Heads-up display of the play screen: exit, quest, round countdown, round counter and total score. */
+export default function RoundHud({ game, roundNumber, timer }: RoundHudProps) {
   const router = useRouter()
   const [confirmExit, setConfirmExit] = useState(false)
-  const mode = getGameModeConfig(game.mode)
 
   return (
     <div className="round-hud">
       <IconButton className="exit" onClick={() => setConfirmExit(true)} aria-label="Salir de la partida">
         <CloseIcon />
       </IconButton>
-      <div className="chip mode">{mode.name}</div>
+      <div className="chip quest">{game.questName}</div>
       <div className="spacer" />
+      {timer}
       <div className="chip round">
         <span className="caption">Ronda</span>
         <span className="value">
@@ -39,7 +45,10 @@ export default function RoundHud({ game, roundNumber }: { game: GameView; roundN
       </div>
       <Dialog open={confirmExit} onClose={() => setConfirmExit(false)}>
         <DialogTitle>¿Salir de la partida?</DialogTitle>
-        <DialogContent>La partida queda guardada: podés retomarla desde el menú principal.</DialogContent>
+        <DialogContent>
+          La partida queda guardada: podés retomarla desde el menú principal. Si la ronda tiene tiempo, el reloj sigue
+          corriendo.
+        </DialogContent>
         <DialogActions sx={{ gap: 1, p: 2 }}>
           <GameButton color="ghost" size="small" onClick={() => setConfirmExit(false)}>
             Seguir jugando

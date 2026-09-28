@@ -1,5 +1,3 @@
-import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
-
 /** One round inside the encrypted game token (see services/gameTokens.ts). */
 export interface GameStateRound {
   placeName: string
@@ -7,11 +5,13 @@ export interface GameStateRound {
   imageId: string
   latitude: number
   longitude: number
-  /** Set once the round was guessed. */
+  /** Set once the round was played. */
   guessLatitude?: number
   guessLongitude?: number
   distanceMeters?: number
   score?: number
+  /** True when the time ran out (the round scores 0). */
+  timedOut?: boolean
 }
 
 /**
@@ -21,9 +21,12 @@ export interface GameStateRound {
  */
 export interface GameState {
   /** Payload format version. */
-  v: 1
+  v: 2
   gameId: number
   userId: number
-  mode: GameMode
+  questId: number
+  questName: string
+  /** Time limit of each round in seconds, copied from the quest when the game started (null = no limit). */
+  timeLimitSeconds: number | null
   rounds: GameStateRound[]
 }

@@ -1,13 +1,13 @@
 'use client'
 
 import './index.scss'
-import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
+import QuestCard from '@/app/(protected)/(game)/components/QuestCard'
 import RecentGames from '@/app/(protected)/(game)/components/RecentGames'
-import { GAME_MODES } from '@/app/(protected)/(game)/models/GameMode'
+import { QuestView } from '@/app/(protected)/(game)/models/QuestView'
 import InstallAppBanner from '@/app/(pwa)/components/InstallAppBanner'
 
-/** Main menu: greeting, install banner, the playable modes and the latest games. */
-export default function HomeMenu({ playerName }: { playerName: string }) {
+/** Main menu: greeting, install banner, every quest (game mode) and the latest games. */
+export default function HomeMenu({ playerName, quests }: { playerName: string; quests: QuestView[] }) {
   return (
     <div className="home-menu">
       <InstallAppBanner />
@@ -17,9 +17,10 @@ export default function HomeMenu({ playerName }: { playerName: string }) {
       </section>
       <div className="layout">
         <section className="modes">
-          {Object.values(GAME_MODES).map((mode) => (
-            <GameModeCard key={mode.mode} mode={mode} />
+          {quests.map((quest) => (
+            <QuestCard key={quest.id} quest={quest} />
           ))}
+          {quests.length === 0 && <p className="no-quests">Todavía no hay modos de juego disponibles.</p>}
         </section>
         <aside className="side">
           <RecentGames />

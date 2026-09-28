@@ -41,13 +41,19 @@ export default function RoundResult({ round, maxRoundScore, isLastRound, onConti
     <div className="round-result">
       {mapPadding && <ResultMap pairs={pairs} className="map" padding={mapPadding} />}
       <GamePanel ref={panelRef} className="panel" title={`Ronda ${round.roundNumber}`} accent="cyan">
-        <div className="verdict">{getRoundVerdict(score, maxRoundScore)}</div>
+        <div className="verdict">{round.timedOut ? '¡Se acabó el tiempo!' : getRoundVerdict(score, maxRoundScore)}</div>
         <div className="place">
           <span className="flag">{countryFlag(round.countryCode)}</span>
           <span>{round.placeName}</span>
         </div>
         <div className="distance">
-          Tu marca quedó a <strong>{formatDistance(round.distanceMeters ?? 0)}</strong> del lugar
+          {round.distanceMeters != null ? (
+            <>
+              Tu marca quedó a <strong>{formatDistance(round.distanceMeters)}</strong> del lugar
+            </>
+          ) : (
+            'No llegaste a marcar un lugar a tiempo'
+          )}
         </div>
         <div className="score">
           <span className="value">{formatScore(animatedScore)}</span>

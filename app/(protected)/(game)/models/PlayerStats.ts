@@ -3,5 +3,4 @@ export interface PlayerStats {
   gamesPlayed: number
   bestScore: number
   averageScore: number
-  maxScore: number
 }
