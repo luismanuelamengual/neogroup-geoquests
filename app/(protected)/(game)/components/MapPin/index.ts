@@ -8,12 +8,15 @@ export type MapPinVariant = 'guess' | 'target'
  */
 export function createMapPinElement(variant: MapPinVariant, label?: string): HTMLElement {
   const element = document.createElement('div')
+  const body = document.createElement('div')
   const head = document.createElement('div')
 
   element.className = `map-pin variant-${variant}`
   head.className = 'head'
   head.textContent = label ?? (variant === 'target' ? '★' : '')
-  element.appendChild(head)
+  body.className = 'body'
+  body.appendChild(head)
+  element.appendChild(body)
 
   return element
 }
