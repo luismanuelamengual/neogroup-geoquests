@@ -1,4 +1,8 @@
 .install-alert-banner {
   align-items: center;
   border: 3px solid var(--color-cyan-dark);
+
+  .install-button {
+    transform: translate(0px, -4px);
+  }
 }

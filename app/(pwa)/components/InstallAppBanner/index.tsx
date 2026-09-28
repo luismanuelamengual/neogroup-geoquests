@@ -51,7 +51,7 @@ export default function InstallAppBanner() {
       icon={<GetAppIcon fontSize="inherit" />}
       action={
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Button color="secondary" variant="contained" size="small" onClick={promptInstall}>
+          <Button className="install-button" color="secondary" variant="contained" size="small" onClick={promptInstall}>
             Instalar
           </Button>
           <IconButton color="inherit" size="small" onClick={dismiss} aria-label="Cerrar">
