@@ -1,8 +1,8 @@
 .street-view {
   // Size of the panel that hides the address card of the embed (top-left).
   // Tune these if Google changes the card.
-  --cover-width: 340px;
-  --cover-height: 112px;
+  --cover-width: 300px;
+  --cover-height: 78px;
 
   position: absolute;
   inset: 0;
@@ -49,7 +49,11 @@
 
 @media (max-width: 600px) {
   .street-view {
-    --cover-width: min(300px, 82vw);
-    --cover-height: 100px;
+    --cover-width: 100%;
+    --cover-height: 78px;
+
+    .address-cover {
+      border-radius: unset;
+    }
   }
 }
