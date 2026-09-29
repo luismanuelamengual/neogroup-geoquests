@@ -3,8 +3,8 @@
  * Seeds demo data for local development: a verified demo user that can sign in
  * with email and password right away (no verification mail needed).
  *
- * The playable places ("Ciudades del mundo") are NOT seeded here — they are
- * part of the schema data and live in migration 002-seed-world-cities.
+ * The quests and their places are NOT seeded here — they are
+ * part of the schema data and live in migration 002-seed-quests.
  *
  * Usage: yarn db:seed
  */

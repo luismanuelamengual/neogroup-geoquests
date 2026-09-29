@@ -1,11 +1,14 @@
 import { BaseEntity, BelongsTo, Column, Entity } from '@neogroup/neorm'
+import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { Quest } from '@/app/(protected)/(game)/models/Quest'
 
 /**
- * A game played by a user. Only its progress and final score are stored: the
- * rounds themselves (images, answers, guesses) live in the encrypted game
- * token the player keeps (see services/gameTokens.ts).
+ * A game of any mode. The columns are the ones every mode shares (and the
+ * ones that are filtered or indexed); everything particular to the mode —
+ * rounds, answers, guesses, clocks — lives in `data`, which only the engine of
+ * the mode reads and writes (see services/gameModes.ts). The players are in
+ * `game_players` (GamePlayer).
  */
 @Entity({ table: 'games' })
 export class Game extends BaseEntity {
@@ -13,39 +16,44 @@ export class Game extends BaseEntity {
   id!: number
 
   @Column({ cast: 'number' })
-  userId!: number
+  mode!: GameMode
 
   @Column({ cast: 'number' })
-  questId!: number
+  questId!: number | null
 
   @Column({ cast: 'number' })
   status!: GameStatus
 
+  /** Invitation code of multiplayer games (null for single player games and once the game ends). */
+  @Column()
+  code!: string | null
+
   @Column({ cast: 'number' })
-  roundsCount!: number
+  hostUserId!: number | null
 
   /**
-   * Rounds already guessed. A token is only accepted when it carries exactly
-   * this many guessed rounds, so an old token can't be replayed to re-guess.
+   * Increased on every write. Updates are conditional on it (optimistic
+   * locking: several players may act at the same time) and clients poll with
+   * it to know whether something changed.
    */
   @Column({ cast: 'number' })
-  playedRounds!: number
+  version!: number
 
-  @Column({ cast: 'number' })
-  totalScore!: number
-
-  /**
-   * When the current round was shown to the player (timed quests only). The
-   * time limit is measured from here, server side. Reset after every guess.
-   */
-  @Column({ cast: 'date' })
-  roundStartedAt!: Date | null
+  /** State of the game mode. Never sent to the browser as is (see GameModeEngine.toView). */
+  @Column({ cast: 'json' })
+  data!: unknown
 
   @Column({ cast: 'date' })
   createdAt!: Date
 
   @Column({ cast: 'date' })
+  startedAt!: Date | null
+
+  @Column({ cast: 'date' })
   finishedAt!: Date | null
+
+  @Column({ cast: 'date' })
+  updatedAt!: Date
 
   @BelongsTo(() => Quest, 'questId')
   quest?: Quest

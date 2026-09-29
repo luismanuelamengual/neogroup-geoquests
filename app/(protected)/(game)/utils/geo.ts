@@ -178,6 +178,20 @@ export function isPointInGeometry(point: LatLng, geometry: PlaceGeometry, tolera
   return isPointInPolygon(point, geometry)
 }
 
+/** Size of a place geometry (meters): the diameter of a circle, the diagonal of a polygon's bounding box. */
+export function getGeometrySizeMeters(geometry: PlaceGeometry): number {
+  if (isCircleGeometry(geometry)) {
+    return geometry.radius * 2
+  }
+
+  const box = polygonBoundingBox(geometry)
+
+  return haversineDistance(
+    { latitude: box.minLatitude, longitude: box.minLongitude },
+    { latitude: box.maxLatitude, longitude: box.maxLongitude }
+  )
+}
+
 /** Random position inside a place geometry (circle or polygon). */
 export function randomPointInGeometry(geometry: PlaceGeometry, random: RandomFn = Math.random): LatLng {
   assertValidGeometry(geometry)

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import GamePlay from '@/app/(protected)/(game)/components/GamePlay'
+import GameScreen from '@/app/(protected)/(game)/components/GameScreen'
 
-export const metadata: Metadata = { title: 'Jugando' }
+export const metadata: Metadata = { title: 'Partida' }
 
 export default async function GamePage({ params }: { params: Promise<{ id: string }> }) {
   const gameId = Number((await params).id)
@@ -11,5 +11,5 @@ export default async function GamePage({ params }: { params: Promise<{ id: strin
     notFound()
   }
 
-  return <GamePlay gameId={gameId} />
+  return <GameScreen gameId={gameId} />
 }

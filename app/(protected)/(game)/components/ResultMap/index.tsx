@@ -8,10 +8,18 @@ import { createMapPinElement } from '@/app/(protected)/(game)/components/MapPin'
 import { useMapLibre } from '@/app/(protected)/(game)/hooks/useMapLibre'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 
+/** A guess pin of a result: where it is, and optionally its own label and color (e.g. a player's). */
+export interface ResultGuess {
+  position: LatLng
+  label?: string
+  color?: string
+}
+
+/** A real location and the guesses made for it (one in single player games, one per player in multiplayer). */
 export interface ResultPair {
   location: LatLng
-  guess: LatLng | null
-  /** Text inside the pins (e.g. the round number). */
+  guesses: ResultGuess[]
+  /** Text inside the pins (e.g. the round number); a guess may have its own. */
   label?: string
 }
 
@@ -19,8 +27,9 @@ const SOURCE_ID = 'result-lines'
 const DEFAULT_PADDING: PaddingOptions = { top: 70, bottom: 50, left: 50, right: 50 }
 
 /**
- * Map revealing the answers: the real location (gold pin), the player's guess
- * (magenta pin) and a dashed line between them, framed to show every pair.
+ * Map revealing the answers: the real location (gold pin), the guesses
+ * (magenta pins, or each player's color) and a dashed line from each guess to
+ * its location, framed to show every pin.
  */
 interface ResultMapProps {
   pairs: ResultPair[]
@@ -48,19 +57,19 @@ export default function ResultMap({ pairs, className, padding = DEFAULT_PADDING 
 
       const lines = {
         type: 'FeatureCollection' as const,
-        features: pairs
-          .filter((pair) => pair.guess)
-          .map((pair) => ({
+        features: pairs.flatMap((pair) =>
+          pair.guesses.map((guess) => ({
             type: 'Feature' as const,
             properties: {},
             geometry: {
               type: 'LineString' as const,
               coordinates: [
-                [pair.guess!.longitude, pair.guess!.latitude],
+                [guess.position.longitude, guess.position.latitude],
                 [pair.location.longitude, pair.location.latitude]
               ]
             }
           }))
+        )
       }
       const source = map.getSource(SOURCE_ID) as GeoJSONSource | undefined
 
@@ -92,13 +101,15 @@ export default function ResultMap({ pairs, className, padding = DEFAULT_PADDING 
         )
         bounds.extend([pair.location.longitude, pair.location.latitude])
 
-        if (pair.guess) {
+        for (const guess of pair.guesses) {
+          const element = createMapPinElement('guess', guess.label ?? pair.label, guess.color)
+
           markers.push(
-            new maplibregl.Marker({ element: createMapPinElement('guess', pair.label), anchor: 'bottom' })
-              .setLngLat([pair.guess.longitude, pair.guess.latitude])
+            new maplibregl.Marker({ element, anchor: 'bottom' })
+              .setLngLat([guess.position.longitude, guess.position.latitude])
               .addTo(map)
           )
-          bounds.extend([pair.guess.longitude, pair.guess.latitude])
+          bounds.extend([guess.position.longitude, guess.position.latitude])
         }
       }
 

@@ -1,13 +1,11 @@
-/** A quest as shown in the main menu. */
+import { QuestModeView } from '@/app/(protected)/(game)/models/QuestModeView'
+
+/** A quest as shown in the main menu, with the game modes it offers. */
 export interface QuestView {
   id: number
   name: string
   description: string
-  rounds: number
-  /** Time limit of each round, in seconds (null = no limit). */
-  time: number | null
   image: string | null
   placesCount: number
-  /** Best possible score of a game (rounds × max score per round). */
-  maxScore: number
+  modes: QuestModeView[]
 }

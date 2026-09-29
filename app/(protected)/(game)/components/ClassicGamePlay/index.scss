@@ -1,0 +1,9 @@
+// Immersive: the play screen covers the whole viewport, app bar included.
+.classic-game-play {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  overflow: hidden;
+  background: var(--color-night);
+  touch-action: none;
+}

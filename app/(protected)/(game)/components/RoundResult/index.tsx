@@ -6,7 +6,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ResultMap, { ResultPair } from '@/app/(protected)/(game)/components/ResultMap'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
-import { RoundView } from '@/app/(protected)/(game)/models/GameView'
+import { RoundView } from '@/app/(protected)/(game)/models/RoundView'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatDistance, formatScore, getRoundVerdict } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
@@ -26,7 +26,8 @@ export default function RoundResult({ round, maxRoundScore, isLastRound, onConti
   const panelRef = useRef<HTMLDivElement>(null)
   const [mapPadding, setMapPadding] = useState<PaddingOptions | null>(null)
   const pairs = useMemo<ResultPair[]>(
-    () => (round.location ? [{ location: round.location, guess: round.guess }] : []),
+    () =>
+      round.location ? [{ location: round.location, guesses: round.guess ? [{ position: round.guess }] : [] }] : [],
     [round.location, round.guess]
   )
 

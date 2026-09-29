@@ -1,0 +1,142 @@
+.multiplayer-lobby {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 44px 16px calc(40px + var(--safe-bottom));
+
+  .loading {
+    position: fixed;
+    z-index: 1400;
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .quest {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .rules {
+    margin-top: -8px;
+    color: var(--color-text-secondary);
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .code-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px;
+    border: 3px dashed var(--color-panel-border);
+    border-radius: 18px;
+    background: var(--color-night-light);
+
+    .caption {
+      color: var(--color-text-secondary);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .code {
+      color: var(--color-gold);
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 9vw, 2.8rem);
+      letter-spacing: 6px;
+      text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+      user-select: all;
+    }
+  }
+
+  .players-header {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .players {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    background: var(--color-night-light);
+    animation: multiplayer-lobby-join 260ms ease-out;
+
+    .name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .you {
+        color: var(--color-text-secondary);
+        font-weight: 600;
+      }
+    }
+
+    .host {
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--color-gold);
+      color: #111;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .kick {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .waiting {
+    margin: 4px 0;
+    color: var(--color-cyan);
+    font-weight: 800;
+    text-align: center;
+  }
+}
+
+@keyframes multiplayer-lobby-join {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .multiplayer-lobby {
+    padding-top: 32px;
+  }
+}

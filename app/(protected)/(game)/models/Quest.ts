@@ -1,9 +1,10 @@
 import { BaseEntity, Column, Entity } from '@neogroup/neorm'
 
 /**
- * A game mode of the main menu (e.g. "Ciudades del mundo"): how many rounds
- * its games have, the time limit of each round and the places its rounds are
- * drawn from (the `quest_place` table).
+ * A quest of the main menu (e.g. "Ciudades del mundo"): the content of the
+ * games — the places their locations are drawn from (`quest_places`). The
+ * rules (rounds, time limit...) belong to the game modes the quest offers
+ * (`quest_modes`).
  */
 @Entity({ table: 'quests' })
 export class Quest extends BaseEntity {
@@ -15,14 +16,6 @@ export class Quest extends BaseEntity {
 
   @Column()
   description!: string
-
-  /** Rounds of every game of the quest. */
-  @Column({ cast: 'number' })
-  rounds!: number
-
-  /** Time limit of each round, in seconds. Null = no time limit. */
-  @Column({ cast: 'number' })
-  time!: number | null
 
   /** Image of the quest card in the main menu: a path under /public or an absolute URL. */
   @Column()

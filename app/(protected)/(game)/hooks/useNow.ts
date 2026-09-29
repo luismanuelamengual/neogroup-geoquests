@@ -1,0 +1,16 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+
+/** The current time (epoch ms), refreshed every `intervalMs` — for countdowns. */
+export function useNow(intervalMs = 250): number {
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setNow(Date.now()), intervalMs)
+
+    return () => window.clearInterval(interval)
+  }, [intervalMs])
+
+  return now
+}

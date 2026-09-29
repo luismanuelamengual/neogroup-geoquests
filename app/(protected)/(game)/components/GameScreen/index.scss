@@ -1,0 +1,16 @@
+.game-screen-error {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 48px 16px calc(40px + var(--safe-bottom));
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 480px;
+    font-weight: 800;
+    text-align: center;
+  }
+}

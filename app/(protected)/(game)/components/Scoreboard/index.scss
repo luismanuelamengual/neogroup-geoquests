@@ -1,0 +1,82 @@
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  .entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    background: var(--color-night-light);
+    text-align: left;
+
+    &.me {
+      border-color: var(--color-cyan);
+    }
+
+    &.left {
+      opacity: 0.6;
+    }
+
+    &.first .position {
+      color: var(--color-gold);
+    }
+  }
+
+  .position {
+    width: 34px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-display);
+    font-size: 1rem;
+  }
+
+  .avatar {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .name {
+    overflow: hidden;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .left-tag {
+      color: var(--color-text-secondary);
+      font-weight: 600;
+    }
+  }
+
+  .detail {
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+  }
+
+  .round-score {
+    color: var(--color-cyan);
+    font-weight: 800;
+    font-size: 0.85rem;
+  }
+
+  .score {
+    min-width: 64px;
+    color: var(--color-lime);
+    font-family: var(--font-display);
+    text-align: right;
+  }
+}

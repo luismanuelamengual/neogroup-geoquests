@@ -1,0 +1,203 @@
+.classic-game-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 16px calc(40px + var(--safe-bottom));
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+
+    .mode {
+      color: var(--color-text-secondary);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .stars {
+      display: flex;
+      gap: 6px;
+
+      .star {
+        font-size: 3.4rem;
+        color: #2a3366;
+        filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.45));
+
+        &.earned {
+          color: var(--color-gold);
+          animation: star-pop 500ms cubic-bezier(0.2, 0.9, 0.3, 1.6) both;
+
+          &:nth-child(2) {
+            animation-delay: 250ms;
+          }
+
+          &:nth-child(3) {
+            animation-delay: 500ms;
+          }
+        }
+      }
+    }
+
+    .total {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+
+      .value {
+        color: var(--color-lime);
+        font-family: var(--font-display);
+        font-size: clamp(2.6rem, 9vw, 4rem);
+        text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+      }
+
+      .max {
+        color: var(--color-text-secondary);
+        font-weight: 800;
+      }
+    }
+
+    .score-bar {
+      width: min(100%, 520px);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+  }
+
+  .details {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px 24px;
+  }
+
+  .map-panel {
+    display: flex;
+    min-height: 420px;
+
+    .summary-map {
+      flex: 1;
+      border-radius: 14px;
+    }
+  }
+
+  .rounds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .round {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 2px solid var(--color-panel-border);
+    border-radius: 14px;
+    background: var(--color-night-light);
+
+    .number {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      color: #111;
+      font-family: var(--font-display);
+    }
+
+    .info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+
+      .place {
+        overflow: hidden;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .distance {
+        color: var(--color-text-secondary);
+        font-size: 0.85rem;
+      }
+
+      .bar {
+        height: 12px;
+        border-width: 2px;
+      }
+    }
+
+    .score {
+      min-width: 64px;
+      color: var(--color-lime);
+      font-family: var(--font-display);
+      text-align: right;
+    }
+  }
+
+  .rounds-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding: 0 12px;
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .classic-game-summary {
+    gap: 36px;
+    padding-top: 28px;
+
+    .details {
+      grid-template-columns: 1fr;
+    }
+
+    .map-panel {
+      min-height: 320px;
+    }
+
+    .hero .actions {
+      flex-direction: column;
+      width: 100%;
+
+      .game-button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@keyframes star-pop {
+  from {
+    transform: scale(0) rotate(-40deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}

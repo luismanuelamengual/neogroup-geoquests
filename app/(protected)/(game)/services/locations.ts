@@ -1,7 +1,12 @@
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { PlaceLocation } from '@/app/(protected)/(game)/models/PlaceLocation'
 import { Panorama, PanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
-import { isPointInGeometry, RandomFn, randomPointInGeometry } from '@/app/(protected)/(game)/utils/geo'
+import {
+  getGeometrySizeMeters,
+  isPointInGeometry,
+  RandomFn,
+  randomPointInGeometry
+} from '@/app/(protected)/(game)/utils/geo'
 import { pickRandom } from '@/app/(protected)/(game)/utils/random'
 
 /**
@@ -10,6 +15,14 @@ import { pickRandom } from '@/app/(protected)/(game)/utils/random'
  * parks, outskirts) still end up with a live panorama almost every time.
  */
 export const SEARCH_RADII_METERS = [250, 500, 1000, 2000, 3000, 3000]
+/**
+ * Search radius of each attempt in large places (a whole country): a random
+ * point there is usually far from any road, so the search looks much further
+ * around it (and a few more times).
+ */
+export const LARGE_AREA_SEARCH_RADII_METERS = [2000, 5000, 10000, 20000, 30000, 50000, 50000, 50000]
+/** A place whose area spans more than this (meters, across) is a large place. */
+export const LARGE_AREA_MIN_SIZE_METERS = 100_000
 /** Locations kept per place in the fallback cache (bounded database size). */
 export const MAX_CACHED_LOCATIONS_PER_PLACE = 100
 
@@ -72,10 +85,17 @@ async function cacheLocation(place: Place, panorama: Panorama, random: RandomFn 
   }
 }
 
+/** Search radii of the live attempts in a place: wider in large places (see LARGE_AREA_SEARCH_RADII_METERS). */
+export function getSearchRadii(place: Place): number[] {
+  return getGeometrySizeMeters(place.geometry) > LARGE_AREA_MIN_SIZE_METERS
+    ? LARGE_AREA_SEARCH_RADII_METERS
+    : SEARCH_RADII_METERS
+}
+
 /**
  * Looks for a live Street View panorama inside a place: draws a random point
  * inside its geometry, asks Street View for the nearest panorama (with a
- * growing radius, see SEARCH_RADII_METERS) and keeps it if it is usable. Every
+ * growing radius, see getSearchRadii) and keeps it if it is usable. Every
  * panorama found is also stored in the fallback cache.
  */
 export async function findLiveLocation(
@@ -83,7 +103,7 @@ export async function findLiveLocation(
   finder: PanoramaFinder,
   options: FindLocationOptions = {}
 ): Promise<LiveSearchResult> {
-  for (const radius of SEARCH_RADII_METERS) {
+  for (const radius of getSearchRadii(place)) {
     const target = randomPointInGeometry(place.geometry, options.random)
 
     try {

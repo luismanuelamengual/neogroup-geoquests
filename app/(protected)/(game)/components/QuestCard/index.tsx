@@ -1,30 +1,43 @@
 'use client'
 
 import './index.scss'
-import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
+import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { QuestView } from '@/app/(protected)/(game)/models/QuestView'
-import { saveGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
 
-/** Main menu card of a quest: its image, rules and the button that starts a new game. */
-export default function QuestCard({ quest }: { quest: QuestView }) {
+interface QuestCardProps {
+  quest: QuestView
+  /** Game mode chosen by the player: the card shows its rules for this quest and starts a game of it. */
+  mode: GameMode
+}
+
+/** Card of a quest in the quest picker of a game mode: its image, the mode's rules and the button to play it. */
+export default function QuestCard({ quest, mode }: QuestCardProps) {
   const router = useRouter()
-  const { startGame } = useGames()
+  const { createGame } = useGames()
   const [starting, setStarting] = useState(false)
+  const questMode = quest.modes.find((item) => item.mode === mode)
+
+  if (!questMode) {
+    return null
+  }
+
+  const { rounds, timeLimitSeconds } = questMode.settings
+  const multiplayer = questMode.maxPlayers > 1
 
   const handlePlay = async () => {
     setStarting(true)
 
     try {
-      const session = await startGame(quest.id)
+      const game = await createGame(quest.id, mode)
 
-      saveGameSession(session)
-      router.push(`/game/${session.game.id}`)
+      router.push(`/game/${game.id}`)
     } catch {
       setStarting(false)
     }
@@ -32,7 +45,7 @@ export default function QuestCard({ quest }: { quest: QuestView }) {
 
   return (
     <div className="quest-card">
-      {starting && <Loading message="Buscando lugares por el mundo..." />}
+      {starting && <Loading message={multiplayer ? 'Preparando la sala...' : 'Buscando lugares por el mundo...'} />}
       <div className="art" aria-hidden="true">
         {quest.image ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -52,12 +65,22 @@ export default function QuestCard({ quest }: { quest: QuestView }) {
         <h2 className="name">{quest.name}</h2>
         <p className="description">{quest.description}</p>
         <div className="tags">
-          <span className="tag">{quest.rounds} rondas</span>
-          <span className="tag">{quest.time ? `${formatTimeLimit(quest.time)} por ronda` : 'Sin tiempo'}</span>
-          <span className="tag">{quest.placesCount} lugares</span>
+          <span className="tag">{rounds} rondas</span>
+          <span className="tag">
+            {timeLimitSeconds ? `${formatTimeLimit(timeLimitSeconds)} por ronda` : 'Sin tiempo'}
+          </span>
+          {quest.placesCount > 1 && <span className="tag">{quest.placesCount} lugares</span>}
         </div>
-        <GameButton size="large" fullWidth startIcon={<PlayArrowIcon />} loading={starting} onClick={handlePlay}>
-          Jugar
+        <GameButton
+          size="large"
+          fullWidth
+          className="play"
+          color={multiplayer ? 'cyan' : 'gold'}
+          startIcon={<GameModeIcon mode={mode} />}
+          loading={starting}
+          onClick={handlePlay}
+        >
+          {multiplayer ? 'Crear sala' : 'Jugar'}
         </GameButton>
       </div>
     </div>

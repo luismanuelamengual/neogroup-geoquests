@@ -77,9 +77,14 @@
 
   .content {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 12px;
     padding: 20px;
+  }
+
+  .play {
+    margin-top: auto;
   }
 
   .name {

@@ -1,9 +1,13 @@
+import { GetGameInput } from '@/app/(protected)/(game)/models/GetGameInput'
 import { getGame } from '@/app/(protected)/(game)/services/games'
 import { withAuth } from '@/app/utils/api-server'
 
-/** POST /api/getGame — view of a game from its token (answers only for the rounds already played). */
+/**
+ * POST /api/getGame — current view of a game of the signed-in player
+ * ({ gameId, sinceVersion? }); `{ unchanged: true }` when it is still at `sinceVersion`.
+ */
 export const POST = withAuth(async (request, _context, userId) => {
-  const { token } = (await request.json()) as { token: string }
+  const input = (await request.json()) as GetGameInput
 
-  return getGame(userId, token)
+  return getGame(userId, input)
 })

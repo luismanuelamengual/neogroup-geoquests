@@ -1,18 +1,29 @@
 /* eslint-disable */
 import { DB } from '@neogroup/neorm'
 import baseTables from '@/database/migrations/001-create-base-tables'
-import worldCities from '@/database/migrations/002-seed-world-cities'
+import seedQuests from '@/database/migrations/002-seed-quests'
 
-const TABLES = ['games', 'place_locations', 'quest_place', 'places', 'quests', 'password_reset_tokens', 'email_verification_tokens', 'users']
+const TABLES = [
+  'game_players',
+  'games',
+  'place_locations',
+  'quest_modes',
+  'quest_places',
+  'places',
+  'quests',
+  'password_reset_tokens',
+  'email_verification_tokens',
+  'users'
+]
 
-/** Drops every table and re-applies the real migrations (schema + the 20 seeded cities). */
+/** Drops every table and re-applies the real migrations (schema + the seeded quests and cities). */
 export async function resetDatabase(): Promise<void> {
   for (const table of TABLES) {
     await DB.execute(`DROP TABLE IF EXISTS "${table}"`)
   }
 
   await baseTables.up()
-  await worldCities.up()
+  await seedQuests.up()
 }
 
 /** Inserts a verified user and returns its id. */

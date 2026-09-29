@@ -3,7 +3,7 @@ import { PlaceGeometry } from '@/app/(protected)/(game)/models/PlaceGeometry'
 
 /**
  * A playable area (e.g. a city), used by the quests linked to it through the
- * `quest_place` table. Its
+ * `quest_places` table. Its
  * `geometry` (GeoJSON: a circle or a polygon, see PlaceGeometry) is the area
  * the game draws random street-level locations from.
  */

@@ -1,14 +1,18 @@
 import { create } from 'zustand'
-import { GameSession, GameView } from '@/app/(protected)/(game)/models/GameView'
+import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 
 /** Phase of the play screen: looking at the image / placing the pin, or watching the round result. */
 export type PlayPhase = 'guessing' | 'result'
 
 interface GameState {
+  /** The game on screen, as last answered by the server. */
   game: GameView | null
-  /** Encrypted game token: sent with every guess (see services/gameTokens.ts). */
-  token: string | null
+  /**
+   * When `game` was received (epoch ms, this device's clock): the times left
+   * the server reports (countdowns) are relative to this moment.
+   */
+  receivedAt: number
   phase: PlayPhase
   /** Pin placed by the player on the guess map for the current round. */
   guess: LatLng | null
@@ -21,15 +25,13 @@ interface GameState {
    */
   deadline: number | null
   /** Replaces the game (e.g. loaded, or its round started) keeping the pin already placed. */
-  setSession: (session: GameSession) => void
+  setGame: (game: GameView, timeLeftMs?: number | null) => void
   setGuess: (guess: LatLng | null) => void
-  showResult: (session: GameSession, roundNumber: number) => void
-  nextRound: () => void
+  /** Shows the result of a round (after a guess). */
+  showResult: (game: GameView, roundNumber: number) => void
+  /** Closes the result of a round: back to guessing (the next round, or the summary once the game is over). */
+  closeResult: () => void
   reset: () => void
-}
-
-function deadlineOf(game: GameView): number | null {
-  return game.roundTimeLeftMs != null ? Date.now() + game.roundTimeLeftMs : null
 }
 
 /**
@@ -38,15 +40,17 @@ function deadlineOf(game: GameView): number | null {
  */
 export const useGameStore = create<GameState>()((set) => ({
   game: null,
-  token: null,
+  receivedAt: 0,
   phase: 'guessing',
   guess: null,
   resultRoundNumber: null,
   deadline: null,
-  setSession: ({ game, token }) => set({ game, token, deadline: deadlineOf(game) }),
+  setGame: (game, timeLeftMs = null) =>
+    set({ game, receivedAt: Date.now(), deadline: timeLeftMs != null ? Date.now() + timeLeftMs : null }),
   setGuess: (guess) => set({ guess }),
-  showResult: ({ game, token }, roundNumber) =>
-    set({ game, token, phase: 'result', resultRoundNumber: roundNumber, deadline: null }),
-  nextRound: () => set({ phase: 'guessing', guess: null, resultRoundNumber: null, deadline: null }),
-  reset: () => set({ game: null, token: null, phase: 'guessing', guess: null, resultRoundNumber: null, deadline: null })
+  showResult: (game, roundNumber) =>
+    set({ game, receivedAt: Date.now(), phase: 'result', resultRoundNumber: roundNumber, deadline: null }),
+  closeResult: () => set({ phase: 'guessing', guess: null, resultRoundNumber: null, deadline: null }),
+  reset: () =>
+    set({ game: null, receivedAt: 0, phase: 'guessing', guess: null, resultRoundNumber: null, deadline: null })
 }))

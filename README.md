@@ -2,7 +2,7 @@
 
 Versión gratuita de un juego tipo *GeoGuessr*: aparecés en una calle de algún lugar del mundo y tenés que adivinar dónde estás marcando un punto en el mapa. Cuanto más cerca, más puntos.
 
-Los modos de juego (*quests*) se cargan en la base de datos. Por ahora hay uno, **Ciudades del mundo**: 5 rondas de 2 minutos en 20 grandes ciudades (hasta 5.000 puntos por ronda, 25.000 por partida).
+Los *quests* (el contenido: qué lugares del mundo se juegan) y los modos de juego que ofrece cada uno se cargan en la base de datos. Por ahora hay dos modos, **Clásico** (solo) y **Con amigos** (multijugador en vivo, de 2 a 8), y cinco quests: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas) y tres de países, **Argentina**, **España** y **Estados Unidos** (un lugar al azar en cualquier parte del país). Las partidas son de 5 rondas de 2 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
 
 ## Tech stack
 
@@ -56,7 +56,7 @@ El iframe de Google muestra arriba a la izquierda un cartel con la dirección (�
    - **Google OAuth**: en Google Cloud Console crear un OAuth Client (Web) con redirect URI `http://localhost:3000/api/auth/callback/google` (y la del dominio productivo).
    - Sin `RESEND_API_KEY` los mails no se envían: el link de verificación / reseteo se imprime en la consola del servidor.
 
-3. Levantar PostgreSQL local, correr migraciones (crean las tablas y cargan las 20 ciudades) y el seed (usuario demo `demo@geoquests.app` / `demo1234`):
+3. Levantar PostgreSQL local, correr migraciones (crean las tablas y cargan los quests con sus ciudades) y el seed (usuario demo `demo@geoquests.app` / `demo1234`):
 
    ```bash
    yarn db:local:up
@@ -99,7 +99,7 @@ tests/                    Tests (Vitest)
 app/(protected)/
   components/AppShell/    Barra superior (y tab bar en celulares) de las páginas autenticadas
   stores/users.ts         Store con el usuario logueado
-  (home)/                 Menú principal: los quests (modos de juego) y últimas partidas
+  (home)/                 Menú principal: la elección del modo de juego
   (game)/                 ⭐ Módulo core del juego (ver abajo)
   (account)/              Perfil del jugador (nombre, estadísticas)
 ```
@@ -122,53 +122,109 @@ Los imports siempre son absolutos con el alias `@/` (lo exige ESLint).
 
 ### API endpoints
 
-Mismo contrato que TeamUp: siempre `POST` con body JSON, nombre `verbNoun` (`/api/startGame`, `/api/submitGuess`...), respuesta `{ success, data }` / `{ success: false, error: { name, message } }`. Los handlers se envuelven con `withApi` (público) o `withAuth` (requiere sesión, inyecta el `userId`) de `app/utils/api-server.ts`, y los errores se señalizan tirando `ApiException(message, status)`. En el FE, `useRequests()` devuelve `executeRequest<T>(url, payload)`.
+Mismo contrato que TeamUp: siempre `POST` con body JSON (única excepción: `GET /api/cronCleanupGames`, que llama Vercel Cron), nombre `verbNoun` (`/api/createGame`, `/api/sendGameAction`...), respuesta `{ success, data }` / `{ success: false, error: { name, message } }`. Los handlers se envuelven con `withApi` (público) o `withAuth` (requiere sesión, inyecta el `userId`) de `app/utils/api-server.ts`, y los errores se señalizan tirando `ApiException(message, status)`. En el FE, `useRequests()` devuelve `executeRequest<T>(url, payload)`.
 
 ## El módulo de juego — `app/(protected)/(game)`
 
 Toda la lógica principal del juego vive en este módulo:
 
 ```
-models/     Quest, Place, PlaceLocation, Game (entidades) · QuestView (tarjeta del menú)
-            GameState (estado completo, viaja cifrado) · GameView / RoundView (lo que ve el cliente)
-services/   quests.ts     quests del menú y lugares de cada quest (quest_place)
-            locations.ts  rutina que obtiene una imagen aleatoria dentro de un lugar
-            games.ts      crear partida, registrar respuestas, puntaje, historial, estadísticas
-            gameTokens.ts cifrado / descifrado del estado de la partida (AES-256-GCM)
-            streetView.ts búsqueda de panorámicas en Google Street View (Image Metadata)
+models/     Entidades: Quest, QuestMode, QuestPlace, Place, PlaceLocation, Game, GamePlayer
+            Enums: GameMode, GameStatus, GamePlayerStatus, GameOutcome
+            Motor: GameModeEngine, GameModeDefinition, GameContext, GameAction (StartRoundAction, GuessAction...)
+            Estado de cada modo (games.data): ClassicGameData, ClassicGameSettings, GameRound, GameGuess
+            Lo que ve el cliente: GameView (+ ClassicGameView, RoundView), GameListItem, QuestView...
+services/   games.ts           servicio genérico: crear, consultar, acciones, historial, estadísticas
+            gamePersistence.ts lectura / escritura de partidas con bloqueo optimista (games.version)
+            gameModes.ts       registro de modos: GameMode → motor
+            classicMode.ts     motor del modo Clásico
+            classicMultiplayerMode.ts motor del modo Multijugador
+            roundBasedMode.ts  piezas comunes de los modos multijugador por rondas (reloj, presencia, ranking)
+            gameCleanup.ts     limpieza de salas y partidas abandonadas
+            rounds.ts          elección de las rondas de una partida
+            quests.ts          modos y quests del menú, sus lugares (quest_places) y sus modos (quest_modes)
+            locations.ts       rutina que obtiene una imagen aleatoria dentro de un lugar
+            streetView.ts      búsqueda de panorámicas en Google Street View (Image Metadata)
 utils/      geo.ts        haversine, puntos aleatorios en círculo/polígono, bounding boxes
+            guesses.ts    evaluación de una respuesta (distancia, puntaje, tiempo agotado)
             score.ts      fórmula de puntaje y formateos
-            gameStorage.ts partidas guardadas en el navegador (localStorage)
-components/ StreetView (iframe de Google), GuessMap / ResultMap (MapLibre), GuessPanel, RoundHud,
-            RoundTimer, RoundResult, GameSummary, QuestCard, RecentGames, MyGames, GameListRow
-(api)/api/  startGame, getGame, startRound, submitGuess, getGameResult, getGames
-(pages)/    /game/[id] (jugar) · /game/[id]/summary (resumen) · /games (Mis partidas)
+            gameCodes.ts  códigos de invitación de las partidas multijugador
+components/ GameScreen (elige la pantalla según el modo y estado) · Clásico: ClassicGamePlay, ClassicGameSummary
+            Multijugador: MultiplayerLobby, InviteButton, MultiplayerGamePlay, RoundCountdown, PlayersStatus,
+            MultiplayerRoundResult, Scoreboard, MultiplayerGameSummary · Menú: GameModeCard, GameModeIcon, QuestPicker, QuestCard, JoinGameDialog,
+            ActiveGameBanner, MyGames, GameListRow · Comunes: StreetView (iframe de Google),
+            GuessMap / ResultMap (MapLibre, con un pin por jugador), GuessPanel, RoundHud, RoundTimer, RoundResult
+hooks/      useGames (llamadas a la API), useGameSync (polling de los modos en tiempo real), useNow, ...
+(api)/api/  createGame, getGame, sendGameAction, getGames · joinGame, leaveGame, kickPlayer, startGame, getActiveGame
+(pages)/    /play/[mode] (elegir dónde jugar un modo) · /game/[id] (sala de espera, jugar o ver el resumen) · /join/[code] (link de invitación) · /games (Mis partidas)
 ```
 
-### Quests (modos de juego)
+### Quests y modos de juego
 
-Cada modo de juego es una fila de `quests`:
+Un **quest** es el contenido de las partidas: una fila de `quests` y los lugares asociados en `quest_places`.
 
 | Columna | |
 | --- | --- |
 | `name`, `description` | Lo que muestra la tarjeta del menú principal |
-| `rounds` | Cantidad de rondas de cada partida |
-| `time` | Tiempo por ronda en **segundos** (p. ej. `90` = minuto y medio); `null` = sin límite |
 | `image` | Imagen de la tarjeta: ruta bajo `/public` (p. ej. `/quests/ciudades-del-mundo.png`) o URL absoluta; sin imagen se dibuja una ilustración por defecto |
 | `enabled` | Para ocultar un quest sin borrarlo |
 
-Los lugares de cada quest se asocian en la tabla `quest_place` (`questId`, `placeId`): un mismo lugar puede estar en varios quests. El menú principal (`services/quests.ts` → `getQuests`) muestra todos los quests habilitados que tengan al menos un lugar habilitado.
+Un mismo lugar puede estar en varios quests. Las **reglas** (cantidad de rondas, tiempo...) no son del quest sino del **modo de juego**: la tabla `quest_modes` (`questId`, `mode`, `settings`, `enabled`) dice qué modos ofrece cada quest y con qué configuración, que se combina sobre la configuración por defecto del modo. Para el Clásico:
 
-**Agregar un quest:** una migración que inserte la fila en `quests`, sus lugares en `places` (si no existen) y las filas de `quest_place`. Ver `002-seed-world-cities`.
+```jsonc
+{ "rounds": 5, "timeLimitSeconds": 120, "scoreScaleKm": 15 }   // timeLimitSeconds: null = sin límite
+```
+
+**Menú principal: primero el modo, después el quest.** El menú (`/home`) muestra sólo los modos de juego (`getGameModes`: los modos con motor registrado que ofrezca al menos un quest jugable) como tarjetas con imagen (`GameModeCard`; la imagen es `definition.image`, en `public/modes/`, con la misma estética que las de los quests). Arriba aparecen, sólo cuando corresponden, el banner para instalar la app y el acceso a la partida con amigos en curso. Las partidas anteriores están en "Mis partidas" (`/games`) y "Unirme con código" está en la página del modo multijugador. Cada una abre `/play/<slug>` (`/play/classic`, `/play/multiplayer`; como todas las rutas, en inglés) (`QuestPicker`), con la grilla de los quests donde se puede jugar ese modo (`getQuests(mode)`: habilitados, con al menos un lugar habilitado y ese modo en `quest_modes`) y un botón para jugar o crear la sala. Así el menú escala con la cantidad de modos (una tarjeta por modo) y de quests (una grilla por modo, que más adelante puede sumar categorías o búsqueda).
+
+**Agregar un quest:** una migración que inserte la fila en `quests`, sus lugares en `places` (si no existen), las filas de `quest_places` y las de `quest_modes`. Ver `002-seed-quests`, que carga cada lugar una sola vez y lo asocia a los quests que lo usan.
+
+### Partidas: tabla `games` + motores de modos de juego
+
+Todas las partidas, de cualquier modo, están en la tabla `games`:
+
+- Las **columnas** son las comunes a todos los modos y las que se filtran o indexan: `mode`, `questId`, `status` (sala de espera · en curso · terminada), `code` (invitación, multijugador), `hostUserId`, `version`, fechas.
+- **`data`** (jsonb) tiene todo lo particular del modo: rondas, respuestas correctas, lo que marcó cada jugador, relojes... Sólo lo lee y escribe el **motor** del modo, y nunca llega así al navegador: cada motor arma la vista que puede ver cada jugador (`toView`), sin respuestas antes de tiempo.
+- **`game_players`** tiene una fila por jugador (también en partidas individuales) con su resultado final (`score`, `position`, `outcome`): es lo que usan el historial y las estadísticas.
+
+Cada modo es un `GameModeEngine` (`models/GameModeEngine.ts`) registrado en `services/gameModes.ts`: crea el estado inicial, aplica las acciones de los jugadores (`/api/sendGameAction`), los cambios por tiempo (`advance`, que se aplica al principio de cada pedido porque no hay procesos en segundo plano), dice cuándo terminó y calcula los resultados finales. El servicio genérico (`services/games.ts`) se encarga de la base, los jugadores y los permisos.
+
+**Concurrencia:** `data` se lee, se modifica y se escribe entero, así que cada escritura es condicional a la `version` leída (`services/gamePersistence.ts`). Si otro pedido escribió antes, el cambio se vuelve a aplicar sobre el estado nuevo (hasta 4 veces). Eso también garantiza que cada ronda se puntúe una sola vez. `version` sirve además para el polling: `/api/getGame` con `sinceVersion` responde `{ unchanged: true }` si no cambió nada.
+
+Como el estado vive en el servidor, **una partida se puede seguir desde cualquier dispositivo** y el resumen conserva el detalle de cada ronda.
+
+**Agregar un modo:** un valor en `GameMode`, sus modelos (settings, data, view), un motor en `services/<modo>Mode.ts` registrado en `services/gameModes.ts`, su `slug`, `description` e `image` (menú), su ícono en `components/GameModeIcon`, sus pantallas registradas en `components/GameScreen` y las filas de `quest_modes` de los quests que lo ofrezcan.
+
+**Limpieza** (`services/gameCleanup.ts`, se ejecuta al crear una partida y una vez por día con Vercel Cron): las salas de espera de más de 30 min se borran, y las partidas en curso sin actividad por más tiempo del que define su modo (Clásico: 24 h) se borran o se dan por terminadas, según el modo.
+
+### Modo Multijugador
+
+De 2 a 8 jugadores (todos con cuenta) juegan las mismas rondas al mismo tiempo, con el mismo reloj:
+
+1. **Sala de espera:** el anfitrión crea la partida (`createGame`, queda en estado `LOBBY` con un código de 6 caracteres) y los demás entran con el código (`joinGame`). El anfitrión puede sacar jugadores (`kickPlayer`) y la empieza (`startGame`) cuando hay al menos 2: recién ahí se eligen las rondas. Cada jugador puede estar en una sola partida multijugador activa (`getActiveGame`).
+2. **Ronda:** empieza para todos después de una cuenta regresiva de 3 s. Se cierra cuando respondieron todos los jugadores conectados o se acaba el tiempo (con la misma tolerancia de 5 s); quien no respondió saca 0. Hasta que se cierra, nadie ve dónde marcaron los demás (sólo quién ya respondió).
+3. **Resultado:** se muestran los pines de todos durante 15 s (el anfitrión puede pasar antes con la acción `next`) y arranca la siguiente ronda. Después de la última, la partida termina: gana el mayor puntaje total y, en caso de empate, la menor distancia total. El resultado de cada jugador queda en `game_players`.
+
+En el navegador, `GameScreen` mantiene la partida al día con `useGameSync`, que la consulta cada ~1,5 s (se pausa con la pestaña oculta y espera más tras un error); los relojes se calculan a partir del momento en que llegó cada respuesta. Para invitar se comparte el link `/join/<código>` (o el código, que se ingresa con "Unirme con código" en el menú); abrir el link no une a nadie hasta confirmar. Los clientes consultan la partida cada ~1,5 s (`getGame` con `sinceVersion`); cada consulta registra la **presencia** del jugador (`game_players.lastSeenAt`, como mucho una escritura cada 10 s). Un jugador que no consultó en los últimos 20 s se considera desconectado y la ronda no lo espera. Quien abandona (`leaveGame`) antes de empezar sale de la partida; después, queda en los resultados con los puntos que hizo. Si se va el anfitrión, el rol pasa al jugador que entró primero. Una partida en curso sin actividad por 5 minutos se da por terminada con los puntajes que había.
+
+Tiempos y límites se configuran por quest en `quest_modes.settings`: `{ "rounds": 5, "timeLimitSeconds": 120, "maxPlayers": 8, "revealSeconds": 15, "countdownSeconds": 3, "scoreScaleKm": 15 }`.
+
+### Tarea programada: limpieza diaria
+
+`vercel.json` agenda con **Vercel Cron** una llamada diaria (06:00 UTC; en el plan Hobby alcanza con una por día) a `GET /api/cronCleanupGames`, la única ruta `GET` de la API. Vercel la llama con `Authorization: Bearer <CRON_SECRET>`: hay que definir `CRON_SECRET` en las variables de entorno del proyecto en Vercel (`openssl rand -base64 32`). Sin esa variable la ruta rechaza todos los pedidos. La limpieza también corre cada vez que se crea una partida, así que el cron es una red de seguridad para los días sin actividad. Para probarla localmente:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cronCleanupGames
+```
 
 ### Tiempo por ronda
 
-Cuando el quest tiene `time`, el tiempo lo controla el **servidor**:
+Cuando el modo tiene `timeLimitSeconds`, el tiempo lo controla el **servidor**:
 
-1. Al mostrar cada ronda el cliente llama a `/api/startRound`, que guarda la hora de inicio en `games.roundStartedAt`. Es idempotente: si se recarga la página, la ronda conserva su hora de inicio original (no se gana tiempo).
+1. Al mostrar cada ronda el cliente manda la acción `startRound`, que guarda la hora de inicio en el estado de la partida. Es idempotente: si se recarga la página, la ronda conserva su hora de inicio original (no se gana tiempo).
 2. El cliente muestra la cuenta regresiva (`RoundTimer`, en rojo los últimos 10 s) a partir del tiempo restante que informa el servidor.
 3. Al llegar a 0, el cliente envía automáticamente el pin marcado (o ninguno).
-4. En `/api/submitGuess`, una respuesta que llega después del límite (más 5 s de tolerancia por la latencia) o sin pin vale **0 puntos** y la ronda queda como "¡Se acabó el tiempo!".
+4. En la acción `guess`, una respuesta que llega después del límite (más 5 s de tolerancia por la latencia) o sin pin vale **0 puntos** y la ronda queda como "¡Se acabó el tiempo!" (`utils/guesses.ts`).
 
 ### Lugares (`places`)
 
@@ -181,27 +237,17 @@ Cada lugar define su área en una sola columna `geometry` (`jsonb`) con una **ge
 { "type": "Polygon", "coordinates": [[[-58.46, -34.535], [-58.413, -34.56], ..., [-58.46, -34.535]]] }
 ```
 
-`radius` es un *foreign member* permitido por el RFC: cualquier herramienta GeoJSON lo sigue leyendo como un Point válido. Los tipos están en `models/PlaceGeometry.ts`; para soportar otra geometría (p. ej. `MultiPolygon`) se agrega al tipo `PlaceGeometry` y a `randomPointInGeometry` / `isPointInGeometry` en `utils/geo.ts`. Las 20 ciudades de "Ciudades del mundo" se cargan en la migración `002-seed-world-cities` (17 círculos y 3 polígonos: Buenos Aires, Manhattan y París). No se usa PostGIS: la geometría está en `utils/geo.ts`, así el esquema es portable (y testeable con SQLite).
+`radius` es un *foreign member* permitido por el RFC: cualquier herramienta GeoJSON lo sigue leyendo como un Point válido. Los tipos están en `models/PlaceGeometry.ts`; para soportar otra geometría (p. ej. `MultiPolygon`) se agrega al tipo `PlaceGeometry` y a `randomPointInGeometry` / `isPointInGeometry` en `utils/geo.ts`. Las 150 ciudades se cargan en la migración `002-seed-quests` (círculos, salvo 3 polígonos: Buenos Aires, Manhattan y París); las 20 marcadas como famosas forman además "Ciudades famosas". Los quests de países tienen un único lugar: el contorno aproximado del territorio continental como polígono (sin islas, p. ej. sin Tierra del Fuego, Baleares, Canarias, Alaska ni Hawái), dibujado un poco hacia adentro en las fronteras terrestres para que una panorámica encontrada cerca del límite nunca sea del país vecino. No se usa PostGIS: la geometría está en `utils/geo.ts`, así el esquema es portable (y testeable con SQLite).
 
 ### Cómo se obtiene una ubicación aleatoria (`services/locations.ts`)
 
 1. Se sortea un punto uniforme dentro de la geometría (círculo: `R·√u`; polígono: muestreo por rechazo sobre su bounding box).
 2. Se le pide a Street View (Image Metadata) la panorámica exterior más cercana al punto; se descarta si cae fuera de la geometría del lugar.
-3. Si no hay panorámica se reintenta con otro punto y un radio cada vez mayor (250 m, 500 m, 1 km, 2 km, 3 km, 3 km).
+3. Si no hay panorámica se reintenta con otro punto y un radio cada vez mayor (250 m, 500 m, 1 km, 2 km, 3 km, 3 km). En lugares grandes (más de 100 km de punta a punta, como un país entero) un punto al azar suele quedar lejos de cualquier ruta, así que se busca mucho más lejos y más veces (2, 5, 10, 20, 30 y 3 × 50 km; `getSearchRadii`).
 
-`startGame` (`planRounds` en `services/games.ts`) baraja los lugares del quest y busca las ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
+Al crear una partida, `planRounds` (`services/rounds.ts`) baraja los lugares del quest y busca las ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
 
 **Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada panorámica encontrada en vivo se guarda ahí, pero sólo se *lee* si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Street View falla o la key está mal configurada), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada panorámica nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria.
-
-### Dónde viven las rondas: token cifrado + tabla `games` mínima
-
-Para que la base (Supabase free) sea lo más chica posible, **las rondas no se guardan en la base**:
-
-- El estado completo de la partida (imágenes, respuestas correctas, lo que marcó el jugador y los puntajes) se serializa, se comprime y se **cifra con AES-256-GCM** en el servidor (`services/gameTokens.ts`, clave derivada de `AUTH_SECRET`). Ese *token* es lo único que recibe el navegador, junto con una vista que sólo revela las rondas ya jugadas.
-- El navegador guarda token + vista en **localStorage** (`utils/gameStorage.ts`, últimas 5 partidas) y manda el token en cada respuesta; el servidor lo descifra, calcula el puntaje y devuelve un token nuevo. GCM detecta cualquier modificación del token.
-- La tabla `games` guarda sólo el progreso y el resultado (≈ 100 bytes por partida). `games.playedRounds` impide reutilizar un token viejo (p. ej. volver a responder una ronda después de ver la respuesta): un token cuyas rondas jugadas no coinciden con la base se rechaza, y la actualización es condicional para que cada ronda se puntúe una sola vez.
-- Consecuencias: una partida sin terminar sólo se puede seguir en el dispositivo donde empezó; el detalle por ronda del resumen sólo está en ese dispositivo (en otro se ve el resultado final). Las partidas sin terminar de más de 24 h se borran solas.
-- Cambiar `AUTH_SECRET` invalida las partidas en curso.
 
 ### Puntaje (`utils/score.ts`)
 
@@ -209,11 +255,11 @@ Para que la base (Supabase free) sea lo más chica posible, **las rondas no se g
 puntos = 5000 · e^(−distancia / 15 km)      (5000 si la distancia es ≤ 25 m)
 ```
 
-La ciudad no se revela hasta responder: acertar la ciudad ya da muchos puntos (a 3 km ≈ 4.100) y la precisión dentro de ella completa los 5.000; una ciudad equivocada da prácticamente 0. Los parámetros están en `SCORE_SETTINGS` (`utils/score.ts`) y son los mismos para todos los quests.
+La ciudad no se revela hasta responder: acertar la ciudad ya da muchos puntos (a 3 km ≈ 4.100) y la precisión dentro de ella completa los 5.000; una ciudad equivocada da prácticamente 0. Los parámetros están en `SCORE_SETTINGS` (`utils/score.ts`); la escala (15 km) se puede cambiar por quest con `scoreScaleKm` en `quest_modes.settings`. Los quests de países usan aproximadamente un décimo del tamaño del país (Argentina 370 km, España 110 km, Estados Unidos 460 km): acertar la región ya da muchos puntos, como acertar la ciudad en los quests de ciudades.
 
 ### Mis partidas
 
-La página `/games` (menú principal → "Mis partidas") lista todas las partidas del jugador, de la más nueva a la más vieja, de a 20 (`/api/getGames`): quest, fecha, puntaje, estrellas y estado. Las terminadas abren su resumen; las que están en curso se pueden seguir sólo desde el dispositivo donde empezaron. El perfil (nombre y estadísticas) sigue disponible desde el menú del usuario.
+La página `/games` (menú principal → "Mis partidas") lista todas las partidas del jugador, de la más nueva a la más vieja, de a 20 (`/api/getGames`): quest, fecha, puntaje, estrellas, posición (multijugador) y estado. Las terminadas abren su resumen y las que están en curso se pueden seguir desde cualquier dispositivo. Las estadísticas se calculan por modo con `game_players`. El perfil (nombre y estadísticas) sigue disponible desde el menú del usuario.
 
 ## Diseño (look & feel de videojuego)
 
@@ -232,5 +278,5 @@ Manifest en `/manifest.webmanifest`, service worker de Serwist en `/serwist/sw.j
 yarn test
 ```
 
-- `tests/unit` — geometría, puntaje, el cliente de Street View (con `fetch` falso) y la validación de panorámicas.
-- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: quests y sus lugares, partida completa, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), tokens cifrados (reutilización, modificación, otro usuario), historial paginado, limpieza de partidas abandonadas y caché.
+- `tests/unit` — geometría, puntaje, evaluación de respuestas, códigos de invitación, autorización del cron, el cliente de Street View (con `fetch` falso) y la validación de panorámicas.
+- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: quests con sus lugares y modos, partida completa, retomar una partida, polling con `sinceVersion`, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), rondas puntuadas una sola vez, permisos, historial paginado, limpieza de partidas abandonadas y caché; y la persistencia con bloqueo optimista (reintentos ante escrituras concurrentes); y el multijugador: sala de espera, códigos, límite de jugadores, inicio, mismas rondas para todos, pines ocultos hasta cerrar la ronda, cierre por tiempo o por jugadores desconectados, siguiente ronda, resultados finales, abandono, anfitrión y limpieza.

@@ -6,9 +6,8 @@ import StarIcon from '@mui/icons-material/Star'
 import classNames from 'classnames'
 import Link from 'next/link'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
+import { GameListItem } from '@/app/(protected)/(game)/models/GameListItem'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
-import { GameListItem } from '@/app/(protected)/(game)/models/GameView'
-import { hasGameSession } from '@/app/(protected)/(game)/utils/gameStorage'
 import { formatScore, getGameStars } from '@/app/(protected)/(game)/utils/score'
 
 const dateFormatter = new Intl.DateTimeFormat('es-AR', {
@@ -26,49 +25,48 @@ interface GameListRowProps {
 }
 
 /**
- * One game of the player's history: finished games open their summary;
- * unfinished ones can be resumed only on the device where they were started
- * (the one holding their token).
+ * One game of the player's history. Every game opens its screen: the summary
+ * of finished games, or the game itself to keep playing (from any device —
+ * games live in the server).
  */
 export default function GameListRow({ game, detailed }: GameListRowProps) {
   const finished = game.status === GameStatus.FINISHED
-  const resumable = !finished && hasGameSession(game.id)
-  const stars = getGameStars(game.totalScore, game.maxScore)
-  const content = (
-    <>
+  const inProgress = game.status === GameStatus.IN_PROGRESS
+  const multiplayer = game.playersCount > 1
+  const stars = game.maxScore ? getGameStars(game.score, game.maxScore) : null
+
+  return (
+    <Link href={`/game/${game.id}`} className="game-list-row">
       <div className="info">
         <span className="quest">{game.questName}</span>
         <span className="date">{dateFormatter.format(new Date(game.createdAt))}</span>
-        {detailed && finished && <ScoreBar value={game.totalScore} max={game.maxScore} className="bar" />}
+        {detailed && finished && game.maxScore != null && (
+          <ScoreBar value={game.score} max={game.maxScore} className="bar" />
+        )}
       </div>
       {finished && (
         <div className="result">
-          {detailed && (
+          {multiplayer && game.position != null && (
+            <span className="position">
+              {game.position}.º de {game.playersCount}
+            </span>
+          )}
+          {detailed && stars != null && (
             <span className="stars" aria-label={`${stars} estrellas`}>
               {[1, 2, 3].map((star) => (
                 <StarIcon key={star} className={classNames('star', { earned: star <= stars })} />
               ))}
             </span>
           )}
-          <span className="score">{formatScore(game.totalScore)}</span>
+          <span className="score">{formatScore(game.score)}</span>
         </div>
       )}
-      {resumable && (
+      {inProgress && (
         <span className="resume">
-          Seguir ({game.playedRounds}/{game.roundsCount})
+          Seguir ({game.completedSteps}/{game.totalSteps})
         </span>
       )}
-      {!finished && !resumable && <span className="unfinished">Sin terminar</span>}
-    </>
-  )
-
-  if (!finished && !resumable) {
-    return <div className="game-list-row disabled">{content}</div>
-  }
-
-  return (
-    <Link href={finished ? `/game/${game.id}/summary` : `/game/${game.id}`} className="game-list-row">
-      {content}
+      {game.status === GameStatus.LOBBY && <span className="status">En sala de espera</span>}
       <ChevronRightIcon className="chevron" />
     </Link>
   )
