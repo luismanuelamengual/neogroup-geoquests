@@ -118,7 +118,7 @@ describe('classic game flow', () => {
     expect(quests[0].image).toBe('/quests/ciudades-del-mundo.png')
 
     for (const quest of quests) {
-      const scoreScaleKm = { Argentina: 370, España: 110, 'Estados Unidos': 460 }[quest.name] ?? 15
+      const scoreMaxDistanceKm = { Argentina: 3500, España: 1000, 'Estados Unidos': 4000 }[quest.name] ?? 2000
 
       expect(quest.modes).toEqual([
         {
@@ -126,7 +126,7 @@ describe('classic game flow', () => {
           name: 'Clásico',
           minPlayers: 1,
           maxPlayers: 1,
-          settings: { rounds: 5, timeLimitSeconds: 120, scoreScaleKm }
+          settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm }
         },
         {
           mode: GameMode.CLASSIC_MULTIPLAYER,
@@ -139,7 +139,7 @@ describe('classic game flow', () => {
             maxPlayers: 8,
             revealSeconds: 15,
             countdownSeconds: 3,
-            scoreScaleKm
+            scoreMaxDistanceKm
           }
         },
         {
@@ -147,7 +147,7 @@ describe('classic game flow', () => {
           name: 'Battle Royale',
           minPlayers: 3,
           maxPlayers: 8,
-          settings: { timeLimitSeconds: 60, maxPlayers: 8, revealSeconds: 15, countdownSeconds: 3, scoreScaleKm }
+          settings: { timeLimitSeconds: 60, maxPlayers: 8, revealSeconds: 15, countdownSeconds: 3, scoreMaxDistanceKm }
         }
       ])
     }

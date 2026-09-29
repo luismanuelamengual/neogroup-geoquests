@@ -16,13 +16,17 @@ import { RoundTiming } from '@/app/(protected)/(game)/models/RoundTiming'
 import { RoundView } from '@/app/(protected)/(game)/models/RoundView'
 import { planGameRounds } from '@/app/(protected)/(game)/services/rounds'
 import { evaluateGuess, getRoundTimeLeftMs, parseGuessPosition } from '@/app/(protected)/(game)/utils/guesses'
-import { MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
+import {
+  DEFAULT_SCORE_MAX_DISTANCE_KM,
+  MAX_ROUND_SCORE,
+  MAX_SCORE_MAX_DISTANCE_KM,
+  MIN_SCORE_MAX_DISTANCE_KM
+} from '@/app/(protected)/(game)/utils/score'
 import { ApiException } from '@/app/models/ApiException'
 
 /** Most rounds a quest can configure for a classic game. */
 const MAX_ROUNDS = 20
 /** Largest score scale a quest can configure (the whole world fits in it). */
-const MAX_SCORE_SCALE_KM = 2000
 const definition: GameModeDefinition<ClassicGameSettings> = {
   mode: GameMode.CLASSIC,
   slug: 'classic',
@@ -32,7 +36,7 @@ const definition: GameModeDefinition<ClassicGameSettings> = {
   minPlayers: 1,
   maxPlayers: 1,
   realtime: false,
-  defaultSettings: { rounds: 5, timeLimitSeconds: null, scoreScaleKm: 15 },
+  defaultSettings: { rounds: 5, timeLimitSeconds: null, scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM },
   // Left unfinished for a day: deleted (as before the game modes existed).
   abandonAfterMs: 24 * 60 * 60 * 1000,
   abandonAction: 'delete'
@@ -121,7 +125,7 @@ function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): bo
     position,
     getTiming(data),
     ctx.now,
-    data.settings.scoreScaleKm ?? definition.defaultSettings.scoreScaleKm
+    data.settings.scoreMaxDistanceKm ?? definition.defaultSettings.scoreMaxDistanceKm
   )
   data.currentRound++
   data.roundStartedAt = null
@@ -140,15 +144,15 @@ export const classicMode: GameModeEngine<ClassicGameData, ClassicGameSettings, C
   resolveSettings(questSettings) {
     const rounds = Math.round(Number(questSettings.rounds ?? definition.defaultSettings.rounds))
     const time = Math.round(Number(questSettings.timeLimitSeconds ?? definition.defaultSettings.timeLimitSeconds))
-    const scale = Number(questSettings.scoreScaleKm ?? definition.defaultSettings.scoreScaleKm)
+    const maxDistance = Number(questSettings.scoreMaxDistanceKm ?? definition.defaultSettings.scoreMaxDistanceKm)
 
     return {
       rounds: Number.isFinite(rounds) ? Math.min(Math.max(rounds, 1), MAX_ROUNDS) : definition.defaultSettings.rounds,
       timeLimitSeconds: Number.isFinite(time) && time > 0 ? time : null,
-      scoreScaleKm:
-        Number.isFinite(scale) && scale > 0
-          ? Math.min(scale, MAX_SCORE_SCALE_KM)
-          : definition.defaultSettings.scoreScaleKm
+      scoreMaxDistanceKm:
+        Number.isFinite(maxDistance) && maxDistance > 0
+          ? Math.min(Math.max(maxDistance, MIN_SCORE_MAX_DISTANCE_KM), MAX_SCORE_MAX_DISTANCE_KM)
+          : definition.defaultSettings.scoreMaxDistanceKm
     }
   },
 

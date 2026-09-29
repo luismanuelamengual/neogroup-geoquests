@@ -175,7 +175,7 @@ Un **quest** es el contenido de las partidas: una fila de `quests` y los lugares
 Un mismo lugar puede estar en varios quests. Las **reglas** (cantidad de rondas, tiempo...) no son del quest sino del **modo de juego**: la tabla `quest_modes` (`questId`, `mode`, `settings`, `enabled`) dice qué modos ofrece cada quest y con qué configuración, que se combina sobre la configuración por defecto del modo. Para el Clásico:
 
 ```jsonc
-{ "rounds": 5, "timeLimitSeconds": 120, "scoreScaleKm": 15 }   // timeLimitSeconds: null = sin límite
+{ "rounds": 5, "timeLimitSeconds": 120, "scoreMaxDistanceKm": 2000 }   // timeLimitSeconds: null = sin límite
 ```
 
 **Menú principal: primero el modo, después el quest.** El menú (`/home`) muestra sólo los modos de juego (`getGameModes`: los modos con motor registrado que ofrezca al menos un quest jugable) como tarjetas con imagen (`GameModeCard`; la imagen es `definition.image`, en `public/modes/`, con la misma estética que las de los quests). Arriba aparecen, sólo cuando corresponden, el banner para instalar la app y el acceso a la partida con amigos en curso. Las partidas anteriores están en "Mis partidas" (`/games`) y "Unirme con código" está en la página del modo multijugador. Cada una abre `/play/<slug>` (`/play/classic`, `/play/multiplayer`; como todas las rutas, en inglés) (`QuestPicker`), con la grilla de los quests donde se puede jugar ese modo (`getQuests(mode)`: habilitados, con al menos un lugar habilitado y ese modo en `quest_modes`) y un botón para jugar o crear la sala. Así el menú escala con la cantidad de modos (una tarjeta por modo) y de quests (una grilla por modo, que más adelante puede sumar categorías o búsqueda).
@@ -210,7 +210,7 @@ De 2 a 8 jugadores (todos con cuenta) juegan las mismas rondas al mismo tiempo, 
 
 En el navegador, `GameScreen` mantiene la partida al día con `useGameSync`, que la consulta cada ~1,5 s (se pausa con la pestaña oculta y espera más tras un error); los relojes se calculan a partir del momento en que llegó cada respuesta. Para invitar se comparte el link `/join/<código>` (o el código, que se ingresa con "Unirme con código" en el menú); abrir el link no une a nadie hasta confirmar. Los clientes consultan la partida cada ~1,5 s (`getGame` con `sinceVersion`); cada consulta registra la **presencia** del jugador (`game_players.lastSeenAt`, como mucho una escritura cada 10 s). Un jugador que no consultó en los últimos 20 s se considera desconectado y la ronda no lo espera. Quien abandona (`leaveGame`) antes de empezar sale de la partida; después, queda en los resultados con los puntos que hizo. Si se va el anfitrión, el rol pasa al jugador que entró primero. Una partida en curso sin actividad por 5 minutos se da por terminada con los puntajes que había.
 
-Tiempos y límites se configuran por quest en `quest_modes.settings`: `{ "rounds": 5, "timeLimitSeconds": 120, "maxPlayers": 8, "revealSeconds": 15, "countdownSeconds": 3, "scoreScaleKm": 15 }`.
+Tiempos y límites se configuran por quest en `quest_modes.settings`: `{ "rounds": 5, "timeLimitSeconds": 120, "maxPlayers": 8, "revealSeconds": 15, "countdownSeconds": 3, "scoreMaxDistanceKm": 2000 }`. `scoreMaxDistanceKm` es la distancia (km) a partir de la cual un intento da 0 puntos: cuanto más grande, más permisivo el puntaje.
 
 ### Tarea programada: limpieza diaria
 
@@ -267,7 +267,7 @@ Al crear una partida, `planRounds` (`services/rounds.ts`) baraja los lugares del
 puntos = 5000 · e^(−distancia / 15 km)      (5000 si la distancia es ≤ 25 m)
 ```
 
-La ciudad no se revela hasta responder: acertar la ciudad ya da muchos puntos (a 3 km ≈ 4.100) y la precisión dentro de ella completa los 5.000; una ciudad equivocada da prácticamente 0. Los parámetros están en `SCORE_SETTINGS` (`utils/score.ts`); la escala (15 km) se puede cambiar por quest con `scoreScaleKm` en `quest_modes.settings`. Los quests de países usan aproximadamente un décimo del tamaño del país (Argentina 370 km, España 110 km, Estados Unidos 460 km): acertar la región ya da muchos puntos, como acertar la ciudad en los quests de ciudades.
+La ciudad no se revela hasta responder. El puntaje decae exponencialmente con la distancia: 5.000 dentro de los 25 m y 0 a partir de `scoreMaxDistanceKm` (por defecto 2.000 km; se configura por quest y modo en `quest_modes.settings`). Con 2.000 km: a 3 km ≈ 4.930, a 50 km ≈ 3.970, a 300 km ≈ 1.260, a 1.000 km ≈ 50. Los quests de países usan una distancia menor (Argentina 3.500 km, España 1.000 km, Estados Unidos 4.000 km) para que acertar la región ya dé muchos puntos. Constantes en `utils/score.ts`.
 
 ### Mis partidas
 

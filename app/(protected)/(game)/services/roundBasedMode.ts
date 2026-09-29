@@ -103,6 +103,13 @@ export function intSetting(value: unknown, min: number, max: number, fallback: n
   return Number.isFinite(number) ? Math.min(Math.max(number, min), max) : fallback
 }
 
+/** A decimal setting within [min, max], or the fallback when missing or invalid. */
+export function floatSetting(value: unknown, min: number, max: number, fallback: number): number {
+  const number = Number(value ?? fallback)
+
+  return Number.isFinite(number) ? Math.min(Math.max(number, min), max) : fallback
+}
+
 /** State of a multiplayer game waiting for players: no rounds yet (they are chosen when it starts). */
 export function createLobbyData<Settings extends MultiplayerRoundsSettings>(
   questId: number,
@@ -219,7 +226,7 @@ export function recordGuess(
   const index = data.currentRound - 1
 
   data.guesses[String(userId)][index] = {
-    ...evaluateGuess(data.rounds[index], position, timing, now, data.settings.scoreScaleKm),
+    ...evaluateGuess(data.rounds[index], position, timing, now, data.settings.scoreMaxDistanceKm),
     guessedAt: now.toISOString()
   }
 }

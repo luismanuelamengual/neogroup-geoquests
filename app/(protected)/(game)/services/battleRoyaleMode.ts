@@ -15,6 +15,7 @@ import {
   beginRound,
   closeRound,
   createLobbyData,
+  floatSetting,
   guessOf,
   initGuesses,
   intSetting,
@@ -25,6 +26,11 @@ import {
   toMultiplayerGameView
 } from '@/app/(protected)/(game)/services/roundBasedMode'
 import { planGameRounds } from '@/app/(protected)/(game)/services/rounds'
+import {
+  DEFAULT_SCORE_MAX_DISTANCE_KM,
+  MAX_SCORE_MAX_DISTANCE_KM,
+  MIN_SCORE_MAX_DISTANCE_KM
+} from '@/app/(protected)/(game)/utils/score'
 import { ApiException } from '@/app/models/ApiException'
 
 /**
@@ -42,7 +48,13 @@ const definition: GameModeDefinition<BattleRoyaleGameSettings> = {
   minPlayers: 3,
   maxPlayers: 8,
   realtime: true,
-  defaultSettings: { timeLimitSeconds: 60, maxPlayers: 8, revealSeconds: 15, countdownSeconds: 3, scoreScaleKm: 15 },
+  defaultSettings: {
+    timeLimitSeconds: 60,
+    maxPlayers: 8,
+    revealSeconds: 15,
+    countdownSeconds: 3,
+    scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM
+  },
   // Nobody asked for the game in 5 minutes (every round writes while someone plays): finished as it is.
   abandonAfterMs: 5 * 60 * 1000,
   abandonAction: 'finish'
@@ -202,7 +214,12 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
       ),
       revealSeconds: intSetting(questSettings.revealSeconds, 3, 60, defaults.revealSeconds),
       countdownSeconds: intSetting(questSettings.countdownSeconds, 0, 10, defaults.countdownSeconds),
-      scoreScaleKm: intSetting(questSettings.scoreScaleKm, 1, 2000, defaults.scoreScaleKm)
+      scoreMaxDistanceKm: floatSetting(
+        questSettings.scoreMaxDistanceKm,
+        MIN_SCORE_MAX_DISTANCE_KM,
+        MAX_SCORE_MAX_DISTANCE_KM,
+        defaults.scoreMaxDistanceKm
+      )
     }
   },
 

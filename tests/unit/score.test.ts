@@ -5,10 +5,10 @@ import {
   formatDistance,
   formatTimeLimit,
   getGameStars,
-  SCORE_SETTINGS
+  scoreSettingsFor
 } from '@/app/(protected)/(game)/utils/score'
 
-const settings = SCORE_SETTINGS
+const settings = scoreSettingsFor(3000)
 
 describe('calculateRoundScore', () => {
   it('gives the max score for a perfect guess', () => {
@@ -24,9 +24,9 @@ describe('calculateRoundScore', () => {
     }
   })
 
-  it('rewards the right city and gives ~nothing on another continent', () => {
+  it('rewards the right city and gives nothing on another continent', () => {
     expect(calculateRoundScore(3000, settings)).toBeGreaterThan(4000)
-    expect(calculateRoundScore(1_000_000, settings)).toBe(0)
+    expect(calculateRoundScore(5_000_000, settings)).toBe(0)
   })
 
   it('never returns negative scores or NaN', () => {
@@ -60,5 +60,19 @@ describe('time formatting', () => {
     expect(formatClock(65_000)).toBe('1:05')
     expect(formatClock(8_200)).toBe('0:09')
     expect(formatClock(-5)).toBe('0:00')
+  })
+})
+
+describe('score max distance', () => {
+  it('gives 0 points from the max distance on and some points before it', () => {
+    expect(calculateRoundScore(2_999_000, settings)).toBeGreaterThan(0)
+    expect(calculateRoundScore(3_000_000, settings)).toBe(0)
+    expect(calculateRoundScore(3_500_000, settings)).toBe(0)
+  })
+
+  it('a bigger max distance is more permissive', () => {
+    expect(calculateRoundScore(50_000, scoreSettingsFor(5000))).toBeGreaterThan(
+      calculateRoundScore(50_000, scoreSettingsFor(500))
+    )
   })
 })

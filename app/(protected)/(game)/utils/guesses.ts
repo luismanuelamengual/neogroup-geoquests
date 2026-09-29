@@ -2,7 +2,11 @@ import { GameGuess } from '@/app/(protected)/(game)/models/GameGuess'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 import { RoundTiming } from '@/app/(protected)/(game)/models/RoundTiming'
 import { haversineDistance, normalizeLongitude } from '@/app/(protected)/(game)/utils/geo'
-import { calculateRoundScore, SCORE_SETTINGS } from '@/app/(protected)/(game)/utils/score'
+import {
+  calculateRoundScore,
+  DEFAULT_SCORE_MAX_DISTANCE_KM,
+  scoreSettingsFor
+} from '@/app/(protected)/(game)/utils/score'
 import { ApiException } from '@/app/models/ApiException'
 
 /**
@@ -47,7 +51,7 @@ export function timedOutGuess(): GameGuess {
 
 /**
  * Scores a guess for a round: distance to the real location and points (the
- * score decays with `scoreScaleKm`, see utils/score.ts). A missing guess, or
+ * score is 0 from `scoreMaxDistanceKm`, see utils/score.ts). A missing guess, or
  * one arriving after the time limit (plus ROUND_TIME_GRACE_MS) of a timed
  * round, scores 0 as timed out.
  */
@@ -56,7 +60,7 @@ export function evaluateGuess(
   guess: LatLng | null,
   timing: RoundTiming | null,
   now: Date,
-  scoreScaleKm = SCORE_SETTINGS.scaleMeters / 1000
+  scoreMaxDistanceKm = DEFAULT_SCORE_MAX_DISTANCE_KM
 ): GameGuess {
   if (!guess || (timing && isRoundTimeOver(timing, now))) {
     return timedOutGuess()
@@ -68,7 +72,7 @@ export function evaluateGuess(
     latitude: guess.latitude,
     longitude: guess.longitude,
     distanceMeters: Math.round(distance * 10) / 10,
-    score: calculateRoundScore(distance, { ...SCORE_SETTINGS, scaleMeters: scoreScaleKm * 1000 }),
+    score: calculateRoundScore(distance, scoreSettingsFor(scoreMaxDistanceKm)),
     timedOut: false
   }
 }

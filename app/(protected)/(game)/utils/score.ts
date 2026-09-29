@@ -4,30 +4,44 @@ export interface ScoreSettings {
   maxScore: number
   /** Guesses closer than this (meters) get `maxScore`. */
   perfectDistanceMeters: number
-  /** Distance (meters) at which the score decays to ~37% (1/e) of `maxScore`. */
-  scaleMeters: number
+  /** Guesses at this distance (meters) or farther get 0 points. */
+  maxDistanceMeters: number
 }
 
+/** Points of a perfect round and radius (meters) of the full score. */
+export const SCORE_SETTINGS = { maxScore: 5000, perfectDistanceMeters: 25 }
+
 /**
- * Scoring used by every quest. Tuned for city-sized places whose city is not
- * revealed: finding the right city already gives a good score, and
- * pinpointing the street inside it is what completes the 5000.
+ * Default `scoreMaxDistanceKm` setting of a game mode (configurable per quest
+ * in `quest_modes.settings`): the distance in km from which a guess scores 0.
+ * The bigger it is, the more permissive the scoring.
  */
-export const SCORE_SETTINGS: ScoreSettings = { maxScore: 5000, perfectDistanceMeters: 25, scaleMeters: 15000 }
+export const DEFAULT_SCORE_MAX_DISTANCE_KM = 2000
+
+/** Bounds accepted for the `scoreMaxDistanceKm` setting. */
+export const MIN_SCORE_MAX_DISTANCE_KM = 1
+export const MAX_SCORE_MAX_DISTANCE_KM = 20000
 
 /** Points of a perfect round. */
 export const MAX_ROUND_SCORE = SCORE_SETTINGS.maxScore
 
+/** Scoring settings of a game from its `scoreMaxDistanceKm` setting. */
+export function scoreSettingsFor(maxDistanceKm: number = DEFAULT_SCORE_MAX_DISTANCE_KM): ScoreSettings {
+  return { ...SCORE_SETTINGS, maxDistanceMeters: maxDistanceKm * 1000 }
+}
+
 /**
  * Score of a round from the distance between the guess and the real location:
  *
- *   score = maxScore · e^(−distance / scaleMeters)
+ *   score = maxScore · e^(−distance / scale)
  *
- * rounded to an integer, with a full score inside `perfectDistanceMeters`.
- * Exponential decay (the same shape GeoGuessr uses) rewards precision close
- * to the target and quickly drops to 0 for guesses in the wrong region.
+ * rounded to an integer, with a full score inside `perfectDistanceMeters` and
+ * 0 points from `maxDistanceMeters` on. The scale is derived from that maximum
+ * distance so that the curve fades out right there (the last point is lost at
+ * `maxDistanceMeters`). Exponential decay (the same shape GeoGuessr uses)
+ * rewards precision close to the target.
  */
-export function calculateRoundScore(distanceMeters: number, settings: ScoreSettings = SCORE_SETTINGS): number {
+export function calculateRoundScore(distanceMeters: number, settings: ScoreSettings = scoreSettingsFor()): number {
   if (!Number.isFinite(distanceMeters) || distanceMeters < 0) {
     return 0
   }
@@ -36,7 +50,13 @@ export function calculateRoundScore(distanceMeters: number, settings: ScoreSetti
     return settings.maxScore
   }
 
-  return Math.round(settings.maxScore * Math.exp(-distanceMeters / settings.scaleMeters))
+  if (distanceMeters >= settings.maxDistanceMeters) {
+    return 0
+  }
+
+  const scaleMeters = settings.maxDistanceMeters / Math.log(settings.maxScore * 2)
+
+  return Math.round(settings.maxScore * Math.exp(-distanceMeters / scaleMeters))
 }
 
 /** Human readable distance: "85 m", "1,2 km", "356 km", "12.345 km". */

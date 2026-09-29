@@ -11,7 +11,7 @@ import { DB } from '@neogroup/neorm'
  *   - "Argentina", "España" and "Estados Unidos": a single place each — the
  *     whole (mainland) country as a polygon — so locations are drawn anywhere
  *     in its territory. Their scores decay much slower than in city quests
- *     (`scoreScaleKm`).
+ *     (`scoreMaxDistanceKm`).
  *
  * A place is stored once and linked to every quest that uses it
  * (`quest_places`). Every quest offers the classic, classic multiplayer and battle royale
@@ -44,11 +44,11 @@ interface SeedQuest {
   image: string | null
   places: (place: SeedPlace) => boolean
   /**
-   * Score scale of the quest (km, see utils/score.ts): 15 km for cities; about a
-   * tenth of the size of the country for country quests, so that guessing the
-   * right region already scores well.
+   * Distance (km) from which a guess of the quest scores 0 (see utils/score.ts):
+   * thousands of km for the cities of the world; a fraction of the size of the
+   * country for country quests, so that guessing the right region scores well.
    */
-  scoreScaleKm: number
+  scoreMaxDistanceKm: number
 }
 
 /** Game modes offered by every seeded quest (GameMode enum values) and their settings. */
@@ -59,8 +59,8 @@ const MODES = [
 ]
 
 /** A quest of a whole country: its only place is the country itself. */
-function countryQuest(name: string, description: string, scoreScaleKm: number): SeedQuest {
-  return { name, description, image: null, places: (place) => place.onlyQuest === name, scoreScaleKm }
+function countryQuest(name: string, description: string, scoreMaxDistanceKm: number): SeedQuest {
+  return { name, description, image: null, places: (place) => place.onlyQuest === name, scoreMaxDistanceKm }
 }
 
 const QUESTS: SeedQuest[] = [
@@ -70,7 +70,7 @@ const QUESTS: SeedQuest[] = [
       'Aparecés en una calle de una de las 20 ciudades más conocidas del mundo. ¿Sabés cuál es y dónde estás?',
     image: '/quests/ciudades-del-mundo.png',
     places: (place) => !!place.famous,
-    scoreScaleKm: 15
+    scoreMaxDistanceKm: 2000
   },
   {
     name: 'Ciudades del mundo',
@@ -78,22 +78,22 @@ const QUESTS: SeedQuest[] = [
       '150 ciudades de 36 países: capitales, pero también ciudades medianas y chicas. ¿Te animás a reconocerlas?',
     image: null,
     places: (place) => !place.onlyQuest,
-    scoreScaleKm: 15
+    scoreMaxDistanceKm: 2000
   },
   countryQuest(
     'Argentina',
     'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?',
-    370
+    3500
   ),
   countryQuest(
     'España',
     'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?',
-    110
+    1000
   ),
   countryQuest(
     'Estados Unidos',
     'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?',
-    460
+    4000
   )
 ]
 
@@ -684,7 +684,7 @@ export default {
           MODES.map(({ mode, settings }) => ({
             questId: questRow!.id,
             mode,
-            settings: JSON.stringify({ ...settings, scoreScaleKm: quest.scoreScaleKm }),
+            settings: JSON.stringify({ ...settings, scoreMaxDistanceKm: quest.scoreMaxDistanceKm }),
             enabled: true
           }))
         )

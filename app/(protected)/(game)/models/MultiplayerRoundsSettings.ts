@@ -9,8 +9,8 @@ export interface MultiplayerRoundsSettings {
   /** Seconds of countdown before each round. */
   countdownSeconds: number
   /**
-   * Distance (km) at which a guess scores ~37% (1/e) of the maximum: small for
-   * city quests (15 km), large for country quests (hundreds of km). See utils/score.ts.
+   * Distance (km) from which a guess scores 0 points: the bigger, the more
+   * permissive the scoring (e.g. 3000). See utils/score.ts.
    */
-  scoreScaleKm: number
+  scoreMaxDistanceKm: number
 }
