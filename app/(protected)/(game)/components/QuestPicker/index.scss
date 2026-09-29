@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 24px 16px calc(40px + var(--safe-bottom));
 
@@ -58,6 +58,10 @@
 
   &.mode-2 .header .icon {
     color: var(--color-cyan);
+  }
+
+  &.mode-3 .header .icon {
+    color: var(--color-magenta);
   }
 
   .quests {

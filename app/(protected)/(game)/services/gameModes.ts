@@ -1,5 +1,6 @@
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeEngine } from '@/app/(protected)/(game)/models/GameModeEngine'
+import { battleRoyaleMode } from '@/app/(protected)/(game)/services/battleRoyaleMode'
 import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
 import { classicMultiplayerMode } from '@/app/(protected)/(game)/services/classicMultiplayerMode'
 import { ApiException } from '@/app/models/ApiException'
@@ -15,7 +16,8 @@ import { ApiException } from '@/app/models/ApiException'
 function getEngines(): Partial<Record<GameMode, GameModeEngine>> {
   return {
     [GameMode.CLASSIC]: classicMode as GameModeEngine,
-    [GameMode.CLASSIC_MULTIPLAYER]: classicMultiplayerMode as GameModeEngine
+    [GameMode.CLASSIC_MULTIPLAYER]: classicMultiplayerMode as GameModeEngine,
+    [GameMode.BATTLE_ROYALE]: battleRoyaleMode as GameModeEngine
   }
 }
 

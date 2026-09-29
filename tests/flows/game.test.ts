@@ -141,6 +141,13 @@ describe('classic game flow', () => {
             countdownSeconds: 3,
             scoreScaleKm
           }
+        },
+        {
+          mode: GameMode.BATTLE_ROYALE,
+          name: 'Battle Royale',
+          minPlayers: 3,
+          maxPlayers: 8,
+          settings: { timeLimitSeconds: 60, maxPlayers: 8, revealSeconds: 15, countdownSeconds: 3, scoreScaleKm }
         }
       ])
     }
@@ -194,7 +201,8 @@ describe('classic game flow', () => {
   it('offers the game modes of the main menu, each one with the quests where it can be played', async () => {
     expect(await getGameModes()).toEqual([
       expect.objectContaining({ mode: GameMode.CLASSIC, slug: 'classic', questsCount: 5 }),
-      expect.objectContaining({ mode: GameMode.CLASSIC_MULTIPLAYER, slug: 'multiplayer', questsCount: 5 })
+      expect.objectContaining({ mode: GameMode.CLASSIC_MULTIPLAYER, slug: 'multiplayer', questsCount: 5 }),
+      expect.objectContaining({ mode: GameMode.BATTLE_ROYALE, slug: 'battle-royale', questsCount: 5 })
     ])
 
     await DB.table('quest_modes')

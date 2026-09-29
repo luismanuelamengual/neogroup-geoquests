@@ -15,8 +15,11 @@ import GameButton from '@/app/components/GameButton'
 interface RoundHudProps {
   questName: string | null
   roundNumber: number
-  roundsCount: number
-  totalScore: number
+  /** Rounds of the game (null when it is not known beforehand, e.g. battle royale). */
+  roundsCount: number | null
+  totalScore?: number
+  /** A chip to show instead of the score (e.g. the players left in battle royale). */
+  stat?: { caption: string; value: ReactNode }
   /** Countdown of the round (timed quests). */
   timer?: ReactNode
   /** What the exit confirmation says (by default: the game stays saved). */
@@ -33,7 +36,8 @@ export default function RoundHud({
   questName,
   roundNumber,
   roundsCount,
-  totalScore,
+  totalScore = 0,
+  stat,
   timer,
   exitMessage = DEFAULT_EXIT_MESSAGE,
   onExit
@@ -51,13 +55,11 @@ export default function RoundHud({
       {timer}
       <div className="chip round">
         <span className="caption">Ronda</span>
-        <span className="value">
-          {roundNumber}/{roundsCount}
-        </span>
+        <span className="value">{roundsCount != null ? `${roundNumber}/${roundsCount}` : roundNumber}</span>
       </div>
       <div className="chip score">
-        <span className="caption">Puntos</span>
-        <span className="value">{formatScore(totalScore)}</span>
+        <span className="caption">{stat?.caption ?? 'Puntos'}</span>
+        <span className="value">{stat?.value ?? formatScore(totalScore)}</span>
       </div>
       <Dialog open={confirmExit} onClose={() => setConfirmExit(false)}>
         <DialogTitle>¿Salir de la partida?</DialogTitle>

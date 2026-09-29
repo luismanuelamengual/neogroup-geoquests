@@ -2,7 +2,7 @@
 
 Versión gratuita de un juego tipo *GeoGuessr*: aparecés en una calle de algún lugar del mundo y tenés que adivinar dónde estás marcando un punto en el mapa. Cuanto más cerca, más puntos.
 
-Los *quests* (el contenido: qué lugares del mundo se juegan) y los modos de juego que ofrece cada uno se cargan en la base de datos. Por ahora hay dos modos, **Clásico** (solo) y **Con amigos** (multijugador en vivo, de 2 a 8), y cinco quests: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas) y tres de países, **Argentina**, **España** y **Estados Unidos** (un lugar al azar en cualquier parte del país). Las partidas son de 5 rondas de 2 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
+Los *quests* (el contenido: qué lugares del mundo se juegan) y los modos de juego que ofrece cada uno se cargan en la base de datos. Por ahora hay tres modos, **Clásico** (solo), **Con amigos** (multijugador en vivo, de 2 a 8) y **Battle Royale** (de 3 a 8: en cada ronda queda eliminado el que marcó más lejos), y cinco quests: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas) y tres de países, **Argentina**, **España** y **Estados Unidos** (un lugar al azar en cualquier parte del país). Las partidas son de 5 rondas de 2 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
 
 ## Tech stack
 
@@ -138,8 +138,10 @@ services/   games.ts           servicio genérico: crear, consultar, acciones, h
             gamePersistence.ts lectura / escritura de partidas con bloqueo optimista (games.version)
             gameModes.ts       registro de modos: GameMode → motor
             classicMode.ts     motor del modo Clásico
-            classicMultiplayerMode.ts motor del modo Multijugador
-            roundBasedMode.ts  piezas comunes de los modos multijugador por rondas (reloj, presencia, ranking)
+            classicMultiplayerMode.ts motor del modo Con amigos
+            battleRoyaleMode.ts motor del modo Battle Royale
+            roundBasedMode.ts  mecánica común de los modos multijugador por rondas (reloj compartido,
+                               presencia, respuestas, cierre de ronda, vistas, ranking)
             gameCleanup.ts     limpieza de salas y partidas abandonadas
             rounds.ts          elección de las rondas de una partida
             quests.ts          modos y quests del menú, sus lugares (quest_places) y sus modos (quest_modes)
@@ -151,6 +153,7 @@ utils/      geo.ts        haversine, puntos aleatorios en círculo/polígono, bo
             gameCodes.ts  códigos de invitación de las partidas multijugador
 components/ GameScreen (elige la pantalla según el modo y estado) · Clásico: ClassicGamePlay, ClassicGameSummary
             Multijugador: MultiplayerLobby, InviteButton, MultiplayerGamePlay, RoundCountdown, PlayersStatus,
+            BattleRoyaleGamePlay, BattleRoyaleRoundResult, BattleRoyaleGameSummary,
             MultiplayerRoundResult, Scoreboard, MultiplayerGameSummary · Menú: GameModeCard, GameModeIcon, QuestPicker, QuestCard, JoinGameDialog,
             ActiveGameBanner, MyGames, GameListRow · Comunes: StreetView (iframe de Google),
             GuessMap / ResultMap (MapLibre, con un pin por jugador), GuessPanel, RoundHud, RoundTimer, RoundResult
@@ -217,6 +220,15 @@ Tiempos y límites se configuran por quest en `quest_modes.settings`: `{ "rounds
 curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cronCleanupGames
 ```
 
+### Modo Battle Royale
+
+Usa la misma mecánica que "Con amigos" (sala de espera con código, mismas rondas y mismo reloj para todos, cuenta 3-2-1, resultado de cada ronda con los pines de todos, presencia y abandono; todo en `services/roundBasedMode.ts`), pero con otra regla: **en cada ronda queda eliminado un jugador** y gana el último en pie. De 3 a 8 jugadores, 60 s por ronda (configurables por quest en `quest_modes.settings`, sin `rounds`).
+
+- **Quién cae** cuando se cierra la ronda: si nadie respondió, nadie (se juega otra ronda); si no, los que no respondieron a tiempo; si respondieron todos, el que marcó más lejos y, si hay empate, el que respondió último. Quien abandonó la partida también cae. Nunca se elimina a todos los que siguen jugando (p. ej. un empate exacto entre los dos últimos): en ese caso no cae nadie.
+- **Rondas:** se eligen al empezar, una por eliminación (jugadores − 1) más 2 de repuesto (`SPARE_ROUNDS`) para las rondas sin eliminados. Si se terminan, gana el de más puntos entre los que siguen en pie.
+- **Eliminados:** siguen mirando la partida (ven cada ronda y los pines de todos) pero ya no responden; la ronda sólo espera a los que siguen en pie.
+- **Posiciones:** el ganador 1.º y después según la ronda en que cayó cada uno (los que cayeron en la misma ronda comparten el puesto). Los puntos se muestran pero no deciden la posición; en `game_players` quedan la posición, el resultado (`WON`/`LOST`/`DRAW`) y los puntos.
+
 ### Tiempo por ronda
 
 Cuando el modo tiene `timeLimitSeconds`, el tiempo lo controla el **servidor**:
@@ -279,4 +291,4 @@ yarn test
 ```
 
 - `tests/unit` — geometría, puntaje, evaluación de respuestas, códigos de invitación, autorización del cron, el cliente de Street View (con `fetch` falso) y la validación de panorámicas.
-- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: quests con sus lugares y modos, partida completa, retomar una partida, polling con `sinceVersion`, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), rondas puntuadas una sola vez, permisos, historial paginado, limpieza de partidas abandonadas y caché; y la persistencia con bloqueo optimista (reintentos ante escrituras concurrentes); y el multijugador: sala de espera, códigos, límite de jugadores, inicio, mismas rondas para todos, pines ocultos hasta cerrar la ronda, cierre por tiempo o por jugadores desconectados, siguiente ronda, resultados finales, abandono, anfitrión y limpieza.
+- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: quests con sus lugares y modos, partida completa, retomar una partida, polling con `sinceVersion`, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, quests sin tiempo), rondas puntuadas una sola vez, permisos, historial paginado, limpieza de partidas abandonadas y caché; y la persistencia con bloqueo optimista (reintentos ante escrituras concurrentes); y el multijugador: sala de espera, códigos, límite de jugadores, inicio, mismas rondas para todos, pines ocultos hasta cerrar la ronda, cierre por tiempo o por jugadores desconectados, siguiente ronda, resultados finales, abandono, anfitrión y limpieza; y el Battle Royale: mínimo de jugadores, rondas planificadas, eliminación del más lejano, desempate por el que respondió último, eliminación de quien no respondió o abandonó, rondas sin eliminados y posiciones finales.

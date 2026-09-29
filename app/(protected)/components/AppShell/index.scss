@@ -15,6 +15,10 @@
     border-bottom: 4px solid var(--color-panel-border);
     background: linear-gradient(180deg, var(--color-panel) 0%, var(--color-night-light) 100%);
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
+
+    .brand {
+      display: flex;
+    }
   }
 
   .nav {

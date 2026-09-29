@@ -1,14 +1,29 @@
 import { GameGuess } from '@/app/(protected)/(game)/models/GameGuess'
 import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
+import { GuessAction } from '@/app/(protected)/(game)/models/GuessAction'
+import { MultiplayerGameView } from '@/app/(protected)/(game)/models/MultiplayerGameView'
+import { MultiplayerRoundsData } from '@/app/(protected)/(game)/models/MultiplayerRoundsData'
+import { MultiplayerRoundsSettings } from '@/app/(protected)/(game)/models/MultiplayerRoundsSettings'
+import { MultiplayerRoundView } from '@/app/(protected)/(game)/models/MultiplayerRoundView'
 import { PlayerGuessView } from '@/app/(protected)/(game)/models/PlayerGuessView'
 import { PlayerStandingView } from '@/app/(protected)/(game)/models/PlayerStandingView'
 import { RoundTiming } from '@/app/(protected)/(game)/models/RoundTiming'
+import {
+  evaluateGuess,
+  getRoundTimeLeftMs,
+  isRoundTimeOver,
+  parseGuessPosition,
+  timedOutGuess
+} from '@/app/(protected)/(game)/utils/guesses'
+import { ApiException } from '@/app/models/ApiException'
 
 /**
  * Building blocks shared by the round based multiplayer modes (classic
- * multiplayer today; battle royale tomorrow): clocks, presence, guesses and
- * scoreboards. The mode engines combine them with their own rules.
+ * multiplayer, battle royale): the shared clock of each round, presence,
+ * guesses, closing a round, views and scoreboards. The mode engines combine
+ * them with their own rules (who plays each round, what happens when it
+ * closes, when the game ends).
  */
 
 /**
@@ -79,4 +94,199 @@ export function rankPlayers(userIds: number[], guesses: Record<string, (GameGues
 
     return { ...entry, position }
   })
+}
+
+/** An integer setting within [min, max], or the fallback when missing or invalid. */
+export function intSetting(value: unknown, min: number, max: number, fallback: number): number {
+  const number = Math.round(Number(value ?? fallback))
+
+  return Number.isFinite(number) ? Math.min(Math.max(number, min), max) : fallback
+}
+
+/** State of a multiplayer game waiting for players: no rounds yet (they are chosen when it starts). */
+export function createLobbyData<Settings extends MultiplayerRoundsSettings>(
+  questId: number,
+  settings: Settings
+): MultiplayerRoundsData<Settings> {
+  return {
+    v: 1,
+    settings,
+    questId,
+    phase: 'guessing',
+    currentRound: 0,
+    roundStartedAt: null,
+    revealedAt: null,
+    finished: false,
+    rounds: [],
+    guesses: {}
+  }
+}
+
+/** Clock of the current round (null before the game starts). */
+export function getCurrentTiming(data: MultiplayerRoundsData): RoundTiming | null {
+  return getRoundTiming(data.roundStartedAt, data.settings.timeLimitSeconds)
+}
+
+/** Guess of a player for a round (null: not guessed, or not playing it). */
+export function guessOf(data: MultiplayerRoundsData, userId: number, roundNumber: number): GameGuess | null {
+  return data.guesses[String(userId)]?.[roundNumber - 1] ?? null
+}
+
+/** Starts a round: the same clock for everybody, after the countdown. */
+export function beginRound(data: MultiplayerRoundsData, roundNumber: number, now: Date): void {
+  data.currentRound = roundNumber
+  data.phase = 'guessing'
+  data.roundStartedAt = new Date(now.getTime() + data.settings.countdownSeconds * 1000).toISOString()
+  data.revealedAt = null
+}
+
+/**
+ * Whether the current round must close: every connected player of `playing`
+ * guessed (the acting player counts as connected) or the time ran out.
+ */
+export function isRoundDone(
+  data: MultiplayerRoundsData,
+  playing: GamePlayer[],
+  now: Date,
+  actingUserId: number | null = null
+): boolean {
+  if (data.phase !== 'guessing' || data.currentRound === 0 || data.finished) {
+    return false
+  }
+
+  const connected = playing.filter((player) => player.userId === actingUserId || isPlayerConnected(player, now))
+  const everybodyGuessed =
+    connected.length > 0 && connected.every((player) => guessOf(data, player.userId, data.currentRound) !== null)
+
+  return everybodyGuessed || isRoundTimeOver(getCurrentTiming(data)!, now)
+}
+
+/** Closes the current round: the given players who did not guess score 0, and the result is shown. */
+export function closeRound(data: MultiplayerRoundsData, userIds: number[], now: Date): void {
+  const index = data.currentRound - 1
+
+  for (const userId of userIds) {
+    const playerGuesses = data.guesses[String(userId)]
+
+    if (playerGuesses) {
+      playerGuesses[index] = playerGuesses[index] ?? timedOutGuess()
+    }
+  }
+
+  data.phase = 'reveal'
+  data.revealedAt = now.toISOString()
+}
+
+/** Whether the result of the current round was shown long enough (revealSeconds). */
+export function isRevealOver(data: MultiplayerRoundsData, now: Date): boolean {
+  return (
+    data.phase === 'reveal' &&
+    !!data.revealedAt &&
+    now.getTime() >= new Date(data.revealedAt).getTime() + data.settings.revealSeconds * 1000
+  )
+}
+
+/**
+ * Records the guess of one of the `playing` players for the current round
+ * (validated: right round, started, not guessed yet), with its time.
+ */
+export function recordGuess(
+  data: MultiplayerRoundsData,
+  userId: number,
+  action: GuessAction,
+  playing: GamePlayer[],
+  now: Date
+): void {
+  if (!playing.some((player) => player.userId === userId)) {
+    throw new ApiException('No estás jugando esta ronda', 403)
+  }
+
+  if (data.phase !== 'guessing' || Number(action.roundNumber) !== data.currentRound) {
+    throw new ApiException('Esa ronda ya terminó')
+  }
+
+  const timing = getCurrentTiming(data)!
+
+  if (now < timing.startedAt) {
+    throw new ApiException('La ronda todavía no empezó')
+  }
+
+  if (guessOf(data, userId, data.currentRound)) {
+    throw new ApiException('Ya respondiste esta ronda')
+  }
+
+  const position = parseGuessPosition(action.latitude, action.longitude)
+  const index = data.currentRound - 1
+
+  data.guesses[String(userId)][index] = {
+    ...evaluateGuess(data.rounds[index], position, timing, now, data.settings.scoreScaleKm),
+    guessedAt: now.toISOString()
+  }
+}
+
+/** A round as the players see it: its answer and everybody's guesses only once it is closed. */
+export function toMultiplayerRoundView(data: MultiplayerRoundsData, index: number): MultiplayerRoundView {
+  const round = data.rounds[index]
+  const closed = index < data.currentRound - 1 || data.phase === 'reveal' || data.finished
+
+  return {
+    roundNumber: index + 1,
+    panoId: round.panoId,
+    closed,
+    placeName: closed ? round.placeName : null,
+    countryCode: closed ? round.countryCode : null,
+    location: closed ? { latitude: round.latitude, longitude: round.longitude } : null,
+    guesses: closed
+      ? Object.entries(data.guesses)
+          .flatMap(([userId, playerGuesses]) =>
+            // Players who did not play the round (e.g. already eliminated) have no guess for it.
+            playerGuesses[index] ? [toPlayerGuessView(Number(userId), playerGuesses[index])] : []
+          )
+          .sort((a, b) => b.score - a.score || (a.distanceMeters ?? Infinity) - (b.distanceMeters ?? Infinity))
+      : []
+  }
+}
+
+/** The part of the view every multiplayer round based mode shares (clocks, who guessed, rounds so far). */
+export function toMultiplayerGameView(
+  data: MultiplayerRoundsData,
+  userId: number,
+  limits: { minPlayers: number; maxPlayers: number },
+  now: Date
+): MultiplayerGameView {
+  const started = data.currentRound > 0
+  const guessing = started && !data.finished && data.phase === 'guessing'
+  const timing = started ? getCurrentTiming(data) : null
+  const revealEndsAt =
+    data.phase === 'reveal' && data.revealedAt
+      ? new Date(data.revealedAt).getTime() + data.settings.revealSeconds * 1000
+      : null
+
+  return {
+    phase: data.phase,
+    minPlayers: limits.minPlayers,
+    maxPlayers: limits.maxPlayers,
+    timeLimitSeconds: data.settings.timeLimitSeconds,
+    currentRoundNumber: started ? data.currentRound : null,
+    countdownMs: guessing && timing ? Math.max(0, timing.startedAt.getTime() - now.getTime()) : 0,
+    roundTimeLeftMs:
+      guessing && timing ? Math.min(data.settings.timeLimitSeconds * 1000, getRoundTimeLeftMs(timing, now)) : null,
+    revealTimeLeftMs: !data.finished && revealEndsAt != null ? Math.max(0, revealEndsAt - now.getTime()) : null,
+    hasGuessed: guessing && guessOf(data, userId, data.currentRound) !== null,
+    guessedUserIds: guessing
+      ? Object.keys(data.guesses)
+          .map(Number)
+          .filter((playerId) => guessOf(data, playerId, data.currentRound) !== null)
+      : [],
+    rounds: data.rounds.slice(0, data.currentRound).map((_, index) => toMultiplayerRoundView(data, index))
+  }
+}
+
+/** Active players of the game when it starts: they get their (empty) guesses for every round. */
+export function initGuesses(data: MultiplayerRoundsData, players: GamePlayer[]): void {
+  data.guesses = Object.fromEntries(
+    players
+      .filter((player) => player.status === GamePlayerStatus.ACTIVE)
+      .map((player) => [String(player.userId), data.rounds.map(() => null)])
+  )
 }

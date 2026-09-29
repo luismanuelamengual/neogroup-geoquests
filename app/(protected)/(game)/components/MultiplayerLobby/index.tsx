@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import InviteButton from '@/app/(protected)/(game)/components/InviteButton'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
-import { ClassicMultiplayerGameView } from '@/app/(protected)/(game)/models/ClassicMultiplayerGameView'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
+import { MultiplayerGameView } from '@/app/(protected)/(game)/models/MultiplayerGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
@@ -32,7 +32,7 @@ export default function MultiplayerLobby() {
   const userId = useUserStore((state) => state.user?.id)
   const [starting, setStarting] = useState(false)
   const [leaving, setLeaving] = useState(false)
-  const view = game.modeView as ClassicMultiplayerGameView
+  const view = game.modeView as MultiplayerGameView & { roundsCount?: number }
   const players = game.players.filter((player) => player.status === GamePlayerStatus.ACTIVE)
   const colors = getPlayerColors(game.players)
   const isHost = userId != null && userId === game.hostUserId
@@ -76,7 +76,8 @@ export default function MultiplayerLobby() {
       <GamePanel className="panel" title="Sala de espera" accent="cyan">
         <div className="quest">{game.questName}</div>
         <div className="rules">
-          {view.roundsCount} rondas · {formatTimeLimit(view.timeLimitSeconds)} por ronda
+          {view.roundsCount ? `${view.roundsCount} rondas` : 'Eliminación'} · {formatTimeLimit(view.timeLimitSeconds)}{' '}
+          por ronda
         </div>
         {game.code && (
           <div className="code-box">

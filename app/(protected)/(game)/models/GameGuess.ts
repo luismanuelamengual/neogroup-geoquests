@@ -7,4 +7,6 @@ export interface GameGuess {
   score: number
   /** True when the time ran out before the player guessed (the round scores 0). */
   timedOut: boolean
+  /** When the guess was sent (ISO date; multiplayer modes, used to break ties). */
+  guessedAt?: string
 }

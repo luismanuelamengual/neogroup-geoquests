@@ -14,8 +14,9 @@ import { DB } from '@neogroup/neorm'
  *     (`scoreScaleKm`).
  *
  * A place is stored once and linked to every quest that uses it
- * (`quest_places`). Every quest offers the classic and the classic multiplayer
- * modes (`quest_modes`), with 5 rounds of 120 seconds and the quest's score scale.
+ * (`quest_places`). Every quest offers the classic, classic multiplayer and battle royale
+ * modes (`quest_modes`): 5 rounds of 120 seconds (60 seconds per round in battle
+ * royale) and the quest's score scale.
  *
  * Each place gets a GeoJSON `geometry` (see models/PlaceGeometry.ts): most
  * cities are a circle (center + radius covering the urban core); three of them
@@ -53,7 +54,8 @@ interface SeedQuest {
 /** Game modes offered by every seeded quest (GameMode enum values) and their settings. */
 const MODES = [
   { mode: 1, settings: { rounds: 5, timeLimitSeconds: 120 } },
-  { mode: 2, settings: { rounds: 5, timeLimitSeconds: 120, maxPlayers: 8 } }
+  { mode: 2, settings: { rounds: 5, timeLimitSeconds: 120, maxPlayers: 8 } },
+  { mode: 3, settings: { timeLimitSeconds: 60, maxPlayers: 8 } }
 ]
 
 /** A quest of a whole country: its only place is the country itself. */

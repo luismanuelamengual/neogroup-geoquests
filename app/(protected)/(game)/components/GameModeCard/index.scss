@@ -34,6 +34,11 @@
     --mode-color-dark: var(--color-cyan-dark);
   }
 
+  &.mode-3 {
+    --mode-color: var(--color-magenta);
+    --mode-color-dark: var(--color-magenta-dark);
+  }
+
   .art {
     position: relative;
     display: block;

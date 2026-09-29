@@ -2,6 +2,8 @@
 
 import './index.scss'
 import { ComponentType, useCallback, useEffect, useState } from 'react'
+import BattleRoyaleGamePlay from '@/app/(protected)/(game)/components/BattleRoyaleGamePlay'
+import BattleRoyaleGameSummary from '@/app/(protected)/(game)/components/BattleRoyaleGameSummary'
 import ClassicGamePlay from '@/app/(protected)/(game)/components/ClassicGamePlay'
 import ClassicGameSummary from '@/app/(protected)/(game)/components/ClassicGameSummary'
 import MultiplayerGamePlay from '@/app/(protected)/(game)/components/MultiplayerGamePlay'
@@ -34,6 +36,12 @@ const MODE_SCREENS: Partial<Record<GameMode, ModeScreens>> = {
     Lobby: MultiplayerLobby,
     Play: MultiplayerGamePlay,
     Summary: MultiplayerGameSummary,
+    realtime: true
+  },
+  [GameMode.BATTLE_ROYALE]: {
+    Lobby: MultiplayerLobby,
+    Play: BattleRoyaleGamePlay,
+    Summary: BattleRoyaleGameSummary,
     realtime: true
   }
 }

@@ -17,6 +17,10 @@ export interface ScoreboardEntry {
   roundScore?: number
   /** Extra line under the name (e.g. the distance of the last guess). */
   detail?: string
+  /** Highlighted label next to the name (e.g. "Eliminado"). */
+  badge?: string
+  /** Hide the score column (modes where points do not decide the position). */
+  hideScore?: boolean
 }
 
 interface ScoreboardProps {
@@ -56,8 +60,9 @@ export default function Scoreboard({ entries, players, colors, highlightUserId, 
                 </span>
                 {entry.detail && <span className="detail">{entry.detail}</span>}
               </span>
+              {entry.badge && <span className="badge">{entry.badge}</span>}
               {entry.roundScore != null && <span className="round-score">+{formatScore(entry.roundScore)}</span>}
-              <span className="score">{formatScore(entry.score)}</span>
+              {!entry.hideScore && <span className="score">{formatScore(entry.score)}</span>}
             </li>
           )
         })}

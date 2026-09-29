@@ -5,5 +5,6 @@
  */
 export enum GameMode {
   CLASSIC = 1,
-  CLASSIC_MULTIPLAYER = 2
+  CLASSIC_MULTIPLAYER = 2,
+  BATTLE_ROYALE = 3
 }

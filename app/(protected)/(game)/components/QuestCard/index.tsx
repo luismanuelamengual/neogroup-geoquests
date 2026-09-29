@@ -28,7 +28,8 @@ export default function QuestCard({ quest, mode }: QuestCardProps) {
     return null
   }
 
-  const { rounds, timeLimitSeconds } = questMode.settings
+  const { settings } = questMode
+  const { timeLimitSeconds } = settings
   const multiplayer = questMode.maxPlayers > 1
 
   const handlePlay = async () => {
@@ -65,7 +66,7 @@ export default function QuestCard({ quest, mode }: QuestCardProps) {
         <h2 className="name">{quest.name}</h2>
         <p className="description">{quest.description}</p>
         <div className="tags">
-          <span className="tag">{rounds} rondas</span>
+          <span className="tag">{'rounds' in settings ? `${settings.rounds} rondas` : 'Eliminación'}</span>
           <span className="tag">
             {timeLimitSeconds ? `${formatTimeLimit(timeLimitSeconds)} por ronda` : 'Sin tiempo'}
           </span>
