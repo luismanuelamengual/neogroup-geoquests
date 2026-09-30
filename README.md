@@ -78,7 +78,7 @@ Igual que en TeamUp, el código está organizado en **módulos** dentro de `app/
 
 ```
 app/
-  layout.tsx              Root layout (tema, fuentes, service worker, toasts)
+  layout.tsx              Root layout (tema, fuentes, service worker, toasts, GTM)
   page.tsx                Entry point: landing pública o redirección al menú principal
   globals.scss            Tokens de diseño (colores, safe areas, breakpoints) y estilos globales
   components/             Componentes compartidos (ThemeRegistry, GameButton, GamePanel, Logo, Loading, PlayerAvatar)
