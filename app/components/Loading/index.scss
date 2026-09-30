@@ -1,7 +1,9 @@
 .loading {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 20;
+  overflow: hidden;
+  padding: calc(var(--appbar-height) + var(--safe-top)) 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,6 +72,18 @@
     letter-spacing: 1px;
     text-align: center;
     animation: message-blink 1.4s ease-in-out infinite;
+  }
+}
+
+/* No page scrollbars while the loading screen is visible. */
+html:has(.loading),
+html:has(.loading) body {
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .loading {
+    padding-bottom: calc(72px + var(--safe-bottom));
   }
 }
 
