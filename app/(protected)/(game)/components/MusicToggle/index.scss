@@ -1,0 +1,18 @@
+// Same look as the chips of the HUD (map, round, score).
+.music-toggle {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--color-panel-border) !important;
+  background-color: rgba(27, 35, 80, 0.92) !important;
+  color: var(--color-text-secondary) !important;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+
+  &:hover {
+    background: rgba(27, 35, 80, 0.92);
+    filter: brightness(1.2);
+  }
+
+  &.on {
+    color: var(--color-cyan);
+  }
+}
