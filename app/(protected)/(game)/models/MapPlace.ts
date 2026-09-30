@@ -1,10 +1,10 @@
 import { BaseEntity, Column, Entity } from '@neogroup/neorm'
 
-/** Link between a quest and one of its places (`quest_places` table). */
-@Entity({ table: 'quest_places' })
-export class QuestPlace extends BaseEntity {
+/** Link between a map and one of its places (`map_places` table). */
+@Entity({ table: 'map_places' })
+export class MapPlace extends BaseEntity {
   @Column({ cast: 'number', primaryKey: true })
-  questId!: number
+  mapId!: number
 
   @Column({ cast: 'number', primaryKey: true })
   placeId!: number

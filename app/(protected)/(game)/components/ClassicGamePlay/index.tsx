@@ -20,7 +20,7 @@ function classicView(game: GameView): ClassicGameView {
 
 /**
  * Play screen of a classic game: full-screen street view, HUD (with the
- * countdown of timed quests), guess panel and the result overlay after each
+ * countdown of timed games), guess panel and the result overlay after each
  * guess. Covers the app shell (immersive mode).
  *
  * The game lives in the server, so it can be resumed from any device. Every
@@ -42,7 +42,7 @@ export default function ClassicGamePlay() {
   const view = classicView(game)
   const { currentRoundNumber, timeLimitSeconds, roundTimeLeftMs } = view
 
-  // Starts the clock of the round on screen (timed quests) — idempotent on the server,
+  // Starts the clock of the round on screen (timed games) — idempotent on the server,
   // so a reload keeps the original start time. Also sets the countdown of a resumed round.
   useEffect(() => {
     if (phase !== 'guessing' || currentRoundNumber == null || timeLimitSeconds == null) {
@@ -99,7 +99,7 @@ export default function ClassicGamePlay() {
     <div className="classic-game-play">
       <StreetView panoId={round.panoId} />
       <RoundHud
-        questName={game.questName}
+        mapName={game.mapName}
         roundNumber={displayedRoundNumber}
         roundsCount={view.roundsCount}
         totalScore={view.totalScore}

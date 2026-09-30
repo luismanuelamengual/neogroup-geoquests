@@ -74,7 +74,7 @@ export default function MultiplayerLobby() {
     <div className="multiplayer-lobby">
       {starting && <Loading message="Buscando lugares por el mundo..." />}
       <GamePanel className="panel" title="Sala de espera" accent="cyan">
-        <div className="quest">{game.questName}</div>
+        <div className="map">{game.mapName}</div>
         <div className="rules">
           {view.roundsCount ? `${view.roundsCount} rondas` : 'Eliminación'} · {formatTimeLimit(view.timeLimitSeconds)}{' '}
           por ronda

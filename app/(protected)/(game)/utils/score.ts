@@ -12,15 +12,11 @@ export interface ScoreSettings {
 export const SCORE_SETTINGS = { maxScore: 5000, perfectDistanceMeters: 25 }
 
 /**
- * Default `scoreMaxDistanceKm` setting of a game mode (configurable per quest
- * in `quest_modes.settings`): the distance in km from which a guess scores 0.
- * The bigger it is, the more permissive the scoring.
+ * Default `scoreMaxDistanceKm` setting of the game modes (a map can override it
+ * with its own `maps.scoreMaxDistanceKm`): the distance in km from which a
+ * guess scores 0. The bigger it is, the more permissive the scoring.
  */
 export const DEFAULT_SCORE_MAX_DISTANCE_KM = 2000
-
-/** Bounds accepted for the `scoreMaxDistanceKm` setting. */
-export const MIN_SCORE_MAX_DISTANCE_KM = 1
-export const MAX_SCORE_MAX_DISTANCE_KM = 20000
 
 /** Points of a perfect round. */
 export const MAX_ROUND_SCORE = SCORE_SETTINGS.maxScore

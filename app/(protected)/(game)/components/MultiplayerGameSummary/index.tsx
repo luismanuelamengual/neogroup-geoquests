@@ -66,14 +66,14 @@ export default function MultiplayerGameSummary() {
   )
 
   const handlePlayAgain = async () => {
-    if (game.questId == null) {
+    if (game.mapId == null) {
       return
     }
 
     setStarting(true)
 
     try {
-      const created = await createGame(game.questId, game.mode)
+      const created = await createGame(game.mapId, game.mode)
 
       router.push(`/game/${created.id}`)
     } catch {
@@ -85,7 +85,7 @@ export default function MultiplayerGameSummary() {
     <div className="multiplayer-game-summary">
       {starting && <Loading message="Preparando la sala..." />}
       <GamePanel className="hero" title="¡Partida terminada!" accent="magenta">
-        <div className="mode">{game.questName}</div>
+        <div className="mode">{game.mapName}</div>
         <div className="headline">
           <EmojiEventsIcon className="trophy" />
           {getHeadline(me?.outcome ?? null, me?.position ?? null)}

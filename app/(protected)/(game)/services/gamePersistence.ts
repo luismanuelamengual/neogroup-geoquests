@@ -35,7 +35,7 @@ export interface UpdateGameOptions {
 
 /** A game with its players (and their users); throws 404 when it does not exist. */
 export async function loadGame(gameId: number): Promise<LoadedGame> {
-  const game = Number.isInteger(gameId) ? await Game.where('id', gameId).with('quest').first() : null
+  const game = Number.isInteger(gameId) ? await Game.where('id', gameId).with('map').first() : null
 
   if (!game) {
     throw new ApiException('Partida no encontrada', 404)

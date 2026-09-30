@@ -48,14 +48,14 @@ export default function ClassicGameSummary() {
   )
 
   const handlePlayAgain = async () => {
-    if (game.questId == null) {
+    if (game.mapId == null) {
       return
     }
 
     setStarting(true)
 
     try {
-      const created = await createGame(game.questId, game.mode)
+      const created = await createGame(game.mapId, game.mode)
 
       router.push(`/game/${created.id}`)
     } catch {
@@ -67,7 +67,7 @@ export default function ClassicGameSummary() {
     <div className="classic-game-summary">
       {starting && <Loading message="Buscando lugares por el mundo..." />}
       <GamePanel className="hero" title="¡Partida terminada!" accent="magenta">
-        <div className="mode">{game.questName}</div>
+        <div className="mode">{game.mapName}</div>
         <div className="stars">
           {[1, 2, 3].map((star) => (
             <StarIcon key={star} className={classNames('star', { earned: star <= stars })} />

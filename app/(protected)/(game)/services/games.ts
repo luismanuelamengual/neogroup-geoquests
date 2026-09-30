@@ -20,9 +20,9 @@ import { KickPlayerInput } from '@/app/(protected)/(game)/models/KickPlayerInput
 import { LoadedGame } from '@/app/(protected)/(game)/models/LoadedGame'
 import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { cleanupGames, deleteGames } from '@/app/(protected)/(game)/services/gameCleanup'
-import { findGameModeEngine, getGameModeEngine } from '@/app/(protected)/(game)/services/gameModes'
+import { findGameModeEngine, getGameModeEngine, getGameSettings } from '@/app/(protected)/(game)/services/gameModes'
 import { loadGame, updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
-import { findQuestMode } from '@/app/(protected)/(game)/services/quests'
+import { findMap } from '@/app/(protected)/(game)/services/maps'
 import { getPanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { generateGameCode, normalizeGameCode } from '@/app/(protected)/(game)/utils/gameCodes'
 import { ApiException } from '@/app/models/ApiException'
@@ -69,8 +69,8 @@ function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameCont
     id: game.id,
     mode: game.mode,
     status: game.status,
-    questId: game.questId,
-    questName: game.quest?.name ?? null,
+    mapId: game.mapId,
+    mapName: game.map?.name ?? null,
     code: game.code,
     hostUserId: game.hostUserId,
     version: game.version,
@@ -147,18 +147,18 @@ async function generateUniqueCode(ctx: GameContext): Promise<string> {
 }
 
 /**
- * Creates a game of a quest in one of its modes. Single player games start
+ * Creates a game in a map with one of the game modes. Single player games start
  * right away; multiplayer games wait for players (status LOBBY) with an
  * invitation code, and their creator is the host.
  */
 export async function createGame(userId: number, input: CreateGameInput, options: GameOptions = {}): Promise<GameView> {
   const ctx = resolveContext(options)
   const engine = getGameModeEngine(input?.mode)
-  const questId = Number(input?.questId)
-  const questMode = await findQuestMode(questId, engine.definition.mode)
+  const mapId = Number(input?.mapId)
+  const map = await findMap(mapId)
 
-  if (!questMode) {
-    throw new ApiException('Modo de juego no encontrado', 404)
+  if (!map) {
+    throw new ApiException('Mapa no encontrado', 404)
   }
 
   const multiplayer = engine.definition.maxPlayers > 1
@@ -167,15 +167,15 @@ export async function createGame(userId: number, input: CreateGameInput, options
     throw new ApiException('Ya estás en otra partida con amigos', 409)
   }
 
-  const settings = engine.resolveSettings(questMode.settings ?? {})
-  const data = await engine.create(questId, settings, ctx)
+  const settings = getGameSettings(engine, map)
+  const data = await engine.create(mapId, settings, ctx)
 
   await cleanupGames(ctx)
 
   const game = new Game()
 
   game.mode = engine.definition.mode
-  game.questId = questId
+  game.mapId = mapId
   game.status = multiplayer ? GameStatus.LOBBY : GameStatus.IN_PROGRESS
   game.code = multiplayer ? await generateUniqueCode(ctx) : null
   game.hostUserId = multiplayer ? userId : null
@@ -479,7 +479,7 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
     .get()
   const page = rows.slice(0, safeLimit)
   const gameIds = page.map((row) => row.gameId)
-  const games = gameIds.length > 0 ? await Game.whereIn('id', gameIds).with('quest').get() : []
+  const games = gameIds.length > 0 ? await Game.whereIn('id', gameIds).with('map').get() : []
   const participants = gameIds.length > 0 ? await GamePlayer.whereIn('gameId', gameIds).select('gameId').get() : []
   const items = page.flatMap((row): GameListItem[] => {
     const game = games.find((candidate) => candidate.id === row.gameId)
@@ -495,8 +495,8 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
       {
         id: game.id,
         mode: game.mode,
-        questId: game.questId,
-        questName: game.quest?.name ?? null,
+        mapId: game.mapId,
+        mapName: game.map?.name ?? null,
         status: game.status,
         playersCount: participants.filter((participant) => participant.gameId === game.id).length,
         score: game.status === GameStatus.FINISHED ? row.score : summary.score,

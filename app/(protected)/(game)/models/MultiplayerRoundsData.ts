@@ -12,8 +12,8 @@ export interface MultiplayerRoundsData<Settings extends MultiplayerRoundsSetting
   /** Format version of this object. */
   v: 1
   settings: Settings
-  /** Quest the rounds are drawn from (they are chosen when the host starts the game). */
-  questId: number
+  /** Map the rounds are drawn from (they are chosen when the host starts the game). */
+  mapId: number
   phase: RoundPhase
   /** Round being played or shown (1-based); 0 while waiting for players. */
   currentRound: number

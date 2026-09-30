@@ -1,5 +1,5 @@
 import { DB } from '@neogroup/neorm'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ClassicGameData } from '@/app/(protected)/(game)/models/ClassicGameData'
 import { ClassicGameView } from '@/app/(protected)/(game)/models/ClassicGameView'
 import { Game } from '@/app/(protected)/(game)/models/Game'
@@ -11,9 +11,12 @@ import { GameRound } from '@/app/(protected)/(game)/models/GameRound'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
+import { Map as GameMap } from '@/app/(protected)/(game)/models/Map'
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { PlaceLocation } from '@/app/(protected)/(game)/models/PlaceLocation'
+import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
 import { cleanupGames, LOBBY_MAX_AGE_MS } from '@/app/(protected)/(game)/services/gameCleanup'
+import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGame, getGames, getPlayerStats, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import {
   findLiveLocation,
@@ -22,7 +25,7 @@ import {
   MAX_CACHED_LOCATIONS_PER_PLACE,
   SEARCH_RADII_METERS
 } from '@/app/(protected)/(game)/services/locations'
-import { getGameModes, getQuestPlaces, getQuests } from '@/app/(protected)/(game)/services/quests'
+import { getMapPlaces, getMaps } from '@/app/(protected)/(game)/services/maps'
 import { ROUND_TIME_GRACE_MS } from '@/app/(protected)/(game)/utils/guesses'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
@@ -41,18 +44,23 @@ function classic(game: GameView): ClassicGameView {
 
 describe('classic game flow', () => {
   let userId: number
-  let questId: number
+  let mapId: number
+  const originalSettings = classicMode.definition.settings
+
+  afterEach(() => {
+    classicMode.definition.settings = originalSettings
+  })
 
   beforeEach(async () => {
     await resetDatabase()
     userId = await createUser()
-    questId = (await getQuests())[0].id
+    mapId = (await getMaps())[0].id
   })
 
-  function create(options: GameOptions = {}, targetQuestId = questId): Promise<GameView> {
+  function create(options: GameOptions = {}, targetMapId = mapId): Promise<GameView> {
     return createGame(
       userId,
-      { questId: targetQuestId, mode: GameMode.CLASSIC },
+      { mapId: targetMapId, mode: GameMode.CLASSIC },
       { finder: new FakePanoramaFinder(), ...options }
     )
   }
@@ -74,86 +82,52 @@ describe('classic game flow', () => {
     return ((await Game.find(gameId))!.data as ClassicGameData).rounds
   }
 
-  /** Starts the current round and guesses it (the normal flow of a timed quest). */
+  /** Starts the current round and guesses it (the normal flow of a timed game). */
   async function play(gameId: number, position: LatLng | null): Promise<GameView> {
     const started = await act(gameId, { type: 'startRound' })
 
     return guess(gameId, classic(started).currentRoundNumber!, position)
   }
 
-  /** Links a new quest to the Argentinian places, offering the given modes. */
-  async function createArgentinaQuest(modes: { mode: GameMode; settings: object }[]): Promise<number> {
-    await DB.table('quests').insert({ name: 'Ciudades argentinas', description: 'Solo Argentina', enabled: true })
+  /** Creates a map with the Argentinian cities (optionally with its own score scale). */
+  async function createArgentinaMap(scoreMaxDistanceKm: number | null = null, withPlaces = true): Promise<number> {
+    await DB.table('maps').insert({
+      name: 'Ciudades argentinas',
+      description: 'Solo Argentina',
+      settings: scoreMaxDistanceKm == null ? null : JSON.stringify({ scoreMaxDistanceKm }),
+      enabled: true
+    })
 
-    const argentinaId = Number((await DB.table('quests').where('name', 'Ciudades argentinas').first())!.id)
-    // The Argentinian cities (not the whole country, the place of the "Argentina" quest).
+    const argentinaId = Number((await DB.table('maps').where('name', 'Ciudades argentinas').first())!.id)
+    // The Argentinian cities (not the whole country, the place of the "Argentina" map).
     const places = (await Place.where('countryCode', 'AR').get()).filter((place) => place.name !== 'Argentina')
 
-    await DB.table('quest_places').insert(places.map((place) => ({ questId: argentinaId, placeId: place.id })))
-
-    if (modes.length > 0) {
-      await DB.table('quest_modes').insert(
-        modes.map(({ mode, settings }) => ({
-          questId: argentinaId,
-          mode,
-          settings: JSON.stringify(settings),
-          enabled: true
-        }))
-      )
+    if (withPlaces) {
+      await DB.table('map_places').insert(places.map((place) => ({ mapId: argentinaId, placeId: place.id })))
     }
 
     return argentinaId
   }
 
-  it('seeds the city quests and the country quests, all with their playable modes', async () => {
-    const quests = await getQuests()
+  it('seeds the city maps and the country maps', async () => {
+    const maps = await getMaps()
 
-    expect(quests.map((quest) => [quest.name, quest.placesCount])).toEqual([
+    expect(maps.map((map) => [map.name, map.placesCount])).toEqual([
       ['Ciudades famosas', 20],
       ['Ciudades del mundo', 150],
       ['Argentina', 1],
       ['España', 1],
       ['Estados Unidos', 1]
     ])
-    expect(quests[0].image).toBe('/quests/ciudades-del-mundo.png')
+    expect(maps[0].image).toBe('/maps/ciudades-del-mundo.png')
 
-    for (const quest of quests) {
-      const scoreMaxDistanceKm = { Argentina: 3500, España: 1000, 'Estados Unidos': 4000 }[quest.name] ?? 2000
-
-      expect(quest.modes).toEqual([
-        {
-          mode: GameMode.CLASSIC,
-          name: 'Clásico',
-          minPlayers: 1,
-          maxPlayers: 1,
-          settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm }
-        },
-        {
-          mode: GameMode.CLASSIC_MULTIPLAYER,
-          name: 'Con amigos',
-          minPlayers: 2,
-          maxPlayers: 8,
-          settings: {
-            rounds: 5,
-            timeLimitSeconds: 120,
-            maxPlayers: 8,
-            revealSeconds: 15,
-            countdownSeconds: 3,
-            scoreMaxDistanceKm
-          }
-        },
-        {
-          mode: GameMode.BATTLE_ROYALE,
-          name: 'Battle Royale',
-          minPlayers: 3,
-          maxPlayers: 8,
-          settings: { timeLimitSeconds: 60, maxPlayers: 8, revealSeconds: 15, countdownSeconds: 3, scoreMaxDistanceKm }
-        }
-      ])
+    // No seeded map overrides the settings of the game modes.
+    for (const map of maps) {
+      expect((await GameMap.find(map.id))!.settings).toBeNull()
     }
 
-    const famous = await getQuestPlaces(questId)
-    const world = await getQuestPlaces(quests[1].id)
+    const famous = await getMapPlaces(mapId)
+    const world = await getMapPlaces(maps[1].id)
 
     expect(famous.filter((place) => place.geometry.type === 'Polygon')).toHaveLength(3)
     expect(famous.map((place) => place.name)).toEqual(expect.arrayContaining(['París', 'Roma', 'Buenos Aires']))
@@ -164,16 +138,16 @@ describe('classic game flow', () => {
       coordinates: [-68.8458, -32.8895],
       radius: 5000
     })
-    // Every famous city is also a city of the world (the same place, linked to both quests).
+    // Every famous city is also a city of the world (the same place, linked to both maps).
     expect(famous.every((place) => world.some((other) => other.id === place.id))).toBe(true)
     expect(new Set(world.map((place) => place.countryCode)).size).toBe(36)
-    // A country quest has a single place: the whole country (not part of "Ciudades del mundo").
+    // A country map has a single place: the whole country (not part of "Ciudades del mundo").
     expect(world.map((place) => place.name)).not.toContain('Argentina')
   })
 
-  it('plays a country quest anywhere in the country, with searches and scores sized for it', async () => {
-    const argentina = (await getQuests()).find((quest) => quest.name === 'Argentina')!
-    const [country] = await getQuestPlaces(argentina.id)
+  it('plays a country map anywhere in the country, with searches sized for it', async () => {
+    const argentina = (await getMaps()).find((map) => map.name === 'Argentina')!
+    const [country] = await getMapPlaces(argentina.id)
     const finder = new FakePanoramaFinder()
     const game = await create({ finder }, argentina.id)
     const answers = await answersOf(game.id)
@@ -187,7 +161,7 @@ describe('classic game flow', () => {
       Math.max(...answers.map((round) => round.latitude)) - Math.min(...answers.map((round) => round.latitude))
     ).toBeGreaterThan(1)
 
-    // 100 km off in a country quest still scores well (it would be ~6 points in a city quest).
+    // 100 km off, with the score scale of the mode (2.000 km).
     await act(game.id, { type: 'startRound' })
 
     const result = classic(
@@ -195,23 +169,49 @@ describe('classic game flow', () => {
     )
 
     expect(result.rounds[0].distanceMeters).toBeGreaterThan(95_000)
-    expect(result.rounds[0].score).toBeGreaterThan(3500)
+    expect(result.rounds[0].score).toBeGreaterThan(3000)
   })
 
-  it('offers the game modes of the main menu, each one with the quests where it can be played', async () => {
-    expect(await getGameModes()).toEqual([
-      expect.objectContaining({ mode: GameMode.CLASSIC, slug: 'classic', questsCount: 5 }),
-      expect.objectContaining({ mode: GameMode.CLASSIC_MULTIPLAYER, slug: 'multiplayer', questsCount: 5 }),
-      expect.objectContaining({ mode: GameMode.BATTLE_ROYALE, slug: 'battle-royale', questsCount: 5 })
+  it('offers the game modes of the main menu, each one with its fixed rules', () => {
+    expect(getGameModes()).toEqual([
+      expect.objectContaining({
+        mode: GameMode.CLASSIC,
+        slug: 'classic',
+        name: 'Clásico',
+        minPlayers: 1,
+        maxPlayers: 1,
+        settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: 2000 }
+      }),
+      expect.objectContaining({
+        mode: GameMode.CLASSIC_MULTIPLAYER,
+        slug: 'multiplayer',
+        name: 'Con amigos',
+        minPlayers: 2,
+        maxPlayers: 8,
+        settings: {
+          rounds: 5,
+          timeLimitSeconds: 120,
+          maxPlayers: 8,
+          revealSeconds: 15,
+          countdownSeconds: 3,
+          scoreMaxDistanceKm: 2000
+        }
+      }),
+      expect.objectContaining({
+        mode: GameMode.BATTLE_ROYALE,
+        slug: 'battle-royale',
+        name: 'Battle Royale',
+        minPlayers: 3,
+        maxPlayers: 8,
+        settings: {
+          timeLimitSeconds: 60,
+          maxPlayers: 8,
+          revealSeconds: 15,
+          countdownSeconds: 3,
+          scoreMaxDistanceKm: 2000
+        }
+      })
     ])
-
-    await DB.table('quest_modes')
-      .where('questId', questId)
-      .where('mode', GameMode.CLASSIC_MULTIPLAYER)
-      .update({ enabled: false })
-
-    expect((await getQuests(GameMode.CLASSIC_MULTIPLAYER)).map((quest) => quest.name)).not.toContain('Ciudades famosas')
-    expect((await getGameModes()).find((mode) => mode.mode === GameMode.CLASSIC_MULTIPLAYER)?.questsCount).toBe(4)
   })
 
   it('starts a game with one round per place, hiding the answers', async () => {
@@ -220,7 +220,7 @@ describe('classic game flow', () => {
     expect(game).toMatchObject({
       mode: GameMode.CLASSIC,
       status: GameStatus.IN_PROGRESS,
-      questName: 'Ciudades famosas',
+      mapName: 'Ciudades famosas',
       code: null,
       hostUserId: null,
       version: 1
@@ -244,29 +244,34 @@ describe('classic game flow', () => {
     expect(await GamePlayer.count()).toBe(1)
   })
 
-  it('only uses the places linked to the quest, with the settings of the quest', async () => {
-    const argentinaId = await createArgentinaQuest([
-      { mode: GameMode.CLASSIC, settings: { rounds: 2, timeLimitSeconds: null } }
-    ])
+  it('only uses the places linked to the map, with the rules of the mode', async () => {
+    const argentinaId = await createArgentinaMap()
 
-    expect((await getQuests()).find((quest) => quest.name === 'Ciudades argentinas')).toMatchObject({
-      placesCount: 7,
-      modes: [{ mode: GameMode.CLASSIC, settings: { rounds: 2, timeLimitSeconds: null } }]
-    })
+    expect((await getMaps()).find((map) => map.name === 'Ciudades argentinas')).toMatchObject({ placesCount: 7 })
 
     const game = await create({}, argentinaId)
 
-    expect(classic(game)).toMatchObject({ roundsCount: 2, timeLimitSeconds: null })
-    expect((await answersOf(game.id)).map((round) => round.countryCode)).toEqual(['AR', 'AR'])
+    expect(classic(game)).toMatchObject({ roundsCount: 5, timeLimitSeconds: 120 })
+    expect((await answersOf(game.id)).map((round) => round.countryCode)).toEqual(['AR', 'AR', 'AR', 'AR', 'AR'])
+    expect((await Game.find(game.id))!.data).toMatchObject({ settings: { scoreMaxDistanceKm: 2000 } })
   })
 
-  it('does not offer quests without playable modes, nor modes a quest does not have', async () => {
-    const argentinaId = await createArgentinaQuest([])
+  it('lets a map override only the score scale of the mode', async () => {
+    const argentinaId = await createArgentinaMap(1234)
+    const game = await create({}, argentinaId)
 
-    expect((await getQuests()).map((quest) => quest.name)).not.toContain('Ciudades argentinas')
-    await expect(create({}, argentinaId)).rejects.toThrow('Modo de juego no encontrado')
+    expect((await Game.find(game.id))!.data).toMatchObject({
+      settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: 1234 }
+    })
+  })
+
+  it('does not offer maps without places, nor unknown game modes', async () => {
+    const emptyId = await createArgentinaMap(null, false)
+
+    expect((await getMaps()).map((map) => map.name)).not.toContain('Ciudades argentinas')
+    await expect(create({}, emptyId)).rejects.toThrow('no tiene lugares')
     await expect(
-      createGame(userId, { questId, mode: 99 as GameMode }, { finder: new FakePanoramaFinder() })
+      createGame(userId, { mapId, mode: 99 as GameMode }, { finder: new FakePanoramaFinder() })
     ).rejects.toThrow('Modo de juego no disponible')
   })
 
@@ -378,11 +383,8 @@ describe('classic game flow', () => {
       expect(classic(await play(game.id, null)).rounds[0]).toMatchObject({ score: 0, timedOut: true, guess: null })
     })
 
-    it('has no clock for quests without time limit', async () => {
-      await DB.table('quest_modes')
-        .where('questId', questId)
-        .where('mode', GameMode.CLASSIC)
-        .update({ settings: JSON.stringify({ rounds: 5, timeLimitSeconds: null }) })
+    it('has no clock for a mode without time limit', async () => {
+      classicMode.definition.settings = { ...classicMode.definition.settings, timeLimitSeconds: null }
 
       const game = await create()
 
@@ -442,7 +444,7 @@ describe('classic game flow', () => {
     expect(firstPage.items[0].id).toBeGreaterThan(firstPage.items[1].id)
     expect(firstPage.items[0]).toMatchObject({
       mode: GameMode.CLASSIC,
-      questName: 'Ciudades famosas',
+      mapName: 'Ciudades famosas',
       status: GameStatus.IN_PROGRESS,
       playersCount: 1,
       maxScore: 25000,
@@ -459,7 +461,7 @@ describe('classic game flow', () => {
 
     await DB.table('games').insert({
       mode: GameMode.CLASSIC_MULTIPLAYER,
-      questId,
+      mapId,
       status: GameStatus.LOBBY,
       code: 'ABCDEF',
       hostUserId: userId,
@@ -485,7 +487,7 @@ describe('classic game flow', () => {
 
   /** Fills the fallback cache of every place with one "cached-<placeId>" location. */
   async function fillCache() {
-    const places = await getQuestPlaces(questId)
+    const places = await getMapPlaces(mapId)
 
     await DB.table('place_locations').insert(
       places.map((place) => {
@@ -517,7 +519,7 @@ describe('classic game flow', () => {
   })
 
   it('widens the search radius on every attempt', async () => {
-    const [place] = await getQuestPlaces(questId)
+    const [place] = await getMapPlaces(mapId)
     const finder = new FakePanoramaFinder('empty')
 
     expect((await findLiveLocation(place, finder)).panorama).toBeNull()
@@ -535,7 +537,7 @@ describe('classic game flow', () => {
   })
 
   it('keeps the cache of each place bounded but rotating', async () => {
-    const [place] = await getQuestPlaces(questId)
+    const [place] = await getMapPlaces(mapId)
 
     await DB.table('place_locations').insert(
       Array.from({ length: MAX_CACHED_LOCATIONS_PER_PLACE }, (_, index) => ({
@@ -557,9 +559,9 @@ describe('classic game flow', () => {
     expect(await Game.count()).toBe(0)
   })
 
-  it('rejects unknown or disabled quests', async () => {
+  it('rejects unknown or disabled maps', async () => {
     await expect(create({}, 999)).rejects.toThrow('no encontrado')
-    await DB.table('quests').where('id', questId).update({ enabled: false })
+    await DB.table('maps').where('id', mapId).update({ enabled: false })
     await expect(create()).rejects.toThrow('no encontrado')
   })
 })

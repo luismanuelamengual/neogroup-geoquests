@@ -14,9 +14,7 @@ import {
   beginRound,
   closeRound,
   createLobbyData,
-  floatSetting,
   initGuesses,
-  intSetting,
   isRevealOver,
   isRoundDone,
   rankPlayers,
@@ -24,12 +22,7 @@ import {
   toMultiplayerGameView
 } from '@/app/(protected)/(game)/services/roundBasedMode'
 import { planGameRounds } from '@/app/(protected)/(game)/services/rounds'
-import {
-  DEFAULT_SCORE_MAX_DISTANCE_KM,
-  MAX_ROUND_SCORE,
-  MAX_SCORE_MAX_DISTANCE_KM,
-  MIN_SCORE_MAX_DISTANCE_KM
-} from '@/app/(protected)/(game)/utils/score'
+import { DEFAULT_SCORE_MAX_DISTANCE_KM, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
 import { ApiException } from '@/app/models/ApiException'
 
 const definition: GameModeDefinition<ClassicMultiplayerGameSettings> = {
@@ -41,7 +34,7 @@ const definition: GameModeDefinition<ClassicMultiplayerGameSettings> = {
   minPlayers: 2,
   maxPlayers: 8,
   realtime: true,
-  defaultSettings: {
+  settings: {
     rounds: 5,
     timeLimitSeconds: 120,
     maxPlayers: 8,
@@ -100,36 +93,13 @@ export const classicMultiplayerMode: GameModeEngine<
 > = {
   definition,
 
-  resolveSettings(questSettings) {
-    const defaults = definition.defaultSettings
-
-    return {
-      rounds: intSetting(questSettings.rounds, 1, 20, defaults.rounds),
-      timeLimitSeconds: intSetting(questSettings.timeLimitSeconds, 10, 600, defaults.timeLimitSeconds),
-      maxPlayers: intSetting(
-        questSettings.maxPlayers,
-        definition.minPlayers,
-        definition.maxPlayers,
-        defaults.maxPlayers
-      ),
-      revealSeconds: intSetting(questSettings.revealSeconds, 3, 60, defaults.revealSeconds),
-      countdownSeconds: intSetting(questSettings.countdownSeconds, 0, 10, defaults.countdownSeconds),
-      scoreMaxDistanceKm: floatSetting(
-        questSettings.scoreMaxDistanceKm,
-        MIN_SCORE_MAX_DISTANCE_KM,
-        MAX_SCORE_MAX_DISTANCE_KM,
-        defaults.scoreMaxDistanceKm
-      )
-    }
-  },
-
-  async create(questId, settings) {
-    if (questId == null) {
-      throw new ApiException('Modo de juego no encontrado', 404)
+  async create(mapId, settings) {
+    if (mapId == null) {
+      throw new ApiException('Mapa no encontrado', 404)
     }
 
     // The rounds are chosen when the host starts the game.
-    return createLobbyData(questId, settings)
+    return createLobbyData(mapId, settings)
   },
 
   getMaxPlayers(data) {
@@ -137,7 +107,7 @@ export const classicMultiplayerMode: GameModeEngine<
   },
 
   async start(data, { players }, ctx: GameContext) {
-    data.rounds = await planGameRounds(data.questId, data.settings.rounds, ctx)
+    data.rounds = await planGameRounds(data.mapId, data.settings.rounds, ctx)
     initGuesses(data, players)
     beginRound(data, 1, ctx.now)
   },

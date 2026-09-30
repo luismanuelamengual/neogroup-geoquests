@@ -1,5 +1,4 @@
-import { DB } from '@neogroup/neorm'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { ClassicMultiplayerGameData } from '@/app/(protected)/(game)/models/ClassicMultiplayerGameData'
 import { ClassicMultiplayerGameView } from '@/app/(protected)/(game)/models/ClassicMultiplayerGameView'
 import { Game } from '@/app/(protected)/(game)/models/Game'
@@ -12,6 +11,7 @@ import { GameRound } from '@/app/(protected)/(game)/models/GameRound'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
+import { classicMultiplayerMode } from '@/app/(protected)/(game)/services/classicMultiplayerMode'
 import { cleanupGames } from '@/app/(protected)/(game)/services/gameCleanup'
 import {
   createGame,
@@ -24,7 +24,7 @@ import {
   sendGameAction,
   startGame
 } from '@/app/(protected)/(game)/services/games'
-import { getQuests } from '@/app/(protected)/(game)/services/quests'
+import { getMaps } from '@/app/(protected)/(game)/services/maps'
 import { ROUND_TIME_GRACE_MS } from '@/app/(protected)/(game)/utils/guesses'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
@@ -58,18 +58,23 @@ describe('classic multiplayer flow', () => {
   let host: number
   let ana: number
   let beto: number
-  let questId: number
+  let mapId: number
+  const originalSettings = classicMultiplayerMode.definition.settings
 
   beforeEach(async () => {
     await resetDatabase()
     host = await createUser('host@geoquests.test')
     ana = await createUser('ana@geoquests.test')
     beto = await createUser('beto@geoquests.test')
-    questId = (await getQuests())[0].id
+    mapId = (await getMaps())[0].id
+  })
+
+  afterEach(() => {
+    classicMultiplayerMode.definition.settings = originalSettings
   })
 
   function createLobby(ms = 0): Promise<GameView> {
-    return createGame(host, { questId, mode: GameMode.CLASSIC_MULTIPLAYER }, at(ms))
+    return createGame(host, { mapId, mode: GameMode.CLASSIC_MULTIPLAYER }, at(ms))
   }
 
   function guess(userId: number, gameId: number, roundNumber: number, position: LatLng | null, ms: number) {
@@ -130,7 +135,7 @@ describe('classic multiplayer flow', () => {
 
     await expect(createLobby()).rejects.toThrow('Ya estás en otra partida')
 
-    const other = await createGame(beto, { questId, mode: GameMode.CLASSIC_MULTIPLAYER }, at(0))
+    const other = await createGame(beto, { mapId, mode: GameMode.CLASSIC_MULTIPLAYER }, at(0))
 
     await joinGame(ana, { code: lobby.code! }, at(0))
     await expect(joinGame(ana, { code: other.code! }, at(0))).rejects.toThrow('Ya estás en otra partida')
@@ -138,10 +143,7 @@ describe('classic multiplayer flow', () => {
   })
 
   it('does not accept more players than the settings allow', async () => {
-    await DB.table('quest_modes')
-      .where('questId', questId)
-      .where('mode', GameMode.CLASSIC_MULTIPLAYER)
-      .update({ settings: JSON.stringify({ maxPlayers: 2 }) })
+    classicMultiplayerMode.definition.settings = { ...classicMultiplayerMode.definition.settings, maxPlayers: 2 }
 
     const lobby = await createLobby()
 

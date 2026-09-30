@@ -13,14 +13,14 @@ import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 
 interface RoundHudProps {
-  questName: string | null
+  mapName: string | null
   roundNumber: number
   /** Rounds of the game (null when it is not known beforehand, e.g. battle royale). */
   roundsCount: number | null
   totalScore?: number
   /** A chip to show instead of the score (e.g. the players left in battle royale). */
   stat?: { caption: string; value: ReactNode }
-  /** Countdown of the round (timed quests). */
+  /** Countdown of the round (timed games). */
   timer?: ReactNode
   /** What the exit confirmation says (by default: the game stays saved). */
   exitMessage?: string
@@ -31,9 +31,9 @@ interface RoundHudProps {
 const DEFAULT_EXIT_MESSAGE =
   'La partida queda guardada: podés retomarla desde el menú principal. Si la ronda tiene tiempo, el reloj sigue corriendo.'
 
-/** Heads-up display of the play screen: exit, quest, round countdown, round counter and total score. */
+/** Heads-up display of the play screen: exit, map, round countdown, round counter and total score. */
 export default function RoundHud({
-  questName,
+  mapName,
   roundNumber,
   roundsCount,
   totalScore = 0,
@@ -50,7 +50,7 @@ export default function RoundHud({
       <IconButton className="exit" onClick={() => setConfirmExit(true)} aria-label="Salir de la partida">
         <CloseIcon />
       </IconButton>
-      <div className="chip quest">{questName}</div>
+      <div className="chip map">{mapName}</div>
       <div className="spacer" />
       {timer}
       <div className="chip round">

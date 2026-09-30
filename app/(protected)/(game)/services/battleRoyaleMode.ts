@@ -15,10 +15,8 @@ import {
   beginRound,
   closeRound,
   createLobbyData,
-  floatSetting,
   guessOf,
   initGuesses,
-  intSetting,
   isRevealOver,
   isRoundDone,
   rankPlayers,
@@ -26,11 +24,7 @@ import {
   toMultiplayerGameView
 } from '@/app/(protected)/(game)/services/roundBasedMode'
 import { planGameRounds } from '@/app/(protected)/(game)/services/rounds'
-import {
-  DEFAULT_SCORE_MAX_DISTANCE_KM,
-  MAX_SCORE_MAX_DISTANCE_KM,
-  MIN_SCORE_MAX_DISTANCE_KM
-} from '@/app/(protected)/(game)/utils/score'
+import { DEFAULT_SCORE_MAX_DISTANCE_KM } from '@/app/(protected)/(game)/utils/score'
 import { ApiException } from '@/app/models/ApiException'
 
 /**
@@ -48,7 +42,7 @@ const definition: GameModeDefinition<BattleRoyaleGameSettings> = {
   minPlayers: 3,
   maxPlayers: 8,
   realtime: true,
-  defaultSettings: {
+  settings: {
     timeLimitSeconds: 60,
     maxPlayers: 8,
     revealSeconds: 15,
@@ -201,35 +195,13 @@ function getStandings(data: BattleRoyaleGameData): BattleRoyaleStandingView[] {
 export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyaleGameSettings, BattleRoyaleGameView> = {
   definition,
 
-  resolveSettings(questSettings) {
-    const defaults = definition.defaultSettings
-
-    return {
-      timeLimitSeconds: intSetting(questSettings.timeLimitSeconds, 10, 600, defaults.timeLimitSeconds),
-      maxPlayers: intSetting(
-        questSettings.maxPlayers,
-        definition.minPlayers,
-        definition.maxPlayers,
-        defaults.maxPlayers
-      ),
-      revealSeconds: intSetting(questSettings.revealSeconds, 3, 60, defaults.revealSeconds),
-      countdownSeconds: intSetting(questSettings.countdownSeconds, 0, 10, defaults.countdownSeconds),
-      scoreMaxDistanceKm: floatSetting(
-        questSettings.scoreMaxDistanceKm,
-        MIN_SCORE_MAX_DISTANCE_KM,
-        MAX_SCORE_MAX_DISTANCE_KM,
-        defaults.scoreMaxDistanceKm
-      )
-    }
-  },
-
-  async create(questId, settings) {
-    if (questId == null) {
-      throw new ApiException('Modo de juego no encontrado', 404)
+  async create(mapId, settings) {
+    if (mapId == null) {
+      throw new ApiException('Mapa no encontrado', 404)
     }
 
     // The rounds are chosen when the host starts the game (their number depends on the players).
-    return { ...createLobbyData(questId, settings), eliminations: [] }
+    return { ...createLobbyData(mapId, settings), eliminations: [] }
   },
 
   getMaxPlayers(data) {
@@ -239,7 +211,7 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
   async start(data, { players }, ctx: GameContext) {
     const playersCount = players.filter((player) => player.status === GamePlayerStatus.ACTIVE).length
 
-    data.rounds = await planGameRounds(data.questId, playersCount - 1 + SPARE_ROUNDS, ctx)
+    data.rounds = await planGameRounds(data.mapId, playersCount - 1 + SPARE_ROUNDS, ctx)
     data.eliminations = []
     initGuesses(data, players)
     beginRound(data, 1, ctx.now)

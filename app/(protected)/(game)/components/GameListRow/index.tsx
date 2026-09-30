@@ -38,7 +38,7 @@ export default function GameListRow({ game, detailed }: GameListRowProps) {
   return (
     <Link href={`/game/${game.id}`} className="game-list-row">
       <div className="info">
-        <span className="quest">{game.questName}</span>
+        <span className="map">{game.mapName}</span>
         <span className="date">{dateFormatter.format(new Date(game.createdAt))}</span>
         {detailed && finished && game.maxScore != null && (
           <ScoreBar value={game.score} max={game.maxScore} className="bar" />

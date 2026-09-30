@@ -120,7 +120,7 @@ export default function MultiplayerGamePlay() {
     <div className="multiplayer-game-play">
       <StreetView panoId={round.panoId} />
       <RoundHud
-        questName={game.questName}
+        mapName={game.mapName}
         roundNumber={roundNumber}
         roundsCount={view.roundsCount}
         totalScore={myScore}

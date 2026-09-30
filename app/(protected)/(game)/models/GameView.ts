@@ -11,8 +11,8 @@ export interface GameView<ModeView = unknown> {
   id: number
   mode: GameMode
   status: GameStatus
-  questId: number | null
-  questName: string | null
+  mapId: number | null
+  mapName: string | null
   /** Invitation code (multiplayer games waiting for players or being played). */
   code: string | null
   hostUserId: number | null

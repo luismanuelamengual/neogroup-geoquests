@@ -16,17 +16,9 @@ import { RoundTiming } from '@/app/(protected)/(game)/models/RoundTiming'
 import { RoundView } from '@/app/(protected)/(game)/models/RoundView'
 import { planGameRounds } from '@/app/(protected)/(game)/services/rounds'
 import { evaluateGuess, getRoundTimeLeftMs, parseGuessPosition } from '@/app/(protected)/(game)/utils/guesses'
-import {
-  DEFAULT_SCORE_MAX_DISTANCE_KM,
-  MAX_ROUND_SCORE,
-  MAX_SCORE_MAX_DISTANCE_KM,
-  MIN_SCORE_MAX_DISTANCE_KM
-} from '@/app/(protected)/(game)/utils/score'
+import { DEFAULT_SCORE_MAX_DISTANCE_KM, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
 import { ApiException } from '@/app/models/ApiException'
 
-/** Most rounds a quest can configure for a classic game. */
-const MAX_ROUNDS = 20
-/** Largest score scale a quest can configure (the whole world fits in it). */
 const definition: GameModeDefinition<ClassicGameSettings> = {
   mode: GameMode.CLASSIC,
   slug: 'classic',
@@ -36,7 +28,7 @@ const definition: GameModeDefinition<ClassicGameSettings> = {
   minPlayers: 1,
   maxPlayers: 1,
   realtime: false,
-  defaultSettings: { rounds: 5, timeLimitSeconds: null, scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM },
+  settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM },
   // Left unfinished for a day: deleted (as before the game modes existed).
   abandonAfterMs: 24 * 60 * 60 * 1000,
   abandonAction: 'delete'
@@ -125,7 +117,7 @@ function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): bo
     position,
     getTiming(data),
     ctx.now,
-    data.settings.scoreMaxDistanceKm ?? definition.defaultSettings.scoreMaxDistanceKm
+    data.settings.scoreMaxDistanceKm
   )
   data.currentRound++
   data.roundStartedAt = null
@@ -141,27 +133,12 @@ function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): bo
 export const classicMode: GameModeEngine<ClassicGameData, ClassicGameSettings, ClassicGameView> = {
   definition,
 
-  resolveSettings(questSettings) {
-    const rounds = Math.round(Number(questSettings.rounds ?? definition.defaultSettings.rounds))
-    const time = Math.round(Number(questSettings.timeLimitSeconds ?? definition.defaultSettings.timeLimitSeconds))
-    const maxDistance = Number(questSettings.scoreMaxDistanceKm ?? definition.defaultSettings.scoreMaxDistanceKm)
-
-    return {
-      rounds: Number.isFinite(rounds) ? Math.min(Math.max(rounds, 1), MAX_ROUNDS) : definition.defaultSettings.rounds,
-      timeLimitSeconds: Number.isFinite(time) && time > 0 ? time : null,
-      scoreMaxDistanceKm:
-        Number.isFinite(maxDistance) && maxDistance > 0
-          ? Math.min(Math.max(maxDistance, MIN_SCORE_MAX_DISTANCE_KM), MAX_SCORE_MAX_DISTANCE_KM)
-          : definition.defaultSettings.scoreMaxDistanceKm
-    }
-  },
-
-  async create(questId, settings, ctx) {
-    if (questId == null) {
-      throw new ApiException('Modo de juego no encontrado', 404)
+  async create(mapId, settings, ctx) {
+    if (mapId == null) {
+      throw new ApiException('Mapa no encontrado', 404)
     }
 
-    const rounds = await planGameRounds(questId, settings.rounds, ctx)
+    const rounds = await planGameRounds(mapId, settings.rounds, ctx)
 
     return { v: 1, settings, currentRound: 1, roundStartedAt: null, rounds, guesses: rounds.map(() => null) }
   },

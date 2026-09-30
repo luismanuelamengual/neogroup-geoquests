@@ -1,4 +1,4 @@
-/** Settings of a classic game (`quest_modes.settings` over the defaults of the mode). */
+/** Settings of a classic game (fixed in the definition of the mode). */
 export interface ClassicGameSettings {
   rounds: number
   /** Time limit of each round in seconds (null = no limit). */

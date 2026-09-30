@@ -7,7 +7,7 @@ import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import InstallAppBanner from '@/app/(pwa)/components/InstallAppBanner'
 
 /**
- * Main menu: the choice of the game mode (each card opens the quests where
+ * Main menu: the choice of the game mode (each card opens the maps where
  * that mode can be played). Above it, only when they apply, the install
  * banner and the way back to a multiplayer game in progress.
  */

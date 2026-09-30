@@ -2,10 +2,9 @@ import { BaseEntity, Column, Entity } from '@neogroup/neorm'
 import { PlaceGeometry } from '@/app/(protected)/(game)/models/PlaceGeometry'
 
 /**
- * A playable area (e.g. a city), used by the quests linked to it through the
- * `quest_places` table. Its
- * `geometry` (GeoJSON: a circle or a polygon, see PlaceGeometry) is the area
- * the game draws random street-level locations from.
+ * A playable area (e.g. a city), used by the maps linked to it through the
+ * `map_places` table. Its `geometry` (GeoJSON: a circle or a polygon, see
+ * PlaceGeometry) is the area the game draws random street-level locations from.
  */
 @Entity({ table: 'places' })
 export class Place extends BaseEntity {

@@ -3,7 +3,7 @@ import { GameRound } from '@/app/(protected)/(game)/models/GameRound'
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { PlannedRound } from '@/app/(protected)/(game)/models/PlannedRound'
 import { findCachedLocation, findLiveLocation } from '@/app/(protected)/(game)/services/locations'
-import { getQuestPlaces } from '@/app/(protected)/(game)/services/quests'
+import { getMapPlaces } from '@/app/(protected)/(game)/services/maps'
 import { PanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { RandomFn } from '@/app/(protected)/(game)/utils/geo'
 import { shuffle } from '@/app/(protected)/(game)/utils/random'
@@ -13,7 +13,7 @@ import { ApiException } from '@/app/models/ApiException'
  * Chooses the places and locations of the rounds of a new game.
  *
  *   1. Live panoramas only: places are shuffled and consumed in order (so
- *      every round is in a different place while the quest has enough of
+ *      every round is in a different place while the map has enough of
  *      them); a place where no live panorama is found is skipped for another.
  *      Searches run in parallel, one per round, to keep the wait short.
  *   2. Only if that could not fill the game (in practice: Street View is
@@ -81,12 +81,12 @@ export async function planRounds(
 }
 
 /**
- * The rounds of a new game of a quest: `roundsCount` locations drawn from the
- * quest's places (see planRounds). Throws when the quest has no places or not
+ * The rounds of a new game in a map: `roundsCount` locations drawn from the
+ * map's places (see planRounds). Throws when the map has no places or not
  * enough imagery could be found.
  */
-export async function planGameRounds(questId: number, roundsCount: number, ctx: GameContext): Promise<GameRound[]> {
-  const places = await getQuestPlaces(questId)
+export async function planGameRounds(mapId: number, roundsCount: number, ctx: GameContext): Promise<GameRound[]> {
+  const places = await getMapPlaces(mapId)
 
   if (places.length === 0) {
     throw new ApiException('Este modo de juego todavía no tiene lugares cargados')

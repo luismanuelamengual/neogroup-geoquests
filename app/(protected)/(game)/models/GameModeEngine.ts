@@ -19,11 +19,8 @@ import { GameSummary } from '@/app/(protected)/(game)/models/GameSummary'
 export interface GameModeEngine<Data = unknown, Settings = unknown, View = unknown> {
   readonly definition: GameModeDefinition<Settings>
 
-  /** Settings of a new game: the quest's settings over the defaults of the mode, validated. */
-  resolveSettings(questSettings: Record<string, unknown>): Settings
-
   /** Initial state of a new game (single player games: ready to play; multiplayer: waiting for players). */
-  create(questId: number | null, settings: Settings, ctx: GameContext): Promise<Data>
+  create(mapId: number | null, settings: Settings, ctx: GameContext): Promise<Data>
 
   /** Most players the game accepts (its settings may allow fewer than the mode). */
   getMaxPlayers(data: Data): number

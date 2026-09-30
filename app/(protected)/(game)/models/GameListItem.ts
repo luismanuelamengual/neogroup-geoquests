@@ -6,8 +6,8 @@ import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 export interface GameListItem {
   id: number
   mode: GameMode
-  questId: number | null
-  questName: string | null
+  mapId: number | null
+  mapName: string | null
   status: GameStatus
   playersCount: number
   score: number

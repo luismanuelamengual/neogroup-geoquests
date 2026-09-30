@@ -18,8 +18,8 @@ export interface GameModeDefinition<Settings = unknown> {
   maxPlayers: number
   /** Whether the players' screens must be kept in sync (polling). */
   realtime: boolean
-  /** Settings used for whatever a quest does not set in `quest_modes.settings`. */
-  defaultSettings: Settings
+  /** Rules of the mode (rounds, time limit...): fixed, the same in every map (only `scoreMaxDistanceKm` can be overridden by a map). */
+  settings: Settings
   /** A game in progress without any write for this long is considered abandoned. */
   abandonAfterMs: number
   abandonAction: GameAbandonAction

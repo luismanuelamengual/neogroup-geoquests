@@ -1,4 +1,5 @@
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
+import { GameSettings } from '@/app/(protected)/(game)/models/GameSettings'
 
 /** A game mode as shown in the main menu (the first choice of the player). */
 export interface GameModeView {
@@ -11,6 +12,6 @@ export interface GameModeView {
   image: string
   minPlayers: number
   maxPlayers: number
-  /** Quests that can be played in this mode. */
-  questsCount: number
+  /** Rules of the mode (rounds, time limit...): fixed, the same in every map. */
+  settings: GameSettings
 }

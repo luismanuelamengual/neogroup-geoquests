@@ -1,7 +1,8 @@
 import { DB } from '@neogroup/neorm'
+import { MapSettings } from '@/app/(protected)/(game)/models/MapSettings'
 
 /**
- * Seeds the quests, their places and the game modes they offer:
+ * Seeds the maps and their places:
  *
  *   - "Ciudades famosas": the 20 best known cities of the world (Paris, Rome,
  *     Buenos Aires...).
@@ -10,13 +11,11 @@ import { DB } from '@neogroup/neorm'
  *     20 famous cities included).
  *   - "Argentina", "España" and "Estados Unidos": a single place each — the
  *     whole (mainland) country as a polygon — so locations are drawn anywhere
- *     in its territory. Their scores decay much slower than in city quests
- *     (`scoreMaxDistanceKm`).
+ *     in its territory.
  *
- * A place is stored once and linked to every quest that uses it
- * (`quest_places`). Every quest offers the classic, classic multiplayer and battle royale
- * modes (`quest_modes`): 5 rounds of 120 seconds (60 seconds per round in battle
- * royale) and the quest's score scale.
+ * A place is stored once and linked to every map that uses it
+ * (`map_places`). The rules of the games (rounds, time limit...) are not
+ * seeded: they belong to the game modes (see services/*Mode.ts).
  *
  * Each place gets a GeoJSON `geometry` (see models/PlaceGeometry.ts): most
  * cities are a circle (center + radius covering the urban core); three of them
@@ -25,75 +24,62 @@ import { DB } from '@neogroup/neorm'
  * water or parks are simply discarded by the location finder when no
  * street-level image is found there.
  *
- * Idempotent: skipped when the quests already exist.
+ * Idempotent: skipped when the maps already exist.
  */
 interface SeedPlace {
   name: string
   countryCode: string
   /** Also part of "Ciudades famosas". */
   famous?: boolean
-  /** Only part of this quest (a whole country), not of "Ciudades del mundo". */
-  onlyQuest?: string
+  /** Only part of this map (a whole country), not of "Ciudades del mundo". */
+  onlyMap?: string
   geometry:
     { type: 'Point'; coordinates: [number, number]; radius: number } | { type: 'Polygon'; coordinates: number[][][] }
 }
 
-interface SeedQuest {
+interface SeedMap {
   name: string
   description: string
   image: string | null
   places: (place: SeedPlace) => boolean
   /**
-   * Distance (km) from which a guess of the quest scores 0 (see utils/score.ts):
-   * thousands of km for the cities of the world; a fraction of the size of the
-   * country for country quests, so that guessing the right region scores well.
+   * Settings of the map that override the ones of the game modes (e.g.
+   * `{ scoreMaxDistanceKm: 3500 }`, see MapSettings). Null: the ones of the
+   * modes, as in every seeded map.
    */
-  scoreMaxDistanceKm: number
+  settings: MapSettings | null
 }
 
-/** Game modes offered by every seeded quest (GameMode enum values) and their settings. */
-const MODES = [
-  { mode: 1, settings: { rounds: 5, timeLimitSeconds: 120 } },
-  { mode: 2, settings: { rounds: 5, timeLimitSeconds: 120, maxPlayers: 8 } },
-  { mode: 3, settings: { timeLimitSeconds: 60, maxPlayers: 8 } }
-]
-
-/** A quest of a whole country: its only place is the country itself. */
-function countryQuest(name: string, description: string, scoreMaxDistanceKm: number): SeedQuest {
-  return { name, description, image: null, places: (place) => place.onlyQuest === name, scoreMaxDistanceKm }
+/** A map of a whole country: its only place is the country itself. */
+function countryMap(name: string, description: string): SeedMap {
+  return { name, description, image: null, places: (place) => place.onlyMap === name, settings: null }
 }
 
-const QUESTS: SeedQuest[] = [
+const MAPS: SeedMap[] = [
   {
     name: 'Ciudades famosas',
     description:
       'Aparecés en una calle de una de las 20 ciudades más conocidas del mundo. ¿Sabés cuál es y dónde estás?',
-    image: '/quests/ciudades-del-mundo.png',
+    image: '/maps/ciudades-del-mundo.png',
     places: (place) => !!place.famous,
-    scoreMaxDistanceKm: 2000
+    settings: null
   },
   {
     name: 'Ciudades del mundo',
     description:
       '150 ciudades de 36 países: capitales, pero también ciudades medianas y chicas. ¿Te animás a reconocerlas?',
     image: null,
-    places: (place) => !place.onlyQuest,
-    scoreMaxDistanceKm: 2000
+    places: (place) => !place.onlyMap,
+    settings: null
   },
-  countryQuest(
+  countryMap(
     'Argentina',
-    'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?',
-    3500
+    'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?'
   ),
-  countryQuest(
-    'España',
-    'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?',
-    1000
-  ),
-  countryQuest(
+  countryMap('España', 'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?'),
+  countryMap(
     'Estados Unidos',
-    'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?',
-    4000
+    'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?'
   )
 ]
 
@@ -335,13 +321,13 @@ const PLACES: SeedPlace[] = [
   { name: 'Johannesburgo', countryCode: 'ZA', geometry: circle(-26.2041, 28.0473, 8000) },
   { name: 'Durban', countryCode: 'ZA', geometry: circle(-29.8587, 31.0218, 6000) },
   { name: 'Pretoria', countryCode: 'ZA', geometry: circle(-25.7479, 28.2293, 6000) },
-  // Whole countries: the only place of their quest (not part of "Ciudades del mundo").
+  // Whole countries: the only place of their map (not part of "Ciudades del mundo").
   // Approximate outlines of the mainland, drawn slightly inside the land borders so that
   // panoramas found near a border are never on the other side.
   {
     name: 'Argentina',
     countryCode: 'AR',
-    onlyQuest: 'Argentina',
+    onlyMap: 'Argentina',
     geometry: polygon([
       [-65.6, -22.15],
       [-64.8, -22.15],
@@ -445,7 +431,7 @@ const PLACES: SeedPlace[] = [
   {
     name: 'España',
     countryCode: 'ES',
-    onlyQuest: 'España',
+    onlyMap: 'España',
     geometry: polygon([
       [-8.87, 41.9],
       [-8.64, 42.03],
@@ -517,7 +503,7 @@ const PLACES: SeedPlace[] = [
   {
     name: 'Estados Unidos',
     countryCode: 'US',
-    onlyQuest: 'Estados Unidos',
+    onlyMap: 'Estados Unidos',
     geometry: polygon([
       [-124.7, 48.38],
       [-123.2, 48.15],
@@ -643,10 +629,10 @@ const PLACES: SeedPlace[] = [
 ]
 
 export default {
-  name: '002-seed-quests',
+  name: '002-seed-maps',
 
   async up(): Promise<void> {
-    if (await DB.table('quests').where('name', QUESTS[0].name).first()) {
+    if (await DB.table('maps').where('name', MAPS[0].name).first()) {
       return
     }
 
@@ -664,28 +650,21 @@ export default {
       const rows = await DB.table('places').get()
       const placeIds = new Map(rows.map((row) => [`${row.name}|${row.countryCode ?? row.countrycode}`, row.id]))
 
-      for (const quest of QUESTS) {
-        await DB.table('quests').insert({
-          name: quest.name,
-          description: quest.description,
-          image: quest.image,
+      for (const map of MAPS) {
+        await DB.table('maps').insert({
+          name: map.name,
+          description: map.description,
+          image: map.image,
+          settings: map.settings ? JSON.stringify(map.settings) : null,
           enabled: true
         })
 
-        const questRow = await DB.table('quests').where('name', quest.name).first()
+        const mapRow = await DB.table('maps').where('name', map.name).first()
 
-        await DB.table('quest_places').insert(
-          PLACES.filter(quest.places).map((place) => ({
-            questId: questRow!.id,
+        await DB.table('map_places').insert(
+          PLACES.filter(map.places).map((place) => ({
+            mapId: mapRow!.id,
             placeId: placeIds.get(`${place.name}|${place.countryCode}`)
-          }))
-        )
-        await DB.table('quest_modes').insert(
-          MODES.map(({ mode, settings }) => ({
-            questId: questRow!.id,
-            mode,
-            settings: JSON.stringify({ ...settings, scoreMaxDistanceKm: quest.scoreMaxDistanceKm }),
-            enabled: true
           }))
         )
       }

@@ -1,7 +1,7 @@
 import { BaseEntity, BelongsTo, Column, Entity } from '@neogroup/neorm'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
-import { Quest } from '@/app/(protected)/(game)/models/Quest'
+import { Map } from '@/app/(protected)/(game)/models/Map'
 
 /**
  * A game of any mode. The columns are the ones every mode shares (and the
@@ -19,7 +19,7 @@ export class Game extends BaseEntity {
   mode!: GameMode
 
   @Column({ cast: 'number' })
-  questId!: number | null
+  mapId!: number | null
 
   @Column({ cast: 'number' })
   status!: GameStatus
@@ -55,6 +55,6 @@ export class Game extends BaseEntity {
   @Column({ cast: 'date' })
   updatedAt!: Date
 
-  @BelongsTo(() => Quest, 'questId')
-  quest?: Quest
+  @BelongsTo(() => Map, 'mapId')
+  map?: Map
 }

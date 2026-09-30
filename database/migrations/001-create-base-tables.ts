@@ -7,10 +7,9 @@ import { DB, Schema } from '@neogroup/neorm'
  * PostgreSQL in production and to SQLite in tests):
  *
  *   - users / email_verification_tokens / password_reset_tokens → authentication
- *   - quests          → the content shown in the main menu (name, description, image)
+ *   - maps            → where to play, chosen after the game mode (name, description, image)
  *   - places          → playable areas (a circle or a GeoJSON polygon)
- *   - quest_places    → which places each quest draws its locations from (many-to-many)
- *   - quest_modes     → which game modes each quest offers, with their settings
+ *   - map_places      → which places each map draws its locations from (many-to-many)
  *   - place_locations → small fallback cache of Street View panoramas already found inside a place
  *   - games           → one row per game, of any mode: common columns + `data` (the mode's own state)
  *   - game_players    → who played each game and their final result (the history and the stats)
@@ -67,12 +66,15 @@ export default {
         table.foreign('userId').references('id').on('users').cascadeOnDelete()
       })
 
-      await Schema.createIfNotExists('quests', (table) => {
+      await Schema.createIfNotExists('maps', (table) => {
         table.increments('id')
         table.string('name', 120)
         table.text('description')
-        // Image of the quest card in the main menu (a path under /public or an absolute URL).
+        // Image of the map card (a path under /public or an absolute URL).
         table.string('image', 255).nullable()
+        // Settings of the map (e.g. { scoreMaxDistanceKm: 3500 }) that override the ones of the game
+        // modes: big regions (whole countries) need a bigger score scale than cities. Null: none.
+        table.jsonb('settings').nullable()
         table.boolean('enabled').default(true)
         table.timestamp('createdAt').useCurrent()
       })
@@ -88,27 +90,14 @@ export default {
         table.timestamp('createdAt').useCurrent()
       })
 
-      await Schema.createIfNotExists('quest_places', (table) => {
-        table.integer('questId')
+      await Schema.createIfNotExists('map_places', (table) => {
+        table.integer('mapId')
         table.integer('placeId')
 
-        table.primary(['questId', 'placeId'])
-        table.index('placeId', 'idx_quest_places_place')
-        table.foreign('questId').references('id').on('quests').cascadeOnDelete()
+        table.primary(['mapId', 'placeId'])
+        table.index('placeId', 'idx_map_places_place')
+        table.foreign('mapId').references('id').on('maps').cascadeOnDelete()
         table.foreign('placeId').references('id').on('places').cascadeOnDelete()
-      })
-
-      await Schema.createIfNotExists('quest_modes', (table) => {
-        table.integer('questId')
-        // GameMode enum.
-        table.smallInteger('mode')
-        // Settings of the mode for this quest (e.g. { rounds: 5, timeLimitSeconds: 120 }),
-        // merged over the defaults of the mode.
-        table.jsonb('settings')
-        table.boolean('enabled').default(true)
-
-        table.primary(['questId', 'mode'])
-        table.foreign('questId').references('id').on('quests').cascadeOnDelete()
       })
 
       await Schema.createIfNotExists('place_locations', (table) => {
@@ -128,7 +117,7 @@ export default {
         table.increments('id')
         // GameMode enum.
         table.smallInteger('mode')
-        table.integer('questId').nullable()
+        table.integer('mapId').nullable()
         // GameStatus enum.
         table.smallInteger('status')
         // Invitation code of multiplayer games (cleared when the game ends).
@@ -144,7 +133,7 @@ export default {
         table.timestamp('updatedAt').useCurrent()
 
         table.index(['status', 'updatedAt'], 'idx_games_status')
-        table.foreign('questId').references('id').on('quests').nullOnDelete()
+        table.foreign('mapId').references('id').on('maps').nullOnDelete()
         table.foreign('hostUserId').references('id').on('users').nullOnDelete()
       })
 

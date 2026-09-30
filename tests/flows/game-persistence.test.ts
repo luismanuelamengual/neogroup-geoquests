@@ -5,7 +5,7 @@ import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { MAX_UPDATE_ATTEMPTS, updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
 import { createGame } from '@/app/(protected)/(game)/services/games'
-import { getQuests } from '@/app/(protected)/(game)/services/quests'
+import { getMaps } from '@/app/(protected)/(game)/services/maps'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
@@ -17,9 +17,9 @@ describe('game persistence (optimistic locking)', () => {
     await resetDatabase()
 
     const userId = await createUser()
-    const questId = (await getQuests())[0].id
+    const mapId = (await getMaps())[0].id
 
-    gameId = (await createGame(userId, { questId, mode: GameMode.CLASSIC }, { finder: new FakePanoramaFinder() })).id
+    gameId = (await createGame(userId, { mapId, mode: GameMode.CLASSIC }, { finder: new FakePanoramaFinder() })).id
   })
 
   /** Simulates another request writing the game in the middle of ours. */

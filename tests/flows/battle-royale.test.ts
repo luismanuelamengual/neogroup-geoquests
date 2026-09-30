@@ -19,7 +19,7 @@ import {
   sendGameAction,
   startGame
 } from '@/app/(protected)/(game)/services/games'
-import { getQuests } from '@/app/(protected)/(game)/services/quests'
+import { getMaps } from '@/app/(protected)/(game)/services/maps'
 import { ROUND_TIME_GRACE_MS } from '@/app/(protected)/(game)/utils/guesses'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
@@ -46,14 +46,14 @@ describe('battle royale flow', () => {
   let host: number
   let ana: number
   let beto: number
-  let questId: number
+  let mapId: number
 
   beforeEach(async () => {
     await resetDatabase()
     host = await createUser('host@geoquests.test')
     ana = await createUser('ana@geoquests.test')
     beto = await createUser('beto@geoquests.test')
-    questId = (await getQuests())[0].id
+    mapId = (await getMaps())[0].id
   })
 
   async function view(userId: number, gameId: number, ms: number): Promise<GameView> {
@@ -88,7 +88,7 @@ describe('battle royale flow', () => {
 
   /** A game with the host, Ana and Beto, started at 0 (the first round begins at COUNTDOWN_MS). */
   async function startedGame(): Promise<GameView> {
-    const lobby = await createGame(host, { questId, mode: GameMode.BATTLE_ROYALE }, at(0))
+    const lobby = await createGame(host, { mapId, mode: GameMode.BATTLE_ROYALE }, at(0))
 
     await joinGame(ana, { code: lobby.code! }, at(0))
     await joinGame(beto, { code: lobby.code! }, at(0))
@@ -97,7 +97,7 @@ describe('battle royale flow', () => {
   }
 
   it('needs at least 3 players and plans one round per elimination (plus spares)', async () => {
-    const lobby = await createGame(host, { questId, mode: GameMode.BATTLE_ROYALE }, at(0))
+    const lobby = await createGame(host, { mapId, mode: GameMode.BATTLE_ROYALE }, at(0))
 
     await joinGame(ana, { code: lobby.code! }, at(0))
     await expect(startGame(host, { gameId: lobby.id }, at(0))).rejects.toThrow('al menos 3 jugadores')

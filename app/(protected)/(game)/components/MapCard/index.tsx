@@ -5,38 +5,29 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
-import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
-import { QuestView } from '@/app/(protected)/(game)/models/QuestView'
-import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
+import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
+import { MapView } from '@/app/(protected)/(game)/models/MapView'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
 
-interface QuestCardProps {
-  quest: QuestView
-  /** Game mode chosen by the player: the card shows its rules for this quest and starts a game of it. */
-  mode: GameMode
+interface MapCardProps {
+  map: MapView
+  /** Game mode chosen by the player: the card starts a game of it in this map. */
+  mode: GameModeView
 }
 
-/** Card of a quest in the quest picker of a game mode: its image, the mode's rules and the button to play it. */
-export default function QuestCard({ quest, mode }: QuestCardProps) {
+/** Card of a map in the map picker of a game mode: its image, its number of places and the button to play it. */
+export default function MapCard({ map, mode }: MapCardProps) {
   const router = useRouter()
   const { createGame } = useGames()
   const [starting, setStarting] = useState(false)
-  const questMode = quest.modes.find((item) => item.mode === mode)
-
-  if (!questMode) {
-    return null
-  }
-
-  const { settings } = questMode
-  const { timeLimitSeconds } = settings
-  const multiplayer = questMode.maxPlayers > 1
+  const multiplayer = mode.maxPlayers > 1
 
   const handlePlay = async () => {
     setStarting(true)
 
     try {
-      const game = await createGame(quest.id, mode)
+      const game = await createGame(map.id, mode.mode)
 
       router.push(`/game/${game.id}`)
     } catch {
@@ -45,12 +36,12 @@ export default function QuestCard({ quest, mode }: QuestCardProps) {
   }
 
   return (
-    <div className="quest-card">
+    <div className="map-card">
       {starting && <Loading message={multiplayer ? 'Preparando la sala...' : 'Buscando lugares por el mundo...'} />}
       <div className="art" aria-hidden="true">
-        {quest.image ? (
+        {map.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={quest.image} alt="" className="image" />
+          <img src={map.image} alt="" className="image" />
         ) : (
           <>
             <div className="sun" />
@@ -63,21 +54,19 @@ export default function QuestCard({ quest, mode }: QuestCardProps) {
         )}
       </div>
       <div className="content">
-        <h2 className="name">{quest.name}</h2>
-        <p className="description">{quest.description}</p>
+        <h2 className="name">{map.name}</h2>
+        <p className="description">{map.description}</p>
         <div className="tags">
-          <span className="tag">{'rounds' in settings ? `${settings.rounds} rondas` : 'Eliminación'}</span>
           <span className="tag">
-            {timeLimitSeconds ? `${formatTimeLimit(timeLimitSeconds)} por ronda` : 'Sin tiempo'}
+            {map.placesCount} {map.placesCount === 1 ? 'lugar' : 'lugares'}
           </span>
-          {quest.placesCount > 1 && <span className="tag">{quest.placesCount} lugares</span>}
         </div>
         <GameButton
           size="large"
           fullWidth
           className="play"
           color={multiplayer ? 'cyan' : 'gold'}
-          startIcon={<GameModeIcon mode={mode} />}
+          startIcon={<GameModeIcon mode={mode.mode} />}
           loading={starting}
           onClick={handlePlay}
         >
