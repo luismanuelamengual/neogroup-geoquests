@@ -93,7 +93,7 @@ export default function GameScreen({ gameId }: { gameId: number }) {
       <div className="game-screen-error">
         <GamePanel className="panel">
           <p>{loadError ?? 'Este modo de juego todavía no está disponible.'}</p>
-          <GameButton href="/home">Volver al menú</GameButton>
+          <GameButton href="/play">Volver al menú</GameButton>
         </GamePanel>
       </div>
     )

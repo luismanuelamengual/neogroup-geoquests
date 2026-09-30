@@ -56,7 +56,7 @@ export default function MultiplayerLobby() {
 
     try {
       await leaveGame(game.id)
-      router.push('/home')
+      router.push('/play')
     } catch {
       setLeaving(false)
     }

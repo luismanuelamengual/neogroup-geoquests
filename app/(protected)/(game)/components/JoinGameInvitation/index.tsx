@@ -41,7 +41,7 @@ export default function JoinGameInvitation({ code }: { code: string }) {
         <GameButton size="large" fullWidth startIcon={<GroupAddIcon />} loading={joining} onClick={handleJoin}>
           Unirme a la partida
         </GameButton>
-        <GameButton color="ghost" fullWidth href="/home">
+        <GameButton color="ghost" fullWidth href="/play">
           Ir al menú
         </GameButton>
       </GamePanel>

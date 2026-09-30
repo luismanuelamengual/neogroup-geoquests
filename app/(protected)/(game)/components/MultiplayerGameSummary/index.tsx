@@ -105,7 +105,7 @@ export default function MultiplayerGameSummary() {
           <GameButton size="large" startIcon={<GroupsIcon />} loading={starting} onClick={handlePlayAgain}>
             Otra con amigos
           </GameButton>
-          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/home">
+          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
             Menú
           </GameButton>
         </div>

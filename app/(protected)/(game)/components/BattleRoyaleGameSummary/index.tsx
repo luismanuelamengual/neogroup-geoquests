@@ -117,7 +117,7 @@ export default function BattleRoyaleGameSummary() {
           >
             Otra partida
           </GameButton>
-          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/home">
+          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
             Menú
           </GameButton>
         </div>

@@ -64,7 +64,7 @@ export default function MyGames({ stats }: MyGamesProps) {
         {!loading && games.length === 0 && (
           <div className="empty">
             <p>Todavía no jugaste ninguna partida.</p>
-            <GameButton href="/home">¡A jugar!</GameButton>
+            <GameButton href="/play">¡A jugar!</GameButton>
           </div>
         )}
         <ul className="list">

@@ -82,7 +82,7 @@ export default function ClassicGameSummary() {
           <GameButton size="large" startIcon={<ReplayIcon />} loading={starting} onClick={handlePlayAgain}>
             Jugar de nuevo
           </GameButton>
-          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/home">
+          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
             Menú
           </GameButton>
         </div>

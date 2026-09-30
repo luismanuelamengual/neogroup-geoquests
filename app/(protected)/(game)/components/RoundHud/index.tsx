@@ -68,7 +68,7 @@ export default function RoundHud({
           <GameButton color="ghost" size="small" onClick={() => setConfirmExit(false)}>
             Seguir jugando
           </GameButton>
-          <GameButton color="magenta" size="small" onClick={() => (onExit ? onExit() : router.push('/home'))}>
+          <GameButton color="magenta" size="small" onClick={() => (onExit ? onExit() : router.push('/play'))}>
             Salir
           </GameButton>
         </DialogActions>

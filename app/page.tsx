@@ -16,5 +16,5 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
   const { callbackUrl } = await searchParams
 
-  redirect(resolveCallbackPath(callbackUrl) ?? '/home')
+  redirect(resolveCallbackPath(callbackUrl) ?? '/play')
 }

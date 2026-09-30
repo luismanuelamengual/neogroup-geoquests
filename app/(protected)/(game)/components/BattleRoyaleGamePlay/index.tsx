@@ -117,7 +117,7 @@ export default function BattleRoyaleGamePlay() {
     try {
       await leaveGame(game.id)
     } finally {
-      router.push('/home')
+      router.push('/play')
     }
   }
 

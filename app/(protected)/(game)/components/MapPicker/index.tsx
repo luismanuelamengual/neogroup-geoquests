@@ -15,7 +15,7 @@ import { MapView } from '@/app/(protected)/(game)/models/MapView'
 export default function MapPicker({ mode, maps }: { mode: GameModeView; maps: MapView[] }) {
   return (
     <div className={`map-picker mode-${mode.mode}`}>
-      <Link href="/home" className="back">
+      <Link href="/play" className="back">
         <ArrowBackIcon fontSize="small" /> Menú
       </Link>
       <header className="header">

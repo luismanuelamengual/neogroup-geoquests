@@ -21,7 +21,7 @@ import Logo from '@/app/components/Logo'
 import PlayerAvatar from '@/app/components/PlayerAvatar'
 
 const NAV_ITEMS = [
-  { href: '/home', label: 'Jugar', icon: <SportsEsportsIcon /> },
+  { href: '/play', label: 'Jugar', icon: <SportsEsportsIcon /> },
   { href: '/games', label: 'Mis partidas', icon: <HistoryIcon /> }
 ]
 
@@ -60,7 +60,7 @@ export default function AppShell({ children, user: initialUser }: { children: Re
   return (
     <div className="app-shell">
       <header className="appbar">
-        <Link href="/home" className="brand">
+        <Link href="/play" className="brand">
           <Logo size="small" />
         </Link>
         <nav className="nav">
