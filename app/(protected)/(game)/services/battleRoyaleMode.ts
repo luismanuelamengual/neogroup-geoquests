@@ -43,7 +43,7 @@ const definition: GameModeDefinition<BattleRoyaleGameSettings> = {
   maxPlayers: 8,
   realtime: true,
   settings: {
-    timeLimitSeconds: 60,
+    timeLimitSeconds: 180,
     maxPlayers: 8,
     revealSeconds: 15,
     countdownSeconds: 3,

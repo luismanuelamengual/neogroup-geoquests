@@ -2,7 +2,7 @@
 
 Versión gratuita de un juego tipo *GeoGuessr*: aparecés en una calle de algún lugar del mundo y tenés que adivinar dónde estás marcando un punto en el mapa. Cuanto más cerca, más puntos.
 
-Primero se elige el *modo de juego* (con sus reglas fijas en el código) y después el *mapa* (dónde jugar: las regiones del mundo, que se cargan en la base de datos). Por ahora hay tres modos, **Clásico** (solo), **Con amigos** (multijugador en vivo, de 2 a 8) y **Battle Royale** (de 3 a 8: en cada ronda queda eliminado el que marcó más lejos), y cinco mapas: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas) y tres de países, **Argentina**, **España** y **Estados Unidos** (un lugar al azar en cualquier parte del país). Las partidas son de 5 rondas de 2 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
+Primero se elige el *modo de juego* (con sus reglas fijas en el código) y después el *mapa* (dónde jugar: las regiones del mundo, que se cargan en la base de datos). Por ahora hay tres modos, **Clásico** (solo), **Con amigos** (multijugador en vivo, de 2 a 8) y **Battle Royale** (de 3 a 8: en cada ronda queda eliminado el que marcó más lejos), y cinco mapas: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas) y tres de países, **Argentina**, **España** y **Estados Unidos** (un lugar al azar en cualquier parte del país). Las partidas son de 5 rondas de 3 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
 
 ## Tech stack
 
@@ -167,7 +167,7 @@ hooks/      useGames (llamadas a la API), useGameSync (polling de los modos en t
 Un **modo de juego** define las reglas: cantidad de rondas, tiempo por ronda, jugadores, escala del puntaje... Están fijas en el código, en `definition.settings` del motor de cada modo (`services/<modo>Mode.ts`); no hay configuración en la base de datos. Para el Clásico:
 
 ```jsonc
-{ "rounds": 5, "timeLimitSeconds": 120, "scoreMaxDistanceKm": 2000 }   // timeLimitSeconds: null = sin límite
+{ "rounds": 5, "timeLimitSeconds": 180, "scoreMaxDistanceKm": 2000 }   // timeLimitSeconds: null = sin límite
 ```
 
 Un **mapa** es dónde se juega: una fila de `maps` y los lugares asociados en `map_places` (una región del mundo o varias).
@@ -213,7 +213,7 @@ De 2 a 8 jugadores (todos con cuenta) juegan las mismas rondas al mismo tiempo, 
 
 En el navegador, `GameScreen` mantiene la partida al día con `useGameSync`, que la consulta cada ~1,5 s (se pausa con la pestaña oculta y espera más tras un error); los relojes se calculan a partir del momento en que llegó cada respuesta. Para invitar se comparte el link `/join/<código>` (o el código, que se ingresa con "Unirme con código" en el menú); abrir el link no une a nadie hasta confirmar. Los clientes consultan la partida cada ~1,5 s (`getGame` con `sinceVersion`); cada consulta registra la **presencia** del jugador (`game_players.lastSeenAt`, como mucho una escritura cada 10 s). Un jugador que no consultó en los últimos 20 s se considera desconectado y la ronda no lo espera. Quien abandona (`leaveGame`) antes de empezar sale de la partida; después, queda en los resultados con los puntos que hizo. Si se va el anfitrión, el rol pasa al jugador que entró primero. Una partida en curso sin actividad por 5 minutos se da por terminada con los puntajes que había.
 
-Tiempos y límites son fijos por modo (`definition.settings`): `{ "rounds": 5, "timeLimitSeconds": 120, "maxPlayers": 8, "revealSeconds": 15, "countdownSeconds": 3, "scoreMaxDistanceKm": 2000 }`. `scoreMaxDistanceKm` es la distancia (km) a partir de la cual un intento da 0 puntos: cuanto más grande, más permisivo el puntaje.
+Tiempos y límites son fijos por modo (`definition.settings`): `{ "rounds": 5, "timeLimitSeconds": 180, "maxPlayers": 8, "revealSeconds": 15, "countdownSeconds": 3, "scoreMaxDistanceKm": 2000 }`. `scoreMaxDistanceKm` es la distancia (km) a partir de la cual un intento da 0 puntos: cuanto más grande, más permisivo el puntaje.
 
 ### Tarea programada: limpieza diaria
 
@@ -225,7 +225,7 @@ curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cronClean
 
 ### Modo Battle Royale
 
-Usa la misma mecánica que "Con amigos" (sala de espera con código, mismas rondas y mismo reloj para todos, cuenta 3-2-1, resultado de cada ronda con los pines de todos, presencia y abandono; todo en `services/roundBasedMode.ts`), pero con otra regla: **en cada ronda queda eliminado un jugador** y gana el último en pie. De 3 a 8 jugadores, 60 s por ronda (`definition.settings`, sin `rounds`).
+Usa la misma mecánica que "Con amigos" (sala de espera con código, mismas rondas y mismo reloj para todos, cuenta 3-2-1, resultado de cada ronda con los pines de todos, presencia y abandono; todo en `services/roundBasedMode.ts`), pero con otra regla: **en cada ronda queda eliminado un jugador** y gana el último en pie. De 3 a 8 jugadores, 180 s por ronda (`definition.settings`, sin `rounds`).
 
 - **Quién cae** cuando se cierra la ronda: si nadie respondió, nadie (se juega otra ronda); si no, los que no respondieron a tiempo; si respondieron todos, el que marcó más lejos y, si hay empate, el que respondió último. Quien abandonó la partida también cae. Nunca se elimina a todos los que siguen jugando (p. ej. un empate exacto entre los dos últimos): en ese caso no cae nadie.
 - **Rondas:** se eligen al empezar, una por eliminación (jugadores − 1) más 2 de repuesto (`SPARE_ROUNDS`) para las rondas sin eliminados. Si se terminan, gana el de más puntos entre los que siguen en pie.

@@ -36,7 +36,7 @@ const definition: GameModeDefinition<ClassicMultiplayerGameSettings> = {
   realtime: true,
   settings: {
     rounds: 5,
-    timeLimitSeconds: 120,
+    timeLimitSeconds: 180,
     maxPlayers: 8,
     revealSeconds: 15,
     countdownSeconds: 3,
