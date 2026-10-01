@@ -9,6 +9,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import { MapView } from '@/app/(protected)/(game)/models/MapView'
 import { localizeMapDescription, localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
 import { useT } from '@/app/i18n/I18nProvider'
@@ -40,7 +41,7 @@ export default function MapCard({ map, mode }: MapCardProps) {
   }
 
   return (
-    <div className="map-card">
+    <div className={`map-card mode-${mode.mode}`}>
       {starting && <Loading message={multiplayer ? t('picker.preparingRoom') : t('picker.searchingPlaces')} />}
       <div className="art" aria-hidden="true">
         {map.image && map.photos.length === 0 ? (
@@ -60,7 +61,7 @@ export default function MapCard({ map, mode }: MapCardProps) {
           size="large"
           fullWidth
           className="play"
-          color={multiplayer ? 'cyan' : 'gold'}
+          color={getModeColor(mode.mode)}
           startIcon={<GameModeIcon mode={mode.mode} />}
           loading={starting}
           onClick={handlePlay}

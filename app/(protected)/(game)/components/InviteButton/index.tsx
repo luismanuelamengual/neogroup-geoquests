@@ -1,7 +1,7 @@
 'use client'
 
 import ShareIcon from '@mui/icons-material/Share'
-import GameButton from '@/app/components/GameButton'
+import GameButton, { GameButtonColor } from '@/app/components/GameButton'
 import { useNotifications } from '@/app/hooks/useNotifications'
 import { useT } from '@/app/i18n/I18nProvider'
 
@@ -9,7 +9,15 @@ import { useT } from '@/app/i18n/I18nProvider'
  * Invites friends to a multiplayer game: shares the invitation link with the
  * system share sheet (phones), or copies it to the clipboard.
  */
-export default function InviteButton({ code, className }: { code: string; className?: string }) {
+export default function InviteButton({
+  code,
+  color = 'cyan',
+  className
+}: {
+  code: string
+  color?: GameButtonColor
+  className?: string
+}) {
   const t = useT()
   const { showSuccessMessage, showErrorMessage } = useNotifications()
 
@@ -37,7 +45,7 @@ export default function InviteButton({ code, className }: { code: string; classN
   }
 
   return (
-    <GameButton color="cyan" fullWidth startIcon={<ShareIcon />} onClick={handleInvite} className={className}>
+    <GameButton color={color} fullWidth startIcon={<ShareIcon />} onClick={handleInvite} className={className}>
       {t('invitation.inviteFriends')}
     </GameButton>
   )

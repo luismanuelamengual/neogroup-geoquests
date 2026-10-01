@@ -10,6 +10,7 @@ import { useNow } from '@/app/(protected)/(game)/hooks/useNow'
 import { BattleRoyaleGameView } from '@/app/(protected)/(game)/models/BattleRoyaleGameView'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { MultiplayerRoundView } from '@/app/(protected)/(game)/models/MultiplayerRoundView'
+import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { getPlayerInitial } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance } from '@/app/(protected)/(game)/utils/score'
@@ -138,7 +139,7 @@ export default function BattleRoyaleRoundResult({
           )}
           {isHost && (
             <GameButton
-              color={isLast ? 'magenta' : 'gold'}
+              color={getModeColor(game.mode)}
               size="small"
               startIcon={<SkipNextIcon />}
               loading={advancing}

@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import GuessMap from '@/app/(protected)/(game)/components/GuessMap'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import GameButton from '@/app/components/GameButton'
 import { useT } from '@/app/i18n/I18nProvider'
 
@@ -24,6 +25,7 @@ interface GuessPanelProps {
 export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
   const t = useT()
   const guess = useGameStore((state) => state.guess)
+  const modeColor = getModeColor(useGameStore((state) => state.game?.mode))
   const setGuess = useGameStore((state) => state.setGuess)
   const [open, setOpen] = useState(false)
 
@@ -51,7 +53,7 @@ export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
         </GameButton>
       </div>
       <GameButton
-        color="gold"
+        color={modeColor}
         className={classNames('guess-panel-fab', { hidden: open })}
         startIcon={<MapIcon />}
         onClick={() => setOpen(true)}

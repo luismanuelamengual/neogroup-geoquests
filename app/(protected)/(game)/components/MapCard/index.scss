@@ -1,4 +1,15 @@
 .map-card {
+  // Accent of the mode (by mode number; extend when adding modes).
+  --mode-color: var(--color-gold);
+
+  &.mode-2 {
+    --mode-color: var(--color-cyan);
+  }
+
+  &.mode-3 {
+    --mode-color: var(--color-magenta);
+  }
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -12,7 +23,7 @@
   transition: border-color 160ms ease;
 
   &:hover {
-    border-color: var(--color-gold);
+    border-color: var(--mode-color);
 
     // The photos of the collage show their colors.
     .collage .photo {

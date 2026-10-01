@@ -13,6 +13,7 @@ import { BattleRoyaleGameView } from '@/app/(protected)/(game)/models/BattleRoya
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatPosition, getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance } from '@/app/(protected)/(game)/utils/score'
@@ -114,7 +115,7 @@ export default function BattleRoyaleGameSummary() {
         <div className="actions">
           <GameButton
             size="large"
-            color="magenta"
+            color={getModeColor(game.mode)}
             startIcon={<LocalFireDepartmentIcon />}
             loading={starting}
             onClick={handlePlayAgain}

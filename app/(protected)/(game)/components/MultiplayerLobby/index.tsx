@@ -12,6 +12,7 @@ import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStat
 import { MultiplayerGameView } from '@/app/(protected)/(game)/models/MultiplayerGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
 import { useUserStore } from '@/app/(protected)/stores/users'
@@ -76,7 +77,11 @@ export default function MultiplayerLobby() {
   return (
     <div className="multiplayer-lobby">
       {starting && <Loading message={t('picker.searchingPlaces')} />}
-      <GamePanel className="panel" title={t('lobby.title')} accent="cyan">
+      <GamePanel
+        className="panel"
+        title={t('lobby.title')}
+        accent={getModeColor(game.mode) as 'cyan' | 'magenta' | 'gold'}
+      >
         <div className="map">{localizeMapName(t, game.mapName)}</div>
         <div className="rules">
           {t('lobby.rules', {
@@ -90,7 +95,7 @@ export default function MultiplayerLobby() {
             <span className="code">{game.code}</span>
           </div>
         )}
-        {game.code && <InviteButton code={game.code} />}
+        {game.code && <InviteButton code={game.code} color={getModeColor(game.mode)} />}
         <div className="players-header">
           <span>{t('lobby.players')}</span>
           <span>
@@ -123,6 +128,7 @@ export default function MultiplayerLobby() {
           <GameButton
             size="large"
             fullWidth
+            color={getModeColor(game.mode)}
             startIcon={<PlayArrowIcon />}
             disabled={!enoughPlayers}
             loading={starting}

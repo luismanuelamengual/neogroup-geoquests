@@ -6,244 +6,244 @@ import { MapPhoto } from '@/app/(protected)/(game)/models/MapPhoto'
  * do not edit by hand. Maps with no entry show an illustration instead.
  */
 export const MAP_PHOTOS: Record<string, MapPhoto[]> = {
-  "ciudades-famosas": [
+  'ciudades-famosas': [
     {
-      "src": "/maps/ciudades-famosas/1.jpg",
-      "title": "Paris - The Eiffel Tower in spring - 2307.jpg",
-      "author": "Jorge Royan",
-      "license": "CC BY-SA 3.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg"
+      src: '/maps/ciudades-famosas/1.jpg',
+      title: 'Paris - The Eiffel Tower in spring - 2307.jpg',
+      author: 'Jorge Royan',
+      license: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Paris_-_The_Eiffel_Tower_in_spring_-_2307.jpg'
     },
     {
-      "src": "/maps/ciudades-famosas/2.jpg",
-      "title": "Obelisco de Buenos Aires Sùper TC 2000 2012.jpg",
-      "author": "Banfield",
-      "license": "CC BY-SA 2.5 ar",
-      "url": "https://commons.wikimedia.org/wiki/File:Obelisco_de_Buenos_Aires_S%C3%B9per_TC_2000_2012.jpg"
+      src: '/maps/ciudades-famosas/2.jpg',
+      title: 'Obelisco de Buenos Aires Sùper TC 2000 2012.jpg',
+      author: 'Banfield',
+      license: 'CC BY-SA 2.5 ar',
+      url: 'https://commons.wikimedia.org/wiki/File:Obelisco_de_Buenos_Aires_S%C3%B9per_TC_2000_2012.jpg'
     },
     {
-      "src": "/maps/ciudades-famosas/3.jpg",
-      "title": "Tower Bridge London Feb 2006.jpg",
-      "author": "Diliff",
-      "license": "CC BY-SA 3.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Tower_Bridge_London_Feb_2006.jpg"
+      src: '/maps/ciudades-famosas/3.jpg',
+      title: 'Tower Bridge London Feb 2006.jpg',
+      author: 'Diliff',
+      license: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Tower_Bridge_London_Feb_2006.jpg'
     },
     {
-      "src": "/maps/ciudades-famosas/4.jpg",
-      "title": "Cape Town City Bowl and Table Mountain at dawn.jpg",
-      "author": "Daniel Case",
-      "license": "CC BY-SA 3.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Cape_Town_City_Bowl_and_Table_Mountain_at_dawn.jpg"
+      src: '/maps/ciudades-famosas/4.jpg',
+      title: 'Cape Town City Bowl and Table Mountain at dawn.jpg',
+      author: 'Daniel Case',
+      license: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Cape_Town_City_Bowl_and_Table_Mountain_at_dawn.jpg'
     }
   ],
-  "ciudades-del-mundo": [
+  'ciudades-del-mundo': [
     {
-      "src": "/maps/ciudades-del-mundo/1.jpg",
-      "title": "Tokyo Tower, Minato City.jpg",
-      "author": "David Kernan",
-      "license": "CC BY 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Tokyo_Tower,_Minato_City.jpg"
+      src: '/maps/ciudades-del-mundo/1.jpg',
+      title: 'Tokyo Tower, Minato City.jpg',
+      author: 'David Kernan',
+      license: 'CC BY 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Tokyo_Tower,_Minato_City.jpg'
     },
     {
-      "src": "/maps/ciudades-del-mundo/2.jpg",
-      "title": "West side of Manhattan from Hudson Commons (95103p).jpg",
-      "author": "Rhododendrites",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:West_side_of_Manhattan_from_Hudson_Commons_(95103p).jpg"
+      src: '/maps/ciudades-del-mundo/2.jpg',
+      title: 'West side of Manhattan from Hudson Commons (95103p).jpg',
+      author: 'Rhododendrites',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:West_side_of_Manhattan_from_Hudson_Commons_(95103p).jpg'
     },
     {
-      "src": "/maps/ciudades-del-mundo/3.jpg",
-      "title": "Cairo Skyline.jpg",
-      "author": "Maher Najm",
-      "license": "CC BY 2.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Cairo_Skyline.jpg"
+      src: '/maps/ciudades-del-mundo/3.jpg',
+      title: 'Cairo Skyline.jpg',
+      author: 'Maher Najm',
+      license: 'CC BY 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Cairo_Skyline.jpg'
     },
     {
-      "src": "/maps/ciudades-del-mundo/4.jpg",
-      "title": "Under the Sydney Harbour Bridge, skyline of Sydney CBD, 2023.jpg",
-      "author": "Chris Olszewski",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Under_the_Sydney_Harbour_Bridge,_skyline_of_Sydney_CBD,_2023.jpg"
+      src: '/maps/ciudades-del-mundo/4.jpg',
+      title: 'Under the Sydney Harbour Bridge, skyline of Sydney CBD, 2023.jpg',
+      author: 'Chris Olszewski',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Under_the_Sydney_Harbour_Bridge,_skyline_of_Sydney_CBD,_2023.jpg'
     }
   ],
-  "lugares-iconicos": [
+  'lugares-iconicos': [
     {
-      "src": "/maps/lugares-iconicos/1.jpg",
-      "title": "Genealogie des empereurs incas du Machu Picchu (Aguas Calientes).jpg",
-      "author": "Pierre André Leclercq",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Genealogie_des_empereurs_incas_du_Machu_Picchu_(Aguas_Calientes).jpg"
+      src: '/maps/lugares-iconicos/1.jpg',
+      title: 'Genealogie des empereurs incas du Machu Picchu (Aguas Calientes).jpg',
+      author: 'Pierre André Leclercq',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Genealogie_des_empereurs_incas_du_Machu_Picchu_(Aguas_Calientes).jpg'
     },
     {
-      "src": "/maps/lugares-iconicos/2.jpg",
-      "title": "Colosseum of Rome and Roman forum.jpg",
-      "author": "Wilfredor",
-      "license": "CC0",
-      "url": "https://commons.wikimedia.org/wiki/File:Colosseum_of_Rome_and_Roman_forum.jpg"
+      src: '/maps/lugares-iconicos/2.jpg',
+      title: 'Colosseum of Rome and Roman forum.jpg',
+      author: 'Wilfredor',
+      license: 'CC0',
+      url: 'https://commons.wikimedia.org/wiki/File:Colosseum_of_Rome_and_Roman_forum.jpg'
     },
     {
-      "src": "/maps/lugares-iconicos/3.jpg",
-      "title": "Taj Mahal, Agra, India edit2.jpg",
-      "author": "Yann; edited by King of Hearts",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Taj_Mahal,_Agra,_India_edit2.jpg"
+      src: '/maps/lugares-iconicos/3.jpg',
+      title: 'Taj Mahal, Agra, India edit2.jpg',
+      author: 'Yann; edited by King of Hearts',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Taj_Mahal,_Agra,_India_edit2.jpg'
     },
     {
-      "src": "/maps/lugares-iconicos/4.jpg",
-      "title": "Petermann Ranges (AU), Uluru-Kata Tjuta National Park, Uluru -- 2019 -- 3688.jpg",
-      "author": "Dietmar Rabich",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Petermann_Ranges_(AU),_Uluru-Kata_Tjuta_National_Park,_Uluru_--_2019_--_3688.jpg"
+      src: '/maps/lugares-iconicos/4.jpg',
+      title: 'Petermann Ranges (AU), Uluru-Kata Tjuta National Park, Uluru -- 2019 -- 3688.jpg',
+      author: 'Dietmar Rabich',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Petermann_Ranges_(AU),_Uluru-Kata_Tjuta_National_Park,_Uluru_--_2019_--_3688.jpg'
     }
   ],
-  "argentina": [
+  argentina: [
     {
-      "src": "/maps/argentina/1.jpg",
-      "title": "Perito Moreno Glacier Patagonia Argentina Luca Galuzzi 2005.JPG",
-      "author": "Luca Galuzzi (Lucag)",
-      "license": "CC BY-SA 2.5",
-      "url": "https://commons.wikimedia.org/wiki/File:Perito_Moreno_Glacier_Patagonia_Argentina_Luca_Galuzzi_2005.JPG"
+      src: '/maps/argentina/1.jpg',
+      title: 'Perito Moreno Glacier Patagonia Argentina Luca Galuzzi 2005.JPG',
+      author: 'Luca Galuzzi (Lucag)',
+      license: 'CC BY-SA 2.5',
+      url: 'https://commons.wikimedia.org/wiki/File:Perito_Moreno_Glacier_Patagonia_Argentina_Luca_Galuzzi_2005.JPG'
     },
     {
-      "src": "/maps/argentina/2.jpg",
-      "title": "Mount Fitz Roy at Sunset.jpg",
-      "author": "Masa Sakano",
-      "license": "CC BY-SA 2.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Mount_Fitz_Roy_at_Sunset.jpg"
+      src: '/maps/argentina/2.jpg',
+      title: 'Mount Fitz Roy at Sunset.jpg',
+      author: 'Masa Sakano',
+      license: 'CC BY-SA 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Mount_Fitz_Roy_at_Sunset.jpg'
     },
     {
-      "src": "/maps/argentina/3.jpg",
-      "title": "Rainbows at Iguazu Falls frrom Argentina.jpg",
-      "author": "Pierre André Leclercq",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Rainbows_at_Iguazu_Falls_frrom_Argentina.jpg"
+      src: '/maps/argentina/3.jpg',
+      title: 'Rainbows at Iguazu Falls frrom Argentina.jpg',
+      author: 'Pierre André Leclercq',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Rainbows_at_Iguazu_Falls_frrom_Argentina.jpg'
     },
     {
-      "src": "/maps/argentina/4.jpg",
-      "title": "AR378-Quebrada de Humahuaca.jpg",
-      "author": "Bernard Gagnon",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:AR378-Quebrada_de_Humahuaca.jpg"
+      src: '/maps/argentina/4.jpg',
+      title: 'AR378-Quebrada de Humahuaca.jpg',
+      author: 'Bernard Gagnon',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:AR378-Quebrada_de_Humahuaca.jpg'
     }
   ],
-  "espana": [
+  espana: [
     {
-      "src": "/maps/espana/1.jpg",
-      "title": "Sagrada Familia March 2015-10a.jpg",
-      "author": "Alvesgaspar",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Sagrada_Familia_March_2015-10a.jpg"
+      src: '/maps/espana/1.jpg',
+      title: 'Sagrada Familia March 2015-10a.jpg',
+      author: 'Alvesgaspar',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Sagrada_Familia_March_2015-10a.jpg'
     },
     {
-      "src": "/maps/espana/2.jpg",
-      "title": "Patio de los Arrayanes detail Alhambra Granada Spain.jpg",
-      "author": "Jebulon",
-      "license": "CC0",
-      "url": "https://commons.wikimedia.org/wiki/File:Patio_de_los_Arrayanes_detail_Alhambra_Granada_Spain.jpg"
+      src: '/maps/espana/2.jpg',
+      title: 'Patio de los Arrayanes detail Alhambra Granada Spain.jpg',
+      author: 'Jebulon',
+      license: 'CC0',
+      url: 'https://commons.wikimedia.org/wiki/File:Patio_de_los_Arrayanes_detail_Alhambra_Granada_Spain.jpg'
     },
     {
-      "src": "/maps/espana/3.jpg",
-      "title": "Plaza de España (Sevilla) - 01.jpg",
-      "author": "Carlos Delgado",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Plaza_de_Espa%C3%B1a_(Sevilla)_-_01.jpg"
+      src: '/maps/espana/3.jpg',
+      title: 'Plaza de España (Sevilla) - 01.jpg',
+      author: 'Carlos Delgado',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Plaza_de_Espa%C3%B1a_(Sevilla)_-_01.jpg'
     },
     {
-      "src": "/maps/espana/4.jpg",
-      "title": "2010-Catedral de Santiago de Compostela-Galicia (Spain) 3.jpg",
-      "author": "Luis Miguel Bugallo Sánchez",
-      "license": "CC BY-SA 3.0",
-      "url": "https://commons.wikimedia.org/wiki/File:2010-Catedral_de_Santiago_de_Compostela-Galicia_(Spain)_3.jpg"
+      src: '/maps/espana/4.jpg',
+      title: '2010-Catedral de Santiago de Compostela-Galicia (Spain) 3.jpg',
+      author: 'Luis Miguel Bugallo Sánchez',
+      license: 'CC BY-SA 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:2010-Catedral_de_Santiago_de_Compostela-Galicia_(Spain)_3.jpg'
     }
   ],
-  "estados-unidos": [
+  'estados-unidos': [
     {
-      "src": "/maps/estados-unidos/1.jpg",
-      "title": "Hazy blue hour in Grand Canyon.JPG",
-      "author": "Michael Gäbler",
-      "license": "CC BY 3.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Hazy_blue_hour_in_Grand_Canyon.JPG"
+      src: '/maps/estados-unidos/1.jpg',
+      title: 'Hazy blue hour in Grand Canyon.JPG',
+      author: 'Michael Gäbler',
+      license: 'CC BY 3.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Hazy_blue_hour_in_Grand_Canyon.JPG'
     },
     {
-      "src": "/maps/estados-unidos/2.jpg",
-      "title": "Golden Gate Bridge as seen from Marshall’s Beach, March 2018.jpg",
-      "author": "Frank Schulenburg",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_as_seen_from_Marshall%E2%80%99s_Beach,_March_2018.jpg"
+      src: '/maps/estados-unidos/2.jpg',
+      title: 'Golden Gate Bridge as seen from Marshall’s Beach, March 2018.jpg',
+      author: 'Frank Schulenburg',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_as_seen_from_Marshall%E2%80%99s_Beach,_March_2018.jpg'
     },
     {
-      "src": "/maps/estados-unidos/3.jpg",
-      "title": "Statue of Liberty, NY.jpg",
-      "author": "William Warby",
-      "license": "CC BY 2.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Statue_of_Liberty,_NY.jpg"
+      src: '/maps/estados-unidos/3.jpg',
+      title: 'Statue of Liberty, NY.jpg',
+      author: 'William Warby',
+      license: 'CC BY 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Statue_of_Liberty,_NY.jpg'
     },
     {
-      "src": "/maps/estados-unidos/4.jpg",
-      "title": "John Ford's Point Monument Valley Luca Galuzzi 2007.jpg",
-      "author": "Luca Galuzzi (Lucag)",
-      "license": "CC BY-SA 2.5",
-      "url": "https://commons.wikimedia.org/wiki/File:John_Ford%27s_Point_Monument_Valley_Luca_Galuzzi_2007.jpg"
+      src: '/maps/estados-unidos/4.jpg',
+      title: "John Ford's Point Monument Valley Luca Galuzzi 2007.jpg",
+      author: 'Luca Galuzzi (Lucag)',
+      license: 'CC BY-SA 2.5',
+      url: 'https://commons.wikimedia.org/wiki/File:John_Ford%27s_Point_Monument_Valley_Luca_Galuzzi_2007.jpg'
     }
   ],
-  "latinoamerica": [
+  latinoamerica: [
     {
-      "src": "/maps/latinoamerica/1.jpg",
-      "title": "Cartagena, view from old city walls.jpg",
-      "author": "Leon petrosyan",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Cartagena,_view_from_old_city_walls.jpg"
+      src: '/maps/latinoamerica/1.jpg',
+      title: 'Cartagena, view from old city walls.jpg',
+      author: 'Leon petrosyan',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Cartagena,_view_from_old_city_walls.jpg'
     },
     {
-      "src": "/maps/latinoamerica/2.jpg",
-      "title": "Plaza de la Constitución - Zócalo de la Ciudad de México - 6.jpg",
-      "author": "ProtoplasmaKid",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Plaza_de_la_Constituci%C3%B3n_-_Z%C3%B3calo_de_la_Ciudad_de_M%C3%A9xico_-_6.jpg"
+      src: '/maps/latinoamerica/2.jpg',
+      title: 'Plaza de la Constitución - Zócalo de la Ciudad de México - 6.jpg',
+      author: 'ProtoplasmaKid',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Plaza_de_la_Constituci%C3%B3n_-_Z%C3%B3calo_de_la_Ciudad_de_M%C3%A9xico_-_6.jpg'
     },
     {
-      "src": "/maps/latinoamerica/3.jpg",
-      "title": "On the Hill, Valparaíso (Valparaiso), Chile (3927311373).jpg",
-      "author": "Alex Proimos from Sydney, Australia",
-      "license": "CC BY 2.0",
-      "url": "https://commons.wikimedia.org/wiki/File:On_the_Hill,_Valpara%C3%ADso_(Valparaiso),_Chile_(3927311373).jpg"
+      src: '/maps/latinoamerica/3.jpg',
+      title: 'On the Hill, Valparaíso (Valparaiso), Chile (3927311373).jpg',
+      author: 'Alex Proimos from Sydney, Australia',
+      license: 'CC BY 2.0',
+      url: 'https://commons.wikimedia.org/wiki/File:On_the_Hill,_Valpara%C3%ADso_(Valparaiso),_Chile_(3927311373).jpg'
     },
     {
-      "src": "/maps/latinoamerica/4.jpg",
-      "title": "Sugarloaf Cable Car viewed from Rio de Janeiro, Brazil.jpg",
-      "author": "Wilfredor",
-      "license": "CC0",
-      "url": "https://commons.wikimedia.org/wiki/File:Sugarloaf_Cable_Car_viewed_from_Rio_de_Janeiro,_Brazil.jpg"
+      src: '/maps/latinoamerica/4.jpg',
+      title: 'Sugarloaf Cable Car viewed from Rio de Janeiro, Brazil.jpg',
+      author: 'Wilfredor',
+      license: 'CC0',
+      url: 'https://commons.wikimedia.org/wiki/File:Sugarloaf_Cable_Car_viewed_from_Rio_de_Janeiro,_Brazil.jpg'
     }
   ],
-  "europa": [
+  europa: [
     {
-      "src": "/maps/europa/1.jpg",
-      "title": "Jan Hus Statue, Old Town Square.jpg",
-      "author": "Tadeáš Gregor",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Jan_Hus_Statue,_Old_Town_Square.jpg"
+      src: '/maps/europa/1.jpg',
+      title: 'Jan Hus Statue, Old Town Square.jpg',
+      author: 'Tadeáš Gregor',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Jan_Hus_Statue,_Old_Town_Square.jpg'
     },
     {
-      "src": "/maps/europa/2.jpg",
-      "title": "1000 Three domes of Oia in Santorini Photo by Giles Laurent.jpg",
-      "author": "Giles Laurent",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:1000_Three_domes_of_Oia_in_Santorini_Photo_by_Giles_Laurent.jpg"
+      src: '/maps/europa/2.jpg',
+      title: '1000 Three domes of Oia in Santorini Photo by Giles Laurent.jpg',
+      author: 'Giles Laurent',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:1000_Three_domes_of_Oia_in_Santorini_Photo_by_Giles_Laurent.jpg'
     },
     {
-      "src": "/maps/europa/3.jpg",
-      "title": "Amsterdam Canals - July 2006.jpg",
-      "author": "Diliff",
-      "license": "CC BY 2.5",
-      "url": "https://commons.wikimedia.org/wiki/File:Amsterdam_Canals_-_July_2006.jpg"
+      src: '/maps/europa/3.jpg',
+      title: 'Amsterdam Canals - July 2006.jpg',
+      author: 'Diliff',
+      license: 'CC BY 2.5',
+      url: 'https://commons.wikimedia.org/wiki/File:Amsterdam_Canals_-_July_2006.jpg'
     },
     {
-      "src": "/maps/europa/4.jpg",
-      "title": "Big Ben at sunset - 2014-10-27 17-30.jpg",
-      "author": "Colin",
-      "license": "CC BY-SA 4.0",
-      "url": "https://commons.wikimedia.org/wiki/File:Big_Ben_at_sunset_-_2014-10-27_17-30.jpg"
+      src: '/maps/europa/4.jpg',
+      title: 'Big Ben at sunset - 2014-10-27 17-30.jpg',
+      author: 'Colin',
+      license: 'CC BY-SA 4.0',
+      url: 'https://commons.wikimedia.org/wiki/File:Big_Ben_at_sunset_-_2014-10-27_17-30.jpg'
     }
   ]
 }

@@ -56,6 +56,10 @@
     }
   }
 
+  &.mode-3 .header .subtitle {
+    color: var(--color-magenta);
+  }
+
   &.mode-2 .header .icon {
     color: var(--color-cyan);
   }

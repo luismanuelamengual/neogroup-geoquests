@@ -13,6 +13,7 @@ import { ClassicMultiplayerGameView } from '@/app/(protected)/(game)/models/Clas
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatPosition, getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance, formatScore } from '@/app/(protected)/(game)/utils/score'
@@ -107,7 +108,13 @@ export default function MultiplayerGameSummary() {
           className="final-standings"
         />
         <div className="actions">
-          <GameButton size="large" startIcon={<GroupsIcon />} loading={starting} onClick={handlePlayAgain}>
+          <GameButton
+            size="large"
+            color={getModeColor(game.mode)}
+            startIcon={<GroupsIcon />}
+            loading={starting}
+            onClick={handlePlayAgain}
+          >
             {t('game.anotherWithFriends')}
           </GameButton>
           <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">

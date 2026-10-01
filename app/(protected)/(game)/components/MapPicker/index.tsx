@@ -29,7 +29,7 @@ export default function MapPicker({ mode, maps }: { mode: GameModeView; maps: Ma
           <h1 className="title">{mode.name}</h1>
           <p className="subtitle">{t('picker.chooseWhere')}</p>
         </div>
-        {mode.maxPlayers > 1 && <JoinGameDialog className="join" />}
+        {mode.maxPlayers > 1 && <JoinGameDialog mode={mode.mode} className="join" />}
       </header>
       <section className="maps">
         {maps.map((map) => (
