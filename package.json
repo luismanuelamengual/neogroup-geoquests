@@ -13,6 +13,7 @@
     "db:migrate": "tsx scripts/migrate-database.ts",
     "db:reset": "tsx scripts/reset-database.ts",
     "db:seed": "tsx scripts/seed-database.ts",
+    "maps:photos": "tsx scripts/fetch-map-photos.ts",
     "db:local:up": "docker compose up -d",
     "db:local:down": "docker compose down",
     "test": "vitest run",

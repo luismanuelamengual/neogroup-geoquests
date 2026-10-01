@@ -4,6 +4,7 @@ import './index.scss'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
+import MapArt from '@/app/(protected)/(game)/components/MapArt'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import { MapView } from '@/app/(protected)/(game)/models/MapView'
@@ -39,18 +40,11 @@ export default function MapCard({ map, mode }: MapCardProps) {
     <div className="map-card">
       {starting && <Loading message={multiplayer ? 'Preparando la sala...' : 'Buscando lugares por el mundo...'} />}
       <div className="art" aria-hidden="true">
-        {map.image ? (
+        {map.image && map.photos.length === 0 ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={map.image} alt="" className="image" />
         ) : (
-          <>
-            <div className="sun" />
-            <div className="skyline">
-              {Array.from({ length: 11 }, (_, index) => (
-                <span key={index} className={`building b${index}`} />
-              ))}
-            </div>
-          </>
+          <MapArt mapId={map.id} shape={map.shape} photos={map.photos} />
         )}
       </div>
       <div className="content">

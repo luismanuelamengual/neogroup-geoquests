@@ -2,6 +2,8 @@ import { Map } from '@/app/(protected)/(game)/models/Map'
 import { MapPlace } from '@/app/(protected)/(game)/models/MapPlace'
 import { MapView } from '@/app/(protected)/(game)/models/MapView'
 import { Place } from '@/app/(protected)/(game)/models/Place'
+import { getMapPhotos } from '@/app/(protected)/(game)/utils/mapPhotos'
+import { buildMapShape } from '@/app/(protected)/(game)/utils/mapShape'
 
 /** Enabled map by id, or null. */
 export async function findMap(mapId: number): Promise<Map | null> {
@@ -30,13 +32,19 @@ export async function getMapPlaces(mapId: number): Promise<Place[]> {
 export async function getMaps(): Promise<MapView[]> {
   const maps = await Map.where('enabled', true).orderBy('id').get()
   const views = await Promise.all(
-    maps.map(async (map) => ({
-      id: map.id,
-      name: map.name,
-      description: map.description,
-      image: map.image,
-      placesCount: (await getMapPlaces(map.id)).length
-    }))
+    maps.map(async (map) => {
+      const places = await getMapPlaces(map.id)
+
+      return {
+        id: map.id,
+        name: map.name,
+        description: map.description,
+        image: map.image,
+        shape: map.image ? null : buildMapShape(places.map((place) => place.geometry)),
+        photos: getMapPhotos(map.name).map((photo) => photo.src),
+        placesCount: places.length
+      }
+    })
   )
 
   return views.filter((view) => view.placesCount > 0)

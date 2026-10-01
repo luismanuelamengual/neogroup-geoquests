@@ -13,6 +13,17 @@
 
   &:hover {
     border-color: var(--color-gold);
+
+    // The photos of the collage show their colors.
+    .collage .photo {
+      &::after {
+        opacity: 0.25;
+      }
+
+      img {
+        transform: scale(1.05);
+      }
+    }
   }
 
   .loading {
@@ -24,54 +35,13 @@
     position: relative;
     height: 190px;
     overflow: hidden;
-    background: linear-gradient(180deg, #3b1d8f 0%, #b93a8c 55%, #ff9e5e 100%);
+    background: var(--color-night-light);
 
     .image {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center 30%;
-    }
-
-    .sun {
-      position: absolute;
-      bottom: 26px;
-      left: 50%;
-      width: 120px;
-      height: 120px;
-      transform: translateX(-50%);
-      border-radius: 50%;
-      background: repeating-linear-gradient(180deg, var(--color-gold) 0 12px, transparent 12px 16px);
-      opacity: 0.95;
-    }
-
-    .skyline {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 4px;
-      height: 100%;
-    }
-
-    .building {
-      width: 8%;
-      border: 3px solid rgba(0, 0, 0, 0.35);
-      border-bottom: 0;
-      border-radius: 6px 6px 0 0;
-      background:
-        repeating-linear-gradient(180deg, transparent 0 8px, rgba(255, 226, 120, 0.55) 8px 12px) center / 40% 100%
-          no-repeat,
-        var(--color-night-light);
-
-      @for $i from 0 through 10 {
-        &.b#{$i} {
-          height: #{30 + (($i * 37) % 55)}%;
-        }
-      }
     }
   }
 

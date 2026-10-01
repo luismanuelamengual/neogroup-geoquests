@@ -1,0 +1,288 @@
+.map-art {
+  // Colors of the look (overridden by every sky-* variant): top, middle and bottom of the sky, and the adornment.
+  --sky-top: #3b1d8f;
+  --sky-middle: #b93a8c;
+  --sky-bottom: #ff9e5e;
+  --adornment: var(--color-gold);
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-middle) 55%, var(--sky-bottom) 100%);
+
+  &.sky-1 {
+    --sky-top: var(--color-night);
+    --sky-middle: var(--color-cyan-dark);
+    --sky-bottom: var(--color-cyan);
+    --adornment: var(--color-text);
+  }
+
+  &.sky-2 {
+    --sky-top: var(--color-night-light);
+    --sky-middle: var(--color-magenta-dark);
+    --sky-bottom: var(--color-magenta);
+    --adornment: var(--color-gold);
+  }
+
+  &.sky-3 {
+    --sky-top: var(--color-night);
+    --sky-middle: var(--color-lime-dark);
+    --sky-bottom: var(--color-lime);
+    --adornment: var(--color-gold);
+  }
+
+  &.sky-4 {
+    --sky-top: #3b1d8f;
+    --sky-middle: var(--color-cyan-dark);
+    --sky-bottom: var(--color-gold);
+    --adornment: var(--color-text);
+  }
+
+  &.sky-5 {
+    --sky-top: var(--color-gold-dark);
+    --sky-middle: var(--color-magenta-dark);
+    --sky-bottom: #3b1d8f;
+    --adornment: var(--color-cyan);
+  }
+
+  // Collage of photos: the thick gaps are the frames; the sky of the map tints them (duotone).
+  .collage {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.55);
+
+    &.photos-1 .photo {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+    }
+
+    &.photos-2 .photo {
+      grid-column: span 3;
+      grid-row: 1 / -1;
+
+      &:nth-child(2) {
+        grid-column: span 2;
+      }
+    }
+
+    &.photos-3 .photo {
+      grid-column: 4 / -1;
+
+      &:first-child {
+        grid-column: 1 / 4;
+        grid-row: 1 / -1;
+      }
+    }
+
+    // Two rows that stagger: wide + narrow, narrow + wide.
+    &.photos-4 .photo {
+      &:nth-child(1) {
+        grid-column: 1 / 4;
+      }
+
+      &:nth-child(2) {
+        grid-column: 4 / 6;
+      }
+
+      &:nth-child(3) {
+        grid-column: 1 / 3;
+      }
+
+      &:nth-child(4) {
+        grid-column: 3 / 6;
+      }
+    }
+
+    // Darkens the bottom, where the card continues in the dark panel.
+    &::after {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(11, 16, 38, 0.55) 100%);
+      content: '';
+      pointer-events: none;
+    }
+
+    .photo {
+      position: relative;
+      overflow: hidden;
+      background: var(--sky-top);
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.92) contrast(1.12);
+        transition: transform 300ms ease;
+      }
+
+      // Duotone: hue and saturation of the sky of the map over the light of the photo.
+      &::after {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(160deg, var(--sky-top) 0%, var(--sky-middle) 55%, var(--sky-bottom) 100%);
+        content: '';
+        mix-blend-mode: color;
+        opacity: 0.9;
+        transition: opacity 250ms ease;
+      }
+    }
+  }
+
+  // Sun, moon, ringed planet or stars: behind the shape or the horizon.
+  .adornment {
+    position: absolute;
+    top: 14%;
+    right: 12%;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    opacity: 0.95;
+  }
+
+  &.adornment-0 .adornment {
+    top: auto;
+    right: auto;
+    bottom: 26px;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    transform: translateX(-50%);
+    background: repeating-linear-gradient(180deg, var(--adornment) 0 12px, transparent 12px 16px);
+  }
+
+  &.adornment-1 .adornment {
+    box-shadow: inset 16px -6px 0 0 var(--adornment);
+  }
+
+  &.adornment-2 .adornment {
+    top: 12%;
+    right: auto;
+    left: 10%;
+    width: 64px;
+    height: 64px;
+    background: var(--adornment);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.25);
+
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: -26px;
+      width: 116px;
+      height: 22px;
+      border: 4px solid var(--adornment);
+      border-radius: 50%;
+      content: '';
+      transform: translateY(-50%) rotate(-18deg);
+    }
+  }
+
+  &.adornment-3 .adornment {
+    inset: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background:
+      radial-gradient(circle 2px at 12% 22%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 3px at 28% 64%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 2px at 41% 14%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 2px at 63% 30%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 3px at 78% 12%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 2px at 88% 52%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 2px at 7% 74%, var(--adornment) 98%, transparent),
+      radial-gradient(circle 2px at 54% 78%, var(--adornment) 98%, transparent);
+  }
+
+  // Silhouette or places of the map.
+  .shape {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .outline {
+    fill: var(--color-night-light);
+    stroke: rgba(0, 0, 0, 0.5);
+    stroke-linejoin: round;
+    stroke-width: 3;
+
+    &.shadow {
+      fill: rgba(0, 0, 0, 0.35);
+      stroke: rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .graticule line {
+    stroke: rgba(255, 255, 255, 0.14);
+    stroke-width: 0.5;
+  }
+
+  .dot {
+    fill: var(--color-gold);
+    stroke: var(--color-night);
+    stroke-width: 0.5;
+
+    &.alt {
+      fill: var(--color-cyan);
+    }
+  }
+
+  // Maps with no places to draw: a horizon along the bottom.
+  .horizon {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+  }
+
+  .horizon-0 {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+
+    .building {
+      width: 8%;
+      border: 3px solid rgba(0, 0, 0, 0.35);
+      border-bottom: 0;
+      border-radius: 6px 6px 0 0;
+      background:
+        repeating-linear-gradient(180deg, transparent 0 8px, rgba(255, 226, 120, 0.55) 8px 12px) center / 40% 100%
+          no-repeat,
+        var(--color-night-light);
+
+      @for $i from 0 through 10 {
+        &.b#{$i} {
+          height: #{30 + (($i * 37) % 55)}%;
+        }
+      }
+    }
+  }
+
+  // Hills and waves are drawn with the first spans' background; the rest are hidden.
+  .horizon-1,
+  .horizon-2 {
+    .building {
+      display: none;
+    }
+  }
+
+  .horizon-1 {
+    background:
+      radial-gradient(ellipse 60% 45% at 25% 100%, var(--color-night-light) 98%, transparent 100%),
+      radial-gradient(ellipse 70% 60% at 75% 100%, var(--color-night) 98%, transparent 100%);
+  }
+
+  .horizon-2 {
+    background:
+      radial-gradient(circle 18px at 50% 100%, transparent 96%, var(--color-night-light) 100%) 0 100% / 36px 28px
+        repeat-x,
+      linear-gradient(180deg, transparent 80%, var(--color-night-light) 80%);
+  }
+}
