@@ -10,8 +10,10 @@ import IconButton from '@mui/material/IconButton'
 import { useRouter } from 'next/navigation'
 import { ReactNode, useState } from 'react'
 import MusicToggle from '@/app/(protected)/(game)/components/MusicToggle'
+import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 interface RoundHudProps {
   mapName: string | null
@@ -29,9 +31,6 @@ interface RoundHudProps {
   onExit?: () => void
 }
 
-const DEFAULT_EXIT_MESSAGE =
-  'La partida queda guardada: podés retomarla desde el menú principal. Si la ronda tiene tiempo, el reloj sigue corriendo.'
-
 /** Heads-up display of the play screen: exit, map, round countdown, round counter and total score. */
 export default function RoundHud({
   mapName,
@@ -40,38 +39,39 @@ export default function RoundHud({
   totalScore = 0,
   stat,
   timer,
-  exitMessage = DEFAULT_EXIT_MESSAGE,
+  exitMessage,
   onExit
 }: RoundHudProps) {
+  const { t, locale } = useI18n()
   const router = useRouter()
   const [confirmExit, setConfirmExit] = useState(false)
 
   return (
     <div className="round-hud">
-      <IconButton className="exit" onClick={() => setConfirmExit(true)} aria-label="Salir de la partida">
+      <IconButton className="exit" onClick={() => setConfirmExit(true)} aria-label={t('game.exitAria')}>
         <CloseIcon />
       </IconButton>
-      <div className="chip map">{mapName}</div>
+      <div className="chip map">{localizeMapName(t, mapName)}</div>
       <MusicToggle />
       <div className="spacer" />
       {timer}
       <div className="chip round">
-        <span className="caption">Ronda</span>
+        <span className="caption">{t('game.round')}</span>
         <span className="value">{roundsCount != null ? `${roundNumber}/${roundsCount}` : roundNumber}</span>
       </div>
       <div className="chip score">
-        <span className="caption">{stat?.caption ?? 'Puntos'}</span>
-        <span className="value">{stat?.value ?? formatScore(totalScore)}</span>
+        <span className="caption">{stat?.caption ?? t('game.points')}</span>
+        <span className="value">{stat?.value ?? formatScore(totalScore, locale)}</span>
       </div>
       <Dialog open={confirmExit} onClose={() => setConfirmExit(false)}>
-        <DialogTitle>¿Salir de la partida?</DialogTitle>
-        <DialogContent>{exitMessage}</DialogContent>
+        <DialogTitle>{t('game.exitTitle')}</DialogTitle>
+        <DialogContent>{exitMessage ?? t('game.exitDefault')}</DialogContent>
         <DialogActions sx={{ gap: 1, p: 2 }}>
           <GameButton color="ghost" size="small" onClick={() => setConfirmExit(false)}>
-            Seguir jugando
+            {t('game.keepPlaying')}
           </GameButton>
           <GameButton color="magenta" size="small" onClick={() => (onExit ? onExit() : router.push('/play'))}>
-            Salir
+            {t('game.exit')}
           </GameButton>
         </DialogActions>
       </Dialog>

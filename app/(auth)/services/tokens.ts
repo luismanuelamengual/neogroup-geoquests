@@ -1,6 +1,8 @@
 import { randomBytes } from 'crypto'
 import { EmailVerificationToken } from '@/app/(auth)/models/EmailVerificationToken'
 import { PasswordResetToken } from '@/app/(auth)/models/PasswordResetToken'
+import { DEFAULT_LOCALE, isLocale } from '@/app/i18n/config'
+import { createTranslator, Translator } from '@/app/i18n/translate'
 import { User } from '@/app/models/User'
 import { renderActionEmail, sendEmail } from '@/app/utils/email'
 import { resolveAppUrl } from '@/app/utils/urls'
@@ -11,6 +13,11 @@ const RESET_TOKEN_EXPIRY_HOURS = 1
 
 function createToken(): string {
   return randomBytes(32).toString('hex')
+}
+
+/** Translator of the language the user chose (emails are sent in it, not in the one of the request). */
+function translatorOf(user: User): Translator {
+  return createTranslator(isLocale(user.locale) ? user.locale : DEFAULT_LOCALE)
 }
 
 function hoursFromNow(hours: number): Date {
@@ -33,15 +40,17 @@ export async function sendVerificationEmail(user: User, host: string): Promise<v
   token.expiresAt = hoursFromNow(VERIFICATION_TOKEN_EXPIRY_HOURS)
   await token.save()
 
+  const t = translatorOf(user)
+
   await sendEmail({
     to: user.email,
-    subject: 'Activá tu cuenta de GeoQuests',
+    subject: t('auth.emails.verifySubject'),
     html: renderActionEmail({
-      title: `¡Hola ${getUserDisplayName(user)}!`,
-      intro: 'Gracias por sumarte a GeoQuests. Para activar tu cuenta y empezar a jugar, verificá tu email:',
-      actionLabel: 'Verificar mi email',
+      title: t('auth.emails.greeting', { name: getUserDisplayName(user) }),
+      intro: t('auth.emails.verifyIntro'),
+      actionLabel: t('auth.emails.verifyAction'),
       actionUrl: `${resolveAppUrl(host)}/api/verifyEmail?token=${token.token}`,
-      footer: `El enlace es válido por ${VERIFICATION_TOKEN_EXPIRY_HOURS} horas. Si no creaste esta cuenta, ignorá este mensaje.`
+      footer: t('auth.emails.verifyFooter', { hours: VERIFICATION_TOKEN_EXPIRY_HOURS })
     })
   })
 }
@@ -62,15 +71,17 @@ export async function sendPasswordResetEmail(user: User, host: string): Promise<
   token.expiresAt = hoursFromNow(RESET_TOKEN_EXPIRY_HOURS)
   await token.save()
 
+  const t = translatorOf(user)
+
   await sendEmail({
     to: user.email,
-    subject: 'Restablecer tu contraseña de GeoQuests',
+    subject: t('auth.emails.resetSubject'),
     html: renderActionEmail({
-      title: `¡Hola ${getUserDisplayName(user)}!`,
-      intro: 'Recibimos una solicitud para restablecer la contraseña de tu cuenta de GeoQuests.',
-      actionLabel: 'Restablecer contraseña',
+      title: t('auth.emails.greeting', { name: getUserDisplayName(user) }),
+      intro: t('auth.emails.resetIntro'),
+      actionLabel: t('auth.emails.resetAction'),
       actionUrl: `${resolveAppUrl(host)}/reset-password?token=${token.token}`,
-      footer: `El enlace es válido por ${RESET_TOKEN_EXPIRY_HOURS} hora. Si no pediste este cambio, ignorá este mensaje.`
+      footer: t('auth.emails.resetFooter', { hours: RESET_TOKEN_EXPIRY_HOURS })
     })
   })
 }

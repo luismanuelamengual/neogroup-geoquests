@@ -3,12 +3,14 @@
 import ShareIcon from '@mui/icons-material/Share'
 import GameButton from '@/app/components/GameButton'
 import { useNotifications } from '@/app/hooks/useNotifications'
+import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Invites friends to a multiplayer game: shares the invitation link with the
  * system share sheet (phones), or copies it to the clipboard.
  */
 export default function InviteButton({ code, className }: { code: string; className?: string }) {
+  const t = useT()
   const { showSuccessMessage, showErrorMessage } = useNotifications()
 
   const handleInvite = async () => {
@@ -16,7 +18,7 @@ export default function InviteButton({ code, className }: { code: string; classN
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'GeoQuests', text: `¡Jugá conmigo a GeoQuests! Código: ${code}`, url })
+        await navigator.share({ title: 'GeoQuests', text: t('invitation.share', { code }), url })
 
         return
       } catch (error) {
@@ -28,15 +30,15 @@ export default function InviteButton({ code, className }: { code: string; classN
 
     try {
       await navigator.clipboard.writeText(url)
-      showSuccessMessage('¡Link copiado! Pasáselo a tus amigos.')
+      showSuccessMessage(t('invitation.linkCopied'))
     } catch {
-      showErrorMessage(`No pudimos copiar el link. El código de la partida es ${code}.`)
+      showErrorMessage(t('invitation.copyFailed', { code }))
     }
   }
 
   return (
     <GameButton color="cyan" fullWidth startIcon={<ShareIcon />} onClick={handleInvite} className={className}>
-      Invitar amigos
+      {t('invitation.inviteFriends')}
     </GameButton>
   )
 }

@@ -1,30 +1,44 @@
 import type { Metadata } from 'next'
 import AuthMessage from '@/app/(auth)/components/AuthMessage'
+import { getT } from '@/app/i18n/server'
 
-export const metadata: Metadata = { title: 'Verificá tu email' }
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getT())('metadata.verifyEmail') }
+}
 
 export default async function VerifyEmailPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams
+  const t = await getT()
 
   if (error === 'expiredToken') {
     return (
-      <AuthMessage title="Enlace vencido" severity="warning" linkHref="/register" linkLabel="Registrarme de nuevo">
-        El enlace de verificación expiró. Registrate nuevamente con el mismo email y te mandamos uno nuevo.
+      <AuthMessage
+        title={t('auth.verify.expiredTitle')}
+        severity="warning"
+        linkHref="/register"
+        linkLabel={t('auth.verify.registerAgain')}
+      >
+        {t('auth.verify.expiredText')}
       </AuthMessage>
     )
   }
 
   if (error) {
     return (
-      <AuthMessage title="Enlace inválido" severity="error" linkHref="/register" linkLabel="Registrarme de nuevo">
-        El enlace de verificación no es válido o ya fue utilizado.
+      <AuthMessage
+        title={t('auth.verify.invalidTitle')}
+        severity="error"
+        linkHref="/register"
+        linkLabel={t('auth.verify.registerAgain')}
+      >
+        {t('auth.verify.invalidText')}
       </AuthMessage>
     )
   }
 
   return (
-    <AuthMessage title="Verificá tu email" severity="info">
-      Revisá tu bandeja de entrada y hacé clic en el enlace de verificación para activar tu cuenta.
+    <AuthMessage title={t('auth.verify.title')} severity="info">
+      {t('auth.verify.text')}
     </AuthMessage>
   )
 }

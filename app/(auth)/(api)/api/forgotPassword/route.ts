@@ -9,7 +9,7 @@ export const POST = withApi(async (request) => {
   const email = rawEmail?.trim().toLowerCase()
 
   if (!email) {
-    throw new ApiException('Ingresá tu email')
+    throw new ApiException('errors.emailRequired')
   }
 
   const user = await User.where('email', email).first()

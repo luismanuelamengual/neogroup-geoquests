@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Serializable } from '@neogroup/neorm'
+import { Locale } from '@/app/i18n/config'
 import { getUserDisplayName } from '@/app/utils/users'
 
 /** A GeoQuests player. Signs in with Google or with email + password (verified by email). */
@@ -21,6 +22,10 @@ export class User extends BaseEntity {
   /** True when the user verified their email address. Always true for Google-authenticated users. */
   @Column({ cast: 'boolean' })
   emailVerified!: boolean
+
+  /** Language chosen by the player (app and emails). */
+  @Column()
+  locale!: Locale
 
   /** False disables the account's login. */
   @Column({ cast: 'boolean' })

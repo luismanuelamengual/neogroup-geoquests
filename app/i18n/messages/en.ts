@@ -1,0 +1,382 @@
+import type { Messages } from '@/app/i18n/messages/es'
+
+/** English dictionary. It must have the same shape as the Spanish one (es.ts), which the compiler checks. */
+export const en: Messages = {
+  common: {
+    cancel: 'Cancel',
+    close: 'Close',
+    menu: 'Menu',
+    player: 'Player',
+    loading: 'Loading...',
+    points: 'pts'
+  },
+  nav: {
+    play: 'Play',
+    myGames: 'My games',
+    myProfile: 'My profile',
+    logout: 'Sign out'
+  },
+  metadata: {
+    mainMenu: 'Main menu',
+    invitation: 'Invitation',
+    game: 'Game',
+    chooseWhere: 'Choose where to play',
+    myGames: 'My games',
+    verifyEmail: 'Verify your email',
+    register: 'Create account',
+    forgotPassword: 'Recover password',
+    newPassword: 'New password',
+    login: 'Sign in',
+    offline: 'Offline',
+    profile: 'My profile'
+  },
+  pwa: {
+    description: 'Where are you? Explore streets of cities around the world and guess the place. Free.',
+    installPrompt:
+      'Install GeoQuests on your phone and play full screen, with an icon on your home screen like any other game.',
+    install: 'Install',
+    offlineTitle: 'No signal',
+    offlineText:
+      'GeoQuests needs the internet to bring you the streets of the world. Check your connection and try again.'
+  },
+  landing: {
+    tagline: 'Where are you? Explore the streets of the world and guess the place.',
+    playFree: 'Play for free',
+    steps: {
+      look: { title: 'Look', text: 'You land on a street somewhere in the world. Turn around, zoom in, walk.' },
+      mark: { title: 'Mark', text: 'Look for clues (signs, cars, architecture) and drop your pin on the map.' },
+      score: { title: 'Score', text: 'The closer you are, the more points. 5 rounds, up to 25,000 points.' }
+    },
+    credits: 'Street imagery © Google Street View · Maps © OpenStreetMap / OpenFreeMap'
+  },
+  auth: {
+    email: 'Email',
+    password: 'Password',
+    playerName: 'Player name',
+    login: {
+      title: 'Sign in',
+      subtitle: 'Where are you? Come in and prove it.',
+      google: 'Continue with Google',
+      or: 'or',
+      verified: 'Your email has been verified. You can now sign in.',
+      passwordReset: 'Your password has been updated. You can now sign in.',
+      invalidCredentials: 'Wrong email or password (or the account has not been verified yet)',
+      submit: 'Sign in',
+      forgotPassword: 'Forgot your password?',
+      noAccount: "Don't have an account?",
+      register: 'Sign up'
+    },
+    register: {
+      title: 'Create account',
+      verifyTitle: 'Verify your email',
+      verifySent: 'We sent a verification link to {email}. Check your inbox and click it to activate your account.',
+      alreadyActivated: 'Already activated it?',
+      login: 'Sign in',
+      passwordHint: 'At least 6 characters',
+      repeatPassword: 'Repeat password',
+      passwordsMismatch: "Passwords don't match",
+      passwordsMismatchDot: "Passwords don't match.",
+      submit: 'Create account',
+      haveAccount: 'Already have an account?'
+    },
+    forgot: {
+      title: 'Recover password',
+      sent: 'If there is an account associated with {email}, you will receive an email with instructions to reset your password.',
+      subtitle: "Enter your email and we'll send you a link to reset your password.",
+      submit: 'Send link',
+      back: 'Back to sign in'
+    },
+    reset: {
+      title: 'New password',
+      newPassword: 'New password',
+      confirmPassword: 'Confirm password',
+      submit: 'Save password',
+      requestNew: 'Request a new link'
+    },
+    verify: {
+      expiredTitle: 'Link expired',
+      expiredText:
+        'The verification link has expired. Sign up again with the same email and we will send you a new one.',
+      invalidTitle: 'Invalid link',
+      invalidText: 'The verification link is not valid or has already been used.',
+      title: 'Verify your email',
+      text: 'Check your inbox and click the verification link to activate your account.',
+      registerAgain: 'Sign up again'
+    },
+    resetInvalid: 'The link is not valid or has already been used.',
+    goToLogin: 'Go to sign in',
+    somethingWentWrong: 'Something went wrong. Please try again.',
+    emails: {
+      verifySubject: 'Activate your GeoQuests account',
+      resetSubject: 'Reset your GeoQuests password',
+      greeting: 'Hi {name}!',
+      verifyIntro: 'Thanks for joining GeoQuests. To activate your account and start playing, verify your email:',
+      verifyAction: 'Verify my email',
+      verifyFooter: "The link is valid for {hours} hours. If you didn't create this account, ignore this message.",
+      resetIntro: 'We received a request to reset the password of your GeoQuests account.',
+      resetAction: 'Reset password',
+      resetFooter: "The link is valid for {hours} hour. If you didn't request this change, ignore this message."
+    }
+  },
+  account: {
+    profile: 'My profile',
+    playerNameTitle: 'Player name',
+    save: 'Save',
+    saved: 'Profile updated!',
+    languageLabel: 'App language'
+  },
+  home: {
+    greeting: 'Hi, {name}!',
+    title: 'How do you want to play?',
+    noModes: 'There are no game modes available yet.'
+  },
+  modes: {
+    classic: {
+      name: 'Classic',
+      description:
+        'Play solo, at your own pace: you land on a street somewhere in the world and have to guess where you are.'
+    },
+    multiplayer: {
+      name: 'With friends',
+      description: '2 to 8 players, the same streets at the same time. Whoever gets closest wins.'
+    },
+    'battle-royale': {
+      name: 'Battle Royale',
+      description: '3 to 8 players: every round, whoever marked the farthest is eliminated. The last one standing wins.'
+    },
+    onePlayer: '1 player',
+    playersExact: '{count} players',
+    playersRange: '{min} to {max} players',
+    rounds: '{count} rounds',
+    elimination: 'Elimination',
+    timePerRound: '{time} per round',
+    noTime: 'No time limit',
+    choose: 'Choose'
+  },
+  maps: {
+    'ciudades-famosas': {
+      name: 'Famous cities',
+      description:
+        'You land on a street in one of the 20 best known cities in the world. Do you know which one it is and where you are?'
+    },
+    'ciudades-del-mundo': {
+      name: 'Cities of the world',
+      description: '150 cities in 36 countries: capitals, but also medium and small cities. Can you recognize them?'
+    },
+    'lugares-iconicos': {
+      name: 'Iconic places',
+      description:
+        'You land next to a monument, a natural wonder or a famous sight: from the Colosseum to Machu Picchu, from the Eiffel Tower to Uluru. Over 500 places around the world, so they never repeat.'
+    },
+    argentina: {
+      name: 'Argentina',
+      description: 'You land anywhere in mainland Argentina, from the Puna to Santa Cruz. Where are you?'
+    },
+    espana: {
+      name: 'Spain',
+      description: 'You land anywhere in peninsular Spain, from Galicia to Andalusia. Where are you?'
+    },
+    'estados-unidos': {
+      name: 'United States',
+      description: 'You land anywhere in the 48 contiguous states of the United States. Where are you?'
+    },
+    latinoamerica: {
+      name: 'Latin America',
+      description:
+        'From Mexico to Ushuaia: over 100 Latin American cities, from big capitals to small towns. Can you tell where you are?'
+    },
+    europa: {
+      name: 'Europe',
+      description:
+        'Over 200 European cities, from Reykjavik to Athens and from Lisbon to Moscow: capitals, but also medium and small cities. Are you up for it?'
+    }
+  },
+  picker: {
+    chooseWhere: 'Choose where to play',
+    noMaps: 'There are no maps to play yet.',
+    places: { one: '{count} place', other: '{count} places' },
+    createRoom: 'Create room',
+    play: 'Play',
+    preparingRoom: 'Preparing the room...',
+    searchingPlaces: 'Looking for places around the world...',
+    joinWithCode: 'Join with code',
+    joinTitle: 'Join a game',
+    codeLabel: 'Game code',
+    codePlaceholder: 'E.g. K7QX2M',
+    join: 'Join'
+  },
+  invitation: {
+    title: "You're invited!",
+    text: 'A friend invited you to play a game of GeoQuests.',
+    join: 'Join the game',
+    goToMenu: 'Go to the menu',
+    joinFailed: "We couldn't add you to the game.",
+    share: 'Play GeoQuests with me! Code: {code}',
+    inviteFriends: 'Invite friends',
+    linkCopied: 'Link copied! Send it to your friends.',
+    copyFailed: "We couldn't copy the link. The game code is {code}."
+  },
+  game: {
+    activeLobby: "You're in a room waiting to play with friends.",
+    activeInProgress: 'You have a game with friends in progress.',
+    back: 'Back',
+    backToMenu: 'Back to the menu',
+    removedFromGame: "You're no longer part of this game.",
+    loadFailed: "We couldn't load the game.",
+    modeUnavailable: 'This game mode is not available yet.',
+    preparing: 'Preparing the game...',
+    round: 'Round',
+    roundNumber: 'Round {number}',
+    roundOf: 'Round {number} of {total}',
+    points: 'Points',
+    remaining: 'Left',
+    exit: 'Exit',
+    exitAria: 'Exit the game',
+    exitTitle: 'Exit the game?',
+    keepPlaying: 'Keep playing',
+    exitDefault:
+      'The game is saved: you can resume it from the main menu. If the round is timed, the clock keeps running.',
+    exitMultiplayer:
+      "If you exit, you abandon the game: your points stay in the results, but you won't be able to rejoin.",
+    exitEliminated: "You're already eliminated: if you exit, you stop watching the game.",
+    exitBattleRoyale: 'If you exit, you abandon the game and are eliminated.',
+    musicOff: 'Turn the music off',
+    musicOn: 'Turn the music on',
+    whereAreYou: 'Where are you?',
+    closeMap: 'Close map',
+    guess: 'Guess!',
+    markAPoint: 'Drop a pin on the map',
+    guessShort: 'Guess',
+    map: 'Map',
+    streetViewKey: 'Set {key} to see the imagery.',
+    guessedTitle: '{name}: already answered',
+    ready: 'Done! Waiting for the others…',
+    eliminatedTitle: "You've been eliminated",
+    eliminatedText: 'You keep watching the game until only one player is left.',
+    gameOver: 'Game over!',
+    yourAnswers: 'Your answers',
+    rounds: 'Rounds',
+    total: 'Total',
+    playAgain: 'Play again',
+    anotherWithFriends: 'Another with friends',
+    anotherGame: 'Another game',
+    menu: 'Menu',
+    noAnswerTimeUp: 'No answer: time ran out',
+    noAnswer: 'No answer',
+    nobodyAnswered: 'Nobody answered in time',
+    at: '{distance} away',
+    best: 'Best: {name}, {distance} away',
+    fell: 'Fell: {names}',
+    nobodyFell: 'Nobody fell',
+    eliminatedIn: 'Eliminated in round {round}',
+    stoodUp: 'Still standing',
+    eliminatedBadge: 'Eliminated',
+    won: 'You won!',
+    wonStanding: 'You won! You were the last one standing',
+    draw: "It's a tie for first place!",
+    finished: 'You finished {position}',
+    winnerIs: '{name} won',
+    left: ' (left)',
+    you: ' (you)'
+  },
+  result: {
+    timeUp: "Time's up!",
+    yourMark: 'Your pin landed {distance} from the place',
+    noMark: "You didn't place a pin in time",
+    seeSummary: 'See summary',
+    nextRound: 'Next round',
+    verdicts: {
+      perfect: 'PERFECT!',
+      excellent: 'Excellent!',
+      veryGood: 'Very good!',
+      notBad: 'Not bad',
+      almost: 'Almost...',
+      oops: 'Oops! Way off'
+    },
+    results: 'Results',
+    nextRoundIn: '{what} in {seconds} s',
+    seeResults: 'See results',
+    next: 'Next',
+    nobodyEliminated: 'Nobody was eliminated',
+    eliminated: { one: 'Eliminated: {names}!', other: 'Eliminated: {names}!' }
+  },
+  lobby: {
+    title: 'Waiting room',
+    rules: '{rounds} · {time} per round',
+    code: 'Game code',
+    players: 'Players',
+    host: 'Host',
+    kick: 'Remove {name}',
+    start: 'Start game',
+    waitingPlayers: 'Waiting for players (minimum {min})',
+    waitingHost: 'Waiting for {name} to start the game…',
+    theHost: 'the host',
+    leave: 'Leave the room'
+  },
+  myGames: {
+    title: 'My games',
+    games: 'Games',
+    bestScore: 'Best score',
+    average: 'Average',
+    empty: "You haven't played any games yet.",
+    letsPlay: "Let's play!",
+    loadMore: 'Load more',
+    position: '{position} of {total}',
+    stars: '{count} stars',
+    resume: 'Resume ({done}/{total})',
+    waitingRoom: 'In the waiting room'
+  },
+  time: {
+    seconds: '{count} s',
+    minutes: '{count} min',
+    minutesSeconds: '{minutes} min {seconds} s'
+  },
+  errors: {
+    internal: 'Internal error',
+    notAuthenticated: 'User not authenticated',
+    unauthorized: 'Unauthorized',
+    playerNameRequired: 'Choose a player name',
+    playerNameTooLong: 'The player name can have up to 40 characters',
+    invalidLocale: 'Invalid language',
+    invalidPosition: 'Invalid position',
+    gameModeUnavailable: 'Game mode not available',
+    notPlayingThisRound: "You're not playing this round",
+    roundAlreadyOver: 'That round is already over',
+    roundNotStarted: "The round hasn't started yet",
+    roundAlreadyAnswered: "You've already answered this round",
+    gameNotFound: 'Game not found',
+    gameBusy: 'There is a lot of activity in this game: try again',
+    gameCreationFailed: "We couldn't create the game. Try again.",
+    mapNotFound: 'Map not found',
+    alreadyInMultiplayerGame: "You're already in another game with friends",
+    invalidAction: 'Invalid action',
+    gameAlreadyOver: 'The game is already over',
+    gameNotStarted: "The game hasn't started yet",
+    gameCodeNotFound: "We couldn't find a game with that code",
+    gameAlreadyStartedJoin: 'That game has already started',
+    gameFull: 'The game is full',
+    gameCannotBeAbandoned: 'This game cannot be abandoned',
+    onlyHostCanKick: 'Only the host can remove players',
+    kickOnlyBeforeStart: 'Players can only be removed before the game starts',
+    cannotKickYourself: "You can't remove yourself: leave the game instead",
+    playerNotInGame: "That player isn't in the game",
+    gameAlreadyStarted: 'The game has already started',
+    onlyHostCanStart: 'Only the host can start the game',
+    notEnoughPlayers: 'At least {minPlayers} players are needed to start',
+    onlyHostCanAdvance: 'Only the host can move on to the next round',
+    roundNotFinished: "The round hasn't ended yet",
+    roundAlreadyPlayed: 'That round has already been played',
+    markAPlace: 'Drop a pin on the map',
+    noPlacesLoaded: "This game mode doesn't have any places loaded yet",
+    noImageryFound: "We couldn't find imagery to set up the game. Try again in a moment.",
+    missingMapsApiKey: 'GOOGLE_MAPS_API_KEY is not configured on the server',
+    eliminatedCannotAnswer: "You've been eliminated: you can no longer answer",
+    emailRequired: 'Enter your email',
+    invalidEmail: 'The email is not valid',
+    passwordTooShort: 'The password must be at least {min} characters long',
+    emailAlreadyRegistered: 'The email is already registered',
+    fillAllFields: 'Fill in all the fields',
+    linkInvalidOrUsed: 'The link is not valid or has already been used',
+    linkExpired: 'The link has expired. Request a new one'
+  }
+}

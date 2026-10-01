@@ -15,6 +15,7 @@ import { getPlayerInitial } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 interface BattleRoyaleRoundResultProps {
   game: GameView
@@ -43,11 +44,13 @@ export default function BattleRoyaleRoundResult({
   advancing,
   onNext
 }: BattleRoyaleRoundResultProps) {
+  const { t, locale } = useI18n()
   const view = game.modeView as BattleRoyaleGameView
   const now = useNow(250)
   const panelRef = useRef<HTMLDivElement>(null)
   const [mapPadding, setMapPadding] = useState<PaddingOptions | null>(null)
-  const nameOf = (playerId: number) => game.players.find((player) => player.userId === playerId)?.name ?? 'Jugador'
+  const nameOf = (playerId: number) =>
+    game.players.find((player) => player.userId === playerId)?.name ?? t('common.player')
   const isLast = view.aliveUserIds.length <= 1
   const secondsLeft = nextAt != null ? Math.max(0, Math.ceil((nextAt - now) / 1000)) : null
   const pairs = useMemo<ResultPair[]>(() => {
@@ -76,8 +79,11 @@ export default function BattleRoyaleRoundResult({
     userId: playerGuess.userId,
     position: index + 1,
     score: playerGuess.score,
-    detail: playerGuess.distanceMeters != null ? `a ${formatDistance(playerGuess.distanceMeters)}` : 'Sin respuesta',
-    badge: view.eliminatedThisRound.includes(playerGuess.userId) ? 'Eliminado' : undefined,
+    detail:
+      playerGuess.distanceMeters != null
+        ? t('game.at', { distance: formatDistance(playerGuess.distanceMeters, locale) })
+        : t('game.noAnswer'),
+    badge: view.eliminatedThisRound.includes(playerGuess.userId) ? t('game.eliminatedBadge') : undefined,
     hideScore: true
   }))
 
@@ -91,15 +97,23 @@ export default function BattleRoyaleRoundResult({
   return (
     <div className="battle-royale-round-result">
       {mapPadding && <ResultMap pairs={pairs} className="map" padding={mapPadding} />}
-      <GamePanel ref={panelRef} className="panel" title={`Ronda ${round.roundNumber}`} accent="magenta">
+      <GamePanel
+        ref={panelRef}
+        className="panel"
+        title={t('game.roundNumber', { number: round.roundNumber })}
+        accent="magenta"
+      >
         <div className="place">
           <span className="flag">{countryFlag(round.countryCode)}</span>
           <span>{round.placeName}</span>
         </div>
         <div className="fallen">
           {view.eliminatedThisRound.length === 0
-            ? 'Nadie quedó eliminado'
-            : `¡Eliminado${view.eliminatedThisRound.length > 1 ? 's' : ''}: ${view.eliminatedThisRound.map(nameOf).join(', ')}!`}
+            ? t('result.nobodyEliminated')
+            : t('result.eliminated', {
+                count: view.eliminatedThisRound.length,
+                names: view.eliminatedThisRound.map(nameOf).join(', ')
+              })}
         </div>
         <Scoreboard
           entries={entries}
@@ -111,10 +125,17 @@ export default function BattleRoyaleRoundResult({
         <div className="footer">
           {secondsLeft != null && (
             <span className="next">
-              {isLast ? 'Resultados' : 'Siguiente ronda'} en {secondsLeft} s
+              {t('result.nextRoundIn', {
+                what: isLast ? t('result.results') : t('result.nextRound'),
+                seconds: secondsLeft
+              })}
             </span>
           )}
-          {!isLast && <span className="alive">Quedan {view.aliveUserIds.length}</span>}
+          {!isLast && (
+            <span className="alive">
+              {t('game.remaining')} {view.aliveUserIds.length}
+            </span>
+          )}
           {isHost && (
             <GameButton
               color={isLast ? 'magenta' : 'gold'}
@@ -123,7 +144,7 @@ export default function BattleRoyaleRoundResult({
               loading={advancing}
               onClick={onNext}
             >
-              {isLast ? 'Ver resultados' : 'Siguiente'}
+              {isLast ? t('result.seeResults') : t('result.next')}
             </GameButton>
           )}
         </div>

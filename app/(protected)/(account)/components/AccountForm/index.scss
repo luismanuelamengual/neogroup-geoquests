@@ -33,18 +33,13 @@
 
   .form {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    flex-direction: column;
+    gap: 20px;
   }
 }
 
 @media (max-width: 600px) {
   .account-page {
     padding-top: 36px;
-
-    .form {
-      flex-direction: column;
-      align-items: stretch;
-    }
   }
 }

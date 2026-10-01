@@ -4,6 +4,8 @@ import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import { cache } from 'react'
 import { authConfig } from '@/app/(auth)/services/auth.config'
+import { isLocale } from '@/app/i18n/config'
+import { detectLocale } from '@/app/i18n/detect'
 import { User } from '@/app/models/User'
 import { getUserDisplayName, normalizeName } from '@/app/utils/users'
 
@@ -58,6 +60,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           dbUser.name = normalizeName(String(profile?.given_name ?? profile?.name ?? '')) || null
           dbUser.emailVerified = true
           dbUser.active = true
+          dbUser.locale = await detectLocale()
           await dbUser.save()
         } else if (!dbUser.emailVerified) {
           // Google already proved ownership of the address: an account registered
@@ -73,6 +76,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 
         token.userId = Number(dbUser.id)
         token.name = getUserDisplayName(dbUser)
+        token.locale = dbUser.locale
       }
 
       if (account?.provider === 'credentials' && user?.id) {
@@ -81,15 +85,17 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         if (dbUser) {
           token.userId = Number(dbUser.id)
           token.name = getUserDisplayName(dbUser)
+          token.locale = dbUser.locale
         }
       }
 
-      // `unstable_update()` (e.g. after the player renames itself) re-reads the user.
+      // `unstable_update()` (e.g. after the player renames itself or changes its language) re-reads the user.
       if (trigger === 'update' && token.userId) {
         const dbUser = await User.find(token.userId)
 
         if (dbUser) {
           token.name = getUserDisplayName(dbUser)
+          token.locale = dbUser.locale
         }
       }
 
@@ -100,6 +106,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       if (token.userId) {
         session.user.id = String(token.userId)
         session.user.name = token.name ?? session.user.email ?? ''
+        session.user.locale = isLocale(token.locale) ? token.locale : undefined
       }
 
       return session

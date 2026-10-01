@@ -19,10 +19,12 @@ import { SessionUser } from '@/app/(protected)/models/SessionUser'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import Logo from '@/app/components/Logo'
 import PlayerAvatar from '@/app/components/PlayerAvatar'
+import { useT } from '@/app/i18n/I18nProvider'
+import type { MessageKey } from '@/app/i18n/messages'
 
-const NAV_ITEMS = [
-  { href: '/play', label: 'Jugar', icon: <SportsEsportsIcon /> },
-  { href: '/games', label: 'Mis partidas', icon: <HistoryIcon /> }
+const NAV_ITEMS: { href: string; labelKey: MessageKey; icon: ReactNode }[] = [
+  { href: '/play', labelKey: 'nav.play', icon: <SportsEsportsIcon /> },
+  { href: '/games', labelKey: 'nav.myGames', icon: <HistoryIcon /> }
 ]
 
 /**
@@ -31,6 +33,7 @@ const NAV_ITEMS = [
  * of it in full screen.
  */
 export default function AppShell({ children, user: initialUser }: { children: ReactNode; user: SessionUser }) {
+  const t = useT()
   const router = useRouter()
   const pathname = usePathname()
   const user = useUserStore((state) => state.user) ?? initialUser
@@ -70,7 +73,7 @@ export default function AppShell({ children, user: initialUser }: { children: Re
               href={item.href}
               className={classNames('nav-link', { active: pathname === item.href })}
             >
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           ))}
         </nav>
@@ -95,13 +98,13 @@ export default function AppShell({ children, user: initialUser }: { children: Re
             <ListItemIcon>
               <PersonIcon fontSize="small" />
             </ListItemIcon>
-            Mi perfil
+            {t('nav.myProfile')}
           </MenuItem>
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" />
             </ListItemIcon>
-            Cerrar sesión
+            {t('nav.logout')}
           </MenuItem>
         </Menu>
       </header>
@@ -110,7 +113,7 @@ export default function AppShell({ children, user: initialUser }: { children: Re
         {NAV_ITEMS.map((item) => (
           <Link key={item.href} href={item.href} className={classNames('tab', { active: pathname === item.href })}>
             {item.icon}
-            <span>{item.label}</span>
+            <span>{t(item.labelKey)}</span>
           </Link>
         ))}
       </nav>

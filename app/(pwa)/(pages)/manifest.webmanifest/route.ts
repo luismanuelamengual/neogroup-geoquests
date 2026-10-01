@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server'
 import { PWA_CONFIG } from '@/app/(pwa)/services/pwa'
+import { getLocale } from '@/app/i18n/server'
+import { createTranslator } from '@/app/i18n/translate'
 
 /**
  * Web App Manifest. Its path contains a dot, so the auth proxy never runs for
  * it: the browser can always fetch it without a session.
  */
-export function GET(): NextResponse {
+export async function GET(): Promise<NextResponse> {
+  const locale = await getLocale()
   const manifest = {
     name: PWA_CONFIG.name,
     short_name: PWA_CONFIG.shortName,
-    description: PWA_CONFIG.description,
-    lang: 'es',
+    description: createTranslator(locale)('pwa.description'),
+    lang: locale,
     start_url: '/',
     scope: '/',
     display: 'standalone',

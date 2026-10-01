@@ -8,6 +8,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { useEffect, useState } from 'react'
 import { useInstallPrompt } from '@/app/hooks/useInstallPrompt'
+import { useT } from '@/app/i18n/I18nProvider'
 
 const DISMISSED_UNTIL_STORAGE_KEY = 'installBanner:dismissedUntil'
 const DISMISS_DURATION_MS = 24 * 60 * 60 * 1000
@@ -21,6 +22,7 @@ const DISMISS_DURATION_MS = 24 * 60 * 60 * 1000
  * (or sooner, on another device/browser) as long as the app stays installable.
  */
 export default function InstallAppBanner() {
+  const t = useT()
   const { canInstall, promptInstall } = useInstallPrompt()
   const [dismissed, setDismissed] = useState(false)
 
@@ -52,16 +54,15 @@ export default function InstallAppBanner() {
       action={
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <Button className="install-button" color="secondary" variant="contained" size="small" onClick={promptInstall}>
-            Instalar
+            {t('pwa.install')}
           </Button>
-          <IconButton color="inherit" size="small" onClick={dismiss} aria-label="Cerrar">
+          <IconButton color="inherit" size="small" onClick={dismiss} aria-label={t('common.close')}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
         </div>
       }
     >
-      Instalá GeoQuests en tu celular y jugá en pantalla completa, con un ícono en tu pantalla de inicio como cualquier
-      otro juego.
+      {t('pwa.installPrompt')}
     </Alert>
   )
 }

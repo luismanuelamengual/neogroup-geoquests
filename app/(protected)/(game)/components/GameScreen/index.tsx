@@ -17,6 +17,8 @@ import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
+import { useT } from '@/app/i18n/I18nProvider'
+import type { ApiError } from '@/app/models/ApiError'
 
 interface ModeScreens {
   /** Waiting room (multiplayer modes). */
@@ -53,6 +55,7 @@ const MODE_SCREENS: Partial<Record<GameMode, ModeScreens>> = {
  * closed). Real time modes are kept in sync by polling.
  */
 export default function GameScreen({ gameId }: { gameId: number }) {
+  const t = useT()
   const { getGame } = useGames()
   const game = useGameStore((state) => state.game)
   const phase = useGameStore((state) => state.phase)
@@ -60,12 +63,15 @@ export default function GameScreen({ gameId }: { gameId: number }) {
   const reset = useGameStore((state) => state.reset)
   const [loadError, setLoadError] = useState<string | null>(null)
   const screens = game ? MODE_SCREENS[game.mode] : undefined
-  const handleSyncError = useCallback((error: Error) => {
-    // Removed from the game (e.g. by the host) or the game was deleted.
-    if (error.message.includes('no encontrada')) {
-      setLoadError('Ya no formás parte de esta partida.')
-    }
-  }, [])
+  const handleSyncError = useCallback(
+    (error: Error) => {
+      // Removed from the game (e.g. by the host) or the game was deleted.
+      if ((error as ApiError).key === 'errors.gameNotFound') {
+        setLoadError(t('game.removedFromGame'))
+      }
+    },
+    [t]
+  )
 
   useGameSync(
     gameId,
@@ -83,24 +89,24 @@ export default function GameScreen({ gameId }: { gameId: number }) {
           setGame(response.game)
         }
       })
-      .catch((error: Error) => setLoadError(error.message || 'No pudimos cargar la partida.'))
+      .catch((error: Error) => setLoadError(error.message || t('game.loadFailed')))
 
     return () => reset()
-  }, [gameId, getGame, setGame, reset])
+  }, [gameId, getGame, setGame, reset, t])
 
   if (loadError || (game && !screens)) {
     return (
       <div className="game-screen-error">
         <GamePanel className="panel">
-          <p>{loadError ?? 'Este modo de juego todavía no está disponible.'}</p>
-          <GameButton href="/play">Volver al menú</GameButton>
+          <p>{loadError ?? t('game.modeUnavailable')}</p>
+          <GameButton href="/play">{t('game.backToMenu')}</GameButton>
         </GamePanel>
       </div>
     )
   }
 
   if (!game || !screens || game.id !== gameId) {
-    return <Loading message="Preparando la partida..." />
+    return <Loading message={t('game.preparing')} />
   }
 
   const { Lobby, Play, Summary } = screens

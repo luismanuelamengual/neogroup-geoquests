@@ -1,3 +1,6 @@
+import { DEFAULT_LOCALE, Locale, LOCALE_TAGS } from '@/app/i18n/config'
+import { createTranslator, Translator } from '@/app/i18n/translate'
+
 /** Scoring curve — see calculateRoundScore. */
 export interface ScoreSettings {
   /** Points of a perfect round. */
@@ -55,8 +58,8 @@ export function calculateRoundScore(distanceMeters: number, settings: ScoreSetti
   return Math.round(settings.maxScore * Math.exp(-distanceMeters / scaleMeters))
 }
 
-/** Human readable distance: "85 m", "1,2 km", "356 km", "12.345 km". */
-export function formatDistance(distanceMeters: number): string {
+/** Human readable distance: "85 m", "1,2 km", "356 km", "12.345 km" (decimal and thousands separators of the language). */
+export function formatDistance(distanceMeters: number, locale: Locale = DEFAULT_LOCALE): string {
   if (distanceMeters < 1000) {
     return `${Math.round(distanceMeters)} m`
   }
@@ -64,27 +67,27 @@ export function formatDistance(distanceMeters: number): string {
   const kilometers = distanceMeters / 1000
 
   if (kilometers < 10) {
-    return `${kilometers.toLocaleString('es-AR', { maximumFractionDigits: 1 })} km`
+    return `${kilometers.toLocaleString(LOCALE_TAGS[locale], { maximumFractionDigits: 1 })} km`
   }
 
-  return `${Math.round(kilometers).toLocaleString('es-AR')} km`
+  return `${Math.round(kilometers).toLocaleString(LOCALE_TAGS[locale])} km`
 }
 
-/** Integer score with thousands separator ("12.345"). */
-export function formatScore(score: number): string {
-  return Math.round(score).toLocaleString('es-AR')
+/** Integer score with the thousands separator of the language ("12.345"). */
+export function formatScore(score: number, locale: Locale = DEFAULT_LOCALE): string {
+  return Math.round(score).toLocaleString(LOCALE_TAGS[locale])
 }
 
 /** "2 min", "1 min 30 s", "45 s" — time limit of a round. */
-export function formatTimeLimit(seconds: number): string {
+export function formatTimeLimit(seconds: number, t: Translator = createTranslator(DEFAULT_LOCALE)): string {
   const minutes = Math.floor(seconds / 60)
   const rest = seconds % 60
 
   if (minutes === 0) {
-    return `${rest} s`
+    return t('time.seconds', { count: rest })
   }
 
-  return rest === 0 ? `${minutes} min` : `${minutes} min ${rest} s`
+  return rest === 0 ? t('time.minutes', { count: minutes }) : t('time.minutesSeconds', { minutes, seconds: rest })
 }
 
 /** Countdown clock: "1:05", "0:09". */
@@ -95,30 +98,34 @@ export function formatClock(milliseconds: number): string {
 }
 
 /** Short verdict of a round, used by the result screen. */
-export function getRoundVerdict(score: number, maxScore: number): string {
+export function getRoundVerdict(
+  score: number,
+  maxScore: number,
+  t: Translator = createTranslator(DEFAULT_LOCALE)
+): string {
   const ratio = score / maxScore
 
   if (ratio >= 0.98) {
-    return '¡PERFECTO!'
+    return t('result.verdicts.perfect')
   }
 
   if (ratio >= 0.8) {
-    return '¡Excelente!'
+    return t('result.verdicts.excellent')
   }
 
   if (ratio >= 0.5) {
-    return '¡Muy bien!'
+    return t('result.verdicts.veryGood')
   }
 
   if (ratio >= 0.2) {
-    return 'Nada mal'
+    return t('result.verdicts.notBad')
   }
 
   if (ratio > 0) {
-    return 'Casi...'
+    return t('result.verdicts.almost')
   }
 
-  return '¡Ups! Muy lejos'
+  return t('result.verdicts.oops')
 }
 
 /** Number of stars (0-3) earned by a whole game. */

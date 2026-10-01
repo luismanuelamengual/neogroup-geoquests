@@ -18,6 +18,7 @@ import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import GamePanel from '@/app/components/GamePanel'
+import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Play screen of a battle royale game (immersive). Like the classic
@@ -27,6 +28,7 @@ import GamePanel from '@/app/components/GamePanel'
  * watching the game without guessing.
  */
 export default function BattleRoyaleGamePlay() {
+  const t = useT()
   const router = useRouter()
   const { sendGameAction, leaveGame } = useGames()
   const game = useGameStore((state) => state.game)!
@@ -132,12 +134,8 @@ export default function BattleRoyaleGamePlay() {
         mapName={game.mapName}
         roundNumber={roundNumber}
         roundsCount={null}
-        stat={{ caption: 'Quedan', value: view.aliveUserIds.length }}
-        exitMessage={
-          view.isEliminated
-            ? 'Ya quedaste eliminado: si salís, dejás de mirar la partida.'
-            : 'Si salís, abandonás la partida y quedás eliminado.'
-        }
+        stat={{ caption: t('game.remaining'), value: view.aliveUserIds.length }}
+        exitMessage={view.isEliminated ? t('game.exitEliminated') : t('game.exitBattleRoyale')}
         onExit={handleExit}
         timer={
           guessing &&
@@ -158,13 +156,13 @@ export default function BattleRoyaleGamePlay() {
       {guessing && !view.isEliminated && view.hasGuessed && (
         <GamePanel className="waiting" accent="lime">
           <CheckCircleIcon className="icon" />
-          <span>¡Listo! Esperando a los demás…</span>
+          <span>{t('game.ready')}</span>
         </GamePanel>
       )}
       {guessing && view.isEliminated && (
         <GamePanel className="eliminated" accent="magenta">
-          <span className="title">Quedaste eliminado</span>
-          <span className="text">Seguís mirando la partida hasta que quede uno solo.</span>
+          <span className="title">{t('game.eliminatedTitle')}</span>
+          <span className="text">{t('game.eliminatedText')}</span>
         </GamePanel>
       )}
       {countingDown && <RoundCountdown startsAt={startsAt} roundNumber={roundNumber} />}

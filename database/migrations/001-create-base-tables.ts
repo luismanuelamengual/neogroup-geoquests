@@ -41,6 +41,8 @@ export default {
         table.string('email', 255).unique()
         table.string('passwordHash', 255).nullable()
         table.string('name', 60).nullable()
+        // Language chosen by the player ('es' | 'en', see app/i18n/config.ts): app and emails.
+        table.string('locale', 5).default('es')
         table.boolean('emailVerified').default(false)
         table.boolean('active').default(true)
         table.timestamp('createdAt').useCurrent()

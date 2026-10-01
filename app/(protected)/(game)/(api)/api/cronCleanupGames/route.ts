@@ -10,7 +10,7 @@ import { isAuthorizedCronRequest } from '@/app/utils/cron'
  */
 export const GET = withApi(async (request) => {
   if (!isAuthorizedCronRequest(request.headers.get('authorization'), process.env.CRON_SECRET)) {
-    throw new ApiException('No autorizado', 401)
+    throw new ApiException('errors.unauthorized', 401)
   }
 
   return { cleaned: await cleanupAbandonedGames() }

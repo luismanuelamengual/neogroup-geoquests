@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
 import { GamePlayerView } from '@/app/(protected)/(game)/models/GamePlayerView'
 import PlayerAvatar from '@/app/components/PlayerAvatar'
+import { useT } from '@/app/i18n/I18nProvider'
 
 interface PlayersStatusProps {
   players: GamePlayerView[]
@@ -17,6 +18,8 @@ interface PlayersStatusProps {
 
 /** Row of the players still in the game, with a check on those who already guessed the current round. */
 export default function PlayersStatus({ players, guessedUserIds, colors, className }: PlayersStatusProps) {
+  const t = useT()
+
   return (
     <ul className={classNames('players-status', className)}>
       {players
@@ -28,7 +31,7 @@ export default function PlayersStatus({ players, guessedUserIds, colors, classNa
             <li
               key={player.userId}
               className={classNames('player', { guessed })}
-              title={`${player.name}${guessed ? ': ya respondió' : ''}`}
+              title={guessed ? t('game.guessedTitle', { name: player.name }) : player.name}
             >
               <PlayerAvatar name={player.name} color={colors.get(player.userId)} className="avatar" />
               {guessed && <CheckIcon className="check" />}

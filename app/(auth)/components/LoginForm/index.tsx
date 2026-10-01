@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { FormEvent, useState } from 'react'
 import GameButton from '@/app/components/GameButton'
+import { useT } from '@/app/i18n/I18nProvider'
 
 interface LoginFormProps {
   callbackUrl: string | null
@@ -42,6 +43,7 @@ export function GoogleLogo() {
 }
 
 export default function LoginForm({ callbackUrl, verified, passwordReset }: LoginFormProps) {
+  const t = useT()
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -57,7 +59,7 @@ export default function LoginForm({ callbackUrl, verified, passwordReset }: Logi
     const response = await signIn('credentials', { email, password, redirect: false })
 
     if (response?.error) {
-      setError('Email o contraseña incorrectos (o la cuenta todavía no fue verificada)')
+      setError(t('auth.login.invalidCredentials'))
       setLoading(false)
 
       return
@@ -74,10 +76,10 @@ export default function LoginForm({ callbackUrl, verified, passwordReset }: Logi
   return (
     <div className="auth-form">
       <Typography variant="h5" component="h1" className="title">
-        Iniciar sesión
+        {t('auth.login.title')}
       </Typography>
       <Typography variant="body2" color="text.secondary" className="subtitle">
-        ¿Dónde estás? Entrá y demostralo.
+        {t('auth.login.subtitle')}
       </Typography>
       <GameButton
         color="ghost"
@@ -86,15 +88,15 @@ export default function LoginForm({ callbackUrl, verified, passwordReset }: Logi
         startIcon={<GoogleLogo />}
         onClick={handleGoogleSignIn}
       >
-        Continuar con Google
+        {t('auth.login.google')}
       </GameButton>
-      <Divider className="divider">o</Divider>
+      <Divider className="divider">{t('auth.login.or')}</Divider>
       <form onSubmit={handleSubmit} className="form">
-        {verified && <Alert severity="success">Tu email fue verificado. Ya podés iniciar sesión.</Alert>}
-        {passwordReset && <Alert severity="success">Tu contraseña fue actualizada. Ya podés iniciar sesión.</Alert>}
+        {verified && <Alert severity="success">{t('auth.login.verified')}</Alert>}
+        {passwordReset && <Alert severity="success">{t('auth.login.passwordReset')}</Alert>}
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
-          label="Email"
+          label={t('auth.email')}
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -104,7 +106,7 @@ export default function LoginForm({ callbackUrl, verified, passwordReset }: Logi
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
-          label="Contraseña"
+          label={t('auth.password')}
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -114,21 +116,21 @@ export default function LoginForm({ callbackUrl, verified, passwordReset }: Logi
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <GameButton type="submit" fullWidth loading={loading}>
-          Ingresar
+          {t('auth.login.submit')}
         </GameButton>
         <Typography variant="body2" className="forgot-password">
           <Link href="/forgot-password" className="text-link">
-            ¿Olvidaste tu contraseña?
+            {t('auth.login.forgotPassword')}
           </Link>
         </Typography>
       </form>
       <Typography variant="body2" className="footer">
-        ¿No tenés cuenta?{' '}
+        {t('auth.login.noAccount')}{' '}
         <Link
           href={`/register${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`}
           className="text-link"
         >
-          Registrate
+          {t('auth.login.register')}
         </Link>
       </Typography>
     </div>

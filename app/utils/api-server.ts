@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/app/(auth)/services/auth'
+import { getT } from '@/app/i18n/server'
 import { ApiException } from '@/app/models/ApiException'
 import { ApiResponse } from '@/app/models/ApiResponse'
 import { isProduction } from '@/app/utils/environment'
@@ -19,15 +20,20 @@ function successResponse(data: unknown): NextResponse {
   return NextResponse.json(body)
 }
 
-function errorResponse(error: unknown): NextResponse {
+async function errorResponse(error: unknown): Promise<NextResponse> {
   const isApiException = error instanceof ApiException
   const normalizedError = error instanceof Error ? error : new Error(String(error))
   // Unexpected errors are masked in production so a real cause never leaks to
   // end users; outside production the real message is sent to ease debugging.
-  const maskedMessage = isProduction ? 'Error interno' : normalizedError.message
+  const t = await getT()
+  const maskedMessage = isProduction ? t('errors.internal') : normalizedError.message
   const body: ApiResponse = {
     success: false,
-    error: { name: normalizedError.name, message: isApiException ? error.message : maskedMessage } as Error
+    error: {
+      name: normalizedError.name,
+      message: isApiException ? t(error.messageKey, error.params) : maskedMessage,
+      key: isApiException ? error.messageKey : undefined
+    } as Error
   }
 
   if (!isApiException) {
@@ -47,7 +53,7 @@ export function withApi<P = Record<string, string>>(handler: ApiHandler<P>) {
     try {
       return successResponse(await handler(request, context))
     } catch (error) {
-      return errorResponse(error)
+      return await errorResponse(error)
     }
   }
 }
@@ -59,13 +65,13 @@ export function withAuth<P = Record<string, string>>(handler: AuthenticatedApiHa
     const userId = session?.user?.id ? Number(session.user.id) : null
 
     if (!userId) {
-      return errorResponse(new ApiException('Usuario no autenticado', 401))
+      return await errorResponse(new ApiException('errors.notAuthenticated', 401))
     }
 
     try {
       return successResponse(await handler(request, context, userId))
     } catch (error) {
-      return errorResponse(error)
+      return await errorResponse(error)
     }
   }
 }

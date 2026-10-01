@@ -2,6 +2,7 @@
 
 import './index.scss'
 import { useMemo } from 'react'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 const EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY
 
@@ -20,6 +21,7 @@ const EMBED_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY
  * require. Zooming still works with the wheel / pinch.
  */
 export default function StreetView({ panoId }: { panoId: string }) {
+  const { t, locale } = useI18n()
   // A new random heading per panorama (not per render).
   const src = useMemo(() => {
     const params = new URLSearchParams({
@@ -28,11 +30,11 @@ export default function StreetView({ panoId }: { panoId: string }) {
       heading: String(Math.floor(Math.random() * 360)),
       pitch: '0',
       fov: '90',
-      language: 'es'
+      language: locale
     })
 
     return `https://www.google.com/maps/embed/v1/streetview?${params}`
-  }, [panoId])
+  }, [panoId, locale])
 
   return (
     <div className="street-view">
@@ -48,9 +50,7 @@ export default function StreetView({ panoId }: { panoId: string }) {
           />
         </>
       ) : (
-        <div className="street-view-error">
-          Falta configurar <code>NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY</code> para ver las imágenes.
-        </div>
+        <div className="street-view-error">{t('game.streetViewKey', { key: 'NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY' })}</div>
       )}
     </div>
   )

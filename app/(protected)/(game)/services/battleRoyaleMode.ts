@@ -197,7 +197,7 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
 
   async create(mapId, settings) {
     if (mapId == null) {
-      throw new ApiException('Mapa no encontrado', 404)
+      throw new ApiException('errors.mapNotFound', 404)
     }
 
     // The rounds are chosen when the host starts the game (their number depends on the players).
@@ -236,17 +236,17 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
 
   handleAction(data, userId, action: GameAction, members, ctx) {
     if (data.currentRound === 0) {
-      throw new ApiException('La partida todavía no empezó')
+      throw new ApiException('errors.gameNotStarted')
     }
 
     if (data.finished) {
-      throw new ApiException('La partida ya terminó')
+      throw new ApiException('errors.gameAlreadyOver')
     }
 
     switch (action?.type) {
       case 'guess':
         if (getEliminatedIds(data).has(userId)) {
-          throw new ApiException('Quedaste eliminado: ya no podés responder')
+          throw new ApiException('errors.eliminatedCannotAnswer')
         }
 
         recordGuess(data, userId, action, getPlayingPlayers(data, members), ctx.now)
@@ -255,16 +255,16 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
         return true
       case 'next':
         if (userId !== members.hostUserId) {
-          throw new ApiException('Solo el anfitrión puede pasar a la siguiente ronda', 403)
+          throw new ApiException('errors.onlyHostCanAdvance', 403)
         }
 
         if (data.phase !== 'reveal') {
-          throw new ApiException('La ronda todavía no terminó')
+          throw new ApiException('errors.roundNotFinished')
         }
 
         return goToNextRound(data, ctx.now)
       default:
-        throw new ApiException('Acción no válida')
+        throw new ApiException('errors.invalidAction')
     }
   },
 

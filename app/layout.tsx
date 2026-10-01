@@ -9,28 +9,34 @@ import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { PWA_CONFIG } from '@/app/(pwa)/services/pwa'
 import ThemeRegistry from '@/app/components/ThemeRegistry'
+import I18nProvider from '@/app/i18n/I18nProvider'
+import { getLocale, getT } from '@/app/i18n/server'
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
-export const metadata: Metadata = {
-  applicationName: PWA_CONFIG.name,
-  title: {
-    default: PWA_CONFIG.name,
-    template: `%s · ${PWA_CONFIG.name}`
-  },
-  description: PWA_CONFIG.description,
-  manifest: '/manifest.webmanifest',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: PWA_CONFIG.shortName
-  },
-  formatDetection: {
-    telephone: false
-  },
-  icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png'
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT()
+
+  return {
+    applicationName: PWA_CONFIG.name,
+    title: {
+      default: PWA_CONFIG.name,
+      template: `%s · ${PWA_CONFIG.name}`
+    },
+    description: t('pwa.description'),
+    manifest: '/manifest.webmanifest',
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'black-translucent',
+      title: PWA_CONFIG.shortName
+    },
+    formatDetection: {
+      telephone: false
+    },
+    icons: {
+      icon: '/favicon.ico',
+      apple: '/apple-touch-icon.png'
+    }
   }
 }
 
@@ -42,9 +48,11 @@ export const viewport: Viewport = {
   themeColor: PWA_CONFIG.themeColor
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const locale = await getLocale()
+
   return (
-    <html lang="es">
+    <html lang={locale}>
       {GTM_ID && (
         <head>
           <Script id="gtm-script" strategy="afterInteractive">
@@ -69,7 +77,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         )}
         <SerwistProvider swUrl="/serwist/sw.js">
           <ThemeRegistry>
-            {children}
+            <I18nProvider locale={locale}>{children}</I18nProvider>
             <Toaster
               position="bottom-center"
               toastOptions={{

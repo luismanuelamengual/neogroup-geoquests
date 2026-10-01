@@ -191,21 +191,21 @@ export function recordGuess(
   now: Date
 ): void {
   if (!playing.some((player) => player.userId === userId)) {
-    throw new ApiException('No estás jugando esta ronda', 403)
+    throw new ApiException('errors.notPlayingThisRound', 403)
   }
 
   if (data.phase !== 'guessing' || Number(action.roundNumber) !== data.currentRound) {
-    throw new ApiException('Esa ronda ya terminó')
+    throw new ApiException('errors.roundAlreadyOver')
   }
 
   const timing = getCurrentTiming(data)!
 
   if (now < timing.startedAt) {
-    throw new ApiException('La ronda todavía no empezó')
+    throw new ApiException('errors.roundNotStarted')
   }
 
   if (guessOf(data, userId, data.currentRound)) {
-    throw new ApiException('Ya respondiste esta ronda')
+    throw new ApiException('errors.roundAlreadyAnswered')
   }
 
   const position = parseGuessPosition(action.latitude, action.longitude)

@@ -12,6 +12,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { ClassicMultiplayerGameView } from '@/app/(protected)/(game)/models/ClassicMultiplayerGameView'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatPosition, getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance, formatScore } from '@/app/(protected)/(game)/utils/score'
@@ -19,18 +20,21 @@ import { useUserStore } from '@/app/(protected)/stores/users'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
+import type { Locale } from '@/app/i18n/config'
+import { useI18n } from '@/app/i18n/I18nProvider'
+import type { Translator } from '@/app/i18n/translate'
 
 /** Headline of the summary for the player looking at it. */
-function getHeadline(outcome: GameOutcome | null, position: number | null): string {
+function getHeadline(outcome: GameOutcome | null, position: number | null, t: Translator, locale: Locale): string {
   if (outcome === GameOutcome.WON) {
-    return '¡Ganaste!'
+    return t('game.won')
   }
 
   if (outcome === GameOutcome.DRAW) {
-    return '¡Empate en el primer puesto!'
+    return t('game.draw')
   }
 
-  return position != null ? `Terminaste ${formatPosition(position)}` : '¡Partida terminada!'
+  return position != null ? t('game.finished', { position: formatPosition(position, locale) }) : t('game.gameOver')
 }
 
 /**
@@ -39,6 +43,7 @@ function getHeadline(outcome: GameOutcome | null, position: number | null): stri
  * best guess.
  */
 export default function MultiplayerGameSummary() {
+  const { t, locale } = useI18n()
   const router = useRouter()
   const { createGame } = useGames()
   const game = useGameStore((state) => state.game)!
@@ -83,12 +88,12 @@ export default function MultiplayerGameSummary() {
 
   return (
     <div className="multiplayer-game-summary">
-      {starting && <Loading message="Preparando la sala..." />}
-      <GamePanel className="hero" title="¡Partida terminada!" accent="magenta">
-        <div className="mode">{game.mapName}</div>
+      {starting && <Loading message={t('picker.preparingRoom')} />}
+      <GamePanel className="hero" title={t('game.gameOver')} accent="magenta">
+        <div className="mode">{localizeMapName(t, game.mapName)}</div>
         <div className="headline">
           <EmojiEventsIcon className="trophy" />
-          {getHeadline(me?.outcome ?? null, me?.position ?? null)}
+          {getHeadline(me?.outcome ?? null, me?.position ?? null, t, locale)}
         </div>
         <Scoreboard
           entries={game.players.map((player) => ({
@@ -103,18 +108,18 @@ export default function MultiplayerGameSummary() {
         />
         <div className="actions">
           <GameButton size="large" startIcon={<GroupsIcon />} loading={starting} onClick={handlePlayAgain}>
-            Otra con amigos
+            {t('game.anotherWithFriends')}
           </GameButton>
           <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
-            Menú
+            {t('common.menu')}
           </GameButton>
         </div>
       </GamePanel>
       <div className="details">
-        <GamePanel className="map-panel" title="Tus respuestas" accent="cyan">
+        <GamePanel className="map-panel" title={t('game.yourAnswers')} accent="cyan">
           <ResultMap pairs={pairs} className="summary-map" />
         </GamePanel>
-        <GamePanel className="rounds-panel" title="Rondas" accent="gold">
+        <GamePanel className="rounds-panel" title={t('game.rounds')} accent="gold">
           <ol className="rounds">
             {view.rounds.map((round) => {
               const best = round.guesses[0]
@@ -130,11 +135,14 @@ export default function MultiplayerGameSummary() {
                     </span>
                     <span className="best">
                       {best && best.distanceMeters != null
-                        ? `Mejor: ${bestPlayer?.name ?? 'Jugador'} a ${formatDistance(best.distanceMeters)}`
-                        : 'Nadie respondió a tiempo'}
+                        ? t('game.best', {
+                            name: bestPlayer?.name ?? t('common.player'),
+                            distance: formatDistance(best.distanceMeters, locale)
+                          })
+                        : t('game.nobodyAnswered')}
                     </span>
                   </div>
-                  <span className="score">{formatScore(mine?.score ?? 0)}</span>
+                  <span className="score">{formatScore(mine?.score ?? 0, locale)}</span>
                 </li>
               )
             })}

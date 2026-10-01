@@ -76,7 +76,7 @@ export function getPanoramaFinder(): PanoramaFinder {
     const apiKey = process.env.GOOGLE_MAPS_API_KEY
 
     if (!apiKey) {
-      throw new ApiException('Falta configurar GOOGLE_MAPS_API_KEY en el servidor', 500)
+      throw new ApiException('errors.missingMapsApiKey', 500)
     }
 
     finder = new GoogleStreetViewFinder(apiKey)

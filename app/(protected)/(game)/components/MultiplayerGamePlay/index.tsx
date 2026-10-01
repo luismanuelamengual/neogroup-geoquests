@@ -18,6 +18,7 @@ import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import GamePanel from '@/app/components/GamePanel'
+import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Play screen of a classic multiplayer game (immersive). Everybody sees the
@@ -28,6 +29,7 @@ import GamePanel from '@/app/components/GamePanel'
  * the game was received.
  */
 export default function MultiplayerGamePlay() {
+  const t = useT()
   const router = useRouter()
   const { sendGameAction, leaveGame } = useGames()
   const game = useGameStore((state) => state.game)!
@@ -124,7 +126,7 @@ export default function MultiplayerGamePlay() {
         roundNumber={roundNumber}
         roundsCount={view.roundsCount}
         totalScore={myScore}
-        exitMessage="Si salís, abandonás la partida: tus puntos quedan en los resultados, pero no vas a poder volver a entrar."
+        exitMessage={t('game.exitMultiplayer')}
         onExit={handleExit}
         timer={
           guessing &&
@@ -146,7 +148,7 @@ export default function MultiplayerGamePlay() {
       {guessing && view.hasGuessed && (
         <GamePanel className="waiting" accent="lime">
           <CheckCircleIcon className="icon" />
-          <span>¡Listo! Esperando a los demás…</span>
+          <span>{t('game.ready')}</span>
         </GamePanel>
       )}
       {countingDown && <RoundCountdown startsAt={startsAt} roundNumber={roundNumber} roundsCount={view.roundsCount} />}

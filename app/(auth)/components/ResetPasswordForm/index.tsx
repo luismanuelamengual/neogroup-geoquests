@@ -8,8 +8,10 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 import { useAuth } from '@/app/(auth)/hooks/useAuth'
 import GameButton from '@/app/components/GameButton'
+import { useT } from '@/app/i18n/I18nProvider'
 
 export default function ResetPasswordForm({ token }: { token: string }) {
+  const t = useT()
   const { resetPassword } = useAuth()
   const router = useRouter()
   const [password, setPassword] = useState('')
@@ -22,7 +24,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
     setError(null)
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden')
+      setError(t('auth.register.passwordsMismatch'))
 
       return
     }
@@ -33,7 +35,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
       await resetPassword(token, password)
       router.push('/login?passwordReset=1')
     } catch (requestError) {
-      setError((requestError as Error).message || 'Algo salió mal. Intentá de nuevo.')
+      setError((requestError as Error).message || t('auth.somethingWentWrong'))
       setLoading(false)
     }
   }
@@ -41,12 +43,12 @@ export default function ResetPasswordForm({ token }: { token: string }) {
   return (
     <div className="auth-form">
       <Typography variant="h5" component="h1" className="title">
-        Nueva contraseña
+        {t('auth.reset.title')}
       </Typography>
       <form onSubmit={handleSubmit} className="form">
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
-          label="Nueva contraseña"
+          label={t('auth.reset.newPassword')}
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -56,7 +58,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
-          label="Confirmar contraseña"
+          label={t('auth.reset.confirmPassword')}
           type="password"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
@@ -66,7 +68,7 @@ export default function ResetPasswordForm({ token }: { token: string }) {
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <GameButton type="submit" fullWidth loading={loading}>
-          Guardar contraseña
+          {t('auth.reset.submit')}
         </GameButton>
       </form>
     </div>

@@ -12,6 +12,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { BattleRoyaleGameView } from '@/app/(protected)/(game)/models/BattleRoyaleGameView'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatPosition, getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance } from '@/app/(protected)/(game)/utils/score'
@@ -19,6 +20,7 @@ import { useUserStore } from '@/app/(protected)/stores/users'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 /**
  * End of a battle royale game: who was the last one standing, everybody's
@@ -26,6 +28,7 @@ import Loading from '@/app/components/Loading'
  * map and who fell in every round.
  */
 export default function BattleRoyaleGameSummary() {
+  const { t, locale } = useI18n()
   const router = useRouter()
   const { createGame } = useGames()
   const game = useGameStore((state) => state.game)!
@@ -33,7 +36,8 @@ export default function BattleRoyaleGameSummary() {
   const [starting, setStarting] = useState(false)
   const view = game.modeView as BattleRoyaleGameView
   const colors = useMemo(() => getPlayerColors(game.players), [game.players])
-  const nameOf = (playerId: number) => game.players.find((player) => player.userId === playerId)?.name ?? 'Jugador'
+  const nameOf = (playerId: number) =>
+    game.players.find((player) => player.userId === playerId)?.name ?? t('common.player')
   const me = game.players.find((player) => player.userId === userId)
   const winners = view.standings.filter((standing) => standing.position === 1)
   const pairs = useMemo<ResultPair[]>(
@@ -53,14 +57,14 @@ export default function BattleRoyaleGameSummary() {
       }),
     [view.rounds, userId, colors]
   )
-  let headline = '¡Partida terminada!'
+  let headline = t('game.gameOver')
 
   if (me?.outcome === GameOutcome.WON) {
-    headline = '¡Ganaste! Quedaste en pie'
+    headline = t('game.wonStanding')
   } else if (me?.outcome === GameOutcome.DRAW) {
-    headline = '¡Empate en el primer puesto!'
+    headline = t('game.draw')
   } else if (me?.position != null) {
-    headline = `Terminaste ${formatPosition(me.position)}`
+    headline = t('game.finished', { position: formatPosition(me.position, locale) })
   }
 
   const handlePlayAgain = async () => {
@@ -81,15 +85,15 @@ export default function BattleRoyaleGameSummary() {
 
   return (
     <div className="battle-royale-game-summary">
-      {starting && <Loading message="Preparando la sala..." />}
-      <GamePanel className="hero" title="¡Partida terminada!" accent="magenta">
-        <div className="mode">{game.mapName}</div>
+      {starting && <Loading message={t('picker.preparingRoom')} />}
+      <GamePanel className="hero" title={t('game.gameOver')} accent="magenta">
+        <div className="mode">{localizeMapName(t, game.mapName)}</div>
         <div className="headline">
           <EmojiEventsIcon className="trophy" />
           {headline}
         </div>
         {winners.length === 1 && me?.outcome !== GameOutcome.WON && (
-          <div className="mode">Ganó {nameOf(winners[0].userId)}</div>
+          <div className="mode">{t('game.winnerIs', { name: nameOf(winners[0].userId) })}</div>
         )}
         <Scoreboard
           entries={view.standings.map((standing) => ({
@@ -98,8 +102,8 @@ export default function BattleRoyaleGameSummary() {
             score: standing.score,
             detail:
               standing.eliminatedInRound != null
-                ? `Eliminado en la ronda ${standing.eliminatedInRound}`
-                : 'Quedó en pie',
+                ? t('game.eliminatedIn', { round: standing.eliminatedInRound })
+                : t('game.stoodUp'),
             hideScore: true
           }))}
           players={game.players}
@@ -115,18 +119,18 @@ export default function BattleRoyaleGameSummary() {
             loading={starting}
             onClick={handlePlayAgain}
           >
-            Otra partida
+            {t('game.anotherGame')}
           </GameButton>
           <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
-            Menú
+            {t('common.menu')}
           </GameButton>
         </div>
       </GamePanel>
       <div className="details">
-        <GamePanel className="map-panel" title="Tus respuestas" accent="cyan">
+        <GamePanel className="map-panel" title={t('game.yourAnswers')} accent="cyan">
           <ResultMap pairs={pairs} className="summary-map" />
         </GamePanel>
-        <GamePanel className="rounds-panel" title="Rondas" accent="gold">
+        <GamePanel className="rounds-panel" title={t('game.rounds')} accent="gold">
           <ol className="rounds">
             {view.rounds.map((round) => {
               const best = round.guesses[0]
@@ -143,10 +147,15 @@ export default function BattleRoyaleGameSummary() {
                     </span>
                     <span className="best">
                       {best && best.distanceMeters != null
-                        ? `Mejor: ${nameOf(best.userId)} a ${formatDistance(best.distanceMeters)}`
-                        : 'Nadie respondió a tiempo'}
+                        ? t('game.best', {
+                            name: nameOf(best.userId),
+                            distance: formatDistance(best.distanceMeters, locale)
+                          })
+                        : t('game.nobodyAnswered')}
                     </span>
-                    <span className="fallen">{fallen.length > 0 ? `Cayó: ${fallen.join(', ')}` : 'Nadie cayó'}</span>
+                    <span className="fallen">
+                      {fallen.length > 0 ? t('game.fell', { names: fallen.join(', ') }) : t('game.nobodyFell')}
+                    </span>
                   </div>
                 </li>
               )

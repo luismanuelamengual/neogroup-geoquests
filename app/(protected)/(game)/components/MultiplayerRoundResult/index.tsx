@@ -15,6 +15,7 @@ import { getPlayerInitial } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 interface MultiplayerRoundResultProps {
   game: GameView
@@ -43,6 +44,7 @@ export default function MultiplayerRoundResult({
   advancing,
   onNext
 }: MultiplayerRoundResultProps) {
+  const { t, locale } = useI18n()
   const view = game.modeView as ClassicMultiplayerGameView
   const now = useNow(250)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -81,7 +83,10 @@ export default function MultiplayerRoundResult({
       position: standing.position,
       score: standing.score,
       roundScore: playerGuess?.score ?? 0,
-      detail: playerGuess?.distanceMeters != null ? `a ${formatDistance(playerGuess.distanceMeters)}` : 'Sin respuesta'
+      detail:
+        playerGuess?.distanceMeters != null
+          ? t('game.at', { distance: formatDistance(playerGuess.distanceMeters, locale) })
+          : t('game.noAnswer')
     }
   })
 
@@ -95,7 +100,12 @@ export default function MultiplayerRoundResult({
   return (
     <div className="multiplayer-round-result">
       {mapPadding && <ResultMap pairs={pairs} className="map" padding={mapPadding} />}
-      <GamePanel ref={panelRef} className="panel" title={`Ronda ${round.roundNumber}`} accent="cyan">
+      <GamePanel
+        ref={panelRef}
+        className="panel"
+        title={t('game.roundNumber', { number: round.roundNumber })}
+        accent="cyan"
+      >
         <div className="place">
           <span className="flag">{countryFlag(round.countryCode)}</span>
           <span>{round.placeName}</span>
@@ -110,7 +120,10 @@ export default function MultiplayerRoundResult({
         <div className="footer">
           {secondsLeft != null && (
             <span className="next">
-              {isLastRound ? 'Resultados' : 'Siguiente ronda'} en {secondsLeft} s
+              {t('result.nextRoundIn', {
+                what: isLastRound ? t('result.results') : t('result.nextRound'),
+                seconds: secondsLeft
+              })}
             </span>
           )}
           {isHost && (
@@ -121,7 +134,7 @@ export default function MultiplayerRoundResult({
               loading={advancing}
               onClick={onNext}
             >
-              {isLastRound ? 'Ver resultados' : 'Siguiente'}
+              {isLastRound ? t('result.seeResults') : t('result.next')}
             </GameButton>
           )}
         </div>

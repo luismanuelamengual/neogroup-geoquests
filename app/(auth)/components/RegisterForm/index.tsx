@@ -8,8 +8,10 @@ import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import { useAuth } from '@/app/(auth)/hooks/useAuth'
 import GameButton from '@/app/components/GameButton'
+import { useT } from '@/app/i18n/I18nProvider'
 
 export default function RegisterForm({ callbackUrl }: { callbackUrl: string | null }) {
+  const t = useT()
   const { registerUser } = useAuth()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -26,7 +28,7 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
     setError(null)
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden.')
+      setError(t('auth.register.passwordsMismatchDot'))
 
       return
     }
@@ -37,7 +39,7 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
       await registerUser({ name, email, password })
       setRegistered(true)
     } catch (requestError) {
-      setError((requestError as Error).message || 'Algo salió mal. Intentá de nuevo.')
+      setError((requestError as Error).message || t('auth.somethingWentWrong'))
     } finally {
       setLoading(false)
     }
@@ -47,16 +49,13 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
     return (
       <div className="auth-form">
         <Typography variant="h5" component="h1" className="title">
-          Verificá tu email
+          {t('auth.register.verifyTitle')}
         </Typography>
-        <Alert severity="success">
-          Te enviamos un enlace de verificación a {email}. Revisá tu bandeja de entrada y hacé clic para activar tu
-          cuenta.
-        </Alert>
+        <Alert severity="success">{t('auth.register.verifySent', { email })}</Alert>
         <Typography variant="body2" className="footer">
-          ¿Ya la activaste?{' '}
+          {t('auth.register.alreadyActivated')}{' '}
           <Link href={loginHref} className="text-link">
-            Ingresar
+            {t('auth.register.login')}
           </Link>
         </Typography>
       </div>
@@ -66,12 +65,12 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
   return (
     <div className="auth-form">
       <Typography variant="h5" component="h1" className="title">
-        Crear cuenta
+        {t('auth.register.title')}
       </Typography>
       <form onSubmit={handleSubmit} className="form">
         {error && <Alert severity="error">{error}</Alert>}
         <TextField
-          label="Nombre de jugador"
+          label={t('auth.playerName')}
           value={name}
           onChange={(event) => setName(event.target.value)}
           required
@@ -80,7 +79,7 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
           slotProps={{ htmlInput: { maxLength: 40 }, inputLabel: { shrink: true } }}
         />
         <TextField
-          label="Email"
+          label={t('auth.email')}
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -90,18 +89,18 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
-          label="Contraseña"
+          label={t('auth.password')}
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
           fullWidth
           autoComplete="new-password"
-          helperText="Mínimo 6 caracteres"
+          helperText={t('auth.register.passwordHint')}
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
-          label="Repetir contraseña"
+          label={t('auth.register.repeatPassword')}
           type="password"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
@@ -109,17 +108,17 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
           fullWidth
           autoComplete="new-password"
           error={passwordsMismatch}
-          helperText={passwordsMismatch ? 'Las contraseñas no coinciden' : ' '}
+          helperText={passwordsMismatch ? t('auth.register.passwordsMismatch') : ' '}
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <GameButton type="submit" fullWidth loading={loading}>
-          Crear cuenta
+          {t('auth.register.submit')}
         </GameButton>
       </form>
       <Typography variant="body2" className="footer">
-        ¿Ya tenés cuenta?{' '}
+        {t('auth.register.haveAccount')}{' '}
         <Link href={loginHref} className="text-link">
-          Ingresar
+          {t('auth.register.login')}
         </Link>
       </Typography>
     </div>

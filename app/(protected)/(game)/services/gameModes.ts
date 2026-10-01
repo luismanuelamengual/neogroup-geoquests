@@ -6,6 +6,8 @@ import { Map } from '@/app/(protected)/(game)/models/Map'
 import { battleRoyaleMode } from '@/app/(protected)/(game)/services/battleRoyaleMode'
 import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
 import { classicMultiplayerMode } from '@/app/(protected)/(game)/services/classicMultiplayerMode'
+import type { MessageKey } from '@/app/i18n/messages'
+import type { Translator } from '@/app/i18n/translate'
 import { ApiException } from '@/app/models/ApiException'
 
 /**
@@ -33,7 +35,7 @@ export function getGameModeEngine(mode: unknown): GameModeEngine {
   const engine = findGameModeEngine(mode)
 
   if (!engine) {
-    throw new ApiException('Modo de juego no disponible', 400)
+    throw new ApiException('errors.gameModeUnavailable', 400)
   }
 
   return engine
@@ -48,13 +50,13 @@ export function getGameModeEngines(): GameModeEngine[] {
  * The game modes of the main menu (the first choice of the player): every
  * registered mode, with its fixed rules (rounds, time limit...).
  */
-export function getGameModes(): GameModeView[] {
+export function getGameModes(t?: Translator): GameModeView[] {
   return getGameModeEngines()
     .map(({ definition }) => ({
       mode: definition.mode,
       slug: definition.slug,
-      name: definition.name,
-      description: definition.description,
+      name: t ? t(`modes.${definition.slug}.name` as MessageKey) : definition.name,
+      description: t ? t(`modes.${definition.slug}.description` as MessageKey) : definition.description,
       image: definition.image,
       minPlayers: definition.minPlayers,
       maxPlayers: definition.maxPlayers,

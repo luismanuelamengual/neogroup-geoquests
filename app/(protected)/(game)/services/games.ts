@@ -89,7 +89,7 @@ async function assertPlayer(gameId: number, userId: number): Promise<void> {
     : null
 
   if (!player) {
-    throw new ApiException('Partida no encontrada', 404)
+    throw new ApiException('errors.gameNotFound', 404)
   }
 }
 
@@ -143,7 +143,7 @@ async function generateUniqueCode(ctx: GameContext): Promise<string> {
     }
   }
 
-  throw new ApiException('No pudimos crear la partida. Intentá de nuevo.', 503)
+  throw new ApiException('errors.gameCreationFailed', 503)
 }
 
 /**
@@ -158,13 +158,13 @@ export async function createGame(userId: number, input: CreateGameInput, options
   const map = await findMap(mapId)
 
   if (!map) {
-    throw new ApiException('Mapa no encontrado', 404)
+    throw new ApiException('errors.mapNotFound', 404)
   }
 
   const multiplayer = engine.definition.maxPlayers > 1
 
   if (multiplayer && (await findActiveMultiplayerGameId(userId)) !== null) {
-    throw new ApiException('Ya estás en otra partida con amigos', 409)
+    throw new ApiException('errors.alreadyInMultiplayerGame', 409)
   }
 
   const settings = getGameSettings(engine, map)
@@ -258,7 +258,7 @@ export async function sendGameAction(
   const action = input?.action
 
   if (!action || typeof action !== 'object' || typeof action.type !== 'string') {
-    throw new ApiException('Acción no válida')
+    throw new ApiException('errors.invalidAction')
   }
 
   await assertPlayer(gameId, userId)
@@ -266,11 +266,11 @@ export async function sendGameAction(
 
   const loaded = await updateGame(gameId, ctx, (data, { game, players }, engine) => {
     if (game.status === GameStatus.FINISHED) {
-      throw new ApiException('La partida ya terminó')
+      throw new ApiException('errors.gameAlreadyOver')
     }
 
     if (game.status !== GameStatus.IN_PROGRESS) {
-      throw new ApiException('La partida todavía no empezó')
+      throw new ApiException('errors.gameNotStarted')
     }
 
     return engine.handleAction(data, userId, action, { players, hostUserId: game.hostUserId }, ctx)
@@ -290,7 +290,7 @@ export async function joinGame(userId: number, input: JoinGameInput, options: Ga
   const game = code ? await Game.where('code', code).first() : null
 
   if (!game) {
-    throw new ApiException('No encontramos una partida con ese código', 404)
+    throw new ApiException('errors.gameCodeNotFound', 404)
   }
 
   const current = await GamePlayer.where('gameId', game.id).where('userId', userId).first()
@@ -300,7 +300,7 @@ export async function joinGame(userId: number, input: JoinGameInput, options: Ga
   }
 
   if (game.status !== GameStatus.LOBBY) {
-    throw new ApiException('Esa partida ya empezó', 409)
+    throw new ApiException('errors.gameAlreadyStartedJoin', 409)
   }
 
   const engine = getGameModeEngine(game.mode)
@@ -308,11 +308,11 @@ export async function joinGame(userId: number, input: JoinGameInput, options: Ga
   const countPlayers = () => GamePlayer.where('gameId', game.id).where('status', GamePlayerStatus.ACTIVE).count()
 
   if ((await findActiveMultiplayerGameId(userId)) !== null) {
-    throw new ApiException('Ya estás en otra partida con amigos', 409)
+    throw new ApiException('errors.alreadyInMultiplayerGame', 409)
   }
 
   if ((await countPlayers()) >= maxPlayers) {
-    throw new ApiException('La partida está completa', 409)
+    throw new ApiException('errors.gameFull', 409)
   }
 
   await GamePlayer.insert([
@@ -332,7 +332,7 @@ export async function joinGame(userId: number, input: JoinGameInput, options: Ga
   if ((await countPlayers()) > maxPlayers) {
     await DB.table('game_players').where('gameId', game.id).where('userId', userId).delete()
 
-    throw new ApiException('La partida está completa', 409)
+    throw new ApiException('errors.gameFull', 409)
   }
 
   return toGameView(await bumpGame(game.id, ctx), userId, ctx)
@@ -353,11 +353,11 @@ export async function leaveGame(userId: number, input: GameIdInput, options: Gam
   const { game, players } = await loadGame(gameId)
 
   if (getGameModeEngine(game.mode).definition.maxPlayers === 1) {
-    throw new ApiException('Esta partida no se puede abandonar')
+    throw new ApiException('errors.gameCannotBeAbandoned')
   }
 
   if (game.status === GameStatus.FINISHED) {
-    throw new ApiException('La partida ya terminó')
+    throw new ApiException('errors.gameAlreadyOver')
   }
 
   if (game.status === GameStatus.LOBBY) {
@@ -399,21 +399,21 @@ export async function kickPlayer(userId: number, input: KickPlayerInput, options
   const { game } = await loadGame(gameId)
 
   if (game.hostUserId !== userId) {
-    throw new ApiException('Solo el anfitrión puede sacar jugadores', 403)
+    throw new ApiException('errors.onlyHostCanKick', 403)
   }
 
   if (game.status !== GameStatus.LOBBY) {
-    throw new ApiException('Solo se pueden sacar jugadores antes de empezar')
+    throw new ApiException('errors.kickOnlyBeforeStart')
   }
 
   if (targetUserId === userId) {
-    throw new ApiException('No podés sacarte a vos mismo: salí de la partida')
+    throw new ApiException('errors.cannotKickYourself')
   }
 
   const removed = await DB.table('game_players').where('gameId', gameId).where('userId', targetUserId).delete()
 
   if (removed === 0) {
-    throw new ApiException('Ese jugador no está en la partida', 404)
+    throw new ApiException('errors.playerNotInGame', 404)
   }
 
   return toGameView(await bumpGame(gameId, ctx), userId, ctx)
@@ -428,17 +428,17 @@ export async function startGame(userId: number, input: GameIdInput, options: Gam
 
   const loaded = await updateGame(gameId, ctx, async (data, { game, players }, engine) => {
     if (game.status !== GameStatus.LOBBY) {
-      throw new ApiException('La partida ya empezó')
+      throw new ApiException('errors.gameAlreadyStarted')
     }
 
     if (game.hostUserId !== userId) {
-      throw new ApiException('Solo el anfitrión puede empezar la partida', 403)
+      throw new ApiException('errors.onlyHostCanStart', 403)
     }
 
     const { minPlayers } = engine.definition
 
     if (players.filter((player) => player.status === GamePlayerStatus.ACTIVE).length < minPlayers) {
-      throw new ApiException(`Hacen falta al menos ${minPlayers} jugadores para empezar`)
+      throw new ApiException('errors.notEnoughPlayers', 400, { minPlayers })
     }
 
     await engine.start(data, { players, hostUserId: game.hostUserId }, ctx)

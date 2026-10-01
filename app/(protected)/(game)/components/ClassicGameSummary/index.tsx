@@ -13,17 +13,20 @@ import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { ClassicGameView } from '@/app/(protected)/(game)/models/ClassicGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatDistance, formatScore, getGameStars, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 /**
  * End of a classic game: stars, total score, every answer on the map and the
  * per-round breakdown (kept in the server, so it can be seen from any device).
  */
 export default function ClassicGameSummary() {
+  const { t, locale } = useI18n()
   const router = useRouter()
   const { createGame } = useGames()
   const game = useGameStore((state) => state.game)!
@@ -65,33 +68,35 @@ export default function ClassicGameSummary() {
 
   return (
     <div className="classic-game-summary">
-      {starting && <Loading message="Buscando lugares por el mundo..." />}
-      <GamePanel className="hero" title="¡Partida terminada!" accent="magenta">
-        <div className="mode">{game.mapName}</div>
+      {starting && <Loading message={t('picker.searchingPlaces')} />}
+      <GamePanel className="hero" title={t('game.gameOver')} accent="magenta">
+        <div className="mode">{localizeMapName(t, game.mapName)}</div>
         <div className="stars">
           {[1, 2, 3].map((star) => (
             <StarIcon key={star} className={classNames('star', { earned: star <= stars })} />
           ))}
         </div>
         <div className="total">
-          <span className="value">{formatScore(animatedTotal)}</span>
-          <span className="max">/ {formatScore(view.maxScore)} pts</span>
+          <span className="value">{formatScore(animatedTotal, locale)}</span>
+          <span className="max">
+            / {formatScore(view.maxScore, locale)} {t('common.points')}
+          </span>
         </div>
         <ScoreBar value={animatedTotal} max={view.maxScore} />
         <div className="actions">
           <GameButton size="large" startIcon={<ReplayIcon />} loading={starting} onClick={handlePlayAgain}>
-            Jugar de nuevo
+            {t('game.playAgain')}
           </GameButton>
           <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
-            Menú
+            {t('common.menu')}
           </GameButton>
         </div>
       </GamePanel>
       <div className="details">
-        <GamePanel className="map-panel" title="Tus respuestas" accent="cyan">
+        <GamePanel className="map-panel" title={t('game.yourAnswers')} accent="cyan">
           <ResultMap pairs={pairs} className="summary-map" />
         </GamePanel>
-        <GamePanel className="rounds-panel" title="Rondas" accent="gold">
+        <GamePanel className="rounds-panel" title={t('game.rounds')} accent="gold">
           <ol className="rounds">
             {view.rounds.map((round) => (
               <li key={round.roundNumber} className="round">
@@ -102,18 +107,18 @@ export default function ClassicGameSummary() {
                   </span>
                   <span className="distance">
                     {round.distanceMeters != null
-                      ? formatDistance(round.distanceMeters)
-                      : 'Sin respuesta: se acabó el tiempo'}
+                      ? formatDistance(round.distanceMeters, locale)
+                      : t('game.noAnswerTimeUp')}
                   </span>
                   <ScoreBar value={round.score ?? 0} max={MAX_ROUND_SCORE} className="bar" />
                 </div>
-                <span className="score">{formatScore(round.score ?? 0)}</span>
+                <span className="score">{formatScore(round.score ?? 0, locale)}</span>
               </li>
             ))}
           </ol>
           <div className="rounds-total">
-            <span>Total</span>
-            <span>{formatScore(view.totalScore)}</span>
+            <span>{t('game.total')}</span>
+            <span>{formatScore(view.totalScore, locale)}</span>
           </div>
         </GamePanel>
       </div>

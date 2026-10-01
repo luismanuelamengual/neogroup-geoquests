@@ -89,13 +89,13 @@ export async function planGameRounds(mapId: number, roundsCount: number, ctx: Ga
   const places = await getMapPlaces(mapId)
 
   if (places.length === 0) {
-    throw new ApiException('Este modo de juego todavía no tiene lugares cargados')
+    throw new ApiException('errors.noPlacesLoaded')
   }
 
   const planned = await planRounds(places, roundsCount, ctx.finder, ctx.random)
 
   if (planned.length < roundsCount) {
-    throw new ApiException('No pudimos encontrar imágenes para armar la partida. Intentá de nuevo en un momento.', 503)
+    throw new ApiException('errors.noImageryFound', 503)
   }
 
   return planned.map(({ place, panorama }) => ({

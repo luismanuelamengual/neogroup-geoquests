@@ -9,28 +9,28 @@ export const POST = withApi(async (request) => {
   const { token, password } = (await request.json()) as { token: string; password: string }
 
   if (!token || !password) {
-    throw new ApiException('Completá todos los campos')
+    throw new ApiException('errors.fillAllFields')
   }
 
   if (password.length < 6) {
-    throw new ApiException('La contraseña debe tener al menos 6 caracteres')
+    throw new ApiException('errors.passwordTooShort', 400, { min: 6 })
   }
 
   const record = await PasswordResetToken.where('token', token).first()
 
   if (!record) {
-    throw new ApiException('El enlace no es válido o ya fue utilizado')
+    throw new ApiException('errors.linkInvalidOrUsed')
   }
 
   if (new Date() > record.expiresAt) {
     await record.delete()
-    throw new ApiException('El enlace expiró. Pedí uno nuevo')
+    throw new ApiException('errors.linkExpired')
   }
 
   const user = await User.find(record.userId)
 
   if (!user) {
-    throw new ApiException('El enlace no es válido o ya fue utilizado')
+    throw new ApiException('errors.linkInvalidOrUsed')
   }
 
   user.passwordHash = await bcrypt.hash(password, 10)

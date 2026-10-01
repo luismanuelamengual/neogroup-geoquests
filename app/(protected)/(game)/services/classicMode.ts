@@ -97,17 +97,17 @@ function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): bo
   const position = parseGuessPosition(action.latitude, action.longitude)
 
   if (Number(action.roundNumber) !== data.currentRound) {
-    throw new ApiException('Esa ronda ya fue jugada')
+    throw new ApiException('errors.roundAlreadyPlayed')
   }
 
   const timed = data.settings.timeLimitSeconds != null
 
   if (timed && !data.roundStartedAt) {
-    throw new ApiException('La ronda todavía no empezó')
+    throw new ApiException('errors.roundNotStarted')
   }
 
   if (!timed && !position) {
-    throw new ApiException('Marcá un lugar en el mapa')
+    throw new ApiException('errors.markAPlace')
   }
 
   const index = data.currentRound - 1
@@ -135,7 +135,7 @@ export const classicMode: GameModeEngine<ClassicGameData, ClassicGameSettings, C
 
   async create(mapId, settings, ctx) {
     if (mapId == null) {
-      throw new ApiException('Mapa no encontrado', 404)
+      throw new ApiException('errors.mapNotFound', 404)
     }
 
     const rounds = await planGameRounds(mapId, settings.rounds, ctx)
@@ -157,7 +157,7 @@ export const classicMode: GameModeEngine<ClassicGameData, ClassicGameSettings, C
 
   handleAction(data, _userId, action: GameAction, _members, ctx) {
     if (isFinished(data)) {
-      throw new ApiException('La partida ya terminó')
+      throw new ApiException('errors.gameAlreadyOver')
     }
 
     switch (action?.type) {
@@ -166,7 +166,7 @@ export const classicMode: GameModeEngine<ClassicGameData, ClassicGameSettings, C
       case 'guess':
         return guess(data, action, ctx)
       default:
-        throw new ApiException('Acción no válida')
+        throw new ApiException('errors.invalidAction')
     }
   },
 

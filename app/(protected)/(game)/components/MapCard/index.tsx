@@ -8,8 +8,10 @@ import MapArt from '@/app/(protected)/(game)/components/MapArt'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import { MapView } from '@/app/(protected)/(game)/models/MapView'
+import { localizeMapDescription, localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
+import { useT } from '@/app/i18n/I18nProvider'
 
 interface MapCardProps {
   map: MapView
@@ -19,6 +21,7 @@ interface MapCardProps {
 
 /** Card of a map in the map picker of a game mode: its image, its number of places and the button to play it. */
 export default function MapCard({ map, mode }: MapCardProps) {
+  const t = useT()
   const router = useRouter()
   const { createGame } = useGames()
   const [starting, setStarting] = useState(false)
@@ -38,7 +41,7 @@ export default function MapCard({ map, mode }: MapCardProps) {
 
   return (
     <div className="map-card">
-      {starting && <Loading message={multiplayer ? 'Preparando la sala...' : 'Buscando lugares por el mundo...'} />}
+      {starting && <Loading message={multiplayer ? t('picker.preparingRoom') : t('picker.searchingPlaces')} />}
       <div className="art" aria-hidden="true">
         {map.image && map.photos.length === 0 ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -48,12 +51,10 @@ export default function MapCard({ map, mode }: MapCardProps) {
         )}
       </div>
       <div className="content">
-        <h2 className="name">{map.name}</h2>
-        <p className="description">{map.description}</p>
+        <h2 className="name">{localizeMapName(t, map.name)}</h2>
+        <p className="description">{localizeMapDescription(t, map.name, map.description)}</p>
         <div className="tags">
-          <span className="tag">
-            {map.placesCount} {map.placesCount === 1 ? 'lugar' : 'lugares'}
-          </span>
+          <span className="tag">{t('picker.places', { count: map.placesCount })}</span>
         </div>
         <GameButton
           size="large"
@@ -64,7 +65,7 @@ export default function MapCard({ map, mode }: MapCardProps) {
           loading={starting}
           onClick={handlePlay}
         >
-          {multiplayer ? 'Crear sala' : 'Jugar'}
+          {multiplayer ? t('picker.createRoom') : t('picker.play')}
         </GameButton>
       </div>
     </div>

@@ -1,21 +1,25 @@
 import type { Metadata } from 'next'
 import AuthMessage from '@/app/(auth)/components/AuthMessage'
 import ResetPasswordForm from '@/app/(auth)/components/ResetPasswordForm'
+import { getT } from '@/app/i18n/server'
 
-export const metadata: Metadata = { title: 'Nueva contraseña' }
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getT())('metadata.newPassword') }
+}
 
 export default async function ResetPasswordPage({ searchParams }: { searchParams: Promise<{ token?: string }> }) {
   const { token } = await searchParams
+  const t = await getT()
 
   if (!token) {
     return (
       <AuthMessage
-        title="Enlace inválido"
+        title={t('auth.verify.invalidTitle')}
         severity="error"
         linkHref="/forgot-password"
-        linkLabel="Pedir un enlace nuevo"
+        linkLabel={t('auth.reset.requestNew')}
       >
-        El enlace no es válido o ya fue utilizado.
+        {t('auth.resetInvalid')}
       </AuthMessage>
     )
   }

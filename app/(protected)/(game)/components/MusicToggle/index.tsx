@@ -6,6 +6,7 @@ import MusicOffIcon from '@mui/icons-material/MusicOff'
 import IconButton from '@mui/material/IconButton'
 import { useEffect, useState } from 'react'
 import { useBackgroundMusic } from '@/app/(protected)/(game)/hooks/useBackgroundMusic'
+import { useT } from '@/app/i18n/I18nProvider'
 import { useMusicStore } from '@/app/stores/music'
 
 /**
@@ -14,6 +15,7 @@ import { useMusicStore } from '@/app/stores/music'
  * when there are none. The choice is remembered in localStorage.
  */
 export default function MusicToggle() {
+  const t = useT()
   const enabled = useMusicStore((state) => state.enabled)
   const toggle = useMusicStore((state) => state.toggle)
   const hydrate = useMusicStore((state) => state.hydrate)
@@ -47,9 +49,9 @@ export default function MusicToggle() {
     <IconButton
       className={`music-toggle${enabled ? ' on' : ''}`}
       onClick={toggle}
-      aria-label={enabled ? 'Apagar la música' : 'Prender la música'}
+      aria-label={enabled ? t('game.musicOff') : t('game.musicOn')}
       aria-pressed={enabled}
-      title={enabled ? 'Apagar la música' : 'Prender la música'}
+      title={enabled ? t('game.musicOff') : t('game.musicOn')}
     >
       {enabled ? <MusicNoteIcon fontSize="small" /> : <MusicOffIcon fontSize="small" />}
     </IconButton>

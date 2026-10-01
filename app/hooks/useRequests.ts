@@ -1,5 +1,7 @@
 import { useCallback } from 'react'
 import { useNotifications } from '@/app/hooks/useNotifications'
+import type { MessageKey } from '@/app/i18n/messages'
+import type { ApiError } from '@/app/models/ApiError'
 import { ApiResponse } from '@/app/models/ApiResponse'
 
 /**
@@ -20,7 +22,9 @@ export function useRequests() {
       const result = (await response.json()) as ApiResponse<T>
 
       if (!result.success) {
-        const error = new Error(result.error?.message ?? 'internalError')
+        const error: ApiError = new Error(result.error?.message ?? 'internalError')
+
+        error.key = result.error?.key as MessageKey | undefined
 
         if (notifyError) {
           showErrorMessage(error.message)

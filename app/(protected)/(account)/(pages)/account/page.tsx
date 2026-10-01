@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import { auth } from '@/app/(auth)/services/auth'
 import AccountForm from '@/app/(protected)/(account)/components/AccountForm'
+import { getT } from '@/app/i18n/server'
 import { User } from '@/app/models/User'
 
-export const metadata: Metadata = { title: 'Mi perfil' }
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getT())('metadata.profile') }
+}
 
 export default async function AccountPage() {
   const session = await auth()
@@ -11,8 +14,6 @@ export default async function AccountPage() {
   const user = await User.find(userId)
 
   return (
-    <AccountForm
-      account={{ name: user?.name ?? '', displayName: user?.displayName ?? '', email: user?.email ?? '' }}
-    />
+    <AccountForm account={{ name: user?.name ?? '', displayName: user?.displayName ?? '', email: user?.email ?? '' }} />
   )
 }

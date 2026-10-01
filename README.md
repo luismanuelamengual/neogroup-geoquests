@@ -295,3 +295,17 @@ yarn test
 
 - `tests/unit` — geometría, puntaje, evaluación de respuestas, códigos de invitación, autorización del cron, el cliente de Street View (con `fetch` falso) y la validación de panorámicas.
 - `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: mapas con sus lugares, modos con sus reglas fijas, partida completa, retomar una partida, polling con `sinceVersion`, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, modo sin tiempo), rondas puntuadas una sola vez, permisos, historial paginado, limpieza de partidas abandonadas y caché; y la persistencia con bloqueo optimista (reintentos ante escrituras concurrentes); y el multijugador: sala de espera, códigos, límite de jugadores, inicio, mismas rondas para todos, pines ocultos hasta cerrar la ronda, cierre por tiempo o por jugadores desconectados, siguiente ronda, resultados finales, abandono, anfitrión y limpieza; y el Battle Royale: mínimo de jugadores, rondas planificadas, eliminación del más lejano, desempate por el que respondió último, eliminación de quien no respondió o abandonó, rondas sin eliminados y posiciones finales.
+
+## Idiomas (i18n)
+
+La app está disponible en español (idioma por defecto) e inglés. El jugador elige el idioma en **Mi perfil**.
+
+- **Diccionarios**: `app/i18n/messages/es.ts` (referencia) y `en.ts` (debe tener la misma forma; el compilador y `tests/unit/i18n.test.ts` lo verifican). Las claves se usan con `t('grupo.clave', { param })`; un mensaje `{ one, other }` es un plural que se elige con `count`.
+- **Componentes cliente**: `const t = useT()` (o `const { t, locale } = useI18n()`) de `app/i18n/I18nProvider`. **Servidor** (páginas, rutas API): `const t = await getT()` de `app/i18n/server`.
+- **Idioma de cada request**: el guardado en el usuario (viaja en la sesión JWT) → cookie `locale` → cabecera `Accept-Language` → español.
+- **Persistencia**: columna `users.locale` (definida en `001-create-base-tables`) y cookie `locale` (para las páginas anteriores al login). Se guarda con `POST /api/updateAccount { locale }`.
+- **Errores de la API**: `new ApiException('errors.clave', status, params)`; la respuesta los envía traducidos al idioma del request (más `error.key`, que el cliente usa para decidir sin depender del texto).
+- **Emails**: se envían en el idioma guardado del destinatario.
+- **Formatos**: números, distancias, fechas y ordinales según el idioma (`utils/score.ts`, `utils/players.ts`).
+- **Mapas**: se guardan en español en la base de datos; los conocidos se traducen por su nombre (`maps.<slug>` en los diccionarios, ver `utils/mapText.ts`) y los demás muestran el texto guardado. Los nombres de los lugares (ciudades) no se traducen.
+- **Agregar un idioma**: sumarlo a `LOCALES`, `LOCALE_NAMES` y `LOCALE_TAGS` (`app/i18n/config.ts`), crear su diccionario y registrarlo en `app/i18n/messages/index.ts`.

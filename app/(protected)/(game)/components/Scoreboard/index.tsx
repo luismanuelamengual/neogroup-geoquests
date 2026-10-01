@@ -7,6 +7,7 @@ import { GamePlayerView } from '@/app/(protected)/(game)/models/GamePlayerView'
 import { formatPosition } from '@/app/(protected)/(game)/utils/players'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import PlayerAvatar from '@/app/components/PlayerAvatar'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 /** A row of the scoreboard. */
 export interface ScoreboardEntry {
@@ -34,13 +35,15 @@ interface ScoreboardProps {
 
 /** Positions of a multiplayer game: position, avatar, name and score of every player, best first. */
 export default function Scoreboard({ entries, players, colors, highlightUserId, className }: ScoreboardProps) {
+  const { t, locale } = useI18n()
+
   return (
     <ol className={classNames('scoreboard', className)}>
       {[...entries]
         .sort((a, b) => a.position - b.position)
         .map((entry) => {
           const player = players.find((candidate) => candidate.userId === entry.userId)
-          const name = player?.name ?? 'Jugador'
+          const name = player?.name ?? t('common.player')
 
           return (
             <li
@@ -51,18 +54,20 @@ export default function Scoreboard({ entries, players, colors, highlightUserId, 
                 first: entry.position === 1
               })}
             >
-              <span className="position">{formatPosition(entry.position)}</span>
+              <span className="position">{formatPosition(entry.position, locale)}</span>
               <PlayerAvatar name={name} color={colors.get(entry.userId)} className="avatar" />
               <span className="info">
                 <span className="name">
                   {name}
-                  {player?.status === GamePlayerStatus.LEFT && <span className="left-tag"> (se fue)</span>}
+                  {player?.status === GamePlayerStatus.LEFT && <span className="left-tag">{t('game.left')}</span>}
                 </span>
                 {entry.detail && <span className="detail">{entry.detail}</span>}
               </span>
               {entry.badge && <span className="badge">{entry.badge}</span>}
-              {entry.roundScore != null && <span className="round-score">+{formatScore(entry.roundScore)}</span>}
-              {!entry.hideScore && <span className="score">{formatScore(entry.score)}</span>}
+              {entry.roundScore != null && (
+                <span className="round-score">+{formatScore(entry.roundScore, locale)}</span>
+              )}
+              {!entry.hideScore && <span className="score">{formatScore(entry.score, locale)}</span>}
             </li>
           )
         })}

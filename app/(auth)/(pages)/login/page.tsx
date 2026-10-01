@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import LoginForm from '@/app/(auth)/components/LoginForm'
+import { getT } from '@/app/i18n/server'
 
-export const metadata: Metadata = { title: 'Ingresar' }
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getT())('metadata.login') }
+}
 
 export default async function LoginPage({
   searchParams

@@ -7,12 +7,14 @@ import { useState } from 'react'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
+import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Landing of an invitation link (/join/[code]): the player confirms before
  * joining — opening (or prefetching) the link never joins by itself.
  */
 export default function JoinGameInvitation({ code }: { code: string }) {
+  const t = useT()
   const router = useRouter()
   const { joinGame } = useGames()
   const [joining, setJoining] = useState(false)
@@ -27,22 +29,22 @@ export default function JoinGameInvitation({ code }: { code: string }) {
 
       router.replace(`/game/${game.id}`)
     } catch (joinError) {
-      setError(joinError instanceof Error ? joinError.message : 'No pudimos unirte a la partida.')
+      setError(joinError instanceof Error ? joinError.message : t('invitation.joinFailed'))
       setJoining(false)
     }
   }
 
   return (
     <div className="join-game-invitation">
-      <GamePanel className="panel" title="¡Te invitaron!" accent="magenta">
-        <p className="text">Un amigo te invitó a jugar una partida de GeoQuests.</p>
+      <GamePanel className="panel" title={t('invitation.title')} accent="magenta">
+        <p className="text">{t('invitation.text')}</p>
         <div className="code">{code}</div>
         {error && <p className="error">{error}</p>}
         <GameButton size="large" fullWidth startIcon={<GroupAddIcon />} loading={joining} onClick={handleJoin}>
-          Unirme a la partida
+          {t('invitation.join')}
         </GameButton>
         <GameButton color="ghost" fullWidth href="/play">
-          Ir al menú
+          {t('invitation.goToMenu')}
         </GameButton>
       </GamePanel>
     </div>

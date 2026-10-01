@@ -28,7 +28,7 @@ export function parseGuessPosition(latitude: unknown, longitude: unknown): LatLn
   const lng = Number(longitude)
 
   if (latitude == null || longitude == null || !Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90) {
-    throw new ApiException('Posición inválida')
+    throw new ApiException('errors.invalidPosition')
   }
 
   return { latitude: lat, longitude: normalizeLongitude(lng) }

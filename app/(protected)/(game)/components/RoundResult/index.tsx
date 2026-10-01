@@ -11,6 +11,10 @@ import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatDistance, formatScore, getRoundVerdict } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
+import { useI18n } from '@/app/i18n/I18nProvider'
+
+/** Stands for the distance while the sentence is split to show it in bold. */
+const DISTANCE_MARKER = '\u0000'
 
 interface RoundResultProps {
   round: RoundView
@@ -21,6 +25,7 @@ interface RoundResultProps {
 
 /** Overlay shown after a guess: map with the answer, distance, animated score and the "next" button. */
 export default function RoundResult({ round, maxRoundScore, isLastRound, onContinue }: RoundResultProps) {
+  const { t, locale } = useI18n()
   const score = round.score ?? 0
   const animatedScore = useCountUp(score, 1300, 500)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -41,8 +46,13 @@ export default function RoundResult({ round, maxRoundScore, isLastRound, onConti
   return (
     <div className="round-result">
       {mapPadding && <ResultMap pairs={pairs} className="map" padding={mapPadding} />}
-      <GamePanel ref={panelRef} className="panel" title={`Ronda ${round.roundNumber}`} accent="cyan">
-        <div className="verdict">{round.timedOut ? '¡Se acabó el tiempo!' : getRoundVerdict(score, maxRoundScore)}</div>
+      <GamePanel
+        ref={panelRef}
+        className="panel"
+        title={t('game.roundNumber', { number: round.roundNumber })}
+        accent="cyan"
+      >
+        <div className="verdict">{round.timedOut ? t('result.timeUp') : getRoundVerdict(score, maxRoundScore, t)}</div>
         <div className="place">
           <span className="flag">{countryFlag(round.countryCode)}</span>
           <span>{round.placeName}</span>
@@ -50,19 +60,27 @@ export default function RoundResult({ round, maxRoundScore, isLastRound, onConti
         <div className="distance">
           {round.distanceMeters != null ? (
             <>
-              Tu marca quedó a <strong>{formatDistance(round.distanceMeters)}</strong> del lugar
+              {t('result.yourMark', { distance: DISTANCE_MARKER })
+                .split(DISTANCE_MARKER)
+                .flatMap((part, index) =>
+                  index === 0
+                    ? [part]
+                    : [<strong key={index}>{formatDistance(round.distanceMeters!, locale)}</strong>, part]
+                )}
             </>
           ) : (
-            'No llegaste a marcar un lugar a tiempo'
+            t('result.noMark')
           )}
         </div>
         <div className="score">
-          <span className="value">{formatScore(animatedScore)}</span>
-          <span className="max">/ {formatScore(maxRoundScore)} pts</span>
+          <span className="value">{formatScore(animatedScore, locale)}</span>
+          <span className="max">
+            / {formatScore(maxRoundScore, locale)} {t('common.points')}
+          </span>
         </div>
         <ScoreBar value={animatedScore} max={maxRoundScore} />
         <GameButton color={isLastRound ? 'magenta' : 'gold'} size="large" fullWidth onClick={onContinue} autoFocus>
-          {isLastRound ? 'Ver resumen' : 'Siguiente ronda'}
+          {isLastRound ? t('result.seeSummary') : t('result.nextRound')}
         </GameButton>
       </GamePanel>
     </div>

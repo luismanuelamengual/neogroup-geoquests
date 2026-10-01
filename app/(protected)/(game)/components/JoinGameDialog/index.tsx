@@ -11,9 +11,11 @@ import { FormEvent, useState } from 'react'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GAME_CODE_LENGTH, normalizeGameCode } from '@/app/(protected)/(game)/utils/gameCodes'
 import GameButton from '@/app/components/GameButton'
+import { useT } from '@/app/i18n/I18nProvider'
 
 /** "Unirme con código": button of the main menu that asks for the code of a friend's game and joins it. */
 export default function JoinGameDialog({ className }: { className?: string }) {
+  const t = useT()
   const router = useRouter()
   const { joinGame } = useGames()
   const [open, setOpen] = useState(false)
@@ -42,18 +44,18 @@ export default function JoinGameDialog({ className }: { className?: string }) {
   return (
     <>
       <GameButton color="cyan" startIcon={<GroupAddIcon />} className={className} onClick={() => setOpen(true)}>
-        Unirme con código
+        {t('picker.joinWithCode')}
       </GameButton>
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
         <form onSubmit={handleSubmit}>
-          <DialogTitle>Unirme a una partida</DialogTitle>
+          <DialogTitle>{t('picker.joinTitle')}</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
               fullWidth
               margin="dense"
-              label="Código de la partida"
-              placeholder="Ej: K7QX2M"
+              label={t('picker.codeLabel')}
+              placeholder={t('picker.codePlaceholder')}
               value={code}
               onChange={(event) => setCode(event.target.value.toUpperCase())}
               slotProps={{ htmlInput: { maxLength: GAME_CODE_LENGTH + 2, autoCapitalize: 'characters' } }}
@@ -61,10 +63,10 @@ export default function JoinGameDialog({ className }: { className?: string }) {
           </DialogContent>
           <DialogActions sx={{ gap: 1, p: 2 }}>
             <GameButton color="ghost" size="small" onClick={() => setOpen(false)}>
-              Cancelar
+              {t('common.cancel')}
             </GameButton>
             <GameButton type="submit" size="small" disabled={!validCode} loading={joining}>
-              Unirme
+              {t('picker.join')}
             </GameButton>
           </DialogActions>
         </form>

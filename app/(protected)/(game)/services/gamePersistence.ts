@@ -38,7 +38,7 @@ export async function loadGame(gameId: number): Promise<LoadedGame> {
   const game = Number.isInteger(gameId) ? await Game.where('id', gameId).with('map').first() : null
 
   if (!game) {
-    throw new ApiException('Partida no encontrada', 404)
+    throw new ApiException('errors.gameNotFound', 404)
   }
 
   const players = await GamePlayer.where('gameId', game.id).orderBy('joinedAt').orderBy('userId').with('user').get()
@@ -156,5 +156,5 @@ export async function updateGame(
     }
   }
 
-  throw new ApiException('Hay mucha actividad en esta partida: intentá de nuevo', 409)
+  throw new ApiException('errors.gameBusy', 409)
 }

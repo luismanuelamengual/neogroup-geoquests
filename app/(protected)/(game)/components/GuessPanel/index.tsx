@@ -9,6 +9,7 @@ import { useState } from 'react'
 import GuessMap from '@/app/(protected)/(game)/components/GuessMap'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import GameButton from '@/app/components/GameButton'
+import { useT } from '@/app/i18n/I18nProvider'
 
 interface GuessPanelProps {
   onSubmit: () => void
@@ -21,6 +22,7 @@ interface GuessPanelProps {
  *  - phone/tablet: a floating "Mapa" button that opens the map as a bottom sheet.
  */
 export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
+  const t = useT()
   const guess = useGameStore((state) => state.guess)
   const setGuess = useGameStore((state) => state.setGuess)
   const [open, setOpen] = useState(false)
@@ -29,8 +31,8 @@ export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
     <>
       <div className={classNames('guess-panel', { open, 'has-guess': !!guess })}>
         <div className="sheet-header">
-          <span className="sheet-title">¿Dónde estás?</span>
-          <IconButton className="close" size="small" onClick={() => setOpen(false)} aria-label="Cerrar mapa">
+          <span className="sheet-title">{t('game.whereAreYou')}</span>
+          <IconButton className="close" size="small" onClick={() => setOpen(false)} aria-label={t('game.closeMap')}>
             <CloseIcon />
           </IconButton>
         </div>
@@ -45,7 +47,7 @@ export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
           loading={submitting}
           onClick={onSubmit}
         >
-          {guess ? '¡Adivinar!' : 'Marcá un punto en el mapa'}
+          {guess ? t('game.guess') : t('game.markAPoint')}
         </GameButton>
       </div>
       <GameButton
@@ -54,7 +56,7 @@ export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
         startIcon={<MapIcon />}
         onClick={() => setOpen(true)}
       >
-        {guess ? 'Adivinar' : 'Mapa'}
+        {guess ? t('game.guessShort') : t('game.map')}
       </GameButton>
     </>
   )

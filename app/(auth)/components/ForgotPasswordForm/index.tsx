@@ -8,8 +8,10 @@ import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 import { useAuth } from '@/app/(auth)/hooks/useAuth'
 import GameButton from '@/app/components/GameButton'
+import { useT } from '@/app/i18n/I18nProvider'
 
 export default function ForgotPasswordForm() {
+  const t = useT()
   const { requestPasswordReset } = useAuth()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -32,21 +34,18 @@ export default function ForgotPasswordForm() {
   return (
     <div className="auth-form">
       <Typography variant="h5" component="h1" className="title">
-        Recuperar contraseña
+        {t('auth.forgot.title')}
       </Typography>
       {sent ? (
-        <Alert severity="success">
-          Si existe una cuenta asociada a {email}, vas a recibir un correo con instrucciones para restablecer tu
-          contraseña.
-        </Alert>
+        <Alert severity="success">{t('auth.forgot.sent', { email })}</Alert>
       ) : (
         <>
           <Typography variant="body2" color="text.secondary" className="subtitle">
-            Ingresá tu email y te enviamos un enlace para restablecer tu contraseña.
+            {t('auth.forgot.subtitle')}
           </Typography>
           <form onSubmit={handleSubmit} className="form">
             <TextField
-              label="Email"
+              label={t('auth.email')}
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -56,14 +55,14 @@ export default function ForgotPasswordForm() {
               slotProps={{ inputLabel: { shrink: true } }}
             />
             <GameButton type="submit" fullWidth loading={loading}>
-              Enviar enlace
+              {t('auth.forgot.submit')}
             </GameButton>
           </form>
         </>
       )}
       <Typography variant="body2" className="footer">
         <Link href="/login" className="text-link">
-          Volver a ingresar
+          {t('auth.forgot.back')}
         </Link>
       </Typography>
     </div>

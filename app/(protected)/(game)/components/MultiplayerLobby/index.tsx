@@ -11,6 +11,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
 import { MultiplayerGameView } from '@/app/(protected)/(game)/models/MultiplayerGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
 import { useUserStore } from '@/app/(protected)/stores/users'
@@ -18,6 +19,7 @@ import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
 import PlayerAvatar from '@/app/components/PlayerAvatar'
+import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Waiting room of a multiplayer game: the invitation code (and the button to
@@ -25,6 +27,7 @@ import PlayerAvatar from '@/app/components/PlayerAvatar'
  * the host, the button that starts the game.
  */
 export default function MultiplayerLobby() {
+  const t = useT()
   const router = useRouter()
   const { startGame, leaveGame, kickPlayer } = useGames()
   const game = useGameStore((state) => state.game)!
@@ -72,22 +75,24 @@ export default function MultiplayerLobby() {
 
   return (
     <div className="multiplayer-lobby">
-      {starting && <Loading message="Buscando lugares por el mundo..." />}
-      <GamePanel className="panel" title="Sala de espera" accent="cyan">
-        <div className="map">{game.mapName}</div>
+      {starting && <Loading message={t('picker.searchingPlaces')} />}
+      <GamePanel className="panel" title={t('lobby.title')} accent="cyan">
+        <div className="map">{localizeMapName(t, game.mapName)}</div>
         <div className="rules">
-          {view.roundsCount ? `${view.roundsCount} rondas` : 'Eliminación'} · {formatTimeLimit(view.timeLimitSeconds)}{' '}
-          por ronda
+          {t('lobby.rules', {
+            rounds: view.roundsCount ? t('modes.rounds', { count: view.roundsCount }) : t('modes.elimination'),
+            time: formatTimeLimit(view.timeLimitSeconds, t)
+          })}
         </div>
         {game.code && (
           <div className="code-box">
-            <span className="caption">Código de la partida</span>
+            <span className="caption">{t('lobby.code')}</span>
             <span className="code">{game.code}</span>
           </div>
         )}
         {game.code && <InviteButton code={game.code} />}
         <div className="players-header">
-          <span>Jugadores</span>
+          <span>{t('lobby.players')}</span>
           <span>
             {players.length}/{view.maxPlayers}
           </span>
@@ -98,15 +103,15 @@ export default function MultiplayerLobby() {
               <PlayerAvatar name={player.name} color={colors.get(player.userId)} />
               <span className="name">
                 {player.name}
-                {player.userId === userId && <span className="you"> (vos)</span>}
+                {player.userId === userId && <span className="you">{t('game.you')}</span>}
               </span>
-              {player.userId === game.hostUserId && <span className="host">Anfitrión</span>}
+              {player.userId === game.hostUserId && <span className="host">{t('lobby.host')}</span>}
               {isHost && player.userId !== userId && (
                 <IconButton
                   className="kick"
                   size="small"
                   onClick={() => handleKick(player.userId)}
-                  aria-label={`Sacar a ${player.name}`}
+                  aria-label={t('lobby.kick', { name: player.name })}
                 >
                   <CloseIcon fontSize="small" />
                 </IconButton>
@@ -123,13 +128,13 @@ export default function MultiplayerLobby() {
             loading={starting}
             onClick={handleStart}
           >
-            {enoughPlayers ? 'Empezar partida' : `Esperando jugadores (mínimo ${view.minPlayers})`}
+            {enoughPlayers ? t('lobby.start') : t('lobby.waitingPlayers', { min: view.minPlayers })}
           </GameButton>
         ) : (
-          <p className="waiting">Esperando a que {host?.name ?? 'el anfitrión'} empiece la partida…</p>
+          <p className="waiting">{t('lobby.waitingHost', { name: host?.name ?? t('lobby.theHost') })}</p>
         )}
         <GameButton color="ghost" fullWidth loading={leaving} onClick={handleLeave}>
-          Salir de la sala
+          {t('lobby.leave')}
         </GameButton>
       </GamePanel>
     </div>

@@ -9,6 +9,7 @@ import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
+import { useI18n } from '@/app/i18n/I18nProvider'
 
 const PAGE_SIZE = 20
 
@@ -18,6 +19,7 @@ interface MyGamesProps {
 }
 
 export default function MyGames({ stats }: MyGamesProps) {
+  const { t, locale } = useI18n()
   const { getGames } = useGames()
   const [games, setGames] = useState<GameListItem[]>([])
   const [hasMore, setHasMore] = useState(false)
@@ -46,25 +48,25 @@ export default function MyGames({ stats }: MyGamesProps) {
 
   return (
     <div className="my-games">
-      <GamePanel title="Mis partidas" accent="cyan">
+      <GamePanel title={t('myGames.title')} accent="cyan">
         <div className="stats">
           <div className="stat">
             <span className="value">{stats.gamesPlayed}</span>
-            <span className="label">Partidas</span>
+            <span className="label">{t('myGames.games')}</span>
           </div>
           <div className="stat">
-            <span className="value">{formatScore(stats.bestScore)}</span>
-            <span className="label">Mejor puntaje</span>
+            <span className="value">{formatScore(stats.bestScore, locale)}</span>
+            <span className="label">{t('myGames.bestScore')}</span>
           </div>
           <div className="stat">
-            <span className="value">{formatScore(stats.averageScore)}</span>
-            <span className="label">Promedio</span>
+            <span className="value">{formatScore(stats.averageScore, locale)}</span>
+            <span className="label">{t('myGames.average')}</span>
           </div>
         </div>
         {!loading && games.length === 0 && (
           <div className="empty">
-            <p>Todavía no jugaste ninguna partida.</p>
-            <GameButton href="/play">¡A jugar!</GameButton>
+            <p>{t('myGames.empty')}</p>
+            <GameButton href="/play">{t('myGames.letsPlay')}</GameButton>
           </div>
         )}
         <ul className="list">
@@ -74,10 +76,10 @@ export default function MyGames({ stats }: MyGamesProps) {
             </li>
           ))}
         </ul>
-        {loading && <p className="loading-more">Cargando...</p>}
+        {loading && <p className="loading-more">{t('common.loading')}</p>}
         {!loading && hasMore && (
           <GameButton color="ghost" fullWidth className="load-more" onClick={() => loadPage(games.length)}>
-            Cargar más
+            {t('myGames.loadMore')}
           </GameButton>
         )}
       </GamePanel>
