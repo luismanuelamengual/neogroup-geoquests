@@ -1,4 +1,4 @@
-.loading {
+.loading-screen {
   position: fixed;
   inset: 0;
   z-index: 20;
@@ -76,13 +76,13 @@
 }
 
 /* No page scrollbars while the loading screen is visible. */
-html:has(.loading),
-html:has(.loading) body {
+html:has(.loading-screen),
+html:has(.loading-screen) body {
   overflow: hidden;
 }
 
 @media (max-width: 600px) {
-  .loading {
+  .loading-screen {
     padding-bottom: calc(72px + var(--safe-bottom));
   }
 }

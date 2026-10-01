@@ -3,7 +3,7 @@ import './index.scss'
 /** Full-area loading overlay: a spinning globe with a bouncing pin. */
 export default function Loading({ message }: { message?: string }) {
   return (
-    <div className="loading">
+    <div className="loading-screen">
       <div className="wrapper">
         <div className="globe">
           <div className="meridians" />
