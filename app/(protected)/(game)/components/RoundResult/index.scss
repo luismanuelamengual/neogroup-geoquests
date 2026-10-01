@@ -6,6 +6,7 @@
   flex-direction: column;
   background: var(--color-night);
   animation: round-result-in 280ms ease-out;
+  z-index: 10;
 
   .map {
     flex: 1;
