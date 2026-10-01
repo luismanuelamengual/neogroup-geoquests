@@ -115,9 +115,12 @@ describe('classic game flow', () => {
     expect(maps.map((map) => [map.name, map.placesCount])).toEqual([
       ['Ciudades famosas', 20],
       ['Ciudades del mundo', 150],
+      ['Lugares icónicos', 582],
       ['Argentina', 1],
       ['España', 1],
-      ['Estados Unidos', 1]
+      ['Estados Unidos', 1],
+      ['Latinoamérica', 105],
+      ['Europa', 213]
     ])
     expect(maps[0].image).toBe('/maps/ciudades-del-mundo.png')
 
@@ -143,6 +146,33 @@ describe('classic game flow', () => {
     expect(new Set(world.map((place) => place.countryCode)).size).toBe(36)
     // A country map has a single place: the whole country (not part of "Ciudades del mundo").
     expect(world.map((place) => place.name)).not.toContain('Argentina')
+  })
+
+  it('seeds the regional maps and the landmarks without touching "Ciudades del mundo"', async () => {
+    const maps = await getMaps()
+    const placesOf = async (name: string) => getMapPlaces(maps.find((map) => map.name === name)!.id)
+    const world = await getMapPlaces(maps[1].id)
+    const worldIds = new Set(world.map((place) => place.id))
+
+    const latinAmerica = await placesOf('Latinoamérica')
+    const europe = await placesOf('Europa')
+    const landmarks = await placesOf('Lugares icónicos')
+
+    // The world cities of the region are shared with "Ciudades del mundo"; the rest are only in the regional map.
+    expect(latinAmerica.map((place) => place.name)).toEqual(expect.arrayContaining(['Buenos Aires', 'Quito', 'La Paz']))
+    expect(latinAmerica.filter((place) => worldIds.has(place.id))).toHaveLength(36)
+    expect(latinAmerica.map((place) => place.name)).not.toContain('Madrid')
+    expect(europe.map((place) => place.name)).toEqual(expect.arrayContaining(['París', 'Madrid', 'Bucarest']))
+    expect(europe.filter((place) => worldIds.has(place.id)).length).toBeGreaterThan(70)
+    expect(europe.map((place) => place.name)).not.toContain('Mendoza')
+    // The country maps are not part of the regional ones.
+    expect([...latinAmerica, ...europe].map((place) => place.name)).not.toEqual(expect.arrayContaining(['Argentina']))
+
+    // Hundreds of landmarks, none of them a city of the world.
+    expect(landmarks.length).toBeGreaterThan(500)
+    expect(landmarks.some((place) => worldIds.has(place.id))).toBe(false)
+    expect(landmarks.map((place) => place.name)).toEqual(expect.arrayContaining(['Torre Eiffel', 'Machu Picchu']))
+    expect(new Set(landmarks.map((place) => place.countryCode)).size).toBeGreaterThan(50)
   })
 
   it('plays a country map anywhere in the country, with searches sized for it', async () => {

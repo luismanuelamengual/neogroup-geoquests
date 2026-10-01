@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-const VOLUME = 0.25
+const VOLUME = 0.12
 
 /**
  * Plays the tracks in a loop: starts with a random one and goes on in order,
