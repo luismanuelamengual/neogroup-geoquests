@@ -26,7 +26,7 @@ import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
 const START = new Date('2026-01-01T10:00:00Z')
 const COUNTDOWN_MS = 3000
-const ROUND_MS = 60_000
+const ROUND_MS = 180_000
 const REVEAL_MS = 15_000
 
 function at(ms: number): GameOptions {

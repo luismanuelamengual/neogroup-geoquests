@@ -31,7 +31,7 @@ import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
 const ATLANTIC = { latitude: 0, longitude: -30 }
-const TWO_MINUTES_MS = 2 * 60 * 1000
+const THREE_MINUTES_MS = 3 * 60 * 1000
 const START = new Date('2026-01-01T10:00:00Z')
 
 function after(ms: number): () => Date {
@@ -210,7 +210,7 @@ describe('classic game flow', () => {
         name: 'Clásico',
         minPlayers: 1,
         maxPlayers: 1,
-        settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: 3000 }
+        settings: { rounds: 5, timeLimitSeconds: 180, scoreMaxDistanceKm: 3000 }
       }),
       expect.objectContaining({
         mode: GameMode.CLASSIC_MULTIPLAYER,
@@ -220,7 +220,7 @@ describe('classic game flow', () => {
         maxPlayers: 8,
         settings: {
           rounds: 5,
-          timeLimitSeconds: 120,
+          timeLimitSeconds: 180,
           maxPlayers: 8,
           revealSeconds: 15,
           countdownSeconds: 3,
@@ -234,7 +234,7 @@ describe('classic game flow', () => {
         minPlayers: 3,
         maxPlayers: 8,
         settings: {
-          timeLimitSeconds: 60,
+          timeLimitSeconds: 180,
           maxPlayers: 8,
           revealSeconds: 15,
           countdownSeconds: 3,
@@ -259,7 +259,7 @@ describe('classic game flow', () => {
     expect(classic(game)).toMatchObject({
       roundsCount: 5,
       currentRoundNumber: 1,
-      timeLimitSeconds: 120,
+      timeLimitSeconds: 180,
       roundTimeLeftMs: null,
       totalScore: 0,
       maxScore: 25000
@@ -277,11 +277,11 @@ describe('classic game flow', () => {
   it('only uses the places linked to the map, with the rules of the mode', async () => {
     const argentinaId = await createArgentinaMap()
 
-    expect((await getMaps()).find((map) => map.name === 'Ciudades argentinas')).toMatchObject({ placesCount: 7 })
+    expect((await getMaps()).find((map) => map.name === 'Ciudades argentinas')).toMatchObject({ placesCount: 38 })
 
     const game = await create({}, argentinaId)
 
-    expect(classic(game)).toMatchObject({ roundsCount: 5, timeLimitSeconds: 120 })
+    expect(classic(game)).toMatchObject({ roundsCount: 5, timeLimitSeconds: 180 })
     expect((await answersOf(game.id)).map((round) => round.countryCode)).toEqual(['AR', 'AR', 'AR', 'AR', 'AR'])
     expect((await Game.find(game.id))!.data).toMatchObject({ settings: { scoreMaxDistanceKm: 3000 } })
   })
@@ -291,7 +291,7 @@ describe('classic game flow', () => {
     const game = await create({}, argentinaId)
 
     expect((await Game.find(game.id))!.data).toMatchObject({
-      settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: 1234 }
+      settings: { rounds: 5, timeLimitSeconds: 180, scoreMaxDistanceKm: 1234 }
     })
   })
 
@@ -375,8 +375,8 @@ describe('classic game flow', () => {
       const first = await act(game.id, { type: 'startRound' }, { now: after(0) })
       const later = await act(game.id, { type: 'startRound' }, { now: after(30_000) })
 
-      expect(classic(first).roundTimeLeftMs).toBe(TWO_MINUTES_MS)
-      expect(classic(later).roundTimeLeftMs).toBe(TWO_MINUTES_MS - 30_000)
+      expect(classic(first).roundTimeLeftMs).toBe(THREE_MINUTES_MS)
+      expect(classic(later).roundTimeLeftMs).toBe(THREE_MINUTES_MS - 30_000)
     })
 
     it('accepts a guess sent right at the end of the countdown (grace period)', async () => {
@@ -385,7 +385,7 @@ describe('classic game flow', () => {
 
       await act(game.id, { type: 'startRound' }, { now: after(0) })
 
-      const result = await guess(game.id, 1, answer, { now: after(TWO_MINUTES_MS + ROUND_TIME_GRACE_MS - 1000) })
+      const result = await guess(game.id, 1, answer, { now: after(THREE_MINUTES_MS + ROUND_TIME_GRACE_MS - 1000) })
 
       expect(classic(result).rounds[0]).toMatchObject({ score: 5000, timedOut: false })
     })
@@ -397,7 +397,7 @@ describe('classic game flow', () => {
       await act(game.id, { type: 'startRound' }, { now: after(0) })
 
       const result = classic(
-        await guess(game.id, 1, answer, { now: after(TWO_MINUTES_MS + ROUND_TIME_GRACE_MS + 1000) })
+        await guess(game.id, 1, answer, { now: after(THREE_MINUTES_MS + ROUND_TIME_GRACE_MS + 1000) })
       )
 
       expect(result.rounds[0]).toMatchObject({ score: 0, timedOut: true, guess: null, distanceMeters: null })

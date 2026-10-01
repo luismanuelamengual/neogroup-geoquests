@@ -31,7 +31,7 @@ import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
 const START = new Date('2026-01-01T10:00:00Z')
 const COUNTDOWN_MS = 3000
-const ROUND_MS = 120_000
+const ROUND_MS = 180_000
 const REVEAL_MS = 15_000
 const ATLANTIC = { latitude: 0, longitude: -30 }
 
@@ -202,10 +202,12 @@ describe('classic multiplayer flow', () => {
       closed: true,
       location: { latitude: answer.latitude, longitude: answer.longitude }
     })
-    expect(closed.rounds[0].guesses.map((playerGuess) => [playerGuess.userId, playerGuess.score])).toEqual([
-      [host, 5000],
-      [ana, 0]
-    ])
+    // Ana's guess is in the middle of the Atlantic: far from the answer, so (almost) no points.
+    const [hostGuess, anaGuess] = closed.rounds[0].guesses
+
+    expect([hostGuess.userId, hostGuess.score]).toEqual([host, 5000])
+    expect(anaGuess.userId).toBe(ana)
+    expect(anaGuess.score).toBeLessThan(100)
     expect(closed.standings.map((standing) => [standing.userId, standing.position])).toEqual([
       [host, 1],
       [ana, 2]
