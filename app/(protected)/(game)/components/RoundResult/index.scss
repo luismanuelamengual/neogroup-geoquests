@@ -6,7 +6,6 @@
   flex-direction: column;
   background: var(--color-night);
   animation: round-result-in 280ms ease-out;
-  z-index: 10;
 
   .map {
     flex: 1;
@@ -24,6 +23,7 @@
     transform: translateX(-50%);
     text-align: center;
     animation: round-result-panel 420ms cubic-bezier(0.2, 0.9, 0.3, 1.25);
+    z-index: 10;
   }
 
   .verdict {
