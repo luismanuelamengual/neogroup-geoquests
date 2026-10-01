@@ -64,6 +64,15 @@
   &.full-width {
     display: flex;
     width: 100%;
+
+    // Long labels (e.g. "Esperando jugadores (mínimo 2)") wrap instead of overflowing.
+    .label {
+      white-space: normal;
+      min-width: 0;
+      text-align: center;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
+    }
   }
 
   &.size-small {
