@@ -16,7 +16,7 @@ export const SCORE_SETTINGS = { maxScore: 5000, perfectDistanceMeters: 25 }
  * with its own `maps.scoreMaxDistanceKm`): the distance in km from which a
  * guess scores 0. The bigger it is, the more permissive the scoring.
  */
-export const DEFAULT_SCORE_MAX_DISTANCE_KM = 2000
+export const DEFAULT_SCORE_MAX_DISTANCE_KM = 3000
 
 /** Points of a perfect round. */
 export const MAX_ROUND_SCORE = SCORE_SETTINGS.maxScore

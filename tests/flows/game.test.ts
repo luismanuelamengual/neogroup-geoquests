@@ -210,7 +210,7 @@ describe('classic game flow', () => {
         name: 'Clásico',
         minPlayers: 1,
         maxPlayers: 1,
-        settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: 2000 }
+        settings: { rounds: 5, timeLimitSeconds: 120, scoreMaxDistanceKm: 3000 }
       }),
       expect.objectContaining({
         mode: GameMode.CLASSIC_MULTIPLAYER,
@@ -224,7 +224,7 @@ describe('classic game flow', () => {
           maxPlayers: 8,
           revealSeconds: 15,
           countdownSeconds: 3,
-          scoreMaxDistanceKm: 2000
+          scoreMaxDistanceKm: 3000
         }
       }),
       expect.objectContaining({
@@ -238,7 +238,7 @@ describe('classic game flow', () => {
           maxPlayers: 8,
           revealSeconds: 15,
           countdownSeconds: 3,
-          scoreMaxDistanceKm: 2000
+          scoreMaxDistanceKm: 3000
         }
       })
     ])
@@ -283,7 +283,7 @@ describe('classic game flow', () => {
 
     expect(classic(game)).toMatchObject({ roundsCount: 5, timeLimitSeconds: 120 })
     expect((await answersOf(game.id)).map((round) => round.countryCode)).toEqual(['AR', 'AR', 'AR', 'AR', 'AR'])
-    expect((await Game.find(game.id))!.data).toMatchObject({ settings: { scoreMaxDistanceKm: 2000 } })
+    expect((await Game.find(game.id))!.data).toMatchObject({ settings: { scoreMaxDistanceKm: 3000 } })
   })
 
   it('lets a map override only the score scale of the mode', async () => {
