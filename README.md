@@ -142,7 +142,7 @@ services/   games.ts           servicio genérico: crear, consultar, acciones, h
             battleRoyaleMode.ts motor del modo Battle Royale
             roundBasedMode.ts  mecánica común de los modos multijugador por rondas (reloj compartido,
                                presencia, respuestas, cierre de ronda, vistas, ranking)
-            gameCleanup.ts     limpieza de salas y partidas abandonadas
+            gameCleanup.ts     limpieza de salas, partidas abandonadas y partidas de más de 7 días
             rounds.ts          elección de las rondas de una partida
             maps.ts            mapas del menú y sus lugares (map_places)
             locations.ts       rutina que obtiene una imagen aleatoria dentro de un lugar
@@ -201,7 +201,7 @@ Como el estado vive en el servidor, **una partida se puede seguir desde cualquie
 
 **Agregar un modo:** un valor en `GameMode`, sus modelos (settings, data, view), un motor en `services/<modo>Mode.ts` registrado en `services/gameModes.ts`, su `slug`, `description` e `image` (menú), su ícono en `components/GameModeIcon`, sus pantallas registradas en `components/GameScreen` y sus `settings` fijos en la definición.
 
-**Limpieza** (`services/gameCleanup.ts`, se ejecuta al crear una partida y una vez por día con Vercel Cron): las salas de espera de más de 30 min se borran, y las partidas en curso sin actividad por más tiempo del que define su modo (Clásico: 24 h) se borran o se dan por terminadas, según el modo.
+**Limpieza** (`services/gameCleanup.ts`, se ejecuta al crear una partida y una vez por día con Vercel Cron): las salas de espera de más de 30 min se borran, y las partidas en curso sin actividad por más tiempo del que define su modo (Clásico: 24 h) se borran o se dan por terminadas, según el modo. Además, **sólo se retienen los últimos 7 días**: toda partida (de cualquier estado) creada hace más de 7 días se borra junto con sus `game_players`, por lo que "Mis partidas" y las estadísticas sólo reflejan la última semana.
 
 ### Modo Multijugador
 
@@ -294,7 +294,7 @@ yarn test
 ```
 
 - `tests/unit` — geometría, puntaje, evaluación de respuestas, códigos de invitación, autorización del cron, el cliente de Street View (con `fetch` falso) y la validación de panorámicas.
-- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: mapas con sus lugares, modos con sus reglas fijas, partida completa, retomar una partida, polling con `sinceVersion`, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, modo sin tiempo), rondas puntuadas una sola vez, permisos, historial paginado, limpieza de partidas abandonadas y caché; y la persistencia con bloqueo optimista (reintentos ante escrituras concurrentes); y el multijugador: sala de espera, códigos, límite de jugadores, inicio, mismas rondas para todos, pines ocultos hasta cerrar la ronda, cierre por tiempo o por jugadores desconectados, siguiente ronda, resultados finales, abandono, anfitrión y limpieza; y el Battle Royale: mínimo de jugadores, rondas planificadas, eliminación del más lejano, desempate por el que respondió último, eliminación de quien no respondió o abandonó, rondas sin eliminados y posiciones finales.
+- `tests/flows` — el flujo completo del juego contra SQLite en memoria con un buscador de panorámicas falso y las migraciones reales: mapas con sus lugares, modos con sus reglas fijas, partida completa, retomar una partida, polling con `sinceVersion`, tiempo por ronda (inicio idempotente, tolerancia, respuestas fuera de tiempo, modo sin tiempo), rondas puntuadas una sola vez, permisos, historial paginado, limpieza de partidas (salas, abandonadas y vencidas por retención) y caché; y la persistencia con bloqueo optimista (reintentos ante escrituras concurrentes); y el multijugador: sala de espera, códigos, límite de jugadores, inicio, mismas rondas para todos, pines ocultos hasta cerrar la ronda, cierre por tiempo o por jugadores desconectados, siguiente ronda, resultados finales, abandono, anfitrión y limpieza; y el Battle Royale: mínimo de jugadores, rondas planificadas, eliminación del más lejano, desempate por el que respondió último, eliminación de quien no respondió o abandonó, rondas sin eliminados y posiciones finales.
 
 ## Idiomas (i18n)
 

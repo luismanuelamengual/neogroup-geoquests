@@ -8,6 +8,9 @@ import { updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
 /** Multiplayer games still waiting for players after this long are deleted. */
 export const LOBBY_MAX_AGE_MS = 30 * 60 * 1000
 
+/** Games (of any status) older than this are deleted: only the last 7 days are kept. */
+export const GAME_RETENTION_MS = 7 * 24 * 60 * 60 * 1000
+
 /** Deletes games and their players. */
 export async function deleteGames(gameIds: number[]): Promise<void> {
   if (gameIds.length === 0) {
@@ -24,7 +27,8 @@ export async function deleteGames(gameIds: number[]): Promise<void> {
  *   - multiplayer games waiting for players for more than LOBBY_MAX_AGE_MS → deleted;
  *   - games in progress without activity (no write) for longer than their mode's
  *     `abandonAfterMs` → deleted or finished with the results they had, as the
- *     mode says (`abandonAction`).
+ *     mode says (`abandonAction`);
+ *   - any game created more than GAME_RETENTION_MS ago → deleted (retention).
  *
  * Returns how many games were cleaned up.
  */
@@ -55,6 +59,13 @@ export async function cleanupGames(ctx: GameContext): Promise<number> {
 
     cleaned += abandoned.length
   }
+
+  const expired = await Game.where('createdAt', '<', new Date(now - GAME_RETENTION_MS))
+    .select('id')
+    .get()
+
+  await deleteGames(expired.map((game) => game.id))
+  cleaned += expired.length
 
   return cleaned
 }

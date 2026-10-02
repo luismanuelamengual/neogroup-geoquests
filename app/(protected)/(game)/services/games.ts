@@ -460,10 +460,11 @@ export async function getActiveGame(userId: number, options: GameOptions = {}): 
 }
 
 /**
- * Cleans up the games nobody is playing anymore (scheduled job; it also runs
- * every time a game is created). Returns how many games were cleaned up.
+ * Cleans up the games that are not needed anymore: lobbies nobody started,
+ * abandoned games and games older than the retention period (scheduled job; it
+ * also runs every time a game is created). Returns how many games were cleaned up.
  */
-export async function cleanupAbandonedGames(options: GameOptions = {}): Promise<number> {
+export async function cleanupExpiredGames(options: GameOptions = {}): Promise<number> {
   return cleanupGames(resolveContext(options))
 }
 

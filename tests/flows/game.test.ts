@@ -15,7 +15,7 @@ import { Map as GameMap } from '@/app/(protected)/(game)/models/Map'
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { PlaceLocation } from '@/app/(protected)/(game)/models/PlaceLocation'
 import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
-import { cleanupGames, LOBBY_MAX_AGE_MS } from '@/app/(protected)/(game)/services/gameCleanup'
+import { cleanupGames, GAME_RETENTION_MS, LOBBY_MAX_AGE_MS } from '@/app/(protected)/(game)/services/gameCleanup'
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGame, getGames, getPlayerStats, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import {
@@ -510,6 +510,25 @@ describe('classic game flow', () => {
     await DB.table('games')
       .where('id', game.id)
       .update({ updatedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000) })
+    expect(await cleanupGames(context)).toBe(1)
+    expect(await Game.count()).toBe(0)
+    expect(await GamePlayer.count()).toBe(0)
+  })
+
+  it('deletes the games (and their players) older than the retention period', async () => {
+    const now = new Date()
+    const game = await create()
+
+    await DB.table('games').where('id', game.id).update({ status: GameStatus.FINISHED, finishedAt: now })
+    const context = { now, random: Math.random, finder: new FakePanoramaFinder() }
+
+    // Recent finished games are kept.
+    expect(await cleanupGames(context)).toBe(0)
+    expect(await Game.count()).toBe(1)
+
+    await DB.table('games')
+      .where('id', game.id)
+      .update({ createdAt: new Date(now.getTime() - GAME_RETENTION_MS - 1000) })
     expect(await cleanupGames(context)).toBe(1)
     expect(await Game.count()).toBe(0)
     expect(await GamePlayer.count()).toBe(0)
