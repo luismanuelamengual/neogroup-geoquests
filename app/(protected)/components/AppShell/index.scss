@@ -24,6 +24,7 @@
   .nav {
     display: flex;
     gap: 8px;
+    width: 0;
   }
 
   .nav-link {
@@ -35,6 +36,7 @@
     font-size: 0.9rem;
     letter-spacing: 1px;
     text-transform: uppercase;
+    white-space: nowrap;
     transition:
       color 120ms ease,
       background 120ms ease;
@@ -134,6 +136,7 @@
       padding: 8px 12px calc(8px + var(--safe-bottom));
       border-top: 4px solid var(--color-panel-border);
       background: var(--color-panel);
+      align-items: center;
     }
 
     .tab {
@@ -148,6 +151,7 @@
       font-family: var(--font-display);
       font-size: 0.7rem;
       text-transform: uppercase;
+      text-align: center;
 
       &.active {
         background: var(--color-gold);
