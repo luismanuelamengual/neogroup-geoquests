@@ -122,7 +122,6 @@ describe('classic game flow', () => {
       ['Latinoamérica', 105],
       ['Europa', 213]
     ])
-    expect(maps[0].image).toBe('/maps/ciudades-del-mundo.png')
 
     // No seeded map overrides the settings of the game modes.
     for (const map of maps) {

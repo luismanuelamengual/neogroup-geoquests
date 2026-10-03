@@ -65,7 +65,6 @@ interface SeedMap {
 
 /** Countries whose cities (the ones of "Ciudades del mundo") are part of "Latinoamérica". */
 const LATIN_AMERICA = new Set(['AR', 'CL', 'UY', 'BR', 'MX', 'CO', 'PE'])
-
 /** Countries whose cities (the ones of "Ciudades del mundo") are part of "Europa". */
 const EUROPE = new Set([
   'GB',
@@ -90,7 +89,6 @@ const EUROPE = new Set([
   'GR',
   'TR'
 ])
-
 const LATIN_AMERICA_MAP = 'Latinoamérica'
 const EUROPE_MAP = 'Europa'
 const LANDMARKS_MAP = 'Lugares icónicos'
@@ -105,7 +103,7 @@ const MAPS: SeedMap[] = [
     name: 'Ciudades famosas',
     description:
       'Aparecés en una calle de una de las 20 ciudades más conocidas del mundo. ¿Sabés cuál es y dónde estás?',
-    image: '/maps/ciudades-del-mundo.png',
+    image: null,
     places: (place) => !!place.famous,
     settings: null
   },
@@ -120,7 +118,7 @@ const MAPS: SeedMap[] = [
   {
     name: LANDMARKS_MAP,
     description:
-      'Aparecés junto a un monumento, una maravilla natural o un sitio famoso: del Coliseo a Machu Picchu, de la Torre Eiffel a Uluru. Más de 500 lugares en todo el mundo, así que no se repiten.',
+      'Aparecés junto a un monumento, una maravilla natural o un sitio famoso: del Coliseo a Machu Picchu, de la Torre Eiffel a Uluru. Más de 500 lugares en todo el mundo.',
     image: null,
     places: (place) => place.onlyMap === LANDMARKS_MAP,
     settings: null
@@ -795,7 +793,6 @@ const LATIN_AMERICA_CITIES: PlaceRow[] = [
   ['Santiago de los Caballeros', 'DO', 19.4517, -70.697, 4000],
   ['San Juan', 'PR', 18.4655, -66.1057, 5000]
 ]
-
 /** More cities of Europe, only in "Europa" (not in "Ciudades del mundo"). */
 const EUROPE_CITIES: PlaceRow[] = [
   // Reino Unido e Irlanda
@@ -953,7 +950,6 @@ const EUROPE_CITIES: PlaceRow[] = [
   ['Moscú', 'RU', 55.7558, 37.6173, 9000],
   ['San Petersburgo', 'RU', 59.9343, 30.3351, 8000]
 ]
-
 /**
  * Landmarks: monuments, natural wonders and famous sights. A circle of a few
  * hundred meters around each one (up to a couple of kilometers for the big
@@ -1564,14 +1560,12 @@ const LANDMARKS: PlaceRow[] = [
   ['Glaciar Franz Josef', 'NZ', -43.467, 170.183, 800],
   ['Rocas Moeraki', 'NZ', -45.346, 170.827, 400]
 ]
-
 const PLACES: SeedPlace[] = [
   ...BASE_PLACES,
   ...circlesOf(LATIN_AMERICA_CITIES, LATIN_AMERICA_MAP),
   ...circlesOf(EUROPE_CITIES, EUROPE_MAP),
   ...circlesOf(LANDMARKS, LANDMARKS_MAP)
 ]
-
 /** Rows per INSERT: keeps every statement well under the parameter limits of the databases. */
 const INSERT_CHUNK_SIZE = 100
 
