@@ -3,6 +3,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
+  --avatar-size: 32px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -23,9 +24,10 @@
   }
 
   .avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 0.9rem;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-width: 2px;
+    font-size: calc(var(--avatar-size) * 0.45);
   }
 
   .check {
@@ -39,5 +41,20 @@
     border-radius: 50%;
     background: var(--color-lime);
     color: #111;
+  }
+
+  // Phones: smaller avatars so 8 players fit on one row even on 320px screens
+  @media (max-width: 480px) {
+    --avatar-size: 28px;
+    gap: 4px;
+
+    .check {
+      right: -3px;
+      bottom: -3px;
+      width: 15px;
+      height: 15px;
+      padding: 1px;
+      border-width: 1.5px;
+    }
   }
 }

@@ -12,9 +12,10 @@
     top: calc(84px + var(--safe-top));
     left: 50%;
     z-index: 6;
-    max-width: calc(100% - 32px);
+    width: max-content;
+    max-width: calc(100% - 24px);
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: 20px;
     background: rgba(27, 35, 80, 0.85);
     transform: translateX(-50%);
   }
