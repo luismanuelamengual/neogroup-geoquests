@@ -48,24 +48,11 @@
     .heading {
       flex: 1;
     }
-
-    .join {
-      flex-shrink: 0;
-      min-width: 260px;
-      max-width: 320px;
-    }
   }
 
-  &.mode-3 .header .subtitle {
-    color: var(--color-magenta);
-  }
-
-  &.mode-2 .header .icon {
+  // Multiplayer accent (see utils/modeColor.ts).
+  &.multi .header .icon {
     color: var(--color-cyan);
-  }
-
-  &.mode-3 .header .icon {
-    color: var(--color-magenta);
   }
 
   .maps {
@@ -83,14 +70,6 @@
 
 @media (max-width: 600px) {
   .map-picker {
-    .header {
-      flex-wrap: wrap;
-
-      .join {
-        margin-left: auto;
-      }
-    }
-
     .maps {
       grid-template-columns: 1fr;
     }

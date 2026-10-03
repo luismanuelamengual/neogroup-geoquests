@@ -1,13 +1,9 @@
 .map-card {
-  // Accent of the mode (by mode number; extend when adding modes).
+  // Accent of the mode: gold for single player, cyan for multiplayer (see utils/modeColor.ts).
   --mode-color: var(--color-gold);
 
-  &.mode-2 {
+  &.multi {
     --mode-color: var(--color-cyan);
-  }
-
-  &.mode-3 {
-    --mode-color: var(--color-magenta);
   }
 
   position: relative;

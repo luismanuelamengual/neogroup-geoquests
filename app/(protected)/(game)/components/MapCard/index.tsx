@@ -1,12 +1,14 @@
 'use client'
 
 import './index.scss'
+import classNames from 'classnames'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
 import MapArt from '@/app/(protected)/(game)/components/MapArt'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
+import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsInput'
 import { MapView } from '@/app/(protected)/(game)/models/MapView'
 import { localizeMapDescription, localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
@@ -18,10 +20,12 @@ interface MapCardProps {
   map: MapView
   /** Game mode chosen by the player: the card starts a game of it in this map. */
   mode: GameModeView
+  /** Rules chosen by the player in the map picker. */
+  settings?: GameSettingsInput
 }
 
 /** Card of a map in the map picker of a game mode: its image, its number of places and the button to play it. */
-export default function MapCard({ map, mode }: MapCardProps) {
+export default function MapCard({ map, mode, settings }: MapCardProps) {
   const t = useT()
   const router = useRouter()
   const { createGame } = useGames()
@@ -32,7 +36,7 @@ export default function MapCard({ map, mode }: MapCardProps) {
     setStarting(true)
 
     try {
-      const game = await createGame(map.id, mode.mode)
+      const game = await createGame(map.id, mode.mode, settings)
 
       router.push(`/game/${game.id}`)
     } catch {
@@ -41,7 +45,7 @@ export default function MapCard({ map, mode }: MapCardProps) {
   }
 
   return (
-    <div className={`map-card mode-${mode.mode}`}>
+    <div className={classNames('map-card', { multi: multiplayer })}>
       {starting && <Loading message={multiplayer ? t('picker.preparingRoom') : t('picker.searchingPlaces')} />}
       <div className="art" aria-hidden="true">
         {map.image && map.photos.length === 0 ? (

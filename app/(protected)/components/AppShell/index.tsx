@@ -1,6 +1,7 @@
 'use client'
 
 import './index.scss'
+import GroupsIcon from '@mui/icons-material/Groups'
 import HistoryIcon from '@mui/icons-material/History'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
@@ -24,8 +25,14 @@ import type { MessageKey } from '@/app/i18n/messages'
 
 const NAV_ITEMS: { href: string; labelKey: MessageKey; icon: ReactNode }[] = [
   { href: '/play', labelKey: 'nav.play', icon: <SportsEsportsIcon /> },
+  { href: '/multiplayer', labelKey: 'nav.multiplayer', icon: <GroupsIcon /> },
   { href: '/games', labelKey: 'nav.myGames', icon: <HistoryIcon /> }
 ]
+
+/** Whether a nav item is the current section: its page or any page under it (e.g. /multiplayer/battle-royale). */
+function isActive(pathname: string, href: string): boolean {
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 /**
  * Shell of every authenticated page: a game-like top bar (logo, navigation and
@@ -71,7 +78,7 @@ export default function AppShell({ children, user: initialUser }: { children: Re
             <Link
               key={item.href}
               href={item.href}
-              className={classNames('nav-link', { active: pathname === item.href })}
+              className={classNames('nav-link', { active: isActive(pathname, item.href) })}
             >
               {t(item.labelKey)}
             </Link>
@@ -111,7 +118,11 @@ export default function AppShell({ children, user: initialUser }: { children: Re
       <main className="content">{children}</main>
       <nav className="tabbar">
         {NAV_ITEMS.map((item) => (
-          <Link key={item.href} href={item.href} className={classNames('tab', { active: pathname === item.href })}>
+          <Link
+            key={item.href}
+            href={item.href}
+            className={classNames('tab', { active: isActive(pathname, item.href) })}
+          >
             {item.icon}
             <span>{t(item.labelKey)}</span>
           </Link>

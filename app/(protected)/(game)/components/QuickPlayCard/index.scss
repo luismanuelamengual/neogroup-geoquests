@@ -1,11 +1,25 @@
-.game-mode-card {
-  // Accent of the mode: gold for single player, cyan for multiplayer (see utils/modeColor.ts).
+.quick-play {
+  display: flex;
+
+  // Over the app bar, like the one of the map cards.
+  .loading-screen {
+    position: fixed;
+    z-index: 1400;
+  }
+}
+
+.quick-play-card {
+  // Single player accent (see utils/modeColor.ts).
   --mode-color: var(--color-gold);
   --mode-color-dark: var(--color-gold-dark);
 
   position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   border: 4px solid var(--color-panel-border);
   border-radius: 26px;
@@ -14,12 +28,14 @@
     0 10px 0 rgba(0, 0, 0, 0.45),
     0 20px 40px rgba(0, 0, 0, 0.35);
   color: var(--color-text);
-  text-decoration: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   transition:
     border-color 160ms ease,
     transform 160ms ease;
 
-  &:hover,
+  &:hover:not(:disabled),
   &:focus-visible {
     border-color: var(--mode-color);
     transform: translateY(-3px);
@@ -29,9 +45,8 @@
     }
   }
 
-  &.multi {
-    --mode-color: var(--color-cyan);
-    --mode-color-dark: var(--color-cyan-dark);
+  &:disabled {
+    cursor: progress;
   }
 
   .art {
@@ -39,17 +54,19 @@
     display: block;
     height: 200px;
     overflow: hidden;
-    background: linear-gradient(180deg, #3b1d8f 0%, #b93a8c 55%, #ff9e5e 100%);
+    background: var(--color-night-light);
 
     .image {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center 30%;
     }
   }
 
   .badge {
     position: absolute;
+    z-index: 1;
     bottom: 12px;
     left: 16px;
     display: flex;
@@ -80,7 +97,15 @@
     color: var(--mode-color);
     font-family: var(--font-display);
     font-size: 1.7rem;
+    line-height: 1.1;
     text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+  }
+
+  .map {
+    margin-top: -6px;
+    color: var(--color-text);
+    font-weight: 800;
+    font-size: 1.05rem;
   }
 
   .description {
@@ -118,7 +143,7 @@
 }
 
 @media (max-width: 600px) {
-  .game-mode-card {
+  .quick-play-card {
     .art {
       height: 160px;
     }

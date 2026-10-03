@@ -11,10 +11,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Second step of the "Jugar" menu: the rules and the maps of a single player
- * mode. A multiplayer mode is sent to its page in the "Multijugador" menu.
+ * Second step of the "Multijugador" menu: the rules and the maps of a
+ * multiplayer mode. A single player mode is sent to its page in "Jugar".
  */
-export default async function PlayModePage({ params }: { params: Promise<{ mode: string }> }) {
+export default async function MultiplayerModePage({ params }: { params: Promise<{ mode: string }> }) {
   const { mode: slug } = await params
   const t = await getT()
   const mode = getGameModes(t).find((item) => item.slug === slug)
@@ -23,7 +23,7 @@ export default async function PlayModePage({ params }: { params: Promise<{ mode:
     notFound()
   }
 
-  if (mode.maxPlayers > 1) {
+  if (mode.maxPlayers === 1) {
     redirect(getModePath(mode))
   }
 

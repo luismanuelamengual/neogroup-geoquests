@@ -1,19 +1,20 @@
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import type { GameButtonColor } from '@/app/components/GameButton'
 
-/**
- * Accent color of each game mode. It is the color of the mode in the main
- * menu and the one of its main buttons in every screen of the mode, so the
- * player always knows where he is: Classic → gold, With friends → cyan,
- * Battle Royale → magenta (the red of the menu).
- */
-const MODE_COLORS: Record<GameMode, GameButtonColor> = {
-  [GameMode.CLASSIC]: 'gold',
-  [GameMode.CLASSIC_MULTIPLAYER]: 'cyan',
-  [GameMode.BATTLE_ROYALE]: 'magenta'
+/** Modes played alone; every other mode is multiplayer. */
+const SINGLE_PLAYER_MODES = new Set<GameMode>([GameMode.CLASSIC])
+
+/** Whether a mode is played with other players. */
+export function isMultiplayerMode(mode: GameMode | undefined | null): boolean {
+  return mode != null && !SINGLE_PLAYER_MODES.has(mode)
 }
 
-/** Accent color of a mode (gold when the mode is unknown). */
+/**
+ * Accent color of a game mode: gold for the single player modes, cyan for
+ * the multiplayer ones. It is the color of the mode in the main menu and the
+ * one of its main buttons in every screen of the mode, so the player always
+ * knows whether he plays alone or with others. Gold when the mode is unknown.
+ */
 export function getModeColor(mode: GameMode | undefined | null): GameButtonColor {
-  return (mode != null && MODE_COLORS[mode]) || 'gold'
+  return isMultiplayerMode(mode) ? 'cyan' : 'gold'
 }

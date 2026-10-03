@@ -167,7 +167,7 @@ export async function createGame(userId: number, input: CreateGameInput, options
     throw new ApiException('errors.alreadyInMultiplayerGame', 409)
   }
 
-  const settings = getGameSettings(engine, map)
+  const settings = getGameSettings(engine, map, input?.settings)
   const data = await engine.create(mapId, settings, ctx)
 
   await cleanupGames(ctx)

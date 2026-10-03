@@ -29,6 +29,7 @@ const definition: GameModeDefinition<ClassicGameSettings> = {
   maxPlayers: 1,
   realtime: false,
   settings: { rounds: 5, timeLimitSeconds: 180, scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM },
+  configurable: { rounds: [3, 5, 10], timeLimitSeconds: [30, 60, 120, 180, 300, null] },
   // Left unfinished for a day: deleted (as before the game modes existed).
   abandonAfterMs: 24 * 60 * 60 * 1000,
   abandonAction: 'delete'

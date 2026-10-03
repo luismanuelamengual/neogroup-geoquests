@@ -27,8 +27,8 @@ import { ApiException } from '@/app/models/ApiException'
 
 const definition: GameModeDefinition<ClassicMultiplayerGameSettings> = {
   mode: GameMode.CLASSIC_MULTIPLAYER,
-  slug: 'multiplayer',
-  name: 'Con amigos',
+  slug: 'friends',
+  name: 'Partida Clásica',
   description: 'De 2 a 8 jugadores, las mismas calles al mismo tiempo. Gana el que más se acerque.',
   image: '/modes/multiplayer.png',
   minPlayers: 2,
@@ -42,6 +42,7 @@ const definition: GameModeDefinition<ClassicMultiplayerGameSettings> = {
     countdownSeconds: 3,
     scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM
   },
+  configurable: { rounds: [3, 5, 10], timeLimitSeconds: [30, 60, 120, 180, 300] },
   // Nobody asked for the game in 5 minutes (every round writes while someone plays): finished as it is.
   abandonAfterMs: 5 * 60 * 1000,
   abandonAction: 'finish'

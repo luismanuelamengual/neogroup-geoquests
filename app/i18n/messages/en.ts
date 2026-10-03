@@ -12,12 +12,14 @@ export const en: Messages = {
   },
   nav: {
     play: 'Play',
+    multiplayer: 'Multiplayer',
     myGames: 'My games',
     myProfile: 'My profile',
     logout: 'Sign out'
   },
   metadata: {
     mainMenu: 'Main menu',
+    multiplayer: 'Multiplayer',
     invitation: 'Invitation',
     game: 'Game',
     chooseWhere: 'Choose where to play',
@@ -128,7 +130,22 @@ export const en: Messages = {
   home: {
     greeting: 'Hi, {name}!',
     title: 'How do you want to play?',
-    noModes: 'There are no game modes available yet.'
+    noModes: 'There are no game modes available yet.',
+    subtitle: 'Single player: play solo, at your own pace.',
+    quickPlay: 'Quick game',
+    playNow: 'Play now',
+    customClassic: {
+      name: 'Custom classic game',
+      description: 'Choose the map, the number of rounds and the time per round, and play solo, at your own pace.'
+    }
+  },
+  multiplayerMenu: {
+    greeting: 'Multiplayer',
+    title: 'Play with your friends',
+    subtitle: 'Everybody on the same streets, at the same time.',
+    joinTitle: 'Were you invited to a game?',
+    joinText: 'Enter the code you were given and join the room.',
+    createTitle: 'Create your own room'
   },
   modes: {
     classic: {
@@ -136,8 +153,8 @@ export const en: Messages = {
       description:
         'Play solo, at your own pace: you land on a street somewhere in the world and have to guess where you are.'
     },
-    multiplayer: {
-      name: 'With friends',
+    friends: {
+      name: 'Classic game',
       description: '2 to 8 players, the same streets at the same time. Whoever gets closest wins.'
     },
     'battle-royale': {
@@ -151,6 +168,7 @@ export const en: Messages = {
     elimination: 'Elimination',
     timePerRound: '{time} per round',
     noTime: 'No time limit',
+    configurable: 'Custom rules',
     choose: 'Choose'
   },
   maps: {
@@ -193,6 +211,9 @@ export const en: Messages = {
   },
   picker: {
     chooseWhere: 'Choose where to play',
+    rules: 'Game rules',
+    rounds: 'Rounds',
+    timePerRound: 'Time per round',
     noMaps: 'There are no maps to play yet.',
     places: { one: '{count} place', other: '{count} places' },
     createRoom: 'Create room',

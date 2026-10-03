@@ -14,6 +14,7 @@ import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
+import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatPosition, getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance } from '@/app/(protected)/(game)/utils/score'
@@ -122,7 +123,7 @@ export default function BattleRoyaleGameSummary() {
           >
             {t('game.anotherGame')}
           </GameButton>
-          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">
+          <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href={MULTIPLAYER_MENU_PATH}>
             {t('common.menu')}
           </GameButton>
         </div>

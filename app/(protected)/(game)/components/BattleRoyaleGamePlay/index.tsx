@@ -15,6 +15,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { useNow } from '@/app/(protected)/(game)/hooks/useNow'
 import { BattleRoyaleGameView } from '@/app/(protected)/(game)/models/BattleRoyaleGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import GamePanel from '@/app/components/GamePanel'
@@ -119,7 +120,7 @@ export default function BattleRoyaleGamePlay() {
     try {
       await leaveGame(game.id)
     } finally {
-      router.push('/play')
+      router.push(MULTIPLAYER_MENU_PATH)
     }
   }
 

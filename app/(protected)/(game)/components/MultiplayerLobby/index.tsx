@@ -13,6 +13,7 @@ import { MultiplayerGameView } from '@/app/(protected)/(game)/models/Multiplayer
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
+import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
 import { useUserStore } from '@/app/(protected)/stores/users'
@@ -60,7 +61,7 @@ export default function MultiplayerLobby() {
 
     try {
       await leaveGame(game.id)
-      router.push('/play')
+      router.push(MULTIPLAYER_MENU_PATH)
     } catch {
       setLeaving(false)
     }

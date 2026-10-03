@@ -3,6 +3,7 @@
 import { useCallback } from 'react'
 import { GameAction } from '@/app/(protected)/(game)/models/GameAction'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
+import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsInput'
 import { GamesPage } from '@/app/(protected)/(game)/models/GamesPage'
 import { GameSyncResponse } from '@/app/(protected)/(game)/models/GameSyncResponse'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
@@ -12,7 +13,8 @@ import { useRequests } from '@/app/hooks/useRequests'
 export function useGames() {
   const executeRequest = useRequests()
   const createGame = useCallback(
-    (mapId: number, mode: GameMode): Promise<GameView> => executeRequest<GameView>('/createGame', { mapId, mode }),
+    (mapId: number, mode: GameMode, settings?: GameSettingsInput): Promise<GameView> =>
+      executeRequest<GameView>('/createGame', { mapId, mode, settings }),
     [executeRequest]
   )
   const getGame = useCallback(

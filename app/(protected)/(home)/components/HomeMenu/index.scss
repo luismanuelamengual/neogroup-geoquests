@@ -24,11 +24,18 @@
       font-weight: 400;
       text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
     }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--color-gold);
+      font-weight: 800;
+    }
   }
 
+  // At most two columns: the quick games and the custom game as a 2×2 grid.
   .modes {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(max(300px, calc((100% - 28px) / 2)), 1fr));
     gap: 28px;
     align-items: stretch;
   }

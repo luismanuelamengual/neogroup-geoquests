@@ -5,6 +5,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
+import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import { useT } from '@/app/i18n/I18nProvider'
@@ -43,7 +44,7 @@ export default function JoinGameInvitation({ code }: { code: string }) {
         <GameButton size="large" fullWidth startIcon={<GroupAddIcon />} loading={joining} onClick={handleJoin}>
           {t('invitation.join')}
         </GameButton>
-        <GameButton color="ghost" fullWidth href="/play">
+        <GameButton color="ghost" fullWidth href={MULTIPLAYER_MENU_PATH}>
           {t('invitation.goToMenu')}
         </GameButton>
       </GamePanel>

@@ -1,0 +1,10 @@
+/**
+ * Rules of a game mode that the player can choose when creating a game, with
+ * the values allowed for each one. A missing field cannot be changed: the
+ * default of the mode (GameModeDefinition.settings) is used.
+ */
+export interface GameSettingsOptions {
+  rounds?: number[]
+  /** Time limit of each round in seconds (null = no limit). */
+  timeLimitSeconds?: (number | null)[]
+}

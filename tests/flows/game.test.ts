@@ -153,7 +153,6 @@ describe('classic game flow', () => {
     const placesOf = async (name: string) => getMapPlaces(maps.find((map) => map.name === name)!.id)
     const world = await getMapPlaces(maps[1].id)
     const worldIds = new Set(world.map((place) => place.id))
-
     const latinAmerica = await placesOf('Latinoamérica')
     const europe = await placesOf('Europa')
     const landmarks = await placesOf('Lugares icónicos')
@@ -214,8 +213,8 @@ describe('classic game flow', () => {
       }),
       expect.objectContaining({
         mode: GameMode.CLASSIC_MULTIPLAYER,
-        slug: 'multiplayer',
-        name: 'Con amigos',
+        slug: 'friends',
+        name: 'Partida Clásica',
         minPlayers: 2,
         maxPlayers: 8,
         settings: {

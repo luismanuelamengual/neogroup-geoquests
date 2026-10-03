@@ -1,4 +1,4 @@
-/** Settings of a classic game (fixed in the definition of the mode). */
+/** Settings of a classic game (the defaults of the mode, with the rules chosen by the player). */
 export interface ClassicGameSettings {
   rounds: number
   /** Time limit of each round in seconds (null = no limit). */

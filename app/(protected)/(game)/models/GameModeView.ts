@@ -1,10 +1,11 @@
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameSettings } from '@/app/(protected)/(game)/models/GameSettings'
+import { GameSettingsOptions } from '@/app/(protected)/(game)/models/GameSettingsOptions'
 
 /** A game mode as shown in the main menu (the first choice of the player). */
 export interface GameModeView {
   mode: GameMode
-  /** Identifier in URLs (/play/[slug]). */
+  /** Identifier in URLs (/play/[slug], /multiplayer/[slug]). */
   slug: string
   name: string
   description: string
@@ -12,6 +13,8 @@ export interface GameModeView {
   image: string
   minPlayers: number
   maxPlayers: number
-  /** Rules of the mode (rounds, time limit...): fixed, the same in every map. */
+  /** Default rules of the mode (rounds, time limit...). */
   settings: GameSettings
+  /** Rules the player can choose when creating a game, with their allowed values. */
+  configurable: GameSettingsOptions
 }

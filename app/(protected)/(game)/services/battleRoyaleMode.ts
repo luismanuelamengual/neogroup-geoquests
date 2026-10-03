@@ -49,6 +49,7 @@ const definition: GameModeDefinition<BattleRoyaleGameSettings> = {
     countdownSeconds: 3,
     scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM
   },
+  configurable: { timeLimitSeconds: [30, 60, 120, 180, 300] },
   // Nobody asked for the game in 5 minutes (every round writes while someone plays): finished as it is.
   abandonAfterMs: 5 * 60 * 1000,
   abandonAction: 'finish'

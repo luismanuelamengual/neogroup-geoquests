@@ -1,10 +1,11 @@
 import { GameAbandonAction } from '@/app/(protected)/(game)/models/GameAbandonAction'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
+import { GameSettingsOptions } from '@/app/(protected)/(game)/models/GameSettingsOptions'
 
 /** Static description of a game mode: what the generic game services need to know about it. */
 export interface GameModeDefinition<Settings = unknown> {
   mode: GameMode
-  /** Identifier of the mode in URLs (e.g. "classic" → /play/classic). Always in English, like every path. */
+  /** Identifier of the mode in URLs (e.g. "classic" → /play/classic, "battle-royale" → /multiplayer/battle-royale). Always in English, like every path. */
   slug: string
   /** Name shown to the players (e.g. "Clásico"). */
   name: string
@@ -18,8 +19,14 @@ export interface GameModeDefinition<Settings = unknown> {
   maxPlayers: number
   /** Whether the players' screens must be kept in sync (polling). */
   realtime: boolean
-  /** Rules of the mode (rounds, time limit...): fixed, the same in every map (only `scoreMaxDistanceKm` can be overridden by a map). */
+  /**
+   * Default rules of the mode (rounds, time limit...). The player can change
+   * the ones in `configurable` when creating a game, and a map can override
+   * `scoreMaxDistanceKm`.
+   */
   settings: Settings
+  /** Rules the player can choose when creating a game, with their allowed values. */
+  configurable: GameSettingsOptions
   /** A game in progress without any write for this long is considered abandoned. */
   abandonAfterMs: number
   abandonAction: GameAbandonAction

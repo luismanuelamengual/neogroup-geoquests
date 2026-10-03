@@ -1,0 +1,120 @@
+.multiplayer-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 16px 40px;
+
+  .hero {
+    text-align: center;
+
+    .greeting {
+      margin: 0 0 4px;
+      color: var(--color-cyan);
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .title {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 400;
+      text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--color-text-secondary);
+      font-weight: 800;
+    }
+  }
+
+  // Joining a friend's game: the same for every mode, so it is not inside any.
+  .join-panel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 22px;
+    border: 4px solid var(--color-cyan);
+    border-radius: 22px;
+    background: var(--color-panel);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .join-icon {
+    flex-shrink: 0;
+    color: var(--color-cyan);
+    font-size: 2.6rem;
+  }
+
+  .join-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .join-title {
+    margin: 0;
+    color: var(--color-cyan);
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 400;
+  }
+
+  .join-hint {
+    margin: 4px 0 0;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+
+  .join-button {
+    flex-shrink: 0;
+    min-width: 240px;
+  }
+
+  .section-title {
+    margin: 8px 0 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--color-cyan);
+    color: var(--color-cyan);
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-weight: 400;
+    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+  }
+
+  .modes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  .no-modes {
+    margin: 0;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .multiplayer-menu {
+    padding-top: 20px;
+
+    .join-panel {
+      flex-wrap: wrap;
+    }
+
+    .join-button {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .modes {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+}

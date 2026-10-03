@@ -2,6 +2,7 @@ import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeEngine } from '@/app/(protected)/(game)/models/GameModeEngine'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import { GameSettings } from '@/app/(protected)/(game)/models/GameSettings'
+import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsInput'
 import { Map } from '@/app/(protected)/(game)/models/Map'
 import { battleRoyaleMode } from '@/app/(protected)/(game)/services/battleRoyaleMode'
 import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
@@ -48,7 +49,7 @@ export function getGameModeEngines(): GameModeEngine[] {
 
 /**
  * The game modes of the main menu (the first choice of the player): every
- * registered mode, with its fixed rules (rounds, time limit...).
+ * registered mode, with its default rules and the ones the player can choose.
  */
 export function getGameModes(t?: Translator): GameModeView[] {
   return getGameModeEngines()
@@ -60,18 +61,43 @@ export function getGameModes(t?: Translator): GameModeView[] {
       image: definition.image,
       minPlayers: definition.minPlayers,
       maxPlayers: definition.maxPlayers,
-      settings: definition.settings as GameSettings
+      settings: definition.settings as GameSettings,
+      configurable: definition.configurable
     }))
     .sort((a, b) => a.mode - b.mode)
 }
 
+/** `value` when it is one of the `allowed` values; otherwise `fallback`. */
+function pickAllowed<T>(value: unknown, allowed: T[] | undefined, fallback: T): T {
+  return allowed && value !== undefined && allowed.includes(value as T) ? (value as T) : fallback
+}
+
 /**
- * Settings of a new game of a mode played in a map: the fixed settings of the
- * mode, except the score scale, which the map can override (it depends on the
- * size of its region).
+ * Settings of a new game of a mode played in a map: the defaults of the mode,
+ * with the rules chosen by the player (only the configurable ones, and only
+ * with an allowed value: anything else keeps the default), and the score
+ * scale of the map when it defines one (it depends on the size of its region).
  */
-export function getGameSettings<Settings>(engine: GameModeEngine<unknown, Settings>, map: Map): Settings {
-  const { settings } = engine.definition
+export function getGameSettings<Settings>(
+  engine: GameModeEngine<unknown, Settings>,
+  map: Map,
+  input?: GameSettingsInput | null
+): Settings {
+  const { settings: defaults, configurable } = engine.definition
+  const settings = { ...defaults } as Settings & { rounds?: number; timeLimitSeconds?: number | null }
+
+  if (configurable.rounds && settings.rounds !== undefined) {
+    settings.rounds = pickAllowed(input?.rounds, configurable.rounds, settings.rounds)
+  }
+
+  if (configurable.timeLimitSeconds && settings.timeLimitSeconds !== undefined) {
+    settings.timeLimitSeconds = pickAllowed(
+      input?.timeLimitSeconds,
+      configurable.timeLimitSeconds,
+      settings.timeLimitSeconds
+    )
+  }
+
   const scoreMaxDistanceKm = Number(map.settings?.scoreMaxDistanceKm)
 
   return Number.isFinite(scoreMaxDistanceKm) && scoreMaxDistanceKm > 0 ? { ...settings, scoreMaxDistanceKm } : settings

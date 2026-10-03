@@ -15,12 +15,14 @@ export const es = {
   },
   nav: {
     play: 'Jugar',
+    multiplayer: 'Multijugador',
     myGames: 'Mis partidas',
     myProfile: 'Mi perfil',
     logout: 'Cerrar sesión'
   },
   metadata: {
     mainMenu: 'Menú principal',
+    multiplayer: 'Multijugador',
     invitation: 'Invitación',
     game: 'Partida',
     chooseWhere: 'Elegí dónde jugar',
@@ -131,15 +133,30 @@ export const es = {
   home: {
     greeting: '¡Hola, {name}!',
     title: '¿Cómo querés jugar?',
-    noModes: 'Todavía no hay modos de juego disponibles.'
+    noModes: 'Todavía no hay modos de juego disponibles.',
+    subtitle: 'Un jugador: jugá solo, a tu ritmo.',
+    quickPlay: 'Partida rápida',
+    playNow: 'Jugar ya',
+    customClassic: {
+      name: 'Partida clásica personalizada',
+      description: 'Elegí el mapa, la cantidad de rondas y el tiempo por ronda, y jugá solo, a tu ritmo.'
+    }
+  },
+  multiplayerMenu: {
+    greeting: 'Multijugador',
+    title: 'Jugá con tus amigos',
+    subtitle: 'Todos las mismas calles, al mismo tiempo.',
+    joinTitle: '¿Te invitaron a una partida?',
+    joinText: 'Ingresá el código que te pasaron y entrá a la sala.',
+    createTitle: 'Creá tu propia sala'
   },
   modes: {
     classic: {
       name: 'Clásico',
       description: 'Jugá solo, a tu ritmo: aparecés en una calle del mundo y tenés que adivinar dónde estás.'
     },
-    multiplayer: {
-      name: 'Con amigos',
+    friends: {
+      name: 'Partida Clásica',
       description: 'De 2 a 8 jugadores, las mismas calles al mismo tiempo. Gana el que más se acerque.'
     },
     'battle-royale': {
@@ -153,6 +170,7 @@ export const es = {
     elimination: 'Eliminación',
     timePerRound: '{time} por ronda',
     noTime: 'Sin tiempo',
+    configurable: 'Reglas a elección',
     choose: 'Elegir'
   },
   maps: {
@@ -196,6 +214,9 @@ export const es = {
   },
   picker: {
     chooseWhere: 'Elegí dónde jugar',
+    rules: 'Reglas de la partida',
+    rounds: 'Rondas',
+    timePerRound: 'Tiempo por ronda',
     noMaps: 'Todavía no hay mapas para jugar.',
     places: { one: '{count} lugar', other: '{count} lugares' },
     createRoom: 'Crear sala',
