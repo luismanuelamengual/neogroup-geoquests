@@ -52,11 +52,11 @@ export default function InstallAppBanner() {
       severity="info"
       icon={<GetAppIcon fontSize="inherit" />}
       action={
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <div className="install-actions">
           <Button className="install-button" color="secondary" variant="contained" size="small" onClick={promptInstall}>
             {t('pwa.install')}
           </Button>
-          <IconButton color="inherit" size="small" onClick={dismiss} aria-label={t('common.close')}>
+          <IconButton className="install-close" color="inherit" size="small" onClick={dismiss} aria-label={t('common.close')}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
         </div>
