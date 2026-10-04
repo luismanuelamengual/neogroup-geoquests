@@ -58,7 +58,7 @@ interface SeedMap {
   /**
    * Settings of the map that override the ones of the game modes (e.g.
    * `{ scoreMaxDistanceKm: 3500 }`, see MapSettings). Null: the ones of the
-   * modes, as in every seeded map.
+   * modes.
    */
   settings: MapSettings | null
 }
@@ -92,10 +92,29 @@ const EUROPE = new Set([
 const LATIN_AMERICA_MAP = 'Latinoamérica'
 const EUROPE_MAP = 'Europa'
 const LANDMARKS_MAP = 'Lugares icónicos'
+/**
+ * `scoreMaxDistanceKm` of the maps (distance from which a guess scores 0),
+ * proportional to the area each map covers: tens of km would be too strict for
+ * a country, thousands too permissive. World-wide maps use about the same
+ * maximum distance as GeoGuessr's world map (~15000 km, the antipodes being
+ * 20000 km away).
+ */
+const WORLD_SCORE_MAX_DISTANCE_KM = 10000
+const LATIN_AMERICA_SCORE_MAX_DISTANCE_KM = 6000 // Tijuana - Ushuaia: ~9000 km
+const UNITED_STATES_SCORE_MAX_DISTANCE_KM = 3000 // Coast to coast: ~4500 km
+const EUROPE_SCORE_MAX_DISTANCE_KM = 3000 // Reikiavik - Athens: ~3700 km
+const ARGENTINA_SCORE_MAX_DISTANCE_KM = 2200 // La Quiaca - Río Gallegos: ~3500 km
+const SPAIN_SCORE_MAX_DISTANCE_KM = 800 // Galicia - Almería: ~850 km
 
 /** A map of a whole country: its only place is the country itself. */
-function countryMap(name: string, description: string): SeedMap {
-  return { name, description, image: null, places: (place) => place.onlyMap === name, settings: null }
+function countryMap(name: string, description: string, scoreMaxDistanceKm: number): SeedMap {
+  return {
+    name,
+    description,
+    image: null,
+    places: (place) => place.onlyMap === name,
+    settings: { scoreMaxDistanceKm }
+  }
 }
 
 const MAPS: SeedMap[] = [
@@ -105,7 +124,7 @@ const MAPS: SeedMap[] = [
       'Aparecés en una calle de una de las 20 ciudades más conocidas del mundo. ¿Sabés cuál es y dónde estás?',
     image: null,
     places: (place) => !!place.famous,
-    settings: null
+    settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   {
     name: 'Ciudades del mundo',
@@ -113,7 +132,7 @@ const MAPS: SeedMap[] = [
       '150 ciudades de 36 países: capitales, pero también ciudades medianas y chicas. ¿Te animás a reconocerlas?',
     image: null,
     places: (place) => !place.onlyMap,
-    settings: null
+    settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   {
     name: LANDMARKS_MAP,
@@ -121,16 +140,22 @@ const MAPS: SeedMap[] = [
       'Aparecés junto a un monumento, una maravilla natural o un sitio famoso: del Coliseo a Machu Picchu, de la Torre Eiffel a Uluru. Más de 500 lugares en todo el mundo.',
     image: null,
     places: (place) => place.onlyMap === LANDMARKS_MAP,
-    settings: null
+    settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   countryMap(
     'Argentina',
-    'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?'
+    'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?',
+    ARGENTINA_SCORE_MAX_DISTANCE_KM
   ),
-  countryMap('España', 'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?'),
+  countryMap(
+    'España',
+    'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?',
+    SPAIN_SCORE_MAX_DISTANCE_KM
+  ),
   countryMap(
     'Estados Unidos',
-    'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?'
+    'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?',
+    UNITED_STATES_SCORE_MAX_DISTANCE_KM
   ),
   {
     name: LATIN_AMERICA_MAP,
@@ -138,7 +163,7 @@ const MAPS: SeedMap[] = [
       'De México a Ushuaia: más de 100 ciudades latinoamericanas, desde las grandes capitales hasta pueblos chicos. ¿Reconocés dónde estás?',
     image: null,
     places: (place) => place.onlyMap === LATIN_AMERICA_MAP || (!place.onlyMap && LATIN_AMERICA.has(place.countryCode)),
-    settings: null
+    settings: { scoreMaxDistanceKm: LATIN_AMERICA_SCORE_MAX_DISTANCE_KM }
   },
   {
     name: EUROPE_MAP,
@@ -146,7 +171,7 @@ const MAPS: SeedMap[] = [
       'Más de 200 ciudades europeas, de Reikiavik a Atenas y de Lisboa a Moscú: capitales, pero también ciudades medianas y chicas. ¿Te animás?',
     image: null,
     places: (place) => place.onlyMap === EUROPE_MAP || (!place.onlyMap && EUROPE.has(place.countryCode)),
-    settings: null
+    settings: { scoreMaxDistanceKm: EUROPE_SCORE_MAX_DISTANCE_KM }
   }
 ]
 
