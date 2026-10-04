@@ -32,11 +32,54 @@
     }
   }
 
-  // At most two columns: the quick games and the custom game as a 2×2 grid.
+  .menu-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 400;
+    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+
+    .section-icon {
+      color: var(--color-gold);
+      font-size: 1.6rem;
+    }
+  }
+
+  .section-subtitle {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-weight: 700;
+  }
+
+  // The game modes: at most two columns.
   .modes {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(max(300px, calc((100% - 28px) / 2)), 1fr));
     gap: 28px;
+    align-items: stretch;
+  }
+
+  // The quick games: three compact cards in a row.
+  .quick-plays {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
     align-items: stretch;
   }
 
@@ -54,6 +97,31 @@
     .modes {
       grid-template-columns: 1fr;
       gap: 24px;
+    }
+  }
+}
+
+// Narrow screens: the quick games scroll sideways (bleeding to the screen
+// edges), with room above and below for the hover lift and the card shadow.
+@media (max-width: 860px) {
+  .home-menu .quick-plays {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(250px, 70%);
+    gap: 18px;
+    margin: -6px -16px 0;
+    padding: 6px 16px 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > * {
+      scroll-snap-align: start;
     }
   }
 }

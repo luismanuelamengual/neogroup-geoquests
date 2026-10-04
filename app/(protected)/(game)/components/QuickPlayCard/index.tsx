@@ -16,6 +16,8 @@ import { useT } from '@/app/i18n/I18nProvider'
 /**
  * Main menu card of a quick game: a single player classic game with fixed
  * rules in a fixed map, which starts right away (no map picker, no rules).
+ * Compact: the cards are shown together under the "Partida rápida" section
+ * of the menu, so each one is titled with its map.
  */
 export default function QuickPlayCard({ quickPlay }: { quickPlay: QuickPlayView }) {
   const t = useT()
@@ -52,8 +54,7 @@ export default function QuickPlayCard({ quickPlay }: { quickPlay: QuickPlayView 
           </span>
         </span>
         <span className="content">
-          <span className="name">{t('home.quickPlay')}</span>
-          <span className="map">{localizeMapName(t, map.name)}</span>
+          <span className="name">{localizeMapName(t, map.name)}</span>
           <span className="description">{localizeMapDescription(t, map.name, map.description)}</span>
           <span className="tags">
             <span className="tag">{t('modes.rounds', { count: settings.rounds })}</span>

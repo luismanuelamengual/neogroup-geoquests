@@ -13,7 +13,7 @@ import { useRequests } from '@/app/hooks/useRequests'
 export function useGames() {
   const executeRequest = useRequests()
   const createGame = useCallback(
-    (mapId: number, mode: GameMode, settings?: GameSettingsInput): Promise<GameView> =>
+    (mapId: number | null, mode: GameMode, settings?: GameSettingsInput): Promise<GameView> =>
       executeRequest<GameView>('/createGame', { mapId, mode, settings }),
     [executeRequest]
   )

@@ -238,6 +238,16 @@ describe('classic game flow', () => {
           countdownSeconds: 3,
           scoreMaxDistanceKm: 3000
         }
+      }),
+      expect.objectContaining({
+        mode: GameMode.DETECTIVE,
+        slug: 'detective',
+        name: 'Detective',
+        minPlayers: 1,
+        maxPlayers: 1,
+        mapName: 'Lugares icónicos',
+        settings: { hops: 5, options: 4, witnesses: 3, minHopKm: 500 },
+        configurable: {}
       })
     ])
   })

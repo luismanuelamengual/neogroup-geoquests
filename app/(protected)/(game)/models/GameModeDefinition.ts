@@ -17,6 +17,12 @@ export interface GameModeDefinition<Settings = unknown> {
   minPlayers: number
   /** Most players a game can have (1 = single player). */
   maxPlayers: number
+  /**
+   * Name of the only map the mode is played in (e.g. the detective mode needs
+   * the landmarks of "Lugares icónicos", which have clues). Missing: the
+   * player chooses the map.
+   */
+  mapName?: string
   /** Whether the players' screens must be kept in sync (polling). */
   realtime: boolean
   /**

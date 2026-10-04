@@ -1,0 +1,159 @@
+.speech-bubble {
+  --bubble-ink: #1a1530;
+  --bubble-paper: #fffdf5;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px 14px;
+  border: 3px solid var(--bubble-ink);
+  border-radius: 22px;
+  background: var(--bubble-paper);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.35);
+  color: var(--bubble-ink);
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: default;
+  transform-origin: 50% 100%;
+  animation: speech-bubble-pop 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &.typing {
+    cursor: pointer;
+  }
+
+  .speaker {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-magenta-dark);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  // The full text keeps the size of the bubble; the typed one is drawn over it.
+  .text {
+    position: relative;
+    display: block;
+
+    .full {
+      visibility: hidden;
+    }
+
+    .typed {
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &:not(.typing) .text {
+    .full {
+      visibility: visible;
+    }
+
+    .typed {
+      display: none;
+    }
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    background: var(--bubble-ink);
+    animation: speech-bubble-caret 600ms steps(1, end) infinite;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  // Tail: a dark triangle (the outline) with a light one inside.
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+  }
+
+  &::before {
+    bottom: -20px;
+    border-width: 20px 14px 0;
+    border-color: var(--bubble-ink) transparent transparent;
+  }
+
+  &::after {
+    bottom: -14px;
+    border-width: 15px 10px 0;
+    border-color: var(--bubble-paper) transparent transparent;
+  }
+
+  &.tail-left {
+    &::before {
+      left: 28px;
+    }
+
+    &::after {
+      left: 32px;
+    }
+  }
+
+  &.tail-center {
+    &::before {
+      left: calc(50% - 14px);
+    }
+
+    &::after {
+      left: calc(50% - 10px);
+    }
+  }
+
+  &.tail-right {
+    &::before {
+      right: 28px;
+    }
+
+    &::after {
+      right: 32px;
+    }
+  }
+}
+
+// With the individual `scale` / `translate` properties (not `transform`), so
+// it never overrides how a parent positions the bubble.
+@keyframes speech-bubble-pop {
+  from {
+    opacity: 0;
+    scale: 0.85;
+    translate: 0 8px;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes speech-bubble-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speech-bubble {
+    animation: none;
+
+    .caret {
+      animation: none;
+    }
+  }
+}

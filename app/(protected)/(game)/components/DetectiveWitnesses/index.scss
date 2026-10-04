@@ -1,0 +1,160 @@
+.detective-witnesses {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  pointer-events: none;
+
+  .witness {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto;
+
+    &.open {
+      z-index: 3;
+    }
+  }
+
+  .person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: transform 160ms ease;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      transform: translateY(-4px);
+    }
+
+    &:disabled {
+      cursor: progress;
+    }
+
+    .avatar {
+      // Like the witness steps into the scene.
+      animation: detective-witness-in 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+  }
+
+  .witness:nth-child(2) .avatar {
+    animation-delay: 90ms;
+  }
+
+  .witness:nth-child(3) .avatar {
+    animation-delay: 180ms;
+  }
+
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: -6px;
+    padding: 4px 6px 4px 10px;
+    border: 3px solid var(--color-panel-border);
+    border-radius: 999px;
+    background: rgba(27, 35, 80, 0.95);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+    font-size: 0.85rem;
+    font-weight: 800;
+    white-space: nowrap;
+
+    .cost {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 1px 7px 1px 4px;
+      border-radius: 999px;
+      background: var(--color-gold);
+      color: #111;
+      font-size: 0.75rem;
+
+      svg {
+        font-size: 0.95rem;
+      }
+
+      &.done {
+        padding: 1px 4px;
+        background: var(--color-lime);
+      }
+
+      &.none {
+        background: var(--color-magenta);
+        color: #fff;
+      }
+    }
+  }
+
+  .witness.asked .tag {
+    border-color: var(--color-lime-dark);
+  }
+
+  // No time left to ask them: they fade into the scene.
+  .witness.silent .person {
+    cursor: not-allowed;
+
+    .avatar {
+      filter: grayscale(0.85) brightness(0.8);
+    }
+  }
+
+  .bubble {
+    position: absolute;
+    bottom: calc(100% + 14px);
+    width: min(320px, calc(100vw - 32px));
+    font-size: 0.95rem;
+  }
+
+  .witness:first-child .bubble {
+    left: 0;
+  }
+
+  .witness:last-child .bubble {
+    right: 0;
+  }
+
+  .witness:not(:first-child):not(:last-child) .bubble {
+    left: 50%;
+    // Centered without `transform` (the bubble animates its own `translate`).
+    margin-left: calc(min(320px, 100vw - 32px) / -2);
+  }
+}
+
+@keyframes detective-witness-in {
+  from {
+    opacity: 0;
+    translate: 0 30px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .detective-witnesses {
+    gap: 4px;
+
+    .avatar {
+      width: 84px;
+      height: auto;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detective-witnesses .person .avatar {
+    animation: none;
+  }
+}

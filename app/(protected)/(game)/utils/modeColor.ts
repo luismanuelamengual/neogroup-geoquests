@@ -2,7 +2,7 @@ import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import type { GameButtonColor } from '@/app/components/GameButton'
 
 /** Modes played alone; every other mode is multiplayer. */
-const SINGLE_PLAYER_MODES = new Set<GameMode>([GameMode.CLASSIC])
+const SINGLE_PLAYER_MODES = new Set<GameMode>([GameMode.CLASSIC, GameMode.DETECTIVE])
 
 /** Whether a mode is played with other players. */
 export function isMultiplayerMode(mode: GameMode | undefined | null): boolean {

@@ -1,0 +1,202 @@
+// Over the immersive play screen (z-index 1300).
+.detective-travel-dialog {
+  z-index: 1400;
+
+  .MuiDialog-paper {
+    border: 3px solid var(--color-panel-border);
+    border-radius: 22px;
+    background: linear-gradient(180deg, var(--color-panel) 0%, var(--color-night-light) 100%);
+    color: var(--color-text);
+  }
+}
+
+.detective-travel-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+
+  .title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    font-weight: 400;
+    text-align: center;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .map {
+    min-height: 380px;
+    border: 3px solid var(--color-panel-border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 3px solid var(--color-panel-border);
+    border-radius: 14px;
+    background: var(--color-night-light);
+    color: var(--color-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 140ms ease,
+      transform 140ms ease;
+
+    &:hover {
+      transform: translateX(3px);
+    }
+
+    &.selected {
+      border-color: var(--color-gold);
+      background: rgba(255, 194, 51, 0.12);
+    }
+
+    .letter {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--color-magenta);
+      color: #fff;
+      font-family: var(--font-display);
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .place {
+      overflow: hidden;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .time {
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+    }
+  }
+
+  .clues {
+    padding: 12px 14px;
+    border: 2px dashed var(--color-panel-border);
+    border-radius: 14px;
+
+    .clues-title {
+      margin: 0 0 6px;
+      color: var(--color-gold);
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--color-text);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .quote {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--color-magenta);
+      font-size: 1.1rem;
+    }
+
+    .no-clues {
+      margin: 0;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    .last-chance {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 auto 0 0;
+      color: var(--color-magenta);
+      font-weight: 800;
+
+      svg {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .detective-travel-panel {
+    padding: 14px;
+
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .map {
+      min-height: 220px;
+    }
+
+    .actions {
+      flex-direction: column-reverse;
+
+      .game-button {
+        width: 100%;
+      }
+    }
+  }
+}

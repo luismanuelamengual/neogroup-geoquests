@@ -1,0 +1,233 @@
+.detective-game-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  min-width: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 16px calc(40px + var(--safe-bottom));
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+
+    .outcome {
+      margin: 0;
+      color: var(--color-magenta);
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 8vw, 3.2rem);
+      font-weight: 400;
+      text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+      animation: detective-outcome-pop 600ms cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+    }
+
+    &.caught .outcome {
+      color: var(--color-lime);
+    }
+
+    .story {
+      max-width: 520px;
+      margin: 0;
+      color: var(--color-text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .total {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+
+      .value {
+        color: var(--color-gold);
+        font-family: var(--font-display);
+        font-size: clamp(2.2rem, 8vw, 3.4rem);
+        text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+      }
+
+      .max {
+        color: var(--color-text-secondary);
+        font-weight: 800;
+      }
+    }
+
+    .score-bar {
+      width: min(100%, 520px);
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 0;
+
+      > div {
+        min-width: 130px;
+        padding: 8px 14px;
+        border: 2px solid var(--color-panel-border);
+        border-radius: 14px;
+        background: var(--color-night-light);
+      }
+
+      dt {
+        color: var(--color-text-secondary);
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      dd {
+        margin: 2px 0 0;
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+      }
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+  }
+
+  .details {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 40px 24px;
+
+    > * {
+      min-width: 0;
+    }
+  }
+
+  .map-panel {
+    display: flex;
+    min-height: 420px;
+
+    .summary-map {
+      flex: 1;
+      border-radius: 14px;
+    }
+  }
+
+  .stages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 2px solid var(--color-panel-border);
+    border-radius: 14px;
+    background: var(--color-night-light);
+
+    &.missed {
+      opacity: 0.6;
+    }
+
+    .number {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      color: #111;
+      font-family: var(--font-display);
+    }
+
+    .info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .place {
+      overflow: hidden;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .how {
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .icon {
+      display: flex;
+
+      .right {
+        color: var(--color-lime);
+      }
+
+      .wrong {
+        color: var(--color-magenta);
+      }
+
+      .missed {
+        color: var(--color-text-secondary);
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .detective-game-summary {
+    gap: 36px;
+    padding-top: 28px;
+
+    .details {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .map-panel {
+      min-height: 320px;
+    }
+
+    .hero .actions {
+      flex-direction: column;
+      width: 100%;
+
+      .game-button {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@keyframes detective-outcome-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .detective-game-summary .hero .outcome {
+    animation: none;
+  }
+}

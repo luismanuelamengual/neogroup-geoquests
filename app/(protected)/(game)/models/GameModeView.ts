@@ -11,6 +11,8 @@ export interface GameModeView {
   description: string
   /** Image of the card (a path under /public). */
   image: string
+  /** Only map of the mode (no map picker), or null when the player chooses it. */
+  mapName: string | null
   minPlayers: number
   maxPlayers: number
   /** Default rules of the mode (rounds, time limit...). */

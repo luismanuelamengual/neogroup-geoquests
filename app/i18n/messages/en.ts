@@ -132,10 +132,12 @@ export const en: Messages = {
     title: 'How do you want to play?',
     noModes: 'There are no game modes available yet.',
     subtitle: 'Single player: play solo, at your own pace.',
-    quickPlay: 'Quick game',
+    modesTitle: 'Game modes',
+    quickPlaysTitle: 'Quick game',
+    quickPlaysSubtitle: 'They start right away, with the rules already set.',
     playNow: 'Play now',
     customClassic: {
-      name: 'Custom classic game',
+      name: 'Classic game',
       description: 'Choose the map, the number of rounds and the time per round, and play solo, at your own pace.'
     }
   },
@@ -161,6 +163,11 @@ export const en: Messages = {
       name: 'Battle Royale',
       description: '3 to 8 players: every round, whoever marked the farthest is eliminated. The last one standing wins.'
     },
+    detective: {
+      name: 'Detective',
+      description:
+        'Follow a thief through five iconic places of the world: talk to witnesses, choose where to travel and catch them before time runs out.'
+    },
     onePlayer: '1 player',
     playersExact: '{count} players',
     playersRange: '{min} to {max} players',
@@ -169,6 +176,8 @@ export const en: Messages = {
     timePerRound: '{time} per round',
     noTime: 'No time limit',
     configurable: 'Custom rules',
+    fixedRules: 'Fixed rules',
+    destinations: { one: '{count} destination', other: '{count} destinations' },
     choose: 'Choose'
   },
   maps: {
@@ -352,6 +361,123 @@ export const en: Messages = {
     minutes: '{count} min',
     minutesSeconds: '{minutes} min {seconds} s'
   },
+  detective: {
+    intro: {
+      subtitle: 'A new case every game',
+      howTo: 'How to play',
+      newCase: 'New case',
+      preparing: 'Preparing the case…'
+    },
+    howTo: {
+      eyes: 'You look through the eyes of the thief: you see where they are now.',
+      witnesses: 'You talk to the witnesses: each one gives you a clue, but it costs you {time}.',
+      travel:
+        'You choose where to travel among {options} destinations. If you are wrong, you waste the trip; after more than {mistakes} mistakes, you lose the trail.',
+      catch: 'You catch the thief if you reach their place number {hops} before time runs out.'
+    },
+    briefing: {
+      caseNumber: 'Case #{id}',
+      title: 'Robbery at {place}',
+      story:
+        'Today at 9:00 someone stole {loot} at {place}. The thief escaped and will go through {hops} places of the world before vanishing forever.',
+      deadline: 'You have until {time}.',
+      accept: 'Accept the case'
+    },
+    days: {
+      d0: 'Monday',
+      d1: 'Tuesday',
+      d2: 'Wednesday',
+      d3: 'Thursday',
+      d4: 'Friday',
+      d5: 'Saturday',
+      d6: 'Sunday'
+    },
+    dayTime: '{day} {time}',
+    loot: {
+      loot1: "an ancient queen's crown",
+      loot2: 'the largest diamond of the exhibition',
+      loot3: 'a 3,000-year-old golden statuette',
+      loot4: "an explorer's original map",
+      loot5: 'the unpublished score of a symphony',
+      loot6: 'a violin over 300 years old',
+      loot7: 'the golden key to the city',
+      loot8: 'an imperial jade egg',
+      loot9: 'the secret recipe of a famous dessert',
+      loot10: "the science museum's meteorite"
+    },
+    play: {
+      thiefEyes: 'What the thief sees',
+      youAreIn: 'You are in',
+      clock: 'Clock',
+      timeLeft: 'Time left',
+      destination: 'Destination',
+      travel: 'Travel',
+      noTime: 'No time',
+      mistakes: 'Mistakes',
+      exitMessage: 'The case stays saved: you can resume it from the menu whenever you want.'
+    },
+    travelPanel: {
+      title: 'Where did the thief go?',
+      clues: 'Clues',
+      noClues: "You haven't talked to any witness yet.",
+      lastChance: 'Last chance: if you get it wrong, you lose the trail.',
+      duration: '{time} trip',
+      choose: 'Choose a destination',
+      go: 'Travel to {place}',
+      cancel: 'Keep investigating'
+    },
+    travel: {
+      flying: 'Traveling to {place}…',
+      correct: 'Good! The thief was here.',
+      wrong: 'No trace of the thief in {place}.',
+      redirect: 'An informant tells you the thief went to {place}.',
+      follow: 'Follow the trail',
+      continue: 'Continue',
+      caught: 'You caught the thief!',
+      escaped: 'Time is up! The thief escaped.',
+      lostTrail: 'Too many mistakes: you lost the trail and the thief escaped.',
+      seeSummary: 'See summary'
+    },
+    summary: {
+      caught: 'Case solved!',
+      escaped: 'The thief escaped',
+      caughtText: 'You caught the thief and recovered {loot}.',
+      escapedText: 'The thief got away with {loot}. Good luck on the next case!',
+      lostTrail: 'You lost the trail',
+      lostTrailText: 'Too many wrong destinations: the thief got away with {loot}. Good luck on the next case!',
+      timeUsed: 'Time used',
+      witnesses: 'Witnesses',
+      mistakes: 'Mistakes',
+      route: "The thief's route",
+      stages: 'Destinations',
+      right: 'Right ({time} trip)',
+      wrongTo: 'You went to {place} ({time} lost)',
+      notReached: 'Not reached'
+    },
+    roles: {
+      waiter: { m: 'Waiter', f: 'Waitress' },
+      guide: { m: 'Tour guide', f: 'Tour guide' },
+      police: { m: 'Police officer', f: 'Police officer' },
+      vendor: { m: 'Street vendor', f: 'Street vendor' },
+      taxiDriver: { m: 'Taxi driver', f: 'Taxi driver' },
+      tourist: { m: 'Tourist', f: 'Tourist' },
+      backpacker: { m: 'Backpacker', f: 'Backpacker' }
+    },
+    witness: {
+      intro1: 'Yes, I saw that person!',
+      intro2: 'Hmm… I remember well.',
+      intro3: 'They came by a while ago.',
+      intro4: 'Sure, they looked very suspicious.',
+      intro5: 'They asked me a strange question…',
+      intro6: 'I heard them on the phone…',
+      nothingSeen: "I haven't seen anyone like that around here. Are you sure you came to the right place?"
+    },
+    gallery: {
+      title: 'Witnesses',
+      subtitle: 'Test page: tap a witness to hear their clue.',
+      reroll: 'Other witnesses'
+    }
+  },
   errors: {
     internal: 'Internal error',
     notAuthenticated: 'User not authenticated',
@@ -386,6 +512,7 @@ export const en: Messages = {
     notEnoughPlayers: 'At least {minPlayers} players are needed to start',
     onlyHostCanAdvance: 'Only the host can move on to the next round',
     roundNotFinished: "The round hasn't ended yet",
+    noTimeForWitness: 'There is no time left to talk to another witness',
     roundAlreadyPlayed: 'That round has already been played',
     markAPlace: 'Drop a pin on the map',
     noPlacesLoaded: "This game mode doesn't have any places loaded yet",

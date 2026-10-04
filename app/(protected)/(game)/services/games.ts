@@ -22,7 +22,7 @@ import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { cleanupGames, deleteGames } from '@/app/(protected)/(game)/services/gameCleanup'
 import { findGameModeEngine, getGameModeEngine, getGameSettings } from '@/app/(protected)/(game)/services/gameModes'
 import { loadGame, updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
-import { findMap } from '@/app/(protected)/(game)/services/maps'
+import { findMap, findMapByName } from '@/app/(protected)/(game)/services/maps'
 import { getPanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { generateGameCode, normalizeGameCode } from '@/app/(protected)/(game)/utils/gameCodes'
 import { ApiException } from '@/app/models/ApiException'
@@ -154,8 +154,9 @@ async function generateUniqueCode(ctx: GameContext): Promise<string> {
 export async function createGame(userId: number, input: CreateGameInput, options: GameOptions = {}): Promise<GameView> {
   const ctx = resolveContext(options)
   const engine = getGameModeEngine(input?.mode)
-  const mapId = Number(input?.mapId)
-  const map = await findMap(mapId)
+  const map = engine.definition.mapName
+    ? await findMapByName(engine.definition.mapName)
+    : await findMap(Number(input?.mapId))
 
   if (!map) {
     throw new ApiException('errors.mapNotFound', 404)
@@ -167,6 +168,7 @@ export async function createGame(userId: number, input: CreateGameInput, options
     throw new ApiException('errors.alreadyInMultiplayerGame', 409)
   }
 
+  const mapId = map.id
   const settings = getGameSettings(engine, map, input?.settings)
   const data = await engine.create(mapId, settings, ctx)
 

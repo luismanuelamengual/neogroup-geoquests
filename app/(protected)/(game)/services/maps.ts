@@ -10,6 +10,11 @@ export async function findMap(mapId: number): Promise<Map | null> {
   return Number.isInteger(mapId) ? Map.where('id', mapId).where('enabled', true).first() : null
 }
 
+/** Enabled map by its name (as seeded: map ids are not fixed), or null. */
+export async function findMapByName(name: string): Promise<Map | null> {
+  return Map.where('name', name).where('enabled', true).first()
+}
+
 /**
  * Enabled places of a map (linked through `map_places`).
  *

@@ -1,0 +1,28 @@
+.detective-map {
+  .map-pin {
+    &.clickable {
+      cursor: pointer;
+    }
+
+    &.selected {
+      z-index: 2;
+
+      .head {
+        width: 38px;
+        height: 38px;
+        border-color: var(--color-gold);
+        box-shadow: 0 0 0 4px rgba(255, 194, 51, 0.45);
+      }
+    }
+  }
+
+  .detective-plane {
+    pointer-events: none;
+
+    svg {
+      display: block;
+      transform: rotate(var(--heading, 0deg));
+      filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.45));
+    }
+  }
+}

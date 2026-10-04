@@ -3,7 +3,8 @@ import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsI
 
 /** Payload of /api/createGame. */
 export interface CreateGameInput {
-  mapId: number
+  /** Map to play in; ignored (may be missing) for the modes that have their own map (GameModeDefinition.mapName). */
+  mapId?: number | null
   mode: GameMode
   /** Rules chosen by the player (missing: the defaults of the mode). */
   settings?: GameSettingsInput

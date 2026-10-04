@@ -6,5 +6,6 @@
 export enum GameMode {
   CLASSIC = 1,
   CLASSIC_MULTIPLAYER = 2,
-  BATTLE_ROYALE = 3
+  BATTLE_ROYALE = 3,
+  DETECTIVE = 4
 }

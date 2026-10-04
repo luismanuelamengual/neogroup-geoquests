@@ -135,10 +135,12 @@ export const es = {
     title: '¿Cómo querés jugar?',
     noModes: 'Todavía no hay modos de juego disponibles.',
     subtitle: 'Un jugador: jugá solo, a tu ritmo.',
-    quickPlay: 'Partida rápida',
+    modesTitle: 'Modos de juego',
+    quickPlaysTitle: 'Partida rápida',
+    quickPlaysSubtitle: 'Arrancan al toque, con las reglas ya elegidas.',
     playNow: 'Jugar ya',
     customClassic: {
-      name: 'Partida clásica personalizada',
+      name: 'Partida clásica',
       description: 'Elegí el mapa, la cantidad de rondas y el tiempo por ronda, y jugá solo, a tu ritmo.'
     }
   },
@@ -163,6 +165,11 @@ export const es = {
       name: 'Battle Royale',
       description: 'De 3 a 8 jugadores: en cada ronda queda eliminado el que marcó más lejos. El último en pie gana.'
     },
+    detective: {
+      name: 'Detective',
+      description:
+        'Seguí el rastro de un ladrón por cinco lugares icónicos del mundo: hablá con testigos, elegí a dónde viajar y atrapalo antes de que se acabe el tiempo.'
+    },
     onePlayer: '1 jugador',
     playersExact: '{count} jugadores',
     playersRange: '{min} a {max} jugadores',
@@ -171,6 +178,8 @@ export const es = {
     timePerRound: '{time} por ronda',
     noTime: 'Sin tiempo',
     configurable: 'Reglas a elección',
+    fixedRules: 'Reglas fijas',
+    destinations: { one: '{count} destino', other: '{count} destinos' },
     choose: 'Elegir'
   },
   maps: {
@@ -355,6 +364,123 @@ export const es = {
     minutes: '{count} min',
     minutesSeconds: '{minutes} min {seconds} s'
   },
+  detective: {
+    intro: {
+      subtitle: 'Un caso nuevo en cada partida',
+      howTo: 'Cómo se juega',
+      newCase: 'Nuevo caso',
+      preparing: 'Armando el caso…'
+    },
+    howTo: {
+      eyes: 'Mirás a través de los ojos del ladrón: ves dónde está ahora.',
+      witnesses: 'Hablás con los testigos del lugar: cada uno te da una pista, pero te cuesta {time}.',
+      travel:
+        'Elegís a dónde viajar entre {options} destinos. Si te equivocás, perdés el viaje; con más de {mistakes} errores, perdés el rastro.',
+      catch: 'Lo atrapás si llegás a su lugar número {hops} antes de que se acabe el tiempo.'
+    },
+    briefing: {
+      caseNumber: 'Caso #{id}',
+      title: 'Robo en {place}',
+      story:
+        'Hoy a las 9:00 se robaron {loot} en {place}. El ladrón escapó y va a pasar por {hops} lugares del mundo antes de desaparecer para siempre.',
+      deadline: 'Tenés tiempo hasta el {time}.',
+      accept: 'Aceptar caso'
+    },
+    days: {
+      d0: 'lunes',
+      d1: 'martes',
+      d2: 'miércoles',
+      d3: 'jueves',
+      d4: 'viernes',
+      d5: 'sábado',
+      d6: 'domingo'
+    },
+    dayTime: '{day} {time}',
+    loot: {
+      loot1: 'la corona de una reina antigua',
+      loot2: 'el diamante más grande de la exposición',
+      loot3: 'una estatuilla de oro de 3000 años',
+      loot4: 'el mapa original de un explorador',
+      loot5: 'la partitura inédita de una sinfonía',
+      loot6: 'un violín de más de 300 años',
+      loot7: 'la llave dorada de la ciudad',
+      loot8: 'un huevo de jade imperial',
+      loot9: 'la receta secreta de un postre famoso',
+      loot10: 'el meteorito del museo de ciencias'
+    },
+    play: {
+      thiefEyes: 'Lo que ve el ladrón',
+      youAreIn: 'Estás en',
+      clock: 'Reloj',
+      timeLeft: 'Te quedan',
+      destination: 'Destino',
+      travel: 'Viajar',
+      noTime: 'Sin tiempo',
+      mistakes: 'Errores',
+      exitMessage: 'El caso queda guardado: podés retomarlo cuando quieras desde el menú.'
+    },
+    travelPanel: {
+      title: '¿A dónde fue el ladrón?',
+      clues: 'Pistas',
+      noClues: 'Todavía no hablaste con ningún testigo.',
+      lastChance: 'Último intento: si te equivocás, perdés el rastro.',
+      duration: '{time} de viaje',
+      choose: 'Elegí un destino',
+      go: 'Viajar a {place}',
+      cancel: 'Seguir investigando'
+    },
+    travel: {
+      flying: 'Viajando a {place}…',
+      correct: '¡Bien! El ladrón estuvo acá.',
+      wrong: 'No hay rastro del ladrón en {place}.',
+      redirect: 'Un informante te dice que el ladrón fue a {place}.',
+      follow: 'Seguir el rastro',
+      continue: 'Continuar',
+      caught: '¡Lo atrapaste!',
+      escaped: '¡Se acabó el tiempo! El ladrón escapó.',
+      lostTrail: 'Fueron demasiados errores: perdiste el rastro y el ladrón escapó.',
+      seeSummary: 'Ver resumen'
+    },
+    summary: {
+      caught: '¡Caso resuelto!',
+      escaped: 'El ladrón escapó',
+      caughtText: 'Atrapaste al ladrón y recuperaste {loot}.',
+      escapedText: 'El ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
+      lostTrail: 'Perdiste el rastro',
+      lostTrailText: 'Demasiados destinos equivocados: el ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
+      timeUsed: 'Tiempo usado',
+      witnesses: 'Testigos',
+      mistakes: 'Errores',
+      route: 'La ruta del ladrón',
+      stages: 'Destinos',
+      right: 'Acertaste ({time} de viaje)',
+      wrongTo: 'Fuiste a {place} ({time} perdidas)',
+      notReached: 'No llegaste'
+    },
+    roles: {
+      waiter: { m: 'Camarero', f: 'Camarera' },
+      guide: { m: 'Guía turístico', f: 'Guía turística' },
+      police: { m: 'Policía', f: 'Policía' },
+      vendor: { m: 'Vendedor', f: 'Vendedora' },
+      taxiDriver: { m: 'Taxista', f: 'Taxista' },
+      tourist: { m: 'Turista', f: 'Turista' },
+      backpacker: { m: 'Mochilero', f: 'Mochilera' }
+    },
+    witness: {
+      intro1: '¡Sí, vi a esa persona!',
+      intro2: 'Mmm… me acuerdo bien.',
+      intro3: 'Pasó por acá hace un rato.',
+      intro4: 'Claro, era muy sospechosa.',
+      intro5: 'Me hizo una pregunta rara…',
+      intro6: 'La escuché hablar por teléfono…',
+      nothingSeen: 'No vi a nadie así por acá. ¿Seguro que viniste al lugar correcto?'
+    },
+    gallery: {
+      title: 'Testigos',
+      subtitle: 'Página de prueba: tocá un testigo para escuchar su pista.',
+      reroll: 'Otros testigos'
+    }
+  },
   errors: {
     internal: 'Error interno',
     notAuthenticated: 'Usuario no autenticado',
@@ -389,6 +515,7 @@ export const es = {
     notEnoughPlayers: 'Hacen falta al menos {minPlayers} jugadores para empezar',
     onlyHostCanAdvance: 'Solo el anfitrión puede pasar a la siguiente ronda',
     roundNotFinished: 'La ronda todavía no terminó',
+    noTimeForWitness: 'No te queda tiempo para hablar con otro testigo',
     roundAlreadyPlayed: 'Esa ronda ya fue jugada',
     markAPlace: 'Marcá un lugar en el mapa',
     noPlacesLoaded: 'Este modo de juego todavía no tiene lugares cargados',

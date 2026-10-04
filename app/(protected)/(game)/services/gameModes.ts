@@ -7,6 +7,7 @@ import { Map } from '@/app/(protected)/(game)/models/Map'
 import { battleRoyaleMode } from '@/app/(protected)/(game)/services/battleRoyaleMode'
 import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
 import { classicMultiplayerMode } from '@/app/(protected)/(game)/services/classicMultiplayerMode'
+import { detectiveMode } from '@/app/(protected)/(game)/services/detectiveMode'
 import type { MessageKey } from '@/app/i18n/messages'
 import type { Translator } from '@/app/i18n/translate'
 import { ApiException } from '@/app/models/ApiException'
@@ -22,7 +23,8 @@ function getEngines(): Partial<Record<GameMode, GameModeEngine>> {
   return {
     [GameMode.CLASSIC]: classicMode as GameModeEngine,
     [GameMode.CLASSIC_MULTIPLAYER]: classicMultiplayerMode as GameModeEngine,
-    [GameMode.BATTLE_ROYALE]: battleRoyaleMode as GameModeEngine
+    [GameMode.BATTLE_ROYALE]: battleRoyaleMode as GameModeEngine,
+    [GameMode.DETECTIVE]: detectiveMode as GameModeEngine
   }
 }
 
@@ -59,6 +61,7 @@ export function getGameModes(t?: Translator): GameModeView[] {
       name: t ? t(`modes.${definition.slug}.name` as MessageKey) : definition.name,
       description: t ? t(`modes.${definition.slug}.description` as MessageKey) : definition.description,
       image: definition.image,
+      mapName: definition.mapName ?? null,
       minPlayers: definition.minPlayers,
       maxPlayers: definition.maxPlayers,
       settings: definition.settings as GameSettings,

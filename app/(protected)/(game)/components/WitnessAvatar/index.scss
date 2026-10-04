@@ -1,0 +1,49 @@
+.witness-avatar {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35));
+
+  // Talking: the mouth opens and closes.
+  .witness-mouth-talking {
+    .open {
+      animation: witness-mouth-open 260ms steps(1, end) infinite;
+    }
+
+    .closed {
+      animation: witness-mouth-closed 260ms steps(1, end) infinite;
+    }
+  }
+}
+
+@keyframes witness-mouth-open {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes witness-mouth-closed {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .witness-avatar .witness-mouth-talking {
+    .open,
+    .closed {
+      animation: none;
+    }
+
+    .closed {
+      opacity: 0;
+    }
+  }
+}

@@ -1,0 +1,105 @@
+// Immersive, over the play screen.
+.detective-travel-result {
+  position: fixed;
+  inset: 0;
+  z-index: 1350;
+  background: var(--color-night);
+
+  .map {
+    position: absolute;
+    inset: 0;
+  }
+
+  .clock {
+    position: absolute;
+    top: calc(16px + var(--safe-top));
+    left: 50%;
+    padding: 6px 16px;
+    border: 3px solid var(--color-panel-border);
+    border-radius: 14px;
+    background: rgba(27, 35, 80, 0.92);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+    font-family: var(--font-display);
+    text-transform: capitalize;
+    transform: translateX(-50%);
+  }
+
+  .card {
+    position: absolute;
+    right: 16px;
+    bottom: calc(20px + var(--safe-bottom));
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 18px 20px 20px;
+    border: 3px solid var(--color-panel-border);
+    border-radius: 22px;
+    background: linear-gradient(180deg, var(--color-panel) 0%, var(--color-night-light) 100%);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.45);
+    text-align: center;
+
+    &.good {
+      border-color: var(--color-lime);
+    }
+
+    &.bad {
+      border-color: var(--color-magenta);
+    }
+
+    .message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 4vw, 1.5rem);
+      line-height: 1.2;
+    }
+
+    .flag {
+      font-family: initial;
+      font-size: 1.8rem;
+    }
+
+    .detail {
+      margin: -4px 0 0;
+      color: var(--color-text-secondary);
+      font-weight: 800;
+    }
+
+    .local {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      width: 100%;
+      margin-top: -70px;
+
+      .bubble {
+        flex: 1;
+        order: 2;
+        margin-bottom: 40px;
+        text-align: left;
+
+        // The tail points down-left, to the local.
+        &::before {
+          left: -20px;
+          bottom: 10px;
+          border-width: 12px 20px 12px 0;
+          border-color: transparent var(--bubble-ink) transparent transparent;
+        }
+
+        &::after {
+          left: -14px;
+          bottom: 14px;
+          border-width: 8px 14px 8px 0;
+          border-color: transparent var(--bubble-paper) transparent transparent;
+        }
+      }
+    }
+  }
+}

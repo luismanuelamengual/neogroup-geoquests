@@ -52,8 +52,13 @@ export default function GameModeCard({ mode, name, description }: GameModeCardPr
         <span className="tags">
           {/* Players only in multiplayer modes: single player ones are in the "Jugar" menu, where it goes without saying. */}
           {mode.maxPlayers > 1 && <span className="tag">{formatPlayers(mode, t)}</span>}
-          {!('rounds' in mode.settings) && <span className="tag">{t('modes.elimination')}</span>}
-          <span className="tag">{t('modes.configurable')}</span>
+          {mode.maxPlayers > 1 && !('rounds' in mode.settings) && <span className="tag">{t('modes.elimination')}</span>}
+          {'hops' in mode.settings && (
+            <span className="tag">{t('modes.destinations', { count: mode.settings.hops })}</span>
+          )}
+          <span className="tag">
+            {Object.keys(mode.configurable).length > 0 ? t('modes.configurable') : t('modes.fixedRules')}
+          </span>
         </span>
         <span className="cta">
           {t('modes.choose')} <ArrowForwardIcon fontSize="small" />

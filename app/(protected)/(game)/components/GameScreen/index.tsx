@@ -6,6 +6,8 @@ import BattleRoyaleGamePlay from '@/app/(protected)/(game)/components/BattleRoya
 import BattleRoyaleGameSummary from '@/app/(protected)/(game)/components/BattleRoyaleGameSummary'
 import ClassicGamePlay from '@/app/(protected)/(game)/components/ClassicGamePlay'
 import ClassicGameSummary from '@/app/(protected)/(game)/components/ClassicGameSummary'
+import DetectiveGamePlay from '@/app/(protected)/(game)/components/DetectiveGamePlay'
+import DetectiveGameSummary from '@/app/(protected)/(game)/components/DetectiveGameSummary'
 import MultiplayerGamePlay from '@/app/(protected)/(game)/components/MultiplayerGamePlay'
 import MultiplayerGameSummary from '@/app/(protected)/(game)/components/MultiplayerGameSummary'
 import MultiplayerLobby from '@/app/(protected)/(game)/components/MultiplayerLobby'
@@ -45,7 +47,8 @@ const MODE_SCREENS: Partial<Record<GameMode, ModeScreens>> = {
     Play: BattleRoyaleGamePlay,
     Summary: BattleRoyaleGameSummary,
     realtime: true
-  }
+  },
+  [GameMode.DETECTIVE]: { Play: DetectiveGamePlay, Summary: DetectiveGameSummary }
 }
 
 /**
