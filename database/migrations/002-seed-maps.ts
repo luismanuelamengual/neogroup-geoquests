@@ -9,9 +9,13 @@ import { MapSettings } from '@/app/(protected)/(game)/models/MapSettings'
  *   - "Ciudades del mundo": 150 cities of 36 countries with good Street View
  *     coverage — capitals and big cities, but also medium and small ones (the
  *     20 famous cities included).
- *   - "Argentina", "España" and "Estados Unidos": a single place each — the
- *     whole (mainland) country as a polygon — so locations are drawn anywhere
- *     in its territory.
+ *   - "Argentina", "España" and "Estados Unidos": the capital cities of the
+ *     provinces / states of each country (24 provinces of Argentina, the 47
+ *     peninsular provinces of Spain, the capitals of the 48 continental states
+ *     of the United States). A whole-country polygon was not used because the
+ *     random points often fell on roads and rural areas, impossible to tell
+ *     apart. Capitals that are already cities of another map (Mendoza,
+ *     Córdoba, Madrid...) are the same place, linked to both maps.
  *   - "Latinoamérica": the cities of "Ciudades del mundo" located in Latin
  *     America plus many more of its cities (Ecuador, Bolivia, Paraguay, Central
  *     America, the Caribbean...).
@@ -46,6 +50,8 @@ interface SeedPlace {
    * take the places of their countries that have no `onlyMap`.
    */
   onlyMap?: string
+  /** Also part of these maps (e.g. the country maps, whose capitals can be cities of other maps). */
+  alsoIn?: string[]
   geometry:
     { type: 'Point'; coordinates: [number, number]; radius: number } | { type: 'Polygon'; coordinates: number[][][] }
 }
@@ -106,13 +112,17 @@ const EUROPE_SCORE_MAX_DISTANCE_KM = 3000 // Reikiavik - Athens: ~3700 km
 const ARGENTINA_SCORE_MAX_DISTANCE_KM = 2200 // La Quiaca - Río Gallegos: ~3500 km
 const SPAIN_SCORE_MAX_DISTANCE_KM = 800 // Galicia - Almería: ~850 km
 
-/** A map of a whole country: its only place is the country itself. */
+const ARGENTINA_MAP = 'Argentina'
+const SPAIN_MAP = 'España'
+const UNITED_STATES_MAP = 'Estados Unidos'
+
+/** A map of a country: its places are the capitals of its provinces / states. */
 function countryMap(name: string, description: string, scoreMaxDistanceKm: number): SeedMap {
   return {
     name,
     description,
     image: null,
-    places: (place) => place.onlyMap === name,
+    places: (place) => place.onlyMap === name || !!place.alsoIn?.includes(name),
     settings: { scoreMaxDistanceKm }
   }
 }
@@ -143,18 +153,18 @@ const MAPS: SeedMap[] = [
     settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   countryMap(
-    'Argentina',
-    'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?',
+    ARGENTINA_MAP,
+    'Aparecés en la capital de una de las 24 provincias argentinas, de Jujuy a Tierra del Fuego. ¿Sabés cuál es?',
     ARGENTINA_SCORE_MAX_DISTANCE_KM
   ),
   countryMap(
-    'España',
-    'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?',
+    SPAIN_MAP,
+    'Aparecés en la capital de una de las 47 provincias de la España peninsular, de A Coruña a Almería. ¿Sabés cuál es?',
     SPAIN_SCORE_MAX_DISTANCE_KM
   ),
   countryMap(
-    'Estados Unidos',
-    'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?',
+    UNITED_STATES_MAP,
+    'Aparecés en la capital de uno de los 48 estados continentales de Estados Unidos, de Olympia a Tallahassee. ¿Sabés cuál es?',
     UNITED_STATES_SCORE_MAX_DISTANCE_KM
   ),
   {
@@ -412,312 +422,7 @@ const BASE_PLACES: SeedPlace[] = [
   { name: 'Ciudad del Cabo', countryCode: 'ZA', famous: true, geometry: circle(-33.9249, 18.4241, 6000) },
   { name: 'Johannesburgo', countryCode: 'ZA', geometry: circle(-26.2041, 28.0473, 8000) },
   { name: 'Durban', countryCode: 'ZA', geometry: circle(-29.8587, 31.0218, 6000) },
-  { name: 'Pretoria', countryCode: 'ZA', geometry: circle(-25.7479, 28.2293, 6000) },
-  // Whole countries: the only place of their map (not part of "Ciudades del mundo").
-  // Approximate outlines of the mainland, drawn slightly inside the land borders so that
-  // panoramas found near a border are never on the other side.
-  {
-    name: 'Argentina',
-    countryCode: 'AR',
-    onlyMap: 'Argentina',
-    geometry: polygon([
-      [-65.6, -22.15],
-      [-64.8, -22.15],
-      [-64.4, -22.75],
-      [-63.9, -22.05],
-      [-62.75, -22.2],
-      [-61.3, -23.1],
-      [-60.1, -23.85],
-      [-58.8, -24.75],
-      [-57.8, -25.35],
-      [-58.2, -26.2],
-      [-58.65, -27.3],
-      [-57.0, -27.5],
-      [-55.95, -27.42],
-      [-55.3, -27.05],
-      [-54.72, -26.4],
-      [-54.6, -25.65],
-      [-53.9, -25.7],
-      [-53.7, -26.3],
-      [-53.8, -27.15],
-      [-55.0, -27.9],
-      [-56.1, -28.6],
-      [-57.15, -29.75],
-      [-57.7, -30.3],
-      [-58.07, -31.4],
-      [-58.2, -32.25],
-      [-58.4, -33.1],
-      [-58.45, -33.9],
-      [-58.58, -34.42],
-      [-58.37, -34.6],
-      [-57.9, -34.85],
-      [-57.15, -35.4],
-      [-57.35, -35.9],
-      [-56.7, -36.3],
-      [-56.7, -36.9],
-      [-57.53, -38.0],
-      [-58.73, -38.57],
-      [-61.3, -39.0],
-      [-62.26, -38.8],
-      [-62.1, -39.2],
-      [-62.4, -40.2],
-      [-62.8, -41.05],
-      [-64.0, -40.9],
-      [-64.95, -40.73],
-      [-65.1, -41.5],
-      [-64.3, -42.4],
-      [-63.6, -42.8],
-      [-64.1, -42.95],
-      [-65.03, -42.77],
-      [-65.0, -43.4],
-      [-65.3, -44.1],
-      [-65.6, -45.0],
-      [-67.3, -45.4],
-      [-67.48, -45.87],
-      [-67.52, -46.44],
-      [-66.0, -47.0],
-      [-65.8, -47.1],
-      [-65.9, -47.75],
-      [-66.4, -48.3],
-      [-67.72, -49.3],
-      [-68.4, -50.1],
-      [-69.2, -51.62],
-      [-68.35, -52.33],
-      [-70.0, -52.05],
-      [-71.9, -52.05],
-      [-72.3, -51.3],
-      [-72.8, -50.3],
-      [-73.0, -49.3],
-      [-72.4, -48.3],
-      [-72.1, -47.2],
-      [-71.8, -46.5],
-      [-71.8, -45.8],
-      [-71.6, -44.8],
-      [-71.8, -43.8],
-      [-71.8, -42.8],
-      [-71.8, -41.8],
-      [-71.8, -41.0],
-      [-71.7, -40.5],
-      [-71.5, -39.3],
-      [-71.1, -38.3],
-      [-70.9, -37.0],
-      [-70.5, -36.1],
-      [-70.4, -35.0],
-      [-70.1, -34.0],
-      [-70.0, -33.0],
-      [-70.3, -32.0],
-      [-70.2, -31.0],
-      [-69.8, -30.0],
-      [-69.4, -29.0],
-      [-68.9, -28.0],
-      [-68.5, -27.2],
-      [-68.4, -26.5],
-      [-68.4, -25.5],
-      [-67.5, -24.4],
-      [-67.2, -23.6],
-      [-66.8, -22.5],
-      [-66.2, -22.15],
-      [-65.6, -22.15]
-    ])
-  },
-  {
-    name: 'España',
-    countryCode: 'ES',
-    onlyMap: 'España',
-    geometry: polygon([
-      [-8.87, 41.9],
-      [-8.64, 42.03],
-      [-8.2, 42.1],
-      [-7.9, 41.92],
-      [-7.2, 41.95],
-      [-6.6, 41.98],
-      [-6.2, 41.62],
-      [-6.8, 41.08],
-      [-6.85, 40.3],
-      [-7.0, 39.75],
-      [-7.45, 39.62],
-      [-7.0, 39.1],
-      [-7.05, 38.87],
-      [-7.25, 38.4],
-      [-7.0, 38.05],
-      [-7.4, 37.55],
-      [-7.35, 37.2],
-      [-6.95, 37.2],
-      [-6.4, 36.8],
-      [-6.3, 36.53],
-      [-5.6, 36.01],
-      [-5.45, 36.13],
-      [-4.9, 36.5],
-      [-4.42, 36.7],
-      [-3.5, 36.72],
-      [-2.46, 36.83],
-      [-2.19, 36.72],
-      [-1.9, 37.2],
-      [-0.98, 37.6],
-      [-0.7, 37.63],
-      [-0.75, 37.9],
-      [-0.48, 38.34],
-      [0.23, 38.73],
-      [-0.33, 39.47],
-      [0.0, 39.97],
-      [0.5, 40.5],
-      [0.87, 40.7],
-      [1.3, 41.05],
-      [2.2, 41.3],
-      [2.5, 41.5],
-      [3.2, 41.9],
-      [3.32, 42.32],
-      [3.1, 42.42],
-      [2.5, 42.35],
-      [1.8, 42.4],
-      [1.4, 42.4],
-      [0.7, 42.68],
-      [0.0, 42.68],
-      [-0.8, 42.8],
-      [-1.4, 43.0],
-      [-1.75, 43.3],
-      [-1.98, 43.32],
-      [-2.93, 43.4],
-      [-3.8, 43.46],
-      [-4.8, 43.42],
-      [-5.66, 43.55],
-      [-5.85, 43.66],
-      [-7.0, 43.56],
-      [-7.68, 43.75],
-      [-8.3, 43.5],
-      [-8.4, 43.37],
-      [-9.27, 42.88],
-      [-8.9, 42.6],
-      [-8.72, 42.24],
-      [-8.87, 41.9]
-    ])
-  },
-  {
-    name: 'Estados Unidos',
-    countryCode: 'US',
-    onlyMap: 'Estados Unidos',
-    geometry: polygon([
-      [-124.7, 48.38],
-      [-123.2, 48.15],
-      [-122.7, 48.2],
-      [-122.75, 48.95],
-      [-95.2, 48.95],
-      [-94.8, 48.7],
-      [-93.2, 48.55],
-      [-90.8, 48.15],
-      [-89.6, 47.99],
-      [-91.0, 47.2],
-      [-92.1, 46.75],
-      [-90.9, 46.6],
-      [-87.4, 46.5],
-      [-85.0, 46.75],
-      [-84.35, 46.45],
-      [-84.5, 45.8],
-      [-83.4, 45.05],
-      [-83.3, 44.0],
-      [-82.5, 43.0],
-      [-83.05, 42.33],
-      [-83.5, 41.7],
-      [-81.7, 41.5],
-      [-80.1, 42.13],
-      [-78.9, 42.85],
-      [-79.0, 43.25],
-      [-77.6, 43.25],
-      [-76.5, 43.45],
-      [-76.2, 44.15],
-      [-75.3, 44.85],
-      [-74.7, 44.95],
-      [-71.5, 44.95],
-      [-70.8, 45.4],
-      [-70.3, 45.9],
-      [-70.0, 46.7],
-      [-69.2, 47.4],
-      [-68.3, 47.3],
-      [-67.85, 47.0],
-      [-67.85, 45.7],
-      [-67.2, 45.15],
-      [-67.0, 44.8],
-      [-68.2, 44.4],
-      [-69.8, 43.8],
-      [-70.25, 43.65],
-      [-70.8, 42.9],
-      [-71.0, 42.35],
-      [-70.0, 41.9],
-      [-70.0, 41.7],
-      [-70.6, 41.5],
-      [-71.4, 41.45],
-      [-72.9, 41.25],
-      [-74.0, 40.6],
-      [-74.0, 40.3],
-      [-74.4, 39.35],
-      [-74.95, 38.93],
-      [-75.1, 38.45],
-      [-75.4, 37.9],
-      [-75.97, 36.85],
-      [-75.5, 35.25],
-      [-76.6, 34.7],
-      [-77.8, 34.0],
-      [-78.9, 33.7],
-      [-79.9, 32.75],
-      [-81.0, 32.0],
-      [-81.4, 30.3],
-      [-80.6, 28.4],
-      [-80.1, 25.8],
-      [-80.4, 25.2],
-      [-81.1, 25.2],
-      [-81.8, 26.15],
-      [-82.8, 27.9],
-      [-83.6, 29.9],
-      [-84.3, 30.05],
-      [-85.0, 29.7],
-      [-85.7, 30.15],
-      [-87.2, 30.35],
-      [-88.05, 30.4],
-      [-88.9, 30.4],
-      [-89.6, 30.2],
-      [-89.4, 29.2],
-      [-90.1, 29.1],
-      [-91.3, 29.3],
-      [-92.5, 29.6],
-      [-93.8, 29.7],
-      [-94.8, 29.3],
-      [-96.3, 28.5],
-      [-97.3, 27.7],
-      [-97.2, 26.05],
-      [-97.6, 26.1],
-      [-98.3, 26.3],
-      [-99.5, 27.6],
-      [-100.3, 28.4],
-      [-100.5, 28.8],
-      [-100.9, 29.45],
-      [-101.4, 29.85],
-      [-102.4, 29.9],
-      [-103.1, 29.2],
-      [-104.0, 29.6],
-      [-104.7, 30.3],
-      [-106.4, 31.85],
-      [-108.3, 31.85],
-      [-108.3, 31.42],
-      [-111.07, 31.42],
-      [-114.8, 32.6],
-      [-114.7, 32.8],
-      [-117.1, 32.62],
-      [-117.25, 32.7],
-      [-118.5, 34.0],
-      [-120.5, 34.45],
-      [-121.9, 36.6],
-      [-122.5, 37.75],
-      [-123.0, 38.0],
-      [-123.8, 39.5],
-      [-124.4, 40.4],
-      [-124.2, 41.8],
-      [-124.5, 42.8],
-      [-124.1, 44.0],
-      [-124.0, 46.2],
-      [-124.1, 47.0],
-      [-124.7, 48.38]
-    ])
-  }
+  { name: 'Pretoria', countryCode: 'ZA', geometry: circle(-25.7479, 28.2293, 6000) }
 ]
 
 /** Compact form of a place drawn as a circle: name, country, latitude, longitude, radius (meters). */
@@ -1585,12 +1290,183 @@ const LANDMARKS: PlaceRow[] = [
   ['Glaciar Franz Josef', 'NZ', -43.467, 170.183, 800],
   ['Rocas Moeraki', 'NZ', -45.346, 170.827, 400]
 ]
+
+/**
+ * Capitals of the provinces of Argentina (the 23 provinces + Buenos Aires
+ * city), only in "Argentina". The ones that are already places of another map
+ * (Buenos Aires, Mendoza, Córdoba, Salta, Posadas...) are shared with it: the
+ * place that already exists wins, so its coordinates here are only informative.
+ */
+const ARGENTINA_CAPITALS: PlaceRow[] = [
+  ['Buenos Aires', 'AR', -34.6037, -58.3816, 5000],
+  ['La Plata', 'AR', -34.9214, -57.9544, 5000],
+  ['Catamarca', 'AR', -28.4696, -65.7795, 3000],
+  ['Resistencia', 'AR', -27.4606, -58.9839, 4000],
+  ['Rawson', 'AR', -43.3002, -65.1023, 2000],
+  ['Córdoba', 'AR', -31.4201, -64.1888, 7000],
+  ['Corrientes', 'AR', -27.4692, -58.8306, 4000],
+  ['Paraná', 'AR', -31.7333, -60.5297, 4000],
+  ['Formosa', 'AR', -26.1775, -58.1781, 3500],
+  ['San Salvador de Jujuy', 'AR', -24.1858, -65.2995, 3000],
+  ['Santa Rosa', 'AR', -36.6203, -64.2906, 3000],
+  ['La Rioja', 'AR', -29.4131, -66.8558, 3000],
+  ['Mendoza', 'AR', -32.8895, -68.8458, 5000],
+  ['Posadas', 'AR', -27.3671, -55.8961, 4000],
+  ['Neuquén', 'AR', -38.9516, -68.0591, 4000],
+  ['Viedma', 'AR', -40.8135, -62.9967, 2500],
+  ['Salta', 'AR', -24.7821, -65.4232, 4000],
+  ['San Juan', 'AR', -31.5375, -68.5364, 4000],
+  ['San Luis', 'AR', -33.295, -66.3356, 3500],
+  ['Río Gallegos', 'AR', -51.6226, -69.2181, 3000],
+  ['Santa Fe', 'AR', -31.6333, -60.7, 4000],
+  ['Santiago del Estero', 'AR', -27.7951, -64.2615, 4000],
+  ['Ushuaia', 'AR', -54.8019, -68.303, 3000],
+  ['San Miguel de Tucumán', 'AR', -26.8083, -65.2176, 5000]
+]
+
+/**
+ * Capitals of the provinces of the Iberian Peninsula of Spain (47 of the 50
+ * provinces: the Balearic and Canary islands are left out, as they were of the
+ * old peninsular outline), only in "España". Shared with the maps that already
+ * have them (Madrid, Barcelona, Zaragoza, Córdoba...).
+ */
+const SPAIN_CAPITALS: PlaceRow[] = [
+  ['A Coruña', 'ES', 43.3623, -8.4115, 4000],
+  ['Albacete', 'ES', 38.9943, -1.8585, 3000],
+  ['Alicante', 'ES', 38.3452, -0.481, 4000],
+  ['Almería', 'ES', 36.834, -2.4637, 3500],
+  ['Ávila', 'ES', 40.6564, -4.7006, 2000],
+  ['Badajoz', 'ES', 38.8794, -6.9707, 3000],
+  ['Barcelona', 'ES', 41.3874, 2.1686, 5000],
+  ['Burgos', 'ES', 42.3439, -3.6969, 3000],
+  ['Cáceres', 'ES', 39.4753, -6.3724, 2500],
+  ['Cádiz', 'ES', 36.5271, -6.2886, 2500],
+  ['Castellón de la Plana', 'ES', 39.9864, -0.0513, 3000],
+  ['Ciudad Real', 'ES', 38.9863, -3.9291, 2500],
+  ['Córdoba', 'ES', 37.8882, -4.7794, 3500],
+  ['Cuenca', 'ES', 40.0704, -2.1374, 2000],
+  ['Girona', 'ES', 41.9794, 2.8214, 2500],
+  ['Granada', 'ES', 37.1773, -3.5986, 3000],
+  ['Guadalajara', 'ES', 40.6329, -3.1667, 2500],
+  ['San Sebastián', 'ES', 43.3183, -1.9812, 3000],
+  ['Huelva', 'ES', 37.2614, -6.9447, 3000],
+  ['Huesca', 'ES', 42.1401, -0.4089, 2000],
+  ['Jaén', 'ES', 37.7796, -3.7849, 3000],
+  ['León', 'ES', 42.5987, -5.5671, 3000],
+  ['Lleida', 'ES', 41.6176, 0.62, 3000],
+  ['Logroño', 'ES', 42.4627, -2.445, 3000],
+  ['Lugo', 'ES', 43.0097, -7.5568, 2500],
+  ['Madrid', 'ES', 40.4168, -3.7038, 7000],
+  ['Málaga', 'ES', 36.7213, -4.4214, 4000],
+  ['Murcia', 'ES', 37.9922, -1.1307, 4000],
+  ['Ourense', 'ES', 42.3358, -7.8639, 2500],
+  ['Oviedo', 'ES', 43.3614, -5.8494, 3000],
+  ['Palencia', 'ES', 42.0096, -4.5288, 2500],
+  ['Pamplona', 'ES', 42.8125, -1.6458, 3000],
+  ['Pontevedra', 'ES', 42.431, -8.6446, 2500],
+  ['Salamanca', 'ES', 40.9701, -5.6635, 3000],
+  ['Santander', 'ES', 43.4623, -3.8099, 3500],
+  ['Segovia', 'ES', 40.9429, -4.1088, 2000],
+  ['Sevilla', 'ES', 37.3891, -5.9845, 5000],
+  ['Soria', 'ES', 41.7636, -2.4649, 2000],
+  ['Tarragona', 'ES', 41.1189, 1.2445, 3000],
+  ['Teruel', 'ES', 40.3456, -1.1065, 1500],
+  ['Toledo', 'ES', 39.8628, -4.0273, 2500],
+  ['Valencia', 'ES', 39.4699, -0.3763, 5000],
+  ['Valladolid', 'ES', 41.6523, -4.7245, 4000],
+  ['Bilbao', 'ES', 43.263, -2.935, 4000],
+  ['Vitoria-Gasteiz', 'ES', 42.8467, -2.6716, 3000],
+  ['Zamora', 'ES', 41.5033, -5.7446, 2000],
+  ['Zaragoza', 'ES', 41.6488, -0.8891, 5000]
+]
+
+/**
+ * Capitals of the 48 continental states of the United States (Alaska and
+ * Hawaii are left out), only in "Estados Unidos". Those whose name is shared
+ * by several states carry the state in brackets. Shared with the maps that
+ * already have them (Boston, Denver, Austin).
+ */
+const UNITED_STATES_CAPITALS: PlaceRow[] = [
+  ['Montgomery', 'US', 32.3792, -86.3077, 3500],
+  ['Phoenix', 'US', 33.4484, -112.074, 8000],
+  ['Little Rock', 'US', 34.7465, -92.2896, 3500],
+  ['Sacramento', 'US', 38.5816, -121.4944, 5000],
+  ['Denver', 'US', 39.7392, -104.9903, 6000],
+  ['Hartford', 'US', 41.7658, -72.6734, 3000],
+  ['Dover', 'US', 39.1582, -75.5244, 2000],
+  ['Tallahassee', 'US', 30.4383, -84.2807, 3500],
+  ['Atlanta', 'US', 33.749, -84.388, 6000],
+  ['Boise', 'US', 43.615, -116.2023, 3500],
+  ['Springfield (Illinois)', 'US', 39.7817, -89.6501, 3500],
+  ['Indianápolis', 'US', 39.7684, -86.1581, 6000],
+  ['Des Moines', 'US', 41.5868, -93.625, 4000],
+  ['Topeka', 'US', 39.0473, -95.6752, 3000],
+  ['Frankfort', 'US', 38.2009, -84.8733, 1500],
+  ['Baton Rouge', 'US', 30.4515, -91.1871, 4500],
+  ['Augusta (Maine)', 'US', 44.3106, -69.7795, 2000],
+  ['Annapolis', 'US', 38.9784, -76.4922, 1500],
+  ['Boston', 'US', 42.3601, -71.0589, 5000],
+  ['Lansing', 'US', 42.7325, -84.5555, 3000],
+  ['Saint Paul', 'US', 44.9537, -93.09, 4000],
+  ['Jackson (Misisipi)', 'US', 32.2988, -90.1848, 4000],
+  ['Jefferson City', 'US', 38.5767, -92.1735, 2500],
+  ['Helena', 'US', 46.5891, -112.0391, 2500],
+  ['Lincoln (Nebraska)', 'US', 40.8136, -96.7026, 4500],
+  ['Carson City', 'US', 39.1638, -119.7674, 2500],
+  ['Concord (Nuevo Hampshire)', 'US', 43.2081, -71.5376, 2500],
+  ['Trenton', 'US', 40.2206, -74.7597, 3000],
+  ['Santa Fe (Nuevo México)', 'US', 35.687, -105.9378, 3000],
+  ['Albany (Nueva York)', 'US', 42.6526, -73.7562, 3500],
+  ['Raleigh', 'US', 35.7796, -78.6382, 5000],
+  ['Bismarck', 'US', 46.8083, -100.7837, 2500],
+  ['Columbus (Ohio)', 'US', 39.9612, -82.9988, 6000],
+  ['Oklahoma City', 'US', 35.4676, -97.5164, 6000],
+  ['Salem (Oregón)', 'US', 44.9429, -123.0351, 3500],
+  ['Harrisburg', 'US', 40.2732, -76.8867, 2500],
+  ['Providence', 'US', 41.824, -71.4128, 3500],
+  ['Columbia (Carolina del Sur)', 'US', 34.0007, -81.0348, 4000],
+  ['Pierre', 'US', 44.3683, -100.351, 1500],
+  ['Nashville', 'US', 36.1627, -86.7816, 5500],
+  ['Austin', 'US', 30.2672, -97.7431, 6000],
+  ['Salt Lake City', 'US', 40.7608, -111.891, 5000],
+  ['Montpelier', 'US', 44.2601, -72.5754, 1500],
+  ['Richmond (Virginia)', 'US', 37.5407, -77.436, 4500],
+  ['Olympia', 'US', 47.0379, -122.9007, 2500],
+  ['Charleston (Virginia Occidental)', 'US', 38.3498, -81.6326, 3000],
+  ['Madison', 'US', 43.0731, -89.4012, 4500],
+  ['Cheyenne', 'US', 41.14, -104.8202, 3000]
+]
+
 const PLACES: SeedPlace[] = [
   ...BASE_PLACES,
   ...circlesOf(LATIN_AMERICA_CITIES, LATIN_AMERICA_MAP),
   ...circlesOf(EUROPE_CITIES, EUROPE_MAP),
   ...circlesOf(LANDMARKS, LANDMARKS_MAP)
 ]
+
+/**
+ * Adds the capitals of a country map to `places`: a capital that already
+ * exists (same name and country, e.g. Mendoza, which is also a city of the
+ * world) is linked to the map too; the other ones are new places only in that
+ * map.
+ */
+function addCapitals(places: SeedPlace[], rows: PlaceRow[], map: string): void {
+  const existing = new Map(places.map((place) => [`${place.name}|${place.countryCode}`, place]))
+
+  for (const [name, countryCode, latitude, longitude, radius] of rows) {
+    const place = existing.get(`${name}|${countryCode}`)
+
+    if (place) {
+      place.alsoIn = [...(place.alsoIn ?? []), map]
+    } else {
+      places.push({ name, countryCode, onlyMap: map, geometry: circle(latitude, longitude, radius) })
+    }
+  }
+}
+
+addCapitals(PLACES, ARGENTINA_CAPITALS, ARGENTINA_MAP)
+addCapitals(PLACES, SPAIN_CAPITALS, SPAIN_MAP)
+addCapitals(PLACES, UNITED_STATES_CAPITALS, UNITED_STATES_MAP)
 /** Rows per INSERT: keeps every statement well under the parameter limits of the databases. */
 const INSERT_CHUNK_SIZE = 100
 

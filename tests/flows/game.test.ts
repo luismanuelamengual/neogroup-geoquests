@@ -99,8 +99,7 @@ describe('classic game flow', () => {
     })
 
     const argentinaId = Number((await DB.table('maps').where('name', 'Ciudades argentinas').first())!.id)
-    // The Argentinian cities (not the whole country, the place of the "Argentina" map).
-    const places = (await Place.where('countryCode', 'AR').get()).filter((place) => place.name !== 'Argentina')
+    const places = await Place.where('countryCode', 'AR').get()
 
     if (withPlaces) {
       await DB.table('map_places').insert(places.map((place) => ({ mapId: argentinaId, placeId: place.id })))
@@ -116,9 +115,9 @@ describe('classic game flow', () => {
       ['Ciudades famosas', 20],
       ['Ciudades del mundo', 150],
       ['Lugares icónicos', 582],
-      ['Argentina', 1],
-      ['España', 1],
-      ['Estados Unidos', 1],
+      ['Argentina', 24],
+      ['España', 47],
+      ['Estados Unidos', 48],
       ['Latinoamérica', 105],
       ['Europa', 213]
     ])
@@ -143,8 +142,22 @@ describe('classic game flow', () => {
     // Every famous city is also a city of the world (the same place, linked to both maps).
     expect(famous.every((place) => world.some((other) => other.id === place.id))).toBe(true)
     expect(new Set(world.map((place) => place.countryCode)).size).toBe(36)
-    // A country map has a single place: the whole country (not part of "Ciudades del mundo").
-    expect(world.map((place) => place.name)).not.toContain('Argentina')
+    // A country map has the capitals of the provinces / states: the ones that are cities of the world are shared
+    // with "Ciudades del mundo", the other ones are only in the country map.
+    const argentina = await getMapPlaces(maps.find((map) => map.name === 'Argentina')!.id)
+
+    expect(argentina.map((place) => place.name)).toEqual(
+      expect.arrayContaining(['Buenos Aires', 'La Plata', 'Mendoza', 'San Juan', 'San Luis', 'Córdoba', 'Ushuaia'])
+    )
+    expect(argentina.every((place) => place.countryCode === 'AR')).toBe(true)
+    expect(argentina.find((place) => place.name === 'Mendoza')?.id).toBe(world.find((place) => place.name === 'Mendoza')!.id)
+    expect(world.map((place) => place.name)).not.toContain('La Plata')
+    expect(
+      (await getMapPlaces(maps.find((map) => map.name === 'España')!.id)).map((place) => place.name)
+    ).toEqual(expect.arrayContaining(['Madrid', 'Zaragoza', 'Vitoria-Gasteiz']))
+    expect(
+      (await getMapPlaces(maps.find((map) => map.name === 'Estados Unidos')!.id)).map((place) => place.name)
+    ).toEqual(expect.arrayContaining(['Austin', 'Sacramento', 'Montpelier']))
   })
 
   it('seeds the regional maps and the landmarks without touching "Ciudades del mundo"', async () => {
@@ -164,7 +177,7 @@ describe('classic game flow', () => {
     expect(europe.filter((place) => worldIds.has(place.id)).length).toBeGreaterThan(70)
     expect(europe.map((place) => place.name)).not.toContain('Mendoza')
     // The country maps are not part of the regional ones.
-    expect([...latinAmerica, ...europe].map((place) => place.name)).not.toEqual(expect.arrayContaining(['Argentina']))
+    expect([...latinAmerica, ...europe].map((place) => place.name)).not.toContain('La Plata')
 
     // Hundreds of landmarks, none of them a city of the world.
     expect(landmarks.length).toBeGreaterThan(500)
@@ -173,23 +186,25 @@ describe('classic game flow', () => {
     expect(new Set(landmarks.map((place) => place.countryCode)).size).toBeGreaterThan(50)
   })
 
-  it('plays a country map anywhere in the country, with searches sized for it', async () => {
+  it('plays a country map in the capitals of its provinces, with searches sized for a city', async () => {
     const argentina = (await getMaps()).find((map) => map.name === 'Argentina')!
-    const [country] = await getMapPlaces(argentina.id)
+    const capitals = await getMapPlaces(argentina.id)
     const finder = new FakePanoramaFinder()
     const game = await create({ finder }, argentina.id)
     const answers = await answersOf(game.id)
 
-    expect(getSearchRadii(country)).toBe(LARGE_AREA_SEARCH_RADII_METERS)
+    expect(capitals.every((place) => getSearchRadii(place) !== LARGE_AREA_SEARCH_RADII_METERS)).toBe(true)
     expect(answers).toHaveLength(5)
     expect(new Set(answers.map((round) => round.panoId)).size).toBe(5)
-    expect(answers.every((round) => round.placeName === 'Argentina' && round.countryCode === 'AR')).toBe(true)
-    // The random points are spread over the country, not around a single spot.
+    // Every round is in a different capital of the country.
+    expect(new Set(answers.map((round) => round.placeName)).size).toBe(5)
     expect(
-      Math.max(...answers.map((round) => round.latitude)) - Math.min(...answers.map((round) => round.latitude))
-    ).toBeGreaterThan(1)
+      answers.every(
+        (round) => round.countryCode === 'AR' && capitals.some((place) => place.name === round.placeName)
+      )
+    ).toBe(true)
 
-    // 100 km off, with the score scale of the mode (2.000 km).
+    // 100 km off, with the score scale of the mode (3.000 km).
     await act(game.id, { type: 'startRound' })
 
     const result = classic(
