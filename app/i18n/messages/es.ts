@@ -385,7 +385,7 @@ export const es = {
       caseNumber: 'Caso #{id}',
       title: 'Robo en {place}',
       story:
-        'Hoy a las 9:00 se robaron {loot} en {place}. El ladrón escapó y va a pasar por {hops} lugares del mundo antes de desaparecer para siempre.',
+        'El {time} se robaron {loot} en {place}. El ladrón escapó y va a pasar por {hops} lugares del mundo antes de desaparecer para siempre.',
       deadline: 'Tenés tiempo hasta el {time}.',
       accept: 'Aceptar caso'
     },

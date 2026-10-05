@@ -50,8 +50,8 @@ export default function DetectiveHud({ view }: { view: DetectiveGameView }) {
         <span className="caption">{t('detective.play.clock')}</span>
         <span className="value">
           {/* The short one ("mié 10:30") only on the narrowest phones. */}
-          <span className="long">{formatCaseTime(t, view.elapsedMinutes)}</span>
-          <span className="short">{formatCaseTime(t, view.elapsedMinutes, { short: true })}</span>
+          <span className="long">{formatCaseTime(t, view.startMinute, view.elapsedMinutes)}</span>
+          <span className="short">{formatCaseTime(t, view.startMinute, view.elapsedMinutes, { short: true })}</span>
         </span>
       </div>
       <div className={classNames('chip time-left', { low: ratio < 0.2 || left < view.witnessMinutes })}>

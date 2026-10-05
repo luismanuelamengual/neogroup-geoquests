@@ -41,11 +41,12 @@ export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveB
           {t('detective.briefing.story', {
             loot: t(`detective.loot.loot${view.loot + 1}` as MessageKey),
             place,
-            hops: view.stagesCount
+            hops: view.stagesCount,
+            time: formatCaseTime(t, view.startMinute, 0)
           })}
         </p>
         <p className="deadline">
-          {t('detective.briefing.deadline', { time: formatCaseTime(t, view.timeLimitMinutes) })}
+          {t('detective.briefing.deadline', { time: formatCaseTime(t, view.startMinute, view.timeLimitMinutes) })}
         </p>
         <DetectiveHowTo settings={{ hops: view.stagesCount, options, witnesses, minHopKm: 0 }} />
         <GameButton size="large" fullWidth startIcon={<AssignmentTurnedInIcon />} onClick={onAccept}>

@@ -146,7 +146,7 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
         fitTo={[from, chosen, ...(showDestination && !travel.correct ? [destination] : [])]}
         padding={{ top: 90, bottom: 340, left: 60, right: 60 }}
       />
-      <div className="clock">{formatCaseTime(t, clock)}</div>
+      <div className="clock">{formatCaseTime(t, view.startMinute, clock)}</div>
       <div className={classNames('card', { good: finished && !escaped, bad: escaped && finished })}>
         {step === 'arrived' && !travel.correct && (
           <div className="local">

@@ -39,6 +39,8 @@ export interface DetectiveGameView {
   stagesCount: number
   /** Null once the case is closed. */
   currentStageNumber: number | null
+  /** Moment the fictional clock started: minutes since Monday 0:00. */
+  startMinute: number
   elapsedMinutes: number
   timeLimitMinutes: number
   /** Minutes of fictional time each witness costs. */

@@ -39,8 +39,17 @@ export const MAX_MISTAKES = 2
 
 /** Different things a thief can steal (detective.loot.loot1… in the dictionaries). */
 export const LOOT_COUNT = 10
-/** The fictional clock of every case starts on Monday at this hour. */
-export const CASE_START_HOUR = 9
+/** The fictional clock of every case starts at a random hour (whole hours) between these two, any day of the week. */
+export const CASE_START_FIRST_HOUR = 7
+export const CASE_START_LAST_HOUR = 22
+
+/** Random start of a case: minutes since Monday 0:00 (a whole hour from CASE_START_FIRST_HOUR to CASE_START_LAST_HOUR). */
+export function randomCaseStartMinute(random: () => number): number {
+  const day = Math.floor(random() * 7)
+  const hour = CASE_START_FIRST_HOUR + Math.floor(random() * (CASE_START_LAST_HOUR - CASE_START_FIRST_HOUR + 1))
+
+  return day * 24 * 60 + hour * 60
+}
 
 /** Points of each destination guessed at the first try. */
 export const CORRECT_STAGE_SCORE = 400

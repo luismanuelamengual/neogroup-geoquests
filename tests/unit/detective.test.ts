@@ -10,6 +10,7 @@ import {
   getMistakeMinutes,
   getTravelMinutes,
   MISTAKES_MARGIN,
+  randomCaseStartMinute,
   TRAVEL_FIXED_MINUTES,
   TRAVEL_ROUNDING_MINUTES,
   WITNESS_BUDGET_MINUTES
@@ -171,15 +172,37 @@ describe('landmark clues', () => {
 })
 
 describe('detective clock', () => {
-  it('formats the fictional time of a case, which starts on Monday at 9:00', () => {
+  it('formats the fictional time of a case, which starts at a random day and hour', () => {
     const t = createTranslator('es')
 
-    expect(formatCaseTime(t, 0)).toBe('lunes 09:00')
-    expect(formatCaseTime(t, 90)).toBe('lunes 10:30')
-    expect(formatCaseTime(t, 2 * 24 * 60 + 90, { short: true })).toBe('mié 10:30')
-    expect(formatCaseTime(t, 15 * 60)).toBe('martes 00:00')
-    expect(formatCaseTime(t, 80 * 60)).toBe('jueves 17:00')
-    expect(formatCaseTime(createTranslator('en'), 80 * 60)).toBe('Thursday 17:00')
+    const monday9 = 9 * 60
+    expect(formatCaseTime(t, monday9, 0)).toBe('lunes 09:00')
+    expect(formatCaseTime(t, monday9, 90)).toBe('lunes 10:30')
+    expect(formatCaseTime(t, monday9, 2 * 24 * 60 + 90, { short: true })).toBe('mié 10:30')
+    expect(formatCaseTime(t, monday9, 15 * 60)).toBe('martes 00:00')
+    expect(formatCaseTime(t, monday9, 80 * 60)).toBe('jueves 17:00')
+    expect(formatCaseTime(createTranslator('en'), monday9, 80 * 60)).toBe('Thursday 17:00')
+    // Starts on any day, and the week wraps around.
+    expect(formatCaseTime(t, 6 * 24 * 60 + 16 * 60, 0)).toBe('domingo 16:00')
+    expect(formatCaseTime(t, 6 * 24 * 60 + 22 * 60, 3 * 60)).toBe('lunes 01:00')
+  })
+
+  it('draws the start of a case on a whole hour between 7:00 and 22:00 of any day', () => {
+    const days = new Set<number>()
+
+    for (let i = 0; i < 2000; i++) {
+      const start = randomCaseStartMinute(Math.random)
+      const hour = (start % (24 * 60)) / 60
+
+      expect(start % 60).toBe(0)
+      expect(hour).toBeGreaterThanOrEqual(7)
+      expect(hour).toBeLessThanOrEqual(22)
+      days.add(Math.floor(start / (24 * 60)))
+    }
+
+    expect(days.size).toBe(7)
+    expect(randomCaseStartMinute(() => 0)).toBe(7 * 60)
+    expect(randomCaseStartMinute(() => 0.999999)).toBe(6 * 24 * 60 + 22 * 60)
     expect(formatDuration(60)).toBe('1 h')
     expect(formatDuration(150)).toBe('2 h 30 min')
     expect(formatDuration(30)).toBe('30 min')

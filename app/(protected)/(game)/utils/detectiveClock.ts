@@ -1,15 +1,14 @@
-import { CASE_START_HOUR } from '@/app/(protected)/(game)/utils/detective'
 import type { MessageKey } from '@/app/i18n/messages'
 import type { Translator } from '@/app/i18n/translate'
 
 const MINUTES_PER_DAY = 24 * 60
 
 /**
- * Moment of the fictional clock of a case, `minutes` after it started (Monday
- * 9:00): "jueves 18:30" (short: "jue 18:30").
+ * Moment of the fictional clock of a case, `minutes` after it started (at
+ * `startMinute`, minutes since Monday 0:00): "jueves 18:30" (short: "jue 18:30").
  */
-export function formatCaseTime(t: Translator, minutes: number, { short = false } = {}): string {
-  const total = CASE_START_HOUR * 60 + minutes
+export function formatCaseTime(t: Translator, startMinute: number, minutes: number, { short = false } = {}): string {
+  const total = startMinute + minutes
   const day = Math.floor(total / MINUTES_PER_DAY) % 7
   const hours = Math.floor((total % MINUTES_PER_DAY) / 60)
   const mins = total % 60

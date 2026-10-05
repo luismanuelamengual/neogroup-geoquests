@@ -21,6 +21,8 @@ export interface DetectiveGameData {
   stages: DetectiveStage[]
   /** Stage being played (1-based); stages.length + 1 once the suspect was caught. */
   currentStage: number
+  /** Moment the fictional clock started: minutes since Monday 0:00 (random, see randomCaseStartMinute). */
+  startMinute: number
   /** Fictional time the detective has spent (minutes since the case started). */
   elapsedMinutes: number
   /** Fictional time available for the whole case (minutes), computed from the route (see utils/detective.ts). */

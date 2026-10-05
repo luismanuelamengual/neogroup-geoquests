@@ -27,6 +27,7 @@ import {
   getTravelMinutes,
   LOOT_COUNT,
   MAX_MISTAKES,
+  randomCaseStartMinute,
   WITNESS_MINUTES
 } from '@/app/(protected)/(game)/utils/detective'
 import { getLandmarkClue } from '@/app/(protected)/(game)/utils/landmarkClues'
@@ -235,6 +236,7 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
       origin: plan.origin,
       stages: plan.stages,
       currentStage: 1,
+      startMinute: randomCaseStartMinute(ctx.random),
       elapsedMinutes: 0,
       timeLimitMinutes: plan.timeLimitMinutes,
       outcome: null
@@ -282,6 +284,7 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
     return {
       stagesCount: data.stages.length,
       currentStageNumber: finished ? null : data.currentStage,
+      startMinute: data.startMinute,
       elapsedMinutes: data.elapsedMinutes,
       timeLimitMinutes: data.timeLimitMinutes,
       witnessMinutes: WITNESS_MINUTES,

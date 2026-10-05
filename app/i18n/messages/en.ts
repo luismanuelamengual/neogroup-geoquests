@@ -382,7 +382,7 @@ export const en: Messages = {
       caseNumber: 'Case #{id}',
       title: 'Robbery at {place}',
       story:
-        'Today at 9:00 someone stole {loot} at {place}. The thief escaped and will go through {hops} places of the world before vanishing forever.',
+        'On {time} someone stole {loot} at {place}. The thief escaped and will go through {hops} places of the world before vanishing forever.',
       deadline: 'You have until {time}.',
       accept: 'Accept the case'
     },
