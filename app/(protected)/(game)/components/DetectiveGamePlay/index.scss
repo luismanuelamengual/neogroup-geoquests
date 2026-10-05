@@ -60,13 +60,27 @@
 }
 
 @media (max-width: 600px) {
-  .detective-game-play .bottom {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+  .detective-game-play {
+    .thief-eyes {
+      padding: 3px 10px;
+      font-size: 0.7rem;
+    }
 
-    .detective-witnesses {
-      justify-content: space-around;
+    .bottom {
+      right: calc(10px + var(--safe-right));
+      left: calc(10px + var(--safe-left));
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+
+      .detective-witnesses {
+        justify-content: space-around;
+      }
+
+      .travel {
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
     }
   }
 }

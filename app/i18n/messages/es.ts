@@ -416,7 +416,6 @@ export const es = {
       destination: 'Destino',
       travel: 'Viajar',
       noTime: 'Sin tiempo',
-      mistakes: 'Errores',
       exitMessage: 'El caso queda guardado: podés retomarlo cuando quieras desde el menú.'
     },
     travelPanel: {

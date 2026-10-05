@@ -413,7 +413,6 @@ export const en: Messages = {
       destination: 'Destination',
       travel: 'Travel',
       noTime: 'No time',
-      mistakes: 'Mistakes',
       exitMessage: 'The case stays saved: you can resume it from the menu whenever you want.'
     },
     travelPanel: {

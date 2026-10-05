@@ -4,15 +4,19 @@ import type { Translator } from '@/app/i18n/translate'
 
 const MINUTES_PER_DAY = 24 * 60
 
-/** Moment of the fictional clock of a case, `minutes` after it started (Monday 9:00): "jueves 18:30". */
-export function formatCaseTime(t: Translator, minutes: number): string {
+/**
+ * Moment of the fictional clock of a case, `minutes` after it started (Monday
+ * 9:00): "jueves 18:30" (short: "jue 18:30").
+ */
+export function formatCaseTime(t: Translator, minutes: number, { short = false } = {}): string {
   const total = CASE_START_HOUR * 60 + minutes
   const day = Math.floor(total / MINUTES_PER_DAY) % 7
   const hours = Math.floor((total % MINUTES_PER_DAY) / 60)
   const mins = total % 60
+  const dayName = t(`detective.days.d${day}` as MessageKey)
 
   return t('detective.dayTime', {
-    day: t(`detective.days.d${day}` as MessageKey),
+    day: short ? dayName.slice(0, 3) : dayName,
     time: `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`
   })
 }

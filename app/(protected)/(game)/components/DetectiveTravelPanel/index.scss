@@ -200,3 +200,74 @@
     }
   }
 }
+
+// Phones: almost the whole screen, a smaller map, full names and the buttons
+// always at hand (they stick to the bottom while the panel scrolls).
+@media (max-width: 600px) {
+  .detective-travel-dialog .MuiDialog-paper {
+    width: calc(100% - 16px);
+    max-height: calc(100% - 16px - var(--safe-top) - var(--safe-bottom));
+    margin: 8px;
+    border-radius: 18px;
+  }
+
+  .detective-travel-panel {
+    gap: 12px;
+    padding: 12px 12px 0;
+
+    .layout {
+      gap: 12px;
+    }
+
+    .map {
+      min-height: 170px;
+    }
+
+    .option {
+      gap: 10px;
+      padding: 8px 10px;
+
+      .letter {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+      }
+
+      .place {
+        white-space: normal;
+        line-height: 1.2;
+      }
+    }
+
+    .actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      gap: 8px;
+      margin: 0 -12px;
+      padding: 10px 12px calc(12px + var(--safe-bottom));
+      background: var(--color-night-light);
+      box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.35);
+
+      .last-chance {
+        margin: 0;
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      // Compact, and long destination names wrap inside the button.
+      .game-button {
+        padding: 10px 14px;
+        font-size: 1rem;
+
+        .label {
+          min-width: 0;
+          white-space: normal;
+          text-align: center;
+          overflow-wrap: anywhere;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+}

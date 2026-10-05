@@ -142,13 +142,47 @@
   .detective-witnesses {
     gap: 4px;
 
+    // The three share the width, however narrow.
+    .witness {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .person {
+      width: 100%;
+    }
+
     .avatar {
       width: 84px;
+      max-width: 100%;
       height: auto;
     }
 
     .tag {
+      gap: 4px;
+      max-width: 100%;
+      padding: 3px 4px 3px 8px;
       font-size: 0.75rem;
+
+      .name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cost {
+        flex-shrink: 0;
+        padding: 1px 5px 1px 3px;
+      }
+
+      // Without time: the icon (and its color) says it.
+      .cost.none {
+        padding: 1px 3px;
+
+        .label {
+          display: none;
+        }
+      }
     }
   }
 }

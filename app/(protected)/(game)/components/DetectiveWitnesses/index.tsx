@@ -104,7 +104,11 @@ export default function DetectiveWitnesses({
                 <span className="name">{traits.name}</span>
                 <span className={classNames('cost', { done: witness.asked, none: silent })}>
                   {witness.asked ? <CheckIcon /> : silent ? <HourglassDisabledIcon /> : <ScheduleIcon />}
-                  {witness.asked ? null : silent ? t('detective.play.noTime') : formatDuration(witnessMinutes)}
+                  {witness.asked ? null : silent ? (
+                    <span className="label">{t('detective.play.noTime')}</span>
+                  ) : (
+                    formatDuration(witnessMinutes)
+                  )}
                 </span>
               </span>
             </button>

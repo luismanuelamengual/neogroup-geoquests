@@ -176,6 +176,7 @@ describe('detective clock', () => {
 
     expect(formatCaseTime(t, 0)).toBe('lunes 09:00')
     expect(formatCaseTime(t, 90)).toBe('lunes 10:30')
+    expect(formatCaseTime(t, 2 * 24 * 60 + 90, { short: true })).toBe('mié 10:30')
     expect(formatCaseTime(t, 15 * 60)).toBe('martes 00:00')
     expect(formatCaseTime(t, 80 * 60)).toBe('jueves 17:00')
     expect(formatCaseTime(createTranslator('en'), 80 * 60)).toBe('Thursday 17:00')

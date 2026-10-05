@@ -20,8 +20,8 @@ import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Heads-up display of a detective game: exit, where the detective is, the
- * fictional clock, the time left (red when little is left, or not enough for a witness), the
- * wrong destinations (red when one more loses the trail) and the destination being followed.
+ * fictional clock, the time left (red when little is left, or not enough for a witness) and the
+ * destination being followed.
  */
 export default function DetectiveHud({ view }: { view: DetectiveGameView }) {
   const t = useT()
@@ -48,19 +48,17 @@ export default function DetectiveHud({ view }: { view: DetectiveGameView }) {
       <div className="spacer" />
       <div className="chip clock">
         <span className="caption">{t('detective.play.clock')}</span>
-        <span className="value">{formatCaseTime(t, view.elapsedMinutes)}</span>
+        <span className="value">
+          {/* The short one ("mié 10:30") only on the narrowest phones. */}
+          <span className="long">{formatCaseTime(t, view.elapsedMinutes)}</span>
+          <span className="short">{formatCaseTime(t, view.elapsedMinutes, { short: true })}</span>
+        </span>
       </div>
       <div className={classNames('chip time-left', { low: ratio < 0.2 || left < view.witnessMinutes })}>
         <span className="caption">{t('detective.play.timeLeft')}</span>
         <span className="value">{formatDuration(left)}</span>
         <span className="bar" aria-hidden="true">
           <span className="fill" style={{ width: `${ratio * 100}%` }} />
-        </span>
-      </div>
-      <div className={classNames('chip mistakes', { low: view.mistakes >= view.maxMistakes })}>
-        <span className="caption">{t('detective.play.mistakes')}</span>
-        <span className="value">
-          {view.mistakes}/{view.maxMistakes}
         </span>
       </div>
       <div className="chip round">
