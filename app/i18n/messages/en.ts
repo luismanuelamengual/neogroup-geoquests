@@ -133,7 +133,7 @@ export const en: Messages = {
     noModes: 'There are no game modes available yet.',
     subtitle: 'Single player: play solo, at your own pace.',
     modesTitle: 'Game modes',
-    quickPlaysTitle: 'Quick game',
+    quickPlaysTitle: 'Quick classic game',
     quickPlaysSubtitle: 'They start right away, with the rules already set.',
     playNow: 'Play now',
     customClassic: {
