@@ -101,27 +101,11 @@
   }
 }
 
-// Narrow screens: the quick games scroll sideways (bleeding to the screen
-// edges), with room above and below for the hover lift and the card shadow.
+// Narrow screens: the quick games wrap into as many columns as fit (two on
+// tablets, one on phones) instead of overflowing sideways.
 @media (max-width: 860px) {
   .home-menu .quick-plays {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(250px, 70%);
-    gap: 18px;
-    margin: -6px -16px 0;
-    padding: 6px 16px 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 16px;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    > * {
-      scroll-snap-align: start;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 24px;
   }
 }
