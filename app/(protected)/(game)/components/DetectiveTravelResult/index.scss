@@ -41,6 +41,7 @@
     background: linear-gradient(180deg, var(--color-panel) 0%, var(--color-night-light) 100%);
     box-shadow: 0 8px 0 rgba(0, 0, 0, 0.45);
     text-align: center;
+    z-index: 10;
 
     &.good {
       border-color: var(--color-lime);
