@@ -134,10 +134,17 @@ describe('classic game flow', () => {
       }
     }
 
-    // No seeded map overrides the settings of the game modes.
-    for (const map of maps) {
-      expect((await GameMap.find(map.id))!.settings).toBeNull()
-    }
+    // Every seeded map sets the score scale (distance that scores 0) proportional to the area it covers.
+    expect(await Promise.all(maps.map(async (map) => [map.slug, (await GameMap.find(map.id))!.settings]))).toEqual([
+      ['famous-cities', { scoreMaxDistanceKm: 10000 }],
+      ['world-cities', { scoreMaxDistanceKm: 10000 }],
+      ['landmarks', { scoreMaxDistanceKm: 10000 }],
+      ['argentina', { scoreMaxDistanceKm: 2200 }],
+      ['spain', { scoreMaxDistanceKm: 800 }],
+      ['united-states', { scoreMaxDistanceKm: 3000 }],
+      ['latin-america', { scoreMaxDistanceKm: 6000 }],
+      ['europe', { scoreMaxDistanceKm: 3000 }]
+    ])
 
     const famous = await getMapPlaces(mapId)
     const world = await getMapPlaces(maps[1].id)
@@ -312,7 +319,7 @@ describe('classic game flow', () => {
   it('only uses the places linked to the map, with the rules of the mode', async () => {
     const argentinaId = await createArgentinaMap()
 
-    expect((await getMaps()).find((map) => map.slug === 'argentine-cities')).toMatchObject({ placesCount: 38 })
+    expect((await getMaps()).find((map) => map.slug === 'argentine-cities')).toMatchObject({ placesCount: 50 })
 
     const game = await create({}, argentinaId)
 
@@ -366,7 +373,12 @@ describe('classic game flow', () => {
     expect(totalScore).toBe(rounds.reduce((total, round) => total + (round.score ?? 0), 0))
     // The final result is stored with the player (history and stats).
     expect(view.players[0]).toMatchObject({ score: totalScore, position: 1, outcome: null })
-    expect(await getPlayerStats(userId)).toEqual({ gamesPlayed: 1, bestScore: totalScore, averageScore: totalScore })
+    expect(await getPlayerStats(userId)).toEqual({
+      gamesPlayed: 1,
+      bestScore: totalScore,
+      averageScore: totalScore,
+      casesSolved: 0
+    })
     await expect(guess(game.id, 5, ATLANTIC)).rejects.toThrow('La partida ya terminó')
   })
 
