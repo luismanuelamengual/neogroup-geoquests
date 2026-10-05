@@ -357,7 +357,10 @@ export const es = {
     position: '{position} de {total}',
     stars: '{count} estrellas',
     resume: 'Seguir ({done}/{total})',
-    waitingRoom: 'En sala de espera'
+    waitingRoom: 'En sala de espera',
+    casesSolved: 'Casos resueltos',
+    caught: 'Atrapado',
+    escaped: 'Escapó'
   },
   time: {
     seconds: '{count} s',

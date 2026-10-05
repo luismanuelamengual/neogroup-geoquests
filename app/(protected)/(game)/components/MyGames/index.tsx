@@ -11,9 +11,9 @@ import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import { useI18n } from '@/app/i18n/I18nProvider'
 
-const PAGE_SIZE = 20
+const GAMES_SHOWN = 10
 
-/** "Mis partidas": the player's whole history, newest first, loaded 20 at a time. */
+/** "Mis partidas": the player's last games, newest first. */
 interface MyGamesProps {
   stats: PlayerStats
 }
@@ -22,29 +22,24 @@ export default function MyGames({ stats }: MyGamesProps) {
   const { t, locale } = useI18n()
   const { getGames } = useGames()
   const [games, setGames] = useState<GameListItem[]>([])
-  const [hasMore, setHasMore] = useState(false)
   const [loading, setLoading] = useState(true)
-  const loadPage = useCallback(
-    async (offset: number) => {
-      setLoading(true)
+  const loadGames = useCallback(async () => {
+    setLoading(true)
 
-      try {
-        const page = await getGames(offset, PAGE_SIZE)
+    try {
+      const page = await getGames(0, GAMES_SHOWN)
 
-        setGames((current) => (offset === 0 ? page.items : [...current, ...page.items]))
-        setHasMore(page.hasMore)
-      } catch {
-        // The error toast is shown by useRequests.
-      } finally {
-        setLoading(false)
-      }
-    },
-    [getGames]
-  )
+      setGames(page.items)
+    } catch {
+      // The error toast is shown by useRequests.
+    } finally {
+      setLoading(false)
+    }
+  }, [getGames])
 
   useEffect(() => {
-    loadPage(0)
-  }, [loadPage])
+    loadGames()
+  }, [loadGames])
 
   return (
     <div className="my-games">
@@ -53,6 +48,10 @@ export default function MyGames({ stats }: MyGamesProps) {
           <div className="stat">
             <span className="value">{stats.gamesPlayed}</span>
             <span className="label">{t('myGames.games')}</span>
+          </div>
+          <div className="stat">
+            <span className="value">{stats.casesSolved}</span>
+            <span className="label">{t('myGames.casesSolved')}</span>
           </div>
           <div className="stat">
             <span className="value">{formatScore(stats.bestScore, locale)}</span>
@@ -77,11 +76,6 @@ export default function MyGames({ stats }: MyGamesProps) {
           ))}
         </ul>
         {loading && <p className="loading-more">{t('common.loading')}</p>}
-        {!loading && hasMore && (
-          <GameButton color="ghost" fullWidth className="load-more" onClick={() => loadPage(games.length)}>
-            {t('myGames.loadMore')}
-          </GameButton>
-        )}
       </GamePanel>
     </div>
   )

@@ -6,6 +6,8 @@ import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 export interface GameListItem {
   id: number
   mode: GameMode
+  /** Slug of the mode (key of its name in the translations: `modes.<slug>.name`). */
+  modeSlug: string
   mapId: number | null
   mapName: string | null
   status: GameStatus

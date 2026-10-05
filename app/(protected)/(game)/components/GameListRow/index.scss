@@ -22,9 +22,22 @@
     gap: 2px;
     min-width: 0;
 
+    .mode {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 800;
+      text-transform: uppercase;
+
+      .mode-icon {
+        font-size: 1.1rem;
+      }
+    }
+
     .map {
       overflow: hidden;
-      font-weight: 800;
+      color: var(--color-text-secondary);
+      font-size: 0.8rem;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -47,6 +60,21 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
+  }
+
+  .case {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &.solved {
+      color: var(--color-lime);
+    }
+
+    &.escaped {
+      color: var(--color-magenta);
+    }
   }
 
   .stars {

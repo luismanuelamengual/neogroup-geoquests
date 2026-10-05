@@ -354,7 +354,10 @@ export const en: Messages = {
     position: '{position} of {total}',
     stars: '{count} stars',
     resume: 'Resume ({done}/{total})',
-    waitingRoom: 'In the waiting room'
+    waitingRoom: 'In the waiting room',
+    casesSolved: 'Cases solved',
+    caught: 'Caught',
+    escaped: 'Escaped'
   },
   time: {
     seconds: '{count} s',

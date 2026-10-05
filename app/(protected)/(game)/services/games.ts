@@ -7,6 +7,7 @@ import { GameIdInput } from '@/app/(protected)/(game)/models/GameIdInput'
 import { GameListItem } from '@/app/(protected)/(game)/models/GameListItem'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameOptions } from '@/app/(protected)/(game)/models/GameOptions'
+import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
 import { GamePlayerView } from '@/app/(protected)/(game)/models/GamePlayerView'
@@ -498,6 +499,7 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
       {
         id: game.id,
         mode: game.mode,
+        modeSlug: engine.definition.slug,
         mapId: game.mapId,
         mapName: game.map?.name ?? null,
         status: game.status,
@@ -516,19 +518,23 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
   return { items, hasMore: rows.length > safeLimit }
 }
 
-/** Aggregated stats over the finished games of the user in a mode (games screen). */
-export async function getPlayerStats(userId: number, mode: GameMode = GameMode.CLASSIC): Promise<PlayerStats> {
+/** Aggregated stats over the finished games of the user, in every mode (games screen). */
+export async function getPlayerStats(userId: number): Promise<PlayerStats> {
   const rows = await GamePlayer.where('userId', userId).get()
   const gameIds = rows.map((row) => row.gameId)
   const finished =
     gameIds.length > 0
-      ? await Game.whereIn('id', gameIds).where('status', GameStatus.FINISHED).where('mode', mode).select('id').get()
+      ? await Game.whereIn('id', gameIds).where('status', GameStatus.FINISHED).select('id', 'mode').get()
       : []
   const finishedIds = new Set(finished.map((game) => game.id))
-  const scores = rows.filter((row) => finishedIds.has(row.gameId)).map((row) => row.score)
+  const detectiveIds = new Set(finished.filter((game) => game.mode === GameMode.DETECTIVE).map((game) => game.id))
+  const played = rows.filter((row) => finishedIds.has(row.gameId))
+  // Best and average score only make sense among the classic games: detective scores are not comparable.
+  const scores = played.filter((row) => !detectiveIds.has(row.gameId)).map((row) => row.score)
 
   return {
-    gamesPlayed: scores.length,
+    gamesPlayed: played.length,
+    casesSolved: played.filter((row) => detectiveIds.has(row.gameId) && row.outcome === GameOutcome.WON).length,
     bestScore: scores.length > 0 ? Math.max(...scores) : 0,
     averageScore: scores.length > 0 ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : 0
   }

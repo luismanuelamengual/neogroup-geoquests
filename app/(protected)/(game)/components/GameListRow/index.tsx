@@ -5,14 +5,18 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import StarIcon from '@mui/icons-material/Star'
 import classNames from 'classnames'
 import Link from 'next/link'
+import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import { GameListItem } from '@/app/(protected)/(game)/models/GameListItem'
+import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
+import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { formatPosition } from '@/app/(protected)/(game)/utils/players'
 import { formatScore, getGameStars } from '@/app/(protected)/(game)/utils/score'
 import { LOCALE_TAGS } from '@/app/i18n/config'
 import { useI18n } from '@/app/i18n/I18nProvider'
+import type { MessageKey } from '@/app/i18n/messages'
 
 interface GameListRowProps {
   game: GameListItem
@@ -36,13 +40,18 @@ export default function GameListRow({ game, detailed }: GameListRowProps) {
   }).format
   const finished = game.status === GameStatus.FINISHED
   const inProgress = game.status === GameStatus.IN_PROGRESS
+  const detective = game.mode === GameMode.DETECTIVE
   const multiplayer = game.playersCount > 1
   const stars = game.maxScore ? getGameStars(game.score, game.maxScore) : null
 
   return (
     <Link href={`/game/${game.id}`} className="game-list-row">
       <div className="info">
-        <span className="map">{localizeMapName(t, game.mapName)}</span>
+        <span className="mode">
+          <GameModeIcon mode={game.mode} className="mode-icon" />
+          {t(`modes.${game.modeSlug}.name` as MessageKey)}
+        </span>
+        {!detective && <span className="map">{localizeMapName(t, game.mapName)}</span>}
         <span className="date">{formatDate(new Date(game.createdAt))}</span>
         {detailed && finished && game.maxScore != null && (
           <ScoreBar value={game.score} max={game.maxScore} className="bar" />
@@ -50,6 +59,11 @@ export default function GameListRow({ game, detailed }: GameListRowProps) {
       </div>
       {finished && (
         <div className="result">
+          {detective && (
+            <span className={classNames('case', game.outcome === GameOutcome.WON ? 'solved' : 'escaped')}>
+              {t(game.outcome === GameOutcome.WON ? 'myGames.caught' : 'myGames.escaped')}
+            </span>
+          )}
           {multiplayer && game.position != null && (
             <span className="position">
               {t('myGames.position', { position: formatPosition(game.position, locale), total: game.playersCount })}
