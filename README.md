@@ -1,8 +1,8 @@
 # NeoGroup GeoQuests
 
-Versión gratuita de un juego tipo *GeoGuessr*: aparecés en una calle de algún lugar del mundo y tenés que adivinar dónde estás marcando un punto en el mapa. Cuanto más cerca, más puntos.
+Versión gratuita de un juego tipo _GeoGuessr_: aparecés en una calle de algún lugar del mundo y tenés que adivinar dónde estás marcando un punto en el mapa. Cuanto más cerca, más puntos.
 
-Primero se elige el *modo de juego* (con sus reglas fijas en el código) y después el *mapa* (dónde jugar: las regiones del mundo, que se cargan en la base de datos). Por ahora hay tres modos, **Clásico** (solo), **Partida Clásica** multijugador (en vivo, de 2 a 8; slug `friends`) y **Battle Royale** (de 3 a 8: en cada ronda queda eliminado el que marcó más lejos), y ocho mapas: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas), tres de países, **Argentina** (24 capitales de provincia), **España** (47 capitales de provincia, peninsulares) y **Estados Unidos** (48 capitales de estado continentales), dos regionales, **Latinoamérica** (105 ciudades) y **Europa** (213 ciudades), y **Lugares icónicos** (más de 500 monumentos, maravillas naturales y sitios famosos de todo el mundo, tantos para que no se repitan ni se puedan aprender de memoria). Las partidas son de 5 rondas de 3 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
+Primero se elige el _modo de juego_ (con sus reglas fijas en el código) y después el _mapa_ (dónde jugar: las regiones del mundo, que se cargan en la base de datos). Por ahora hay tres modos, **Clásico** (solo), **Partida Clásica** multijugador (en vivo, de 2 a 8; slug `friends`) y **Battle Royale** (de 3 a 8: en cada ronda queda eliminado el que marcó más lejos), y ocho mapas: **Ciudades famosas** (las 20 ciudades más conocidas), **Ciudades del mundo** (150 ciudades de 36 países, también medianas y chicas), tres de países, **Argentina** (24 capitales de provincia), **España** (47 capitales de provincia, peninsulares) y **Estados Unidos** (48 capitales de estado continentales), dos regionales, **Latinoamérica** (105 ciudades) y **Europa** (213 ciudades), y **Lugares icónicos** (más de 500 monumentos, maravillas naturales y sitios famosos de todo el mundo, tantos para que no se repitan ni se puedan aprender de memoria). Las partidas son de 5 rondas de 3 minutos (hasta 5.000 puntos por ronda, 25.000 por partida).
 
 ## Tech stack
 
@@ -20,8 +20,8 @@ Primero se elige el *modo de juego* (con sus reglas fijas en el código) y despu
 
 Se usan dos servicios de Google que su documentación declara **sin costo**:
 
-- *Street View Image Metadata* (servidor, `services/streetView.ts` → `GoogleStreetViewFinder`): busca la panorámica exterior más cercana a un punto. No consume cuota.
-- *Maps Embed API* (navegador, componente `StreetView`): muestra la panorámica en un iframe, arrancando hacia una dirección al azar. Uso ilimitado.
+- _Street View Image Metadata_ (servidor, `services/streetView.ts` → `GoogleStreetViewFinder`): busca la panorámica exterior más cercana a un punto. No consume cuota.
+- _Maps Embed API_ (navegador, componente `StreetView`): muestra la panorámica en un iframe, arrancando hacia una dirección al azar. Uso ilimitado.
 
 Hay que habilitar "Street View Static API" y "Maps Embed API" en Google Cloud y crear dos keys (ver `.env.example`): una de servidor (`GOOGLE_MAPS_API_KEY`) y otra de navegador restringida al dominio (`NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY`). Google puede pedir una cuenta de facturación aunque estos servicios no cobren.
 
@@ -29,12 +29,12 @@ El iframe de Google muestra arriba a la izquierda un cartel con la dirección (�
 
 ### Costos (APIs gratuitas)
 
-| Necesidad | Servicio | Costo |
-| --- | --- | --- |
-| Imágenes de calles | Google Street View Image Metadata + Maps Embed API | Gratis (API keys; sin cuota / ilimitado) |
-| Mapa para adivinar / resultados | OpenFreeMap + MapLibre GL | Gratis, sin API key ni límites |
-| Emails | Resend | Plan gratuito (~3.000 mails/mes) |
-| Hosting + DB | Vercel Hobby + Neon/Supabase free | Gratis para arrancar |
+| Necesidad                       | Servicio                                           | Costo                                    |
+| ------------------------------- | -------------------------------------------------- | ---------------------------------------- |
+| Imágenes de calles              | Google Street View Image Metadata + Maps Embed API | Gratis (API keys; sin cuota / ilimitado) |
+| Mapa para adivinar / resultados | OpenFreeMap + MapLibre GL                          | Gratis, sin API key ni límites           |
+| Emails                          | Resend                                             | Plan gratuito (~3.000 mails/mes)         |
+| Hosting + DB                    | Vercel Hobby + Neon/Supabase free                  | Gratis para arrancar                     |
 
 ## Getting started
 
@@ -52,7 +52,7 @@ El iframe de Google muestra arriba a la izquierda un cartel con la dirección (�
 
    Completar `AUTH_SECRET` (`openssl rand -base64 32`), las credenciales OAuth de Google, `RESEND_API_KEY`, los `DB_*` y las keys de Google Street View:
 
-   - **Google Street View**: en Google Cloud Console habilitar *Street View Static API* y *Maps Embed API* y crear dos API keys: `GOOGLE_MAPS_API_KEY` (servidor, restringida a Street View Static API) y `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` (navegador, restringida a Maps Embed API y a los dominios del sitio, p. ej. `http://localhost:3000/*`).
+   - **Google Street View**: en Google Cloud Console habilitar _Street View Static API_ y _Maps Embed API_ y crear dos API keys: `GOOGLE_MAPS_API_KEY` (servidor, restringida a Street View Static API) y `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` (navegador, restringida a Maps Embed API y a los dominios del sitio, p. ej. `http://localhost:3000/*`).
    - **Google OAuth**: en Google Cloud Console crear un OAuth Client (Web) con redirect URI `http://localhost:3000/api/auth/callback/google` (y la del dominio productivo).
    - Sin `RESEND_API_KEY` los mails no se envían: el link de verificación / reseteo se imprime en la consola del servidor.
 
@@ -74,7 +74,7 @@ El iframe de Google muestra arriba a la izquierda un cartel con la dirección (�
 
 ## Project structure
 
-Igual que en TeamUp, el código está organizado en **módulos** dentro de `app/` (no hay carpeta `src/`). Cada módulo es un *route group* de Next.js que encapsula todo lo relacionado con esa funcionalidad: páginas, endpoints, componentes, modelos, servicios, stores, hooks y utils.
+Igual que en TeamUp, el código está organizado en **módulos** dentro de `app/` (no hay carpeta `src/`). Cada módulo es un _route group_ de Next.js que encapsula todo lo relacionado con esa funcionalidad: páginas, endpoints, componentes, modelos, servicios, stores, hooks y utils.
 
 ```
 app/
@@ -167,23 +167,23 @@ hooks/      useGames (llamadas a la API), useGameSync (polling de los modos en t
 Un **modo de juego** define las reglas: cantidad de rondas, tiempo por ronda, jugadores, escala del puntaje... Están fijas en el código, en `definition.settings` del motor de cada modo (`services/<modo>Mode.ts`); no hay configuración en la base de datos. Para el Clásico:
 
 ```jsonc
-{ "rounds": 5, "timeLimitSeconds": 180, "scoreMaxDistanceKm": 2000 }   // timeLimitSeconds: null = sin límite
+{ "rounds": 5, "timeLimitSeconds": 180, "scoreMaxDistanceKm": 2000 } // timeLimitSeconds: null = sin límite
 ```
 
 Un **mapa** es dónde se juega: una fila de `maps` y los lugares asociados en `map_places` (una región del mundo o varias).
 
-| Columna | |
-| --- | --- |
-| `name`, `description` | Lo que muestra la tarjeta del selector de mapa |
-| `image` | Imagen de la tarjeta: ruta bajo `/public` (p. ej. `/maps/ciudades-del-mundo.png`) o URL absoluta; sin imagen se dibuja una ilustración por defecto |
-| `settings` | JSON opcional (`null` = ninguno) que pisa reglas del modo. Hoy sólo `scoreMaxDistanceKm`, la escala del puntaje (un país entero necesita una escala mayor que una ciudad), p. ej. `{ "scoreMaxDistanceKm": 3500 }`; sin ella, la del modo |
-| `enabled` | Para ocultar un mapa sin borrarlo |
+| Columna    |                                                                                                                                                                                                                                                                                                                                     |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `slug`     | Clave estable y única del mapa, en inglés (p. ej. `world-cities`). Es la única fuente de identidad: el nombre y la descripción de la tarjeta **no se guardan en la base**, están en los diccionarios i18n (`maps.<slug>.name` y `maps.<slug>.description`, en `es.ts` y `en.ts`), y las fotos del collage en `/public/maps/<slug>/` |
+| `image`    | Imagen de la tarjeta: ruta bajo `/public` (p. ej. `/maps/world-cities.png`) o URL absoluta; sin imagen se dibuja una ilustración por defecto                                                                                                                                                                                        |
+| `settings` | JSON opcional (`null` = ninguno) que pisa reglas del modo. Hoy sólo `scoreMaxDistanceKm`, la escala del puntaje (un país entero necesita una escala mayor que una ciudad), p. ej. `{ "scoreMaxDistanceKm": 3500 }`; sin ella, la del modo                                                                                           |
+| `enabled`  | Para ocultar un mapa sin borrarlo                                                                                                                                                                                                                                                                                                   |
 
 Un mismo lugar puede estar en varios mapas. Al crear una partida, sus settings son los del modo, salvo `scoreMaxDistanceKm` si el mapa lo define en `maps.settings` (`getGameSettings`, en `services/gameModes.ts`).
 
-**Menús: "Jugar" (un jugador) y "Multijugador".** La navegación tiene dos menús. "Jugar" (`/play`, `HomeMenu`) tiene los juegos de un jugador: las partidas rápidas (`QuickPlayCard`, definidas en `services/quickPlays.ts`: clásico de 5 rondas de 3 minutos en "Ciudades famosas", "Ciudades del mundo" y "Lugares icónicos", que arrancan sin pasar por el selector) y la "Partida clásica personalizada" (`GameModeCard` del modo clásico). "Multijugador" (`/multiplayer`, `MultiplayerMenu`) tiene el botón "Unirme con código" (`JoinGameDialog`, común a todos los modos) y los modos multijugador (`getGameModes`: los modos con motor registrado). Arriba aparecen, sólo cuando corresponden, el banner para instalar la app y el acceso a la partida con amigos en curso. Las partidas anteriores están en "Mis partidas" (`/games`). Cada tarjeta de modo abre `/play/<slug>` o `/multiplayer/<slug>` según sea de uno o de varios jugadores (`/play/classic`, `/multiplayer/friends`, `/multiplayer/battle-royale`; ver `utils/modeRoutes.ts`) (`MapPicker`): arriba, las reglas que el modo deja elegir (`GameSettingsPicker`, según `definition.configurable`: rondas y tiempo por ronda; el servidor descarta los valores no permitidos), y abajo la grilla de mapas (`getMaps()`: habilitados y con al menos un lugar habilitado); cada tarjeta (`MapCard`) muestra la cantidad de lugares y un botón para jugar o crear la sala. El color de acento es amarillo en los modos de un jugador y celeste en los multijugador (`utils/modeColor.ts`).
+**Menús: "Jugar" (un jugador) y "Multijugador".** La navegación tiene dos menús. "Jugar" (`/play`, `HomeMenu`) tiene los juegos de un jugador: las partidas rápidas (`QuickPlayCard`, definidas en `services/quickPlays.ts`: clásico de 5 rondas de 3 minutos en `famous-cities`, `world-cities` y `landmarks`, que arrancan sin pasar por el selector) y la "Partida clásica personalizada" (`GameModeCard` del modo clásico). "Multijugador" (`/multiplayer`, `MultiplayerMenu`) tiene el botón "Unirme con código" (`JoinGameDialog`, común a todos los modos) y los modos multijugador (`getGameModes`: los modos con motor registrado). Arriba aparecen, sólo cuando corresponden, el banner para instalar la app y el acceso a la partida con amigos en curso. Las partidas anteriores están en "Mis partidas" (`/games`). Cada tarjeta de modo abre `/play/<slug>` o `/multiplayer/<slug>` según sea de uno o de varios jugadores (`/play/classic`, `/multiplayer/friends`, `/multiplayer/battle-royale`; ver `utils/modeRoutes.ts`) (`MapPicker`): arriba, las reglas que el modo deja elegir (`GameSettingsPicker`, según `definition.configurable`: rondas y tiempo por ronda; el servidor descarta los valores no permitidos), y abajo la grilla de mapas (`getMaps()`: habilitados y con al menos un lugar habilitado); cada tarjeta (`MapCard`) muestra la cantidad de lugares y un botón para jugar o crear la sala. El color de acento es amarillo en los modos de un jugador y celeste en los multijugador (`utils/modeColor.ts`).
 
-**Agregar un mapa:** una migración que inserte la fila en `maps`, sus lugares en `places` (si no existen) y las filas de `map_places`. Ver `002-seed-maps`, que carga cada lugar una sola vez y lo asocia a los mapas que lo usan.
+**Agregar un mapa:** una migración que inserte la fila en `maps` (con su `slug`; sumar también `maps.<slug>` en `es.ts` y `en.ts`), sus lugares en `places` (si no existen) y las filas de `map_places`. Ver `002-seed-maps`, que carga cada lugar una sola vez y lo asocia a los mapas que lo usan.
 
 ### Partidas: tabla `games` + motores de modos de juego
 
@@ -252,7 +252,7 @@ Cada lugar define su área en una sola columna `geometry` (`jsonb`) con una **ge
 { "type": "Polygon", "coordinates": [[[-58.46, -34.535], [-58.413, -34.56], ..., [-58.46, -34.535]]] }
 ```
 
-`radius` es un *foreign member* permitido por el RFC: cualquier herramienta GeoJSON lo sigue leyendo como un Point válido. Los tipos están en `models/PlaceGeometry.ts`; para soportar otra geometría (p. ej. `MultiPolygon`) se agrega al tipo `PlaceGeometry` y a `randomPointInGeometry` / `isPointInGeometry` en `utils/geo.ts`. Las 150 ciudades se cargan en la migración `002-seed-maps` (círculos, salvo 3 polígonos: Buenos Aires, Manhattan y París); las 20 marcadas como famosas forman además "Ciudades famosas". Los mapas de países tienen un único lugar: el contorno aproximado del territorio continental como polígono (sin islas, p. ej. sin Tierra del Fuego, Baleares, Canarias, Alaska ni Hawái), dibujado un poco hacia adentro en las fronteras terrestres para que una panorámica encontrada cerca del límite nunca sea del país vecino. No se usa PostGIS: la geometría está en `utils/geo.ts`, así el esquema es portable (y testeable con SQLite).
+`radius` es un _foreign member_ permitido por el RFC: cualquier herramienta GeoJSON lo sigue leyendo como un Point válido. Los tipos están en `models/PlaceGeometry.ts`; para soportar otra geometría (p. ej. `MultiPolygon`) se agrega al tipo `PlaceGeometry` y a `randomPointInGeometry` / `isPointInGeometry` en `utils/geo.ts`. Las 150 ciudades se cargan en la migración `002-seed-maps` (círculos, salvo 3 polígonos: Buenos Aires, Manhattan y París); las 20 marcadas como famosas forman además "Ciudades famosas". Los mapas de países tienen un único lugar: el contorno aproximado del territorio continental como polígono (sin islas, p. ej. sin Tierra del Fuego, Baleares, Canarias, Alaska ni Hawái), dibujado un poco hacia adentro en las fronteras terrestres para que una panorámica encontrada cerca del límite nunca sea del país vecino. No se usa PostGIS: la geometría está en `utils/geo.ts`, así el esquema es portable (y testeable con SQLite).
 
 ### Cómo se obtiene una ubicación aleatoria (`services/locations.ts`)
 
@@ -262,7 +262,7 @@ Cada lugar define su área en una sola columna `geometry` (`jsonb`) con una **ge
 
 Al crear una partida, `planRounds` (`services/rounds.ts`) baraja los lugares del mapa y busca las ubicaciones en paralelo, una por ronda y cada una en un lugar distinto. **Un lugar donde no aparece ninguna imagen en vivo se saltea y se prueba con otro.**
 
-**Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada panorámica encontrada en vivo se guarda ahí, pero sólo se *lee* si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Street View falla o la key está mal configurada), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada panorámica nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria.
+**Caché de respaldo (`place_locations`) — la excepción, no la regla.** Cada panorámica encontrada en vivo se guarda ahí, pero sólo se _lee_ si las búsquedas en vivo no alcanzaron para armar la partida (en la práctica: Street View falla o la key está mal configurada), y aun así se prefieren lugares todavía no usados en la partida. Guarda como máximo 100 ubicaciones por lugar y, llegado el límite, cada panorámica nueva reemplaza a una vieja al azar: el respaldo va rotando y no se vuelve un conjunto fijo de lugares que los jugadores aprendan de memoria.
 
 ### Puntaje (`utils/score.ts`)
 
@@ -281,7 +281,7 @@ La página `/games` (menú principal → "Mis partidas") lista todas las partida
 - Tema MUI oscuro con acentos saturados (`app/components/ThemeRegistry/theme.ts`) y los mismos colores como CSS custom properties en `app/globals.scss`.
 - `GameButton` (botón "arcade" con borde 3D y animación al presionar) y `GamePanel` (panel con borde grueso y cinta de título) son los bloques base de todas las pantallas.
 - Breakpoints usados en todos los `.scss`: **celular** ≤ 600 px, **tablet** 601–900 px, **desktop** ≥ 901 px. Se respetan las safe areas (`env(safe-area-inset-*)`) y se usa `100dvh`.
-- Pantalla de juego inmersiva: en desktop el mapa está en la esquina y se agranda al pasar el mouse (o fijándolo con el pin); en celular/tablet se abre como *bottom sheet* desde el botón "Mapa".
+- Pantalla de juego inmersiva: en desktop el mapa está en la esquina y se agranda al pasar el mouse (o fijándolo con el pin); en celular/tablet se abre como _bottom sheet_ desde el botón "Mapa".
 
 ## PWA
 
@@ -307,5 +307,5 @@ La app está disponible en español (idioma por defecto) e inglés. El jugador e
 - **Errores de la API**: `new ApiException('errors.clave', status, params)`; la respuesta los envía traducidos al idioma del request (más `error.key`, que el cliente usa para decidir sin depender del texto).
 - **Emails**: se envían en el idioma guardado del destinatario.
 - **Formatos**: números, distancias, fechas y ordinales según el idioma (`utils/score.ts`, `utils/players.ts`).
-- **Mapas**: se guardan en español en la base de datos; los conocidos se traducen por su nombre (`maps.<slug>` en los diccionarios, ver `utils/mapText.ts`) y los demás muestran el texto guardado. Los nombres de los lugares (ciudades) no se traducen.
+- **Mapas**: la base de datos solo guarda su `slug` (p. ej. `famous-cities`); el nombre y la descripción de cada idioma están en los diccionarios, bajo `maps.<slug>` (ver `utils/mapText.ts`). Un mapa sin entrada en los diccionarios muestra su slug como nombre; un test verifica que todos los mapas cargados tengan nombre y descripción en todos los idiomas. Los nombres de los lugares (ciudades) no se traducen.
 - **Agregar un idioma**: sumarlo a `LOCALES`, `LOCALE_NAMES` y `LOCALE_TAGS` (`app/i18n/config.ts`), crear su diccionario y registrarlo en `app/i18n/messages/index.ts`.

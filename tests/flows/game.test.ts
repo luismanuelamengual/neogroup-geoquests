@@ -27,6 +27,9 @@ import {
 } from '@/app/(protected)/(game)/services/locations'
 import { getMapPlaces, getMaps } from '@/app/(protected)/(game)/services/maps'
 import { ROUND_TIME_GRACE_MS } from '@/app/(protected)/(game)/utils/guesses'
+import { getMapDescription, getMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { LOCALES } from '@/app/i18n/config'
+import { createTranslator } from '@/app/i18n/translate'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
@@ -92,13 +95,12 @@ describe('classic game flow', () => {
   /** Creates a map with the Argentinian cities (optionally with its own score scale). */
   async function createArgentinaMap(scoreMaxDistanceKm: number | null = null, withPlaces = true): Promise<number> {
     await DB.table('maps').insert({
-      name: 'Ciudades argentinas',
-      description: 'Solo Argentina',
+      slug: 'argentine-cities',
       settings: scoreMaxDistanceKm == null ? null : JSON.stringify({ scoreMaxDistanceKm }),
       enabled: true
     })
 
-    const argentinaId = Number((await DB.table('maps').where('name', 'Ciudades argentinas').first())!.id)
+    const argentinaId = Number((await DB.table('maps').where('slug', 'argentine-cities').first())!.id)
     const places = await Place.where('countryCode', 'AR').get()
 
     if (withPlaces) {
@@ -111,16 +113,26 @@ describe('classic game flow', () => {
   it('seeds the city maps and the country maps', async () => {
     const maps = await getMaps()
 
-    expect(maps.map((map) => [map.name, map.placesCount])).toEqual([
-      ['Ciudades famosas', 20],
-      ['Ciudades del mundo', 150],
-      ['Lugares icónicos', 582],
-      ['Argentina', 24],
-      ['España', 47],
-      ['Estados Unidos', 48],
-      ['Latinoamérica', 105],
-      ['Europa', 213]
+    expect(maps.map((map) => [map.slug, map.placesCount])).toEqual([
+      ['famous-cities', 20],
+      ['world-cities', 150],
+      ['landmarks', 582],
+      ['argentina', 24],
+      ['spain', 47],
+      ['united-states', 48],
+      ['latin-america', 105],
+      ['europe', 213]
     ])
+
+    // Every seeded map has its name and description in every language (they are not stored in the database).
+    for (const locale of LOCALES) {
+      const t = createTranslator(locale)
+
+      for (const map of maps) {
+        expect(getMapName(t, map.slug), `${locale} name of ${map.slug}`).not.toBe(map.slug)
+        expect(getMapDescription(t, map.slug), `${locale} description of ${map.slug}`).not.toBe('')
+      }
+    }
 
     // No seeded map overrides the settings of the game modes.
     for (const map of maps) {
@@ -132,7 +144,7 @@ describe('classic game flow', () => {
 
     expect(famous.filter((place) => place.geometry.type === 'Polygon')).toHaveLength(3)
     expect(famous.map((place) => place.name)).toEqual(expect.arrayContaining(['París', 'Roma', 'Buenos Aires']))
-    // Not famous: only in "Ciudades del mundo".
+    // Not famous: only in `world-cities`.
     expect(famous.map((place) => place.name)).not.toContain('Mendoza')
     expect(world.find((place) => place.name === 'Mendoza')?.geometry).toEqual({
       type: 'Point',
@@ -143,33 +155,35 @@ describe('classic game flow', () => {
     expect(famous.every((place) => world.some((other) => other.id === place.id))).toBe(true)
     expect(new Set(world.map((place) => place.countryCode)).size).toBe(36)
     // A country map has the capitals of the provinces / states: the ones that are cities of the world are shared
-    // with "Ciudades del mundo", the other ones are only in the country map.
-    const argentina = await getMapPlaces(maps.find((map) => map.name === 'Argentina')!.id)
+    // with `world-cities`, the other ones are only in the country map.
+    const argentina = await getMapPlaces(maps.find((map) => map.slug === 'argentina')!.id)
 
     expect(argentina.map((place) => place.name)).toEqual(
       expect.arrayContaining(['Buenos Aires', 'La Plata', 'Mendoza', 'San Juan', 'San Luis', 'Córdoba', 'Ushuaia'])
     )
     expect(argentina.every((place) => place.countryCode === 'AR')).toBe(true)
-    expect(argentina.find((place) => place.name === 'Mendoza')?.id).toBe(world.find((place) => place.name === 'Mendoza')!.id)
+    expect(argentina.find((place) => place.name === 'Mendoza')?.id).toBe(
+      world.find((place) => place.name === 'Mendoza')!.id
+    )
     expect(world.map((place) => place.name)).not.toContain('La Plata')
+    expect((await getMapPlaces(maps.find((map) => map.slug === 'spain')!.id)).map((place) => place.name)).toEqual(
+      expect.arrayContaining(['Madrid', 'Zaragoza', 'Vitoria-Gasteiz'])
+    )
     expect(
-      (await getMapPlaces(maps.find((map) => map.name === 'España')!.id)).map((place) => place.name)
-    ).toEqual(expect.arrayContaining(['Madrid', 'Zaragoza', 'Vitoria-Gasteiz']))
-    expect(
-      (await getMapPlaces(maps.find((map) => map.name === 'Estados Unidos')!.id)).map((place) => place.name)
+      (await getMapPlaces(maps.find((map) => map.slug === 'united-states')!.id)).map((place) => place.name)
     ).toEqual(expect.arrayContaining(['Austin', 'Sacramento', 'Montpelier']))
   })
 
-  it('seeds the regional maps and the landmarks without touching "Ciudades del mundo"', async () => {
+  it('seeds the regional maps and the landmarks without touching `world-cities`', async () => {
     const maps = await getMaps()
-    const placesOf = async (name: string) => getMapPlaces(maps.find((map) => map.name === name)!.id)
+    const placesOf = async (slug: string) => getMapPlaces(maps.find((map) => map.slug === slug)!.id)
     const world = await getMapPlaces(maps[1].id)
     const worldIds = new Set(world.map((place) => place.id))
-    const latinAmerica = await placesOf('Latinoamérica')
-    const europe = await placesOf('Europa')
-    const landmarks = await placesOf('Lugares icónicos')
+    const latinAmerica = await placesOf('latin-america')
+    const europe = await placesOf('europe')
+    const landmarks = await placesOf('landmarks')
 
-    // The world cities of the region are shared with "Ciudades del mundo"; the rest are only in the regional map.
+    // The world cities of the region are shared with `world-cities`; the rest are only in the regional map.
     expect(latinAmerica.map((place) => place.name)).toEqual(expect.arrayContaining(['Buenos Aires', 'Quito', 'La Paz']))
     expect(latinAmerica.filter((place) => worldIds.has(place.id))).toHaveLength(36)
     expect(latinAmerica.map((place) => place.name)).not.toContain('Madrid')
@@ -187,7 +201,7 @@ describe('classic game flow', () => {
   })
 
   it('plays a country map in the capitals of its provinces, with searches sized for a city', async () => {
-    const argentina = (await getMaps()).find((map) => map.name === 'Argentina')!
+    const argentina = (await getMaps()).find((map) => map.slug === 'argentina')!
     const capitals = await getMapPlaces(argentina.id)
     const finder = new FakePanoramaFinder()
     const game = await create({ finder }, argentina.id)
@@ -199,9 +213,7 @@ describe('classic game flow', () => {
     // Every round is in a different capital of the country.
     expect(new Set(answers.map((round) => round.placeName)).size).toBe(5)
     expect(
-      answers.every(
-        (round) => round.countryCode === 'AR' && capitals.some((place) => place.name === round.placeName)
-      )
+      answers.every((round) => round.countryCode === 'AR' && capitals.some((place) => place.name === round.placeName))
     ).toBe(true)
 
     // 100 km off, with the score scale of the mode (3.000 km).
@@ -260,7 +272,7 @@ describe('classic game flow', () => {
         name: 'Detective',
         minPlayers: 1,
         maxPlayers: 1,
-        mapName: 'Lugares icónicos',
+        mapSlug: 'landmarks',
         settings: { hops: 5, options: 4, witnesses: 3, minHopKm: 500 },
         configurable: {}
       })
@@ -273,7 +285,7 @@ describe('classic game flow', () => {
     expect(game).toMatchObject({
       mode: GameMode.CLASSIC,
       status: GameStatus.IN_PROGRESS,
-      mapName: 'Ciudades famosas',
+      mapSlug: 'famous-cities',
       code: null,
       hostUserId: null,
       version: 1
@@ -300,7 +312,7 @@ describe('classic game flow', () => {
   it('only uses the places linked to the map, with the rules of the mode', async () => {
     const argentinaId = await createArgentinaMap()
 
-    expect((await getMaps()).find((map) => map.name === 'Ciudades argentinas')).toMatchObject({ placesCount: 38 })
+    expect((await getMaps()).find((map) => map.slug === 'argentine-cities')).toMatchObject({ placesCount: 38 })
 
     const game = await create({}, argentinaId)
 
@@ -321,7 +333,7 @@ describe('classic game flow', () => {
   it('does not offer maps without places, nor unknown game modes', async () => {
     const emptyId = await createArgentinaMap(null, false)
 
-    expect((await getMaps()).map((map) => map.name)).not.toContain('Ciudades argentinas')
+    expect((await getMaps()).map((map) => map.slug)).not.toContain('argentine-cities')
     await expect(create({}, emptyId)).rejects.toThrow('no tiene lugares')
     await expect(
       createGame(userId, { mapId, mode: 99 as GameMode }, { finder: new FakePanoramaFinder() })
@@ -497,7 +509,7 @@ describe('classic game flow', () => {
     expect(firstPage.items[0].id).toBeGreaterThan(firstPage.items[1].id)
     expect(firstPage.items[0]).toMatchObject({
       mode: GameMode.CLASSIC,
-      mapName: 'Ciudades famosas',
+      mapSlug: 'famous-cities',
       status: GameStatus.IN_PROGRESS,
       playersCount: 1,
       maxScore: 25000,

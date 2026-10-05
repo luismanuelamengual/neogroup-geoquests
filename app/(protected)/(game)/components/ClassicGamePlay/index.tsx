@@ -99,7 +99,7 @@ export default function ClassicGamePlay() {
     <div className="classic-game-play">
       <StreetView panoId={round.panoId} />
       <RoundHud
-        mapName={game.mapName}
+        mapSlug={game.mapSlug}
         roundNumber={displayedRoundNumber}
         roundsCount={view.roundsCount}
         totalScore={view.totalScore}

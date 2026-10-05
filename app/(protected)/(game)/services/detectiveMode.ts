@@ -33,7 +33,7 @@ import { getLandmarkClue } from '@/app/(protected)/(game)/utils/landmarkClues'
 import { ApiException } from '@/app/models/ApiException'
 
 /** The only map of the mode: its landmarks have the clues the witnesses give. */
-export const DETECTIVE_MAP_NAME = 'Lugares icónicos'
+export const DETECTIVE_MAP_SLUG = 'landmarks'
 
 const definition: GameModeDefinition<DetectiveGameSettings> = {
   mode: GameMode.DETECTIVE,
@@ -45,7 +45,7 @@ const definition: GameModeDefinition<DetectiveGameSettings> = {
   minPlayers: 1,
   maxPlayers: 1,
   realtime: false,
-  mapName: DETECTIVE_MAP_NAME,
+  mapSlug: DETECTIVE_MAP_SLUG,
   settings: { hops: 5, options: 4, witnesses: 3, minHopKm: 500 },
   // Fixed rules: the time available comes from the route of each case.
   configurable: {},
@@ -212,7 +212,7 @@ function toPlayedStagesView(data: DetectiveGameData): DetectivePlayedStageView[]
 
 /**
  * Detective mode: a single player follows a suspect through a route of
- * landmarks ("Lugares icónicos"). At every stage the player explores where the
+ * landmarks (`landmarks`). At every stage the player explores where the
  * detective is (Street View of the current stop) — the suspect already left,
  * so only the witnesses there give clues about the next stop — and travels to
  * one of the destinations offered, all against a fictional clock computed from

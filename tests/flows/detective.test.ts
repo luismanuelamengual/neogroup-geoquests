@@ -11,7 +11,7 @@ import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { Place } from '@/app/(protected)/(game)/models/Place'
-import { DETECTIVE_MAP_NAME } from '@/app/(protected)/(game)/services/detectiveMode'
+import { DETECTIVE_MAP_SLUG } from '@/app/(protected)/(game)/services/detectiveMode'
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGames, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
@@ -151,16 +151,16 @@ describe('detective game flow', () => {
   it('is offered in the "Jugar" menu, always in the landmarks map', async () => {
     const mode = getGameModes().find((item) => item.mode === GameMode.DETECTIVE)
 
-    expect(mode).toMatchObject({ slug: 'detective', maxPlayers: 1, mapName: DETECTIVE_MAP_NAME })
+    expect(mode).toMatchObject({ slug: 'detective', maxPlayers: 1, mapSlug: DETECTIVE_MAP_SLUG })
 
     // Whatever map the client sends, the case is played in the landmarks map.
-    const otherMap = (await getMaps()).find((map) => map.name !== DETECTIVE_MAP_NAME)!
+    const otherMap = (await getMaps()).find((map) => map.slug !== DETECTIVE_MAP_SLUG)!
     const game = await createGame(
       userId,
       { mode: GameMode.DETECTIVE, mapId: otherMap.id },
       { finder: new FakePanoramaFinder() }
     )
-    const landmarks = (await getMaps()).find((map) => map.name === DETECTIVE_MAP_NAME)!
+    const landmarks = (await getMaps()).find((map) => map.slug === DETECTIVE_MAP_SLUG)!
 
     expect(game.mapId).toBe(landmarks.id)
     expect(game.status).toBe(GameStatus.IN_PROGRESS)

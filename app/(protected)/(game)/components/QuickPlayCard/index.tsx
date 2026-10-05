@@ -8,7 +8,7 @@ import { useState } from 'react'
 import MapArt from '@/app/(protected)/(game)/components/MapArt'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { QuickPlayView } from '@/app/(protected)/(game)/models/QuickPlayView'
-import { localizeMapDescription, localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getMapDescription, getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
 import Loading from '@/app/components/Loading'
 import { useT } from '@/app/i18n/I18nProvider'
@@ -54,8 +54,8 @@ export default function QuickPlayCard({ quickPlay }: { quickPlay: QuickPlayView 
           </span>
         </span>
         <span className="content">
-          <span className="name">{localizeMapName(t, map.name)}</span>
-          <span className="description">{localizeMapDescription(t, map.name, map.description)}</span>
+          <span className="name">{getMapName(t, map.slug)}</span>
+          <span className="description">{getMapDescription(t, map.slug)}</span>
           <span className="tags">
             <span className="tag">{t('modes.rounds', { count: settings.rounds })}</span>
             <span className="tag">

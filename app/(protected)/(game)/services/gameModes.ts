@@ -61,7 +61,7 @@ export function getGameModes(t?: Translator): GameModeView[] {
       name: t ? t(`modes.${definition.slug}.name` as MessageKey) : definition.name,
       description: t ? t(`modes.${definition.slug}.description` as MessageKey) : definition.description,
       image: definition.image,
-      mapName: definition.mapName ?? null,
+      mapSlug: definition.mapSlug ?? null,
       minPlayers: definition.minPlayers,
       maxPlayers: definition.maxPlayers,
       settings: definition.settings as GameSettings,

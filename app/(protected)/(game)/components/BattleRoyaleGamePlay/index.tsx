@@ -133,7 +133,7 @@ export default function BattleRoyaleGamePlay() {
     <div className="battle-royale-game-play">
       <StreetView panoId={round.panoId} />
       <RoundHud
-        mapName={game.mapName}
+        mapSlug={game.mapSlug}
         roundNumber={roundNumber}
         roundsCount={null}
         stat={{ caption: t('game.remaining'), value: view.aliveUserIds.length }}

@@ -19,33 +19,33 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 import { MapPhoto } from '@/app/(protected)/(game)/models/MapPhoto'
-import { mapSlug, MAX_MAP_PHOTOS } from '@/app/(protected)/(game)/utils/mapPhotos'
+import { MAX_MAP_PHOTOS } from '@/app/(protected)/(game)/utils/mapPhotos'
 
-/** Searches of the photos of each map (name as seeded in database/migrations/002-seed-maps.ts): one photo each. */
+/** Searches of the photos of each map (slug as seeded in database/migrations/002-seed-maps.ts): one photo each. */
 const MAP_QUERIES: Record<string, string[]> = {
-  'Ciudades famosas': [
+  'famous-cities': [
     'Eiffel Tower Paris',
     'Buenos Aires Obelisco',
     'London Tower Bridge',
     'Cape Town Table Mountain city'
   ],
-  'Ciudades del mundo': [
-    'Tokyo skyline',
-    'Manhattan skyline from Hudson',
-    'Cairo city skyline',
-    'Sydney Harbour skyline'
-  ],
-  'Lugares icónicos': ['Machu Picchu panorama', 'Colosseum Rome exterior', 'Taj Mahal Agra', 'Uluru Ayers Rock sunset'],
+  'world-cities': ['Tokyo skyline', 'Manhattan skyline from Hudson', 'Cairo city skyline', 'Sydney Harbour skyline'],
+  landmarks: ['Machu Picchu panorama', 'Colosseum Rome exterior', 'Taj Mahal Agra', 'Uluru Ayers Rock sunset'],
   Argentina: ['Perito Moreno glacier', 'Fitz Roy Patagonia', 'Iguazu Falls Argentina', 'Quebrada de Humahuaca'],
-  España: [
+  spain: [
     'Sagrada Familia Barcelona',
     'Alhambra Granada',
     'Plaza de España Sevilla',
     'Santiago de Compostela cathedral'
   ],
-  'Estados Unidos': ['Grand Canyon South Rim', 'Golden Gate Bridge', 'Statue of Liberty', 'Monument Valley'],
-  Latinoamérica: ['Cartagena de Indias old city', 'Zocalo Mexico City', 'Valparaiso hills', 'Rio de Janeiro Sugarloaf'],
-  Europa: ['Prague Old Town Square', 'Santorini Oia', 'Amsterdam canals', 'Big Ben Westminster']
+  'united-states': ['Grand Canyon South Rim', 'Golden Gate Bridge', 'Statue of Liberty', 'Monument Valley'],
+  'latin-america': [
+    'Cartagena de Indias old city',
+    'Zocalo Mexico City',
+    'Valparaiso hills',
+    'Rio de Janeiro Sugarloaf'
+  ],
+  europe: ['Prague Old Town Square', 'Santorini Oia', 'Amsterdam canals', 'Big Ben Westminster']
 }
 const API = 'https://commons.wikimedia.org/w/api.php'
 const USER_AGENT = 'geoquests-map-photos/1.0 (https://github.com/luismanuelamengual; luismanuelamengual@gmail.com)'
@@ -150,13 +150,12 @@ async function search(query: string): Promise<Candidate[]> {
 async function run(): Promise<void> {
   const manifest: Record<string, MapPhoto[]> = {}
 
-  for (const [mapName, queries] of Object.entries(MAP_QUERIES)) {
-    const slug = mapSlug(mapName)
+  for (const [slug, queries] of Object.entries(MAP_QUERIES)) {
     const directory = path.join('public', 'maps', slug)
     const used = new Set<string>()
     const photos: MapPhoto[] = []
 
-    console.log(`\n${mapName}`)
+    console.log(`\n${slug}`)
 
     for (const query of queries.slice(0, MAX_MAP_PHOTOS)) {
       try {

@@ -12,7 +12,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { BattleRoyaleGameView } from '@/app/(protected)/(game)/models/BattleRoyaleGameView'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
-import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
@@ -89,7 +89,7 @@ export default function BattleRoyaleGameSummary() {
     <div className="battle-royale-game-summary">
       {starting && <Loading message={t('picker.preparingRoom')} />}
       <GamePanel className="hero" title={t('game.gameOver')} accent="magenta">
-        <div className="mode">{localizeMapName(t, game.mapName)}</div>
+        <div className="mode">{getMapName(t, game.mapSlug)}</div>
         <div className="headline">
           <EmojiEventsIcon className="trophy" />
           {headline}

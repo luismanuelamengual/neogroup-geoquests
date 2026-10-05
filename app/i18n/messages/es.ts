@@ -183,17 +183,17 @@ export const es = {
     choose: 'Elegir'
   },
   maps: {
-    'ciudades-famosas': {
+    'famous-cities': {
       name: 'Ciudades famosas',
       description:
         'Aparecés en una calle de una de las 20 ciudades más conocidas del mundo. ¿Sabés cuál es y dónde estás?'
     },
-    'ciudades-del-mundo': {
+    'world-cities': {
       name: 'Ciudades del mundo',
       description:
         '150 ciudades de 36 países: capitales, pero también ciudades medianas y chicas. ¿Te animás a reconocerlas?'
     },
-    'lugares-iconicos': {
+    landmarks: {
       name: 'Lugares icónicos',
       description:
         'Aparecés junto a un monumento, una maravilla natural o un sitio famoso: del Coliseo a Machu Picchu, de la Torre Eiffel a Uluru. Más de 500 lugares en todo el mundo, así que no se repiten.'
@@ -202,20 +202,20 @@ export const es = {
       name: 'Argentina',
       description: 'Aparecés en cualquier lugar de la Argentina continental, de la Puna a Santa Cruz. ¿Dónde estás?'
     },
-    espana: {
+    spain: {
       name: 'España',
       description: 'Aparecés en cualquier lugar de la España peninsular, de Galicia a Andalucía. ¿Dónde estás?'
     },
-    'estados-unidos': {
+    'united-states': {
       name: 'Estados Unidos',
       description: 'Aparecés en cualquier lugar de los 48 estados continentales de Estados Unidos. ¿Dónde estás?'
     },
-    latinoamerica: {
+    'latin-america': {
       name: 'Latinoamérica',
       description:
         'De México a Ushuaia: más de 100 ciudades latinoamericanas, desde las grandes capitales hasta pueblos chicos. ¿Reconocés dónde estás?'
     },
-    europa: {
+    europe: {
       name: 'Europa',
       description:
         'Más de 200 ciudades europeas, de Reikiavik a Atenas y de Lisboa a Moscú: capitales, pero también ciudades medianas y chicas. ¿Te animás?'

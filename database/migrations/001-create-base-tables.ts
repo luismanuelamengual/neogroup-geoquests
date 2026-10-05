@@ -70,8 +70,10 @@ export default {
 
       await Schema.createIfNotExists('maps', (table) => {
         table.increments('id')
-        table.string('name', 120)
-        table.text('description')
+        // Stable key of the map (e.g. 'famous-cities'): its name and description are not stored, they are
+        // translated in the i18n dictionaries (maps.<slug>.name / maps.<slug>.description), and its photos
+        // live in /public/maps/<slug>.
+        table.string('slug', 60).unique()
         // Image of the map card (a path under /public or an absolute URL).
         table.string('image', 255).nullable()
         // Settings of the map (e.g. { scoreMaxDistanceKm: 3500 }) that override the ones of the game

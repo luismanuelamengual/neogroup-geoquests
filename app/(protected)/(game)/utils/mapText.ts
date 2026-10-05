@@ -1,28 +1,28 @@
-import { mapSlug } from '@/app/(protected)/(game)/utils/mapPhotos'
 import type { MessageKey } from '@/app/i18n/messages'
 import type { Translator } from '@/app/i18n/translate'
 
 /**
- * Maps are stored in the database in Spanish. The dictionaries translate the
- * known ones (matched by the slug of their stored name); any other map keeps
- * the text it was stored with.
+ * The name and description of a map are not stored in the database: they are
+ * in the i18n dictionaries, under the slug of the map (`maps.<slug>.name` and
+ * `maps.<slug>.description`). A map with no entry (e.g. one added to the
+ * database but not to the dictionaries yet) falls back to `fallback`.
  */
-function localizeMapField(t: Translator, storedName: string, field: 'name' | 'description', stored: string): string {
-  const key = `maps.${mapSlug(storedName)}.${field}` as MessageKey
+function getMapField(t: Translator, slug: string, field: 'name' | 'description', fallback: string): string {
+  const key = `maps.${slug}.${field}` as MessageKey
   const translated = t(key)
 
-  return translated === key ? stored : translated
+  return translated === key ? fallback : translated
 }
 
-/** Name of a map in the language of `t`. */
-export function localizeMapName(t: Translator, storedName: string): string
-export function localizeMapName(t: Translator, storedName: string | null): string | null
+/** Name of a map in the language of `t` (its slug when it has no translation). */
+export function getMapName(t: Translator, slug: string): string
+export function getMapName(t: Translator, slug: string | null): string | null
 
-export function localizeMapName(t: Translator, storedName: string | null): string | null {
-  return storedName == null ? null : localizeMapField(t, storedName, 'name', storedName)
+export function getMapName(t: Translator, slug: string | null): string | null {
+  return slug == null ? null : getMapField(t, slug, 'name', slug)
 }
 
-/** Description of a map in the language of `t`. */
-export function localizeMapDescription(t: Translator, storedName: string, storedDescription: string): string {
-  return localizeMapField(t, storedName, 'description', storedDescription)
+/** Description of a map in the language of `t` (empty when it has no translation). */
+export function getMapDescription(t: Translator, slug: string): string {
+  return getMapField(t, slug, 'description', '')
 }

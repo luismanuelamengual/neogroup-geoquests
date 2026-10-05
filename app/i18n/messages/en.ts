@@ -181,16 +181,16 @@ export const en: Messages = {
     choose: 'Choose'
   },
   maps: {
-    'ciudades-famosas': {
+    'famous-cities': {
       name: 'Famous cities',
       description:
         'You land on a street in one of the 20 best known cities in the world. Do you know which one it is and where you are?'
     },
-    'ciudades-del-mundo': {
+    'world-cities': {
       name: 'Cities of the world',
       description: '150 cities in 36 countries: capitals, but also medium and small cities. Can you recognize them?'
     },
-    'lugares-iconicos': {
+    landmarks: {
       name: 'Iconic places',
       description:
         'You land next to a monument, a natural wonder or a famous sight: from the Colosseum to Machu Picchu, from the Eiffel Tower to Uluru. Over 500 places around the world, so they never repeat.'
@@ -199,20 +199,20 @@ export const en: Messages = {
       name: 'Argentina',
       description: 'You land anywhere in mainland Argentina, from the Puna to Santa Cruz. Where are you?'
     },
-    espana: {
+    spain: {
       name: 'Spain',
       description: 'You land anywhere in peninsular Spain, from Galicia to Andalusia. Where are you?'
     },
-    'estados-unidos': {
+    'united-states': {
       name: 'United States',
       description: 'You land anywhere in the 48 contiguous states of the United States. Where are you?'
     },
-    latinoamerica: {
+    'latin-america': {
       name: 'Latin America',
       description:
         'From Mexico to Ushuaia: over 100 Latin American cities, from big capitals to small towns. Can you tell where you are?'
     },
-    europa: {
+    europe: {
       name: 'Europe',
       description:
         'Over 200 European cities, from Reykjavik to Athens and from Lisbon to Moscow: capitals, but also medium and small cities. Are you up for it?'

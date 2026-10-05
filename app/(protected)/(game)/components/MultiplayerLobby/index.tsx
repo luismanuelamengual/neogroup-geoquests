@@ -11,7 +11,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
 import { MultiplayerGameView } from '@/app/(protected)/(game)/models/MultiplayerGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
-import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
 import { getPlayerColors } from '@/app/(protected)/(game)/utils/players'
@@ -83,7 +83,7 @@ export default function MultiplayerLobby() {
         title={t('lobby.title')}
         accent={getModeColor(game.mode) as 'cyan' | 'magenta' | 'gold'}
       >
-        <div className="map">{localizeMapName(t, game.mapName)}</div>
+        <div className="map">{getMapName(t, game.mapSlug)}</div>
         <div className="rules">
           {t('lobby.rules', {
             rounds: view.roundsCount ? t('modes.rounds', { count: view.roundsCount }) : t('modes.elimination'),

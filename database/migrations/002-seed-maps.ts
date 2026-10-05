@@ -2,26 +2,28 @@ import { DB } from '@neogroup/neorm'
 import { MapSettings } from '@/app/(protected)/(game)/models/MapSettings'
 
 /**
- * Seeds the maps and their places:
+ * Seeds the maps and their places. A map is only a stable `slug`: its name and
+ * description are in the i18n dictionaries (`maps.<slug>`), and its photos in
+ * /public/maps/<slug>.
  *
- *   - "Ciudades famosas": the 20 best known cities of the world (Paris, Rome,
+ *   - `famous-cities`: the 20 best known cities of the world (Paris, Rome,
  *     Buenos Aires...).
- *   - "Ciudades del mundo": 150 cities of 36 countries with good Street View
+ *   - `world-cities`: 150 cities of 36 countries with good Street View
  *     coverage — capitals and big cities, but also medium and small ones (the
  *     20 famous cities included).
- *   - "Argentina", "España" and "Estados Unidos": the capital cities of the
+ *   - `argentina`, `spain` and `united-states`: the capital cities of the
  *     provinces / states of each country (24 provinces of Argentina, the 47
  *     peninsular provinces of Spain, the capitals of the 48 continental states
  *     of the United States). A whole-country polygon was not used because the
  *     random points often fell on roads and rural areas, impossible to tell
  *     apart. Capitals that are already cities of another map (Mendoza,
  *     Córdoba, Madrid...) are the same place, linked to both maps.
- *   - "Latinoamérica": the cities of "Ciudades del mundo" located in Latin
+ *   - `latin-america`: the cities of `world-cities` located in Latin
  *     America plus many more of its cities (Ecuador, Bolivia, Paraguay, Central
  *     America, the Caribbean...).
- *   - "Europa": the cities of "Ciudades del mundo" located in Europe plus many
+ *   - `europe`: the cities of `world-cities` located in Europe plus many
  *     more of its cities (Balkans, Baltics, Eastern Europe...).
- *   - "Lugares icónicos": hundreds of monuments, natural wonders and famous
+ *   - `landmarks`: hundreds of monuments, natural wonders and famous
  *     sights all over the world (small circles around each one). There are
  *     that many on purpose, so games do not repeat them and they cannot be
  *     learnt by heart.
@@ -42,11 +44,11 @@ import { MapSettings } from '@/app/(protected)/(game)/models/MapSettings'
 interface SeedPlace {
   name: string
   countryCode: string
-  /** Also part of "Ciudades famosas". */
+  /** Also part of `famous-cities`. */
   famous?: boolean
   /**
    * Only part of this map (a whole country, the landmarks...), not of
-   * "Ciudades del mundo". Also the regional maps ("Latinoamérica", "Europa")
+   * `world-cities`. Also the regional maps (`latin-america`, `europe`)
    * take the places of their countries that have no `onlyMap`.
    */
   onlyMap?: string
@@ -57,8 +59,8 @@ interface SeedPlace {
 }
 
 interface SeedMap {
-  name: string
-  description: string
+  /** Stable key of the map; its name and description are in the i18n dictionaries (maps.<slug>). */
+  slug: string
   image: string | null
   places: (place: SeedPlace) => boolean
   /**
@@ -69,9 +71,9 @@ interface SeedMap {
   settings: MapSettings | null
 }
 
-/** Countries whose cities (the ones of "Ciudades del mundo") are part of "Latinoamérica". */
+/** Countries whose cities (the ones of `world-cities`) are part of `latin-america`. */
 const LATIN_AMERICA = new Set(['AR', 'CL', 'UY', 'BR', 'MX', 'CO', 'PE'])
-/** Countries whose cities (the ones of "Ciudades del mundo") are part of "Europa". */
+/** Countries whose cities (the ones of `world-cities`) are part of `europe`. */
 const EUROPE = new Set([
   'GB',
   'IE',
@@ -95,9 +97,9 @@ const EUROPE = new Set([
   'GR',
   'TR'
 ])
-const LATIN_AMERICA_MAP = 'Latinoamérica'
-const EUROPE_MAP = 'Europa'
-const LANDMARKS_MAP = 'Lugares icónicos'
+const LATIN_AMERICA_MAP = 'latin-america'
+const EUROPE_MAP = 'europe'
+const LANDMARKS_MAP = 'landmarks'
 /**
  * `scoreMaxDistanceKm` of the maps (distance from which a guess scores 0),
  * proportional to the area each map covers: tens of km would be too strict for
@@ -112,73 +114,50 @@ const EUROPE_SCORE_MAX_DISTANCE_KM = 3000 // Reikiavik - Athens: ~3700 km
 const ARGENTINA_SCORE_MAX_DISTANCE_KM = 2200 // La Quiaca - Río Gallegos: ~3500 km
 const SPAIN_SCORE_MAX_DISTANCE_KM = 800 // Galicia - Almería: ~850 km
 
-const ARGENTINA_MAP = 'Argentina'
-const SPAIN_MAP = 'España'
-const UNITED_STATES_MAP = 'Estados Unidos'
+const ARGENTINA_MAP = 'argentina'
+const SPAIN_MAP = 'spain'
+const UNITED_STATES_MAP = 'united-states'
 
 /** A map of a country: its places are the capitals of its provinces / states. */
-function countryMap(name: string, description: string, scoreMaxDistanceKm: number): SeedMap {
+function countryMap(slug: string, scoreMaxDistanceKm: number): SeedMap {
   return {
-    name,
-    description,
+    slug,
     image: null,
-    places: (place) => place.onlyMap === name || !!place.alsoIn?.includes(name),
+    places: (place) => place.onlyMap === slug || !!place.alsoIn?.includes(slug),
     settings: { scoreMaxDistanceKm }
   }
 }
 
 const MAPS: SeedMap[] = [
   {
-    name: 'Ciudades famosas',
-    description:
-      'Aparecés en una calle de una de las 20 ciudades más conocidas del mundo. ¿Sabés cuál es y dónde estás?',
+    slug: 'famous-cities',
     image: null,
     places: (place) => !!place.famous,
     settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   {
-    name: 'Ciudades del mundo',
-    description:
-      '150 ciudades de 36 países: capitales, pero también ciudades medianas y chicas. ¿Te animás a reconocerlas?',
+    slug: 'world-cities',
     image: null,
     places: (place) => !place.onlyMap,
     settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   {
-    name: LANDMARKS_MAP,
-    description:
-      'Aparecés junto a un monumento, una maravilla natural o un sitio famoso: del Coliseo a Machu Picchu, de la Torre Eiffel a Uluru. Más de 500 lugares en todo el mundo.',
+    slug: LANDMARKS_MAP,
     image: null,
     places: (place) => place.onlyMap === LANDMARKS_MAP,
     settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
-  countryMap(
-    ARGENTINA_MAP,
-    'Aparecés en la capital de una de las 24 provincias argentinas, de Jujuy a Tierra del Fuego. ¿Sabés cuál es?',
-    ARGENTINA_SCORE_MAX_DISTANCE_KM
-  ),
-  countryMap(
-    SPAIN_MAP,
-    'Aparecés en la capital de una de las 47 provincias de la España peninsular, de A Coruña a Almería. ¿Sabés cuál es?',
-    SPAIN_SCORE_MAX_DISTANCE_KM
-  ),
-  countryMap(
-    UNITED_STATES_MAP,
-    'Aparecés en la capital de uno de los 48 estados continentales de Estados Unidos, de Olympia a Tallahassee. ¿Sabés cuál es?',
-    UNITED_STATES_SCORE_MAX_DISTANCE_KM
-  ),
+  countryMap(ARGENTINA_MAP, ARGENTINA_SCORE_MAX_DISTANCE_KM),
+  countryMap(SPAIN_MAP, SPAIN_SCORE_MAX_DISTANCE_KM),
+  countryMap(UNITED_STATES_MAP, UNITED_STATES_SCORE_MAX_DISTANCE_KM),
   {
-    name: LATIN_AMERICA_MAP,
-    description:
-      'De México a Ushuaia: más de 100 ciudades latinoamericanas, desde las grandes capitales hasta pueblos chicos. ¿Reconocés dónde estás?',
+    slug: LATIN_AMERICA_MAP,
     image: null,
     places: (place) => place.onlyMap === LATIN_AMERICA_MAP || (!place.onlyMap && LATIN_AMERICA.has(place.countryCode)),
     settings: { scoreMaxDistanceKm: LATIN_AMERICA_SCORE_MAX_DISTANCE_KM }
   },
   {
-    name: EUROPE_MAP,
-    description:
-      'Más de 200 ciudades europeas, de Reikiavik a Atenas y de Lisboa a Moscú: capitales, pero también ciudades medianas y chicas. ¿Te animás?',
+    slug: EUROPE_MAP,
     image: null,
     places: (place) => place.onlyMap === EUROPE_MAP || (!place.onlyMap && EUROPE.has(place.countryCode)),
     settings: { scoreMaxDistanceKm: EUROPE_SCORE_MAX_DISTANCE_KM }
@@ -438,8 +417,8 @@ function circlesOf(rows: PlaceRow[], onlyMap: string): SeedPlace[] {
 }
 
 /**
- * More cities of Latin America, only in "Latinoamérica" (not in "Ciudades del
- * mundo"): countries and towns that the world map leaves out.
+ * More cities of Latin America, only in `latin-america` (not in
+ * `world-cities`): countries and towns that the world map leaves out.
  */
 const LATIN_AMERICA_CITIES: PlaceRow[] = [
   // Argentina
@@ -523,7 +502,7 @@ const LATIN_AMERICA_CITIES: PlaceRow[] = [
   ['Santiago de los Caballeros', 'DO', 19.4517, -70.697, 4000],
   ['San Juan', 'PR', 18.4655, -66.1057, 5000]
 ]
-/** More cities of Europe, only in "Europa" (not in "Ciudades del mundo"). */
+/** More cities of Europe, only in `europe` (not in `world-cities`). */
 const EUROPE_CITIES: PlaceRow[] = [
   // Reino Unido e Irlanda
   ['Birmingham', 'GB', 52.4862, -1.8904, 6000],
@@ -683,8 +662,8 @@ const EUROPE_CITIES: PlaceRow[] = [
 /**
  * Landmarks: monuments, natural wonders and famous sights. A circle of a few
  * hundred meters around each one (up to a couple of kilometers for the big
- * natural areas, where the Street View roads are spread out). Only in "Lugares
- * icónicos". There are hundreds on purpose: each game draws only a few, so they
+ * natural areas, where the Street View roads are spread out). Only in
+ * `landmarks`. There are hundreds on purpose: each game draws only a few, so they
  * rarely repeat and cannot be learnt by heart.
  */
 const LANDMARKS: PlaceRow[] = [
@@ -1293,7 +1272,7 @@ const LANDMARKS: PlaceRow[] = [
 
 /**
  * Capitals of the provinces of Argentina (the 23 provinces + Buenos Aires
- * city), only in "Argentina". The ones that are already places of another map
+ * city), only in `argentina`. The ones that are already places of another map
  * (Buenos Aires, Mendoza, Córdoba, Salta, Posadas...) are shared with it: the
  * place that already exists wins, so its coordinates here are only informative.
  */
@@ -1327,7 +1306,7 @@ const ARGENTINA_CAPITALS: PlaceRow[] = [
 /**
  * Capitals of the provinces of the Iberian Peninsula of Spain (47 of the 50
  * provinces: the Balearic and Canary islands are left out, as they were of the
- * old peninsular outline), only in "España". Shared with the maps that already
+ * old peninsular outline), only in `spain`. Shared with the maps that already
  * have them (Madrid, Barcelona, Zaragoza, Córdoba...).
  */
 const SPAIN_CAPITALS: PlaceRow[] = [
@@ -1382,7 +1361,7 @@ const SPAIN_CAPITALS: PlaceRow[] = [
 
 /**
  * Capitals of the 48 continental states of the United States (Alaska and
- * Hawaii are left out), only in "Estados Unidos". Those whose name is shared
+ * Hawaii are left out), only in `united-states`. Those whose name is shared
  * by several states carry the state in brackets. Shared with the maps that
  * already have them (Boston, Denver, Austin).
  */
@@ -1480,7 +1459,7 @@ export default {
   name: '002-seed-maps',
 
   async up(): Promise<void> {
-    if (await DB.table('maps').where('name', MAPS[0].name).first()) {
+    if (await DB.table('maps').where('slug', MAPS[0].slug).first()) {
       return
     }
 
@@ -1502,14 +1481,13 @@ export default {
 
       for (const map of MAPS) {
         await DB.table('maps').insert({
-          name: map.name,
-          description: map.description,
+          slug: map.slug,
           image: map.image,
           settings: map.settings ? JSON.stringify(map.settings) : null,
           enabled: true
         })
 
-        const mapRow = await DB.table('maps').where('name', map.name).first()
+        const mapRow = await DB.table('maps').where('slug', map.slug).first()
 
         for (const chunk of chunks(PLACES.filter(map.places), INSERT_CHUNK_SIZE)) {
           await DB.table('map_places').insert(

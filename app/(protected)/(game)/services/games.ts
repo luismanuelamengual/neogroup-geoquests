@@ -23,7 +23,7 @@ import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { cleanupGames, deleteGames } from '@/app/(protected)/(game)/services/gameCleanup'
 import { findGameModeEngine, getGameModeEngine, getGameSettings } from '@/app/(protected)/(game)/services/gameModes'
 import { loadGame, updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
-import { findMap, findMapByName } from '@/app/(protected)/(game)/services/maps'
+import { findMap, findMapBySlug } from '@/app/(protected)/(game)/services/maps'
 import { getPanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { generateGameCode, normalizeGameCode } from '@/app/(protected)/(game)/utils/gameCodes'
 import { ApiException } from '@/app/models/ApiException'
@@ -71,7 +71,7 @@ function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameCont
     mode: game.mode,
     status: game.status,
     mapId: game.mapId,
-    mapName: game.map?.name ?? null,
+    mapSlug: game.map?.slug ?? null,
     code: game.code,
     hostUserId: game.hostUserId,
     version: game.version,
@@ -155,8 +155,8 @@ async function generateUniqueCode(ctx: GameContext): Promise<string> {
 export async function createGame(userId: number, input: CreateGameInput, options: GameOptions = {}): Promise<GameView> {
   const ctx = resolveContext(options)
   const engine = getGameModeEngine(input?.mode)
-  const map = engine.definition.mapName
-    ? await findMapByName(engine.definition.mapName)
+  const map = engine.definition.mapSlug
+    ? await findMapBySlug(engine.definition.mapSlug)
     : await findMap(Number(input?.mapId))
 
   if (!map) {
@@ -501,7 +501,7 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
         mode: game.mode,
         modeSlug: engine.definition.slug,
         mapId: game.mapId,
-        mapName: game.map?.name ?? null,
+        mapSlug: game.map?.slug ?? null,
         status: game.status,
         playersCount: participants.filter((participant) => participant.gameId === game.id).length,
         score: game.status === GameStatus.FINISHED ? row.score : summary.score,

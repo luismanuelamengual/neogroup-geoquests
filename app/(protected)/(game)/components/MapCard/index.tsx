@@ -10,7 +10,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsInput'
 import { MapView } from '@/app/(protected)/(game)/models/MapView'
-import { localizeMapDescription, localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getMapDescription, getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
 import GameButton from '@/app/components/GameButton'
 import Loading from '@/app/components/Loading'
@@ -56,8 +56,8 @@ export default function MapCard({ map, mode, settings }: MapCardProps) {
         )}
       </div>
       <div className="content">
-        <h2 className="name">{localizeMapName(t, map.name)}</h2>
-        <p className="description">{localizeMapDescription(t, map.name, map.description)}</p>
+        <h2 className="name">{getMapName(t, map.slug)}</h2>
+        <p className="description">{getMapDescription(t, map.slug)}</p>
         <div className="tags">
           <span className="tag">{t('picker.places', { count: map.placesCount })}</span>
         </div>

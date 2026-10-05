@@ -103,17 +103,17 @@ describe('quick games', () => {
   it('are classic games of 5 rounds of 3 minutes in their maps', async () => {
     const quickPlays = getQuickPlays(await getMaps())
 
-    expect(quickPlays.map((quickPlay) => [quickPlay.key, quickPlay.map.name])).toEqual([
-      ['famous-cities', 'Ciudades famosas'],
-      ['world-cities', 'Ciudades del mundo'],
-      ['landmarks', 'Lugares icónicos']
+    expect(quickPlays.map((quickPlay) => [quickPlay.key, quickPlay.map.slug])).toEqual([
+      ['famous-cities', 'famous-cities'],
+      ['world-cities', 'world-cities'],
+      ['landmarks', 'landmarks']
     ])
     expect(quickPlays.every((quickPlay) => quickPlay.mode === GameMode.CLASSIC)).toBe(true)
     expect(QUICK_PLAY_SETTINGS).toEqual({ rounds: 5, timeLimitSeconds: 180 })
   })
 
   it('are hidden when their map is not available', async () => {
-    const maps = (await getMaps()).filter((map) => map.name !== 'Lugares icónicos')
+    const maps = (await getMaps()).filter((map) => map.slug !== 'landmarks')
 
     expect(getQuickPlays(maps).map((quickPlay) => quickPlay.key)).toEqual(['famous-cities', 'world-cities'])
   })

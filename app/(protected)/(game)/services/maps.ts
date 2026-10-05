@@ -10,9 +10,9 @@ export async function findMap(mapId: number): Promise<Map | null> {
   return Number.isInteger(mapId) ? Map.where('id', mapId).where('enabled', true).first() : null
 }
 
-/** Enabled map by its name (as seeded: map ids are not fixed), or null. */
-export async function findMapByName(name: string): Promise<Map | null> {
-  return Map.where('name', name).where('enabled', true).first()
+/** Enabled map by its slug (as seeded: map ids are not fixed), or null. */
+export async function findMapBySlug(slug: string): Promise<Map | null> {
+  return Map.where('slug', slug).where('enabled', true).first()
 }
 
 /**
@@ -42,11 +42,10 @@ export async function getMaps(): Promise<MapView[]> {
 
       return {
         id: map.id,
-        name: map.name,
-        description: map.description,
+        slug: map.slug,
         image: map.image,
         shape: map.image ? null : buildMapShape(places.map((place) => place.geometry)),
-        photos: getMapPhotos(map.name).map((photo) => photo.src),
+        photos: getMapPhotos(map.slug).map((photo) => photo.src),
         placesCount: places.length
       }
     })

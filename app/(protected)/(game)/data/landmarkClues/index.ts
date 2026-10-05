@@ -5,7 +5,7 @@ import { EUROPE_CLUES } from '@/app/(protected)/(game)/data/landmarkClues/europe
 import { LandmarkClues } from '@/app/(protected)/(game)/models/LandmarkClues'
 
 /**
- * Clues of the landmarks of "Lugares icónicos" (detective mode), by place name
+ * Clues of the landmarks of `landmarks` (detective mode), by place name
  * as seeded (database/migrations/002-seed-maps.ts), one file per region. Five
  * per language, in this order (see models/LandmarkClues.ts):
  *   0, 1 → geography · 2, 3 → culture · 4 → specific

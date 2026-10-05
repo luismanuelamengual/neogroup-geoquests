@@ -9,7 +9,7 @@ export interface GameListItem {
   /** Slug of the mode (key of its name in the translations: `modes.<slug>.name`). */
   modeSlug: string
   mapId: number | null
-  mapName: string | null
+  mapSlug: string | null
   status: GameStatus
   playersCount: number
   score: number

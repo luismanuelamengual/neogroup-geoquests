@@ -13,7 +13,7 @@ import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { ClassicGameView } from '@/app/(protected)/(game)/models/ClassicGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
-import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatDistance, formatScore, getGameStars, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
@@ -70,7 +70,7 @@ export default function ClassicGameSummary() {
     <div className="classic-game-summary">
       {starting && <Loading message={t('picker.searchingPlaces')} />}
       <GamePanel className="hero" title={t('game.gameOver')} accent="magenta">
-        <div className="mode">{localizeMapName(t, game.mapName)}</div>
+        <div className="mode">{getMapName(t, game.mapSlug)}</div>
         <div className="stars">
           {[1, 2, 3].map((star) => (
             <StarIcon key={star} className={classNames('star', { earned: star <= stars })} />

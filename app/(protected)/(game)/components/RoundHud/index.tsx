@@ -10,13 +10,13 @@ import IconButton from '@mui/material/IconButton'
 import { useRouter } from 'next/navigation'
 import { ReactNode, useState } from 'react'
 import MusicToggle from '@/app/(protected)/(game)/components/MusicToggle'
-import { localizeMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import { useI18n } from '@/app/i18n/I18nProvider'
 
 interface RoundHudProps {
-  mapName: string | null
+  mapSlug: string | null
   roundNumber: number
   /** Rounds of the game (null when it is not known beforehand, e.g. battle royale). */
   roundsCount: number | null
@@ -33,7 +33,7 @@ interface RoundHudProps {
 
 /** Heads-up display of the play screen: exit, map, round countdown, round counter and total score. */
 export default function RoundHud({
-  mapName,
+  mapSlug,
   roundNumber,
   roundsCount,
   totalScore = 0,
@@ -51,7 +51,7 @@ export default function RoundHud({
       <IconButton className="exit" onClick={() => setConfirmExit(true)} aria-label={t('game.exitAria')}>
         <CloseIcon />
       </IconButton>
-      <div className="chip map">{localizeMapName(t, mapName)}</div>
+      <div className="chip map">{getMapName(t, mapSlug)}</div>
       <MusicToggle />
       <div className="spacer" />
       {timer}
