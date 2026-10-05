@@ -15,6 +15,7 @@ import {
   beginRound,
   closeRound,
   createLobbyData,
+  getScoredGuesses,
   guessOf,
   initGuesses,
   isRevealOver,
@@ -162,9 +163,10 @@ function goToNextRound(data: BattleRoyaleGameData, now: Date): boolean {
  */
 function getStandings(data: BattleRoyaleGameData): BattleRoyaleStandingView[] {
   const eliminatedIn = new Map(data.eliminations.map((elimination) => [elimination.userId, elimination.roundNumber]))
-  const scores = rankPlayers(Object.keys(data.guesses).map(Number), data.guesses)
+  const guesses = getScoredGuesses(data)
+  const scores = rankPlayers(Object.keys(data.guesses).map(Number), guesses)
   const scoreOf = (userId: number) => scores.find((standing) => standing.userId === userId)?.score ?? 0
-  const alive = rankPlayers(getAliveUserIds(data), data.guesses)
+  const alive = rankPlayers(getAliveUserIds(data), guesses)
   const standings: BattleRoyaleStandingView[] = alive.map((standing) => ({
     userId: standing.userId,
     position: standing.position,
@@ -313,7 +315,7 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
       : Math.max(0, data.phase === 'reveal' ? data.currentRound : data.currentRound - 1)
 
     return {
-      score: (data.guesses[String(userId)] ?? []).reduce((total, guess) => total + (guess?.score ?? 0), 0),
+      score: (getScoredGuesses(data)[String(userId)] ?? []).reduce((total, guess) => total + (guess?.score ?? 0), 0),
       maxScore: null,
       completedSteps: closedRounds,
       // Rounds needed to have a winner: one elimination per round.

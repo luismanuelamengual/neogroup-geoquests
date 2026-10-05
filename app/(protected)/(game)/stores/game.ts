@@ -24,6 +24,9 @@ interface GameState {
    * not started yet).
    */
   deadline: number | null
+  /** Whether the guess map is open (phones: the bottom sheet). Kept here so a refresh of the game never closes it. */
+  mapOpen: boolean
+  setMapOpen: (open: boolean) => void
   /** Replaces the game (e.g. loaded, or its round started) keeping the pin already placed. */
   setGame: (game: GameView, timeLeftMs?: number | null) => void
   setGuess: (guess: LatLng | null) => void
@@ -43,14 +46,17 @@ export const useGameStore = create<GameState>()((set) => ({
   receivedAt: 0,
   phase: 'guessing',
   guess: null,
+  mapOpen: false,
+  setMapOpen: (mapOpen) => set({ mapOpen }),
   resultRoundNumber: null,
   deadline: null,
   setGame: (game, timeLeftMs = null) =>
     set({ game, receivedAt: Date.now(), deadline: timeLeftMs != null ? Date.now() + timeLeftMs : null }),
-  setGuess: (guess) => set({ guess }),
+  // A new round (guess cleared) starts with the map closed.
+  setGuess: (guess) => set(guess ? { guess } : { guess, mapOpen: false }),
   showResult: (game, roundNumber) =>
     set({ game, receivedAt: Date.now(), phase: 'result', resultRoundNumber: roundNumber, deadline: null }),
-  closeResult: () => set({ phase: 'guessing', guess: null, resultRoundNumber: null, deadline: null }),
+  closeResult: () => set({ phase: 'guessing', guess: null, mapOpen: false, resultRoundNumber: null, deadline: null }),
   reset: () =>
-    set({ game: null, receivedAt: 0, phase: 'guessing', guess: null, resultRoundNumber: null, deadline: null })
+    set({ game: null, receivedAt: 0, phase: 'guessing', guess: null, mapOpen: false, resultRoundNumber: null, deadline: null })
 }))

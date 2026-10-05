@@ -96,6 +96,26 @@ export function rankPlayers(userIds: number[], guesses: Record<string, (GameGues
   })
 }
 
+/**
+ * Guesses that already count for the scores: while a round is being played its
+ * guesses are hidden (nobody scores before the round closes, when everybody
+ * has guessed or the time ran out).
+ */
+export function getScoredGuesses(data: MultiplayerRoundsData): Record<string, (GameGuess | null)[]> {
+  if (data.phase !== 'guessing' || data.currentRound === 0 || data.finished) {
+    return data.guesses
+  }
+
+  const index = data.currentRound - 1
+
+  return Object.fromEntries(
+    Object.entries(data.guesses).map(([userId, playerGuesses]) => [
+      userId,
+      playerGuesses.map((guess, guessIndex) => (guessIndex === index ? null : guess))
+    ])
+  )
+}
+
 /** State of a multiplayer game waiting for players: no rounds yet (they are chosen when it starts). */
 export function createLobbyData<Settings extends MultiplayerRoundsSettings>(
   mapId: number,

@@ -14,6 +14,7 @@ import {
   beginRound,
   closeRound,
   createLobbyData,
+  getScoredGuesses,
   initGuesses,
   isRevealOver,
   isRoundDone,
@@ -191,7 +192,7 @@ export const classicMultiplayerMode: GameModeEngine<
       maxScore: MAX_ROUND_SCORE * data.settings.rounds,
       standings: rankPlayers(
         players.map((player) => player.userId),
-        data.guesses
+        getScoredGuesses(data)
       )
     }
   },
@@ -202,7 +203,7 @@ export const classicMultiplayerMode: GameModeEngine<
       : Math.max(0, data.phase === 'reveal' ? data.currentRound : data.currentRound - 1)
 
     return {
-      score: (data.guesses[String(userId)] ?? []).reduce((total, guess) => total + (guess?.score ?? 0), 0),
+      score: (getScoredGuesses(data)[String(userId)] ?? []).reduce((total, guess) => total + (guess?.score ?? 0), 0),
       maxScore: MAX_ROUND_SCORE * data.settings.rounds,
       completedSteps: closedRounds,
       totalSteps: data.settings.rounds

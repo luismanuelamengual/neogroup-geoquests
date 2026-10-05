@@ -41,6 +41,12 @@
     }
   }
 
+  // Mounted but not available yet: the map keeps its state (it is never recreated).
+  &.hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   &.has-guess .guess-button {
     animation: guess-pulse 1.2s ease-in-out infinite;
   }

@@ -13,6 +13,7 @@ import RoundTimer from '@/app/(protected)/(game)/components/RoundTimer'
 import StreetView from '@/app/(protected)/(game)/components/StreetView'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { useNow } from '@/app/(protected)/(game)/hooks/useNow'
+import { useRoundCountdown } from '@/app/(protected)/(game)/hooks/useRoundCountdown'
 import { ClassicMultiplayerGameView } from '@/app/(protected)/(game)/models/ClassicMultiplayerGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes'
@@ -48,7 +49,7 @@ export default function MultiplayerGamePlay() {
   const colors = useMemo(() => getPlayerColors(game.players), [game.players])
   const startsAt = receivedAt + view.countdownMs
   const guessing = view.phase === 'guessing'
-  const countingDown = guessing && now < startsAt
+  const countingDown = useRoundCountdown(guessing, roundNumber, view.countdownMs, startsAt, now)
   const deadline = guessing && view.roundTimeLeftMs != null ? startsAt + view.roundTimeLeftMs : null
   const myScore = view.standings.find((standing) => standing.userId === userId)?.score ?? 0
   const isHost = userId != null && userId === game.hostUserId
@@ -143,8 +144,8 @@ export default function MultiplayerGamePlay() {
           className="players"
         />
       )}
-      {guessing && !countingDown && !view.hasGuessed && (
-        <GuessPanel onSubmit={() => submit(false)} submitting={submitting} />
+      {guessing && !view.hasGuessed && (
+        <GuessPanel onSubmit={() => submit(false)} submitting={submitting} hidden={countingDown} />
       )}
       {guessing && view.hasGuessed && (
         <GamePanel className="waiting" accent="lime">

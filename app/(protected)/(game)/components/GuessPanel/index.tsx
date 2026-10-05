@@ -5,7 +5,6 @@ import CloseIcon from '@mui/icons-material/Close'
 import MapIcon from '@mui/icons-material/Map'
 import IconButton from '@mui/material/IconButton'
 import classNames from 'classnames'
-import { useState } from 'react'
 import GuessMap from '@/app/(protected)/(game)/components/GuessMap'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { getModeColor } from '@/app/(protected)/(game)/utils/modeColor'
@@ -15,6 +14,8 @@ import { useT } from '@/app/i18n/I18nProvider'
 interface GuessPanelProps {
   onSubmit: () => void
   submitting: boolean
+  /** Keeps the panel mounted but out of sight and reach (e.g. during the round countdown). */
+  hidden?: boolean
 }
 
 /**
@@ -22,16 +23,17 @@ interface GuessPanelProps {
  *  - desktop: a small map floating bottom-right that grows while hovered;
  *  - phone/tablet: a floating "Mapa" button that opens the map as a bottom sheet.
  */
-export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
+export default function GuessPanel({ onSubmit, submitting, hidden = false }: GuessPanelProps) {
   const t = useT()
   const guess = useGameStore((state) => state.guess)
   const modeColor = getModeColor(useGameStore((state) => state.game?.mode))
   const setGuess = useGameStore((state) => state.setGuess)
-  const [open, setOpen] = useState(false)
+  const open = useGameStore((state) => state.mapOpen)
+  const setOpen = useGameStore((state) => state.setMapOpen)
 
   return (
     <>
-      <div className={classNames('guess-panel', { open, 'has-guess': !!guess })}>
+      <div className={classNames('guess-panel', { open, hidden, 'has-guess': !!guess })}>
         <div className="sheet-header">
           <span className="sheet-title">{t('game.whereAreYou')}</span>
           <IconButton className="close" size="small" onClick={() => setOpen(false)} aria-label={t('game.closeMap')}>
@@ -54,7 +56,7 @@ export default function GuessPanel({ onSubmit, submitting }: GuessPanelProps) {
       </div>
       <GameButton
         color={modeColor}
-        className={classNames('guess-panel-fab', { hidden: open })}
+        className={classNames('guess-panel-fab', { hidden: open || hidden })}
         startIcon={<MapIcon />}
         onClick={() => setOpen(true)}
       >
