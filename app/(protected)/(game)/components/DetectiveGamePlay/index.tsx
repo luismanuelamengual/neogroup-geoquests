@@ -2,7 +2,8 @@
 
 import './index.scss'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
-import { useCallback, useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
+import BackgroundMusic from '@/app/(protected)/(game)/components/BackgroundMusic'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
 import DetectiveHud from '@/app/(protected)/(game)/components/DetectiveHud'
 import DetectiveTravelPanel from '@/app/(protected)/(game)/components/DetectiveTravelPanel'
@@ -61,48 +62,55 @@ export default function DetectiveGamePlay() {
     [game.id, stage, sendGameAction, showResult]
   )
 
+  let screen: ReactNode
+
   if (phase === 'result' && resultStage != null) {
-    return <DetectiveTravelResult gameId={game.id} view={view} stageNumber={resultStage} onContinue={closeResult} />
-  }
-
-  if (fresh && !accepted) {
-    return <DetectiveBriefing gameId={game.id} view={view} onAccept={() => setAccepted(true)} />
-  }
-
-  if (!stage) {
-    return null
-  }
-
-  return (
-    <div className="detective-game-play">
-      <StreetView panoId={stage.panoId} />
-      <DetectiveHud view={view} />
-      <div className="bottom">
-        {/* Remounted at every stage: new witnesses, no bubble open. */}
-        <DetectiveWitnesses
-          key={stage.stageNumber}
-          witnesses={stage.witnesses}
-          witnessMinutes={view.witnessMinutes}
-          onAsk={handleAsk}
-          noTime={view.timeLimitMinutes - view.elapsedMinutes < view.witnessMinutes}
+    screen = <DetectiveTravelResult gameId={game.id} view={view} stageNumber={resultStage} onContinue={closeResult} />
+  } else if (fresh && !accepted) {
+    screen = <DetectiveBriefing gameId={game.id} view={view} onAccept={() => setAccepted(true)} />
+  } else if (!stage) {
+    screen = null
+  } else {
+    screen = (
+      <div className="detective-game-play">
+        <StreetView panoId={stage.panoId} />
+        <DetectiveHud view={view} />
+        <div className="bottom">
+          {/* Remounted at every stage: new witnesses, no bubble open. */}
+          <DetectiveWitnesses
+            key={stage.stageNumber}
+            witnesses={stage.witnesses}
+            witnessMinutes={view.witnessMinutes}
+            onAsk={handleAsk}
+            noTime={view.timeLimitMinutes - view.elapsedMinutes < view.witnessMinutes}
+          />
+          <GameButton
+            size="large"
+            className="travel"
+            startIcon={<FlightTakeoffIcon />}
+            onClick={() => setTraveling(true)}
+          >
+            {t('detective.play.travel')}
+          </GameButton>
+        </div>
+        <DetectiveTravelPanel
+          key={`panel-${stage.stageNumber}`}
+          open={traveling}
+          stage={stage}
+          onClose={() => setTraveling(false)}
+          lastChance={view.mistakes >= view.maxMistakes}
+          onTravel={handleTravel}
         />
-        <GameButton
-          size="large"
-          className="travel"
-          startIcon={<FlightTakeoffIcon />}
-          onClick={() => setTraveling(true)}
-        >
-          {t('detective.play.travel')}
-        </GameButton>
       </div>
-      <DetectiveTravelPanel
-        key={`panel-${stage.stageNumber}`}
-        open={traveling}
-        stage={stage}
-        onClose={() => setTraveling(false)}
-        lastChance={view.mistakes >= view.maxMistakes}
-        onTravel={handleTravel}
-      />
-    </div>
+    )
+  }
+
+  // The music is outside the screens (briefing, play, trip) so it goes on between them,
+  // until the case is over (the summary is another component).
+  return (
+    <>
+      <BackgroundMusic />
+      {screen}
+    </>
   )
 }

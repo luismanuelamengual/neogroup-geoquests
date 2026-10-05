@@ -5,6 +5,9 @@ const STORAGE_KEY = 'music:enabled'
 interface MusicState {
   /** Whether the background music is on (saved in localStorage). */
   enabled: boolean
+  /** Tracks available (public/music), loaded once by the player. */
+  tracks: string[]
+  loadTracks: () => Promise<void>
   /** Reads the saved preference (call it on the client, after mounting). */
   hydrate: () => void
   toggle: () => void
@@ -13,6 +16,21 @@ interface MusicState {
 /** Preference of the background music: on by default, remembered across visits. */
 export const useMusicStore = create<MusicState>()((set, get) => ({
   enabled: true,
+  tracks: [],
+  loadTracks: async () => {
+    if (get().tracks.length > 0) {
+      return
+    }
+
+    try {
+      const response = await fetch('/api/getMusicTracks')
+      const data: { tracks?: string[] } = response.ok ? await response.json() : {}
+
+      set({ tracks: data.tracks ?? [] })
+    } catch {
+      // No music: the button is not shown.
+    }
+  },
   hydrate: () => {
     try {
       set({ enabled: window.localStorage.getItem(STORAGE_KEY) !== 'false' })

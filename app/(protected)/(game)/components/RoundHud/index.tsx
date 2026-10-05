@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import { useRouter } from 'next/navigation'
 import { ReactNode, useState } from 'react'
+import BackgroundMusic from '@/app/(protected)/(game)/components/BackgroundMusic'
 import MusicToggle from '@/app/(protected)/(game)/components/MusicToggle'
 import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
@@ -52,6 +53,7 @@ export default function RoundHud({
         <CloseIcon />
       </IconButton>
       <div className="chip map">{getMapName(t, mapSlug)}</div>
+      <BackgroundMusic />
       <MusicToggle />
       <div className="spacer" />
       {timer}

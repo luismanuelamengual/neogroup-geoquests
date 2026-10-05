@@ -4,44 +4,20 @@ import './index.scss'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MusicOffIcon from '@mui/icons-material/MusicOff'
 import IconButton from '@mui/material/IconButton'
-import { useEffect, useState } from 'react'
-import { useBackgroundMusic } from '@/app/(protected)/(game)/hooks/useBackgroundMusic'
 import { useT } from '@/app/i18n/I18nProvider'
 import { useMusicStore } from '@/app/stores/music'
 
 /**
- * Background music of the play screen plus its on/off button. The tracks are
- * the ones in public/music (see /api/getMusicTracks); the button is not shown
- * when there are none. The choice is remembered in localStorage.
+ * On/off button of the background music (see BackgroundMusic, which plays it).
+ * Not shown when there are no tracks. The choice is remembered in localStorage.
  */
 export default function MusicToggle() {
   const t = useT()
   const enabled = useMusicStore((state) => state.enabled)
   const toggle = useMusicStore((state) => state.toggle)
-  const hydrate = useMusicStore((state) => state.hydrate)
-  const [tracks, setTracks] = useState<string[]>([])
+  const hasTracks = useMusicStore((state) => state.tracks.length > 0)
 
-  useBackgroundMusic(tracks, enabled)
-
-  useEffect(() => {
-    let cancelled = false
-
-    hydrate()
-    fetch('/api/getMusicTracks')
-      .then((response) => (response.ok ? response.json() : { tracks: [] }))
-      .then((data: { tracks?: string[] }) => {
-        if (!cancelled) {
-          setTracks(data.tracks ?? [])
-        }
-      })
-      .catch(() => undefined)
-
-    return () => {
-      cancelled = true
-    }
-  }, [hydrate])
-
-  if (tracks.length === 0) {
+  if (!hasTracks) {
     return null
   }
 
