@@ -409,7 +409,6 @@ export const en: Messages = {
       loot10: "the science museum's meteorite"
     },
     play: {
-      detectiveEyes: 'What you see',
       youAreIn: 'You are in',
       clock: 'Clock',
       timeLeft: 'Time left',

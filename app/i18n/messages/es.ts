@@ -412,7 +412,6 @@ export const es = {
       loot10: 'el meteorito del museo de ciencias'
     },
     play: {
-      detectiveEyes: 'Lo que ves vos',
       youAreIn: 'Estás en',
       clock: 'Reloj',
       timeLeft: 'Te quedan',

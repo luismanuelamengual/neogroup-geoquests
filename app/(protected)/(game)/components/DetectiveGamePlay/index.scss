@@ -7,30 +7,6 @@
   background: var(--color-night);
   touch-action: none;
 
-  .detective-eyes {
-    position: absolute;
-    top: calc(84px + var(--safe-top));
-    left: calc(12px + var(--safe-left));
-    z-index: 5;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    background: rgba(255, 77, 141, 0.9);
-    box-shadow: 0 3px 0 var(--color-magenta-dark);
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    pointer-events: none;
-
-    svg {
-      font-size: 1rem;
-    }
-  }
-
   // Witnesses on the left, the travel button on the right, over the panorama
   // (above Google's logo and terms, which must stay visible).
   .bottom {
@@ -61,11 +37,6 @@
 
 @media (max-width: 600px) {
   .detective-game-play {
-    .detective-eyes {
-      padding: 3px 10px;
-      font-size: 0.7rem;
-    }
-
     .bottom {
       right: calc(10px + var(--safe-right));
       left: calc(10px + var(--safe-left));

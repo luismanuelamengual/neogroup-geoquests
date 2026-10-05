@@ -2,7 +2,6 @@
 
 import './index.scss'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
-import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'
 import { useCallback, useState } from 'react'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
 import DetectiveHud from '@/app/(protected)/(game)/components/DetectiveHud'
@@ -78,9 +77,6 @@ export default function DetectiveGamePlay() {
     <div className="detective-game-play">
       <StreetView panoId={stage.panoId} />
       <DetectiveHud view={view} />
-      <div className="detective-eyes">
-        <PersonPinCircleIcon /> {t('detective.play.detectiveEyes')}
-      </div>
       <div className="bottom">
         {/* Remounted at every stage: new witnesses, no bubble open. */}
         <DetectiveWitnesses
