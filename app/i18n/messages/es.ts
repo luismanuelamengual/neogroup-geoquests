@@ -372,7 +372,7 @@ export const es = {
       preparing: 'Armando el caso…'
     },
     howTo: {
-      eyes: 'Mirás a través de los ojos del ladrón: ves dónde está ahora.',
+      eyes: 'Recorrés el lugar donde estás. El ladrón ya se fue: solo los testigos saben a dónde.',
       witnesses: 'Hablás con los testigos del lugar: cada uno te da una pista, pero te cuesta {time}.',
       travel:
         'Elegís a dónde viajar entre {options} destinos. Si te equivocás, perdés el viaje; con más de {mistakes} errores, perdés el rastro.',
@@ -409,7 +409,7 @@ export const es = {
       loot10: 'el meteorito del museo de ciencias'
     },
     play: {
-      thiefEyes: 'Lo que ve el ladrón',
+      detectiveEyes: 'Lo que ves vos',
       youAreIn: 'Estás en',
       clock: 'Reloj',
       timeLeft: 'Te quedan',

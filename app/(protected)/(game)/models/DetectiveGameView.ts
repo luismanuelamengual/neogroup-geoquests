@@ -17,7 +17,7 @@ export interface DetectiveCurrentStageView {
   stageNumber: number
   /** Where the detective is now (the crime scene or the previous stop). */
   location: DetectivePlace
-  /** Street View panorama of the destination: what the suspect sees. */
+  /** Street View panorama of `location`: where the detective is (never the destination). */
   panoId: string
   witnesses: DetectiveWitnessView[]
   options: DetectivePlace[]

@@ -2,7 +2,7 @@
 
 import './index.scss'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
-import VisibilityIcon from '@mui/icons-material/Visibility'
+import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'
 import { useCallback, useState } from 'react'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
 import DetectiveHud from '@/app/(protected)/(game)/components/DetectiveHud'
@@ -18,7 +18,7 @@ import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * Play screen of a detective game. A new case opens with its briefing. Then,
- * at every stage: what the thief sees (Street View of the next stop), the
+ * at every stage: where the detective is (Street View of the current stop), the
  * HUD with the fictional clock, the witnesses (tap to hear their clues) and
  * the button to travel. After a trip, the trip itself (phase "result" of the
  * game store), and then the next stage — or the summary, once the case is closed.
@@ -78,8 +78,8 @@ export default function DetectiveGamePlay() {
     <div className="detective-game-play">
       <StreetView panoId={stage.panoId} />
       <DetectiveHud view={view} />
-      <div className="thief-eyes">
-        <VisibilityIcon /> {t('detective.play.thiefEyes')}
+      <div className="detective-eyes">
+        <PersonPinCircleIcon /> {t('detective.play.detectiveEyes')}
       </div>
       <div className="bottom">
         {/* Remounted at every stage: new witnesses, no bubble open. */}

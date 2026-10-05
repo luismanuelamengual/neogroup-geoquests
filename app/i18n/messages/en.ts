@@ -369,7 +369,7 @@ export const en: Messages = {
       preparing: 'Preparing the case…'
     },
     howTo: {
-      eyes: 'You look through the eyes of the thief: you see where they are now.',
+      eyes: 'You explore the place where you are. The thief already left: only the witnesses know where to.',
       witnesses: 'You talk to the witnesses: each one gives you a clue, but it costs you {time}.',
       travel:
         'You choose where to travel among {options} destinations. If you are wrong, you waste the trip; after more than {mistakes} mistakes, you lose the trail.',
@@ -406,7 +406,7 @@ export const en: Messages = {
       loot10: "the science museum's meteorite"
     },
     play: {
-      thiefEyes: 'What the thief sees',
+      detectiveEyes: 'What you see',
       youAreIn: 'You are in',
       clock: 'Clock',
       timeLeft: 'Time left',

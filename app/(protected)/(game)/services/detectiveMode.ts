@@ -8,6 +8,7 @@ import {
 } from '@/app/(protected)/(game)/models/DetectiveGameView'
 import { DetectivePlace } from '@/app/(protected)/(game)/models/DetectivePlace'
 import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
+import { DetectiveStop } from '@/app/(protected)/(game)/models/DetectiveStop'
 import { GameAction } from '@/app/(protected)/(game)/models/GameAction'
 import { GameMembers } from '@/app/(protected)/(game)/models/GameMembers'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
@@ -65,11 +66,14 @@ function getCurrentStage(data: DetectiveGameData, stageNumber: unknown): Detecti
   return data.stages[data.currentStage - 1]
 }
 
-/** Where the detective is at a stage (1-based): the crime scene, or the destination of the previous stage. */
-function getStageLocation(data: DetectiveGameData, stageNumber: number): DetectivePlace {
-  const stop = stageNumber <= 1 ? data.origin : data.stages[stageNumber - 2].destination
+/** Stop where the detective is at a stage (1-based): the crime scene, or the destination of the previous stage. */
+function getStageStop(data: DetectiveGameData, stageNumber: number): DetectiveStop {
+  return stageNumber <= 1 ? data.origin : data.stages[stageNumber - 2].destination
+}
 
-  return toPlace(stop)
+/** Where the detective is at a stage (1-based). */
+function getStageLocation(data: DetectiveGameData, stageNumber: number): DetectivePlace {
+  return toPlace(getStageStop(data, stageNumber))
 }
 
 function toPlace({ placeId, placeName, countryCode, latitude, longitude }: DetectivePlace): DetectivePlace {
@@ -170,7 +174,7 @@ function toCurrentStageView(data: DetectiveGameData): DetectiveCurrentStageView 
   return {
     stageNumber: data.currentStage,
     location: getStageLocation(data, data.currentStage),
-    panoId: stage.destination.panoId,
+    panoId: getStageStop(data, data.currentStage).panoId,
     witnesses: stage.witnesses.map((witness, index) => {
       const asked = stage.askedWitnesses.includes(index)
 
@@ -208,10 +212,11 @@ function toPlayedStagesView(data: DetectiveGameData): DetectivePlayedStageView[]
 
 /**
  * Detective mode: a single player follows a suspect through a route of
- * landmarks ("Lugares icónicos"). At every stage the player sees what the
- * suspect sees (Street View of the next stop), talks to witnesses that give
- * clues about it and travels to one of the destinations offered, all against a
- * fictional clock computed from the route (see utils/detective.ts).
+ * landmarks ("Lugares icónicos"). At every stage the player explores where the
+ * detective is (Street View of the current stop) — the suspect already left,
+ * so only the witnesses there give clues about the next stop — and travels to
+ * one of the destinations offered, all against a fictional clock computed from
+ * the route (see utils/detective.ts).
  */
 export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSettings, DetectiveGameView> = {
   definition,

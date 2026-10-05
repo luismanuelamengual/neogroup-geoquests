@@ -7,7 +7,7 @@
   background: var(--color-night);
   touch-action: none;
 
-  .thief-eyes {
+  .detective-eyes {
     position: absolute;
     top: calc(84px + var(--safe-top));
     left: calc(12px + var(--safe-left));
@@ -61,7 +61,7 @@
 
 @media (max-width: 600px) {
   .detective-game-play {
-    .thief-eyes {
+    .detective-eyes {
       padding: 3px 10px;
       font-size: 0.7rem;
     }

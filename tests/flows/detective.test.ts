@@ -239,7 +239,7 @@ describe('detective game flow', () => {
     const data = await stored(game.id)
 
     expect(view.currentStageNumber).toBe(1)
-    expect(view.currentStage!.panoId).toBe(data.stages[0].destination.panoId)
+    expect(view.currentStage!.panoId).toBe(data.origin.panoId)
     expect(view.currentStage!.location.placeId).toBe(data.origin.placeId)
     expect(view.currentStage!.options).toHaveLength(4)
     expect(view.currentStage!.witnesses.every((witness) => !witness.asked && witness.clue === null)).toBe(true)
@@ -251,6 +251,7 @@ describe('detective game flow', () => {
 
     expect(json).not.toContain('clueIndex')
     expect(json).not.toContain('destination')
+    expect(json).not.toContain(data.stages[0].destination.panoId)
     expect(json).not.toContain(data.stages[1].destination.panoId)
   })
 
@@ -288,6 +289,7 @@ describe('detective game flow', () => {
     expect(detective(right).currentStageNumber).toBe(2)
     expect(detective(right).elapsedMinutes).toBe(getTravelMinutes(data.origin, first.destination))
     expect(detective(right).currentStage!.location.placeId).toBe(first.destination.placeId)
+    expect(detective(right).currentStage!.panoId).toBe(first.destination.panoId)
     expect(detective(right).playedStages[0]).toMatchObject({
       stageNumber: 1,
       destination: { placeId: first.destination.placeId },
