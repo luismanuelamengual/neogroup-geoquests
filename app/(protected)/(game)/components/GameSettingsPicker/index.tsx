@@ -53,7 +53,7 @@ function ChoiceGroup<T>({ label, options, value, format, onChange, disabled }: C
 /**
  * Rules of the game the player is about to create (map picker of a mode):
  * only the ones the mode lets choose — e.g. rounds and time per round in the
- * classic modes, only the time per round in battle royale.
+ * classic modes, the time per round and the rounds per elimination in battle royale.
  */
 export default function GameSettingsPicker({
   options,
@@ -64,7 +64,7 @@ export default function GameSettingsPicker({
 }: GameSettingsPickerProps) {
   const t = useT()
 
-  if (!options.rounds && !options.timeLimitSeconds) {
+  if (!options.rounds && !options.timeLimitSeconds && !options.roundsPerElimination) {
     return null
   }
 
@@ -89,6 +89,16 @@ export default function GameSettingsPicker({
             value={value.timeLimitSeconds}
             format={(seconds) => (seconds ? formatTimeLimit(seconds, t) : t('modes.noTime'))}
             onChange={(timeLimitSeconds) => onChange({ ...value, timeLimitSeconds })}
+            disabled={disabled}
+          />
+        )}
+        {options.roundsPerElimination && (
+          <ChoiceGroup
+            label={t('picker.roundsPerElimination')}
+            options={options.roundsPerElimination}
+            value={value.roundsPerElimination}
+            format={(rounds) => String(rounds)}
+            onChange={(roundsPerElimination) => onChange({ ...value, roundsPerElimination })}
             disabled={disabled}
           />
         )}

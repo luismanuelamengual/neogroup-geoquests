@@ -232,4 +232,82 @@ describe('battle royale flow', () => {
     expect(closed.eliminatedThisRound).toEqual([beto])
     expect(closed.aliveUserIds).toEqual([host, ana])
   })
+
+  describe('with 2 rounds per elimination', () => {
+    async function startedGameOf2(): Promise<GameView> {
+      const lobby = await createGame(
+        host,
+        { mapId, mode: GameMode.BATTLE_ROYALE, settings: { roundsPerElimination: 2 } },
+        at(0)
+      )
+
+      await joinGame(ana, { code: lobby.code! }, at(0))
+      await joinGame(beto, { code: lobby.code! }, at(0))
+
+      return startGame(host, { gameId: lobby.id }, at(0))
+    }
+
+    it('plans two rounds per elimination (plus spares)', async () => {
+      const game = await startedGameOf2()
+
+      expect(br(game)).toMatchObject({ roundsPerElimination: 2, roundInBlock: 1, eliminationRound: false })
+      expect(await roundsOf(game.id)).toHaveLength(2 * 2 + SPARE_ROUNDS)
+    })
+
+    it('eliminates whoever has the fewest points of the 2 rounds, and the points start again from 0', async () => {
+      const game = await startedGameOf2()
+      const rounds = await roundsOf(game.id)
+
+      // Round 1: Ana is the farthest, but nobody is eliminated yet.
+      await guess(host, game.id, 1, north(rounds[0], 1), 5000)
+      await guess(beto, game.id, 1, north(rounds[0], 50), 5000)
+
+      const first = br(await guess(ana, game.id, 1, north(rounds[0], 2000), 6000))
+
+      expect(first).toMatchObject({ phase: 'reveal', eliminatedThisRound: [], eliminationRound: false })
+      expect(first.aliveUserIds).toEqual([host, ana, beto])
+
+      await sendGameAction(host, { gameId: game.id, action: { type: 'next' } }, at(7000))
+
+      // Round 2: Beto is the farthest of the round, but Ana has the fewest points of the two rounds.
+      await guess(host, game.id, 2, north(rounds[1], 1), 11_000)
+      await guess(ana, game.id, 2, north(rounds[1], 20), 11_000)
+
+      const second = br(await guess(beto, game.id, 2, north(rounds[1], 50), 12_000))
+
+      expect(second).toMatchObject({ phase: 'reveal', eliminatedThisRound: [ana], eliminationRound: true })
+      expect(second.aliveUserIds).toEqual([host, beto])
+      expect(second.blockScores.map((blockScore) => blockScore.userId).pop()).toBe(ana)
+
+      // The next block starts from 0 (the points of the closed rounds count only from the reveal).
+      const third = br(await sendGameAction(host, { gameId: game.id, action: { type: 'next' } }, at(13_000)))
+
+      expect(third).toMatchObject({ currentRoundNumber: 3, roundInBlock: 1, eliminationRound: false })
+      expect(third.blockScores.every((blockScore) => blockScore.score === 0)).toBe(true)
+
+      // Round 3: Beto is far; round 4: Beto is close, but the total of the block is lower than the host's.
+      await guess(host, game.id, 3, north(rounds[2], 1), 17_000)
+      await guess(beto, game.id, 3, north(rounds[2], 1000), 17_000)
+      await sendGameAction(host, { gameId: game.id, action: { type: 'next' } }, at(18_000))
+      await guess(host, game.id, 4, north(rounds[3], 1), 22_000)
+
+      const fourth = br(await guess(beto, game.id, 4, north(rounds[3], 10), 22_000))
+
+      expect(fourth).toMatchObject({ eliminatedThisRound: [beto], aliveUserIds: [host] })
+      expect((await view(host, game.id, 22_000 + REVEAL_MS)).status).toBe(GameStatus.FINISHED)
+    })
+
+    it('keeps playing when nobody guessed in the whole block', async () => {
+      const game = await startedGameOf2()
+      const late = COUNTDOWN_MS + ROUND_MS + ROUND_TIME_GRACE_MS + 1
+
+      for (let ms = 0; ms < late; ms += 10_000) {
+        for (const userId of [host, ana, beto]) {
+          await getGame(userId, { gameId: game.id }, at(ms))
+        }
+      }
+
+      expect(br(await view(host, game.id, late))).toMatchObject({ phase: 'reveal', eliminatedThisRound: [] })
+    })
+  })
 })

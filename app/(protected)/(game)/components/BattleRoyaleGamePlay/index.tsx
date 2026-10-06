@@ -154,6 +154,13 @@ export default function BattleRoyaleGamePlay() {
           className="players"
         />
       )}
+      {guessing && view.roundsPerElimination > 1 && !view.isEliminated && (
+        <div className="block-info">
+          {view.eliminationRound
+            ? t('game.eliminationRound')
+            : t('game.blockProgress', { number: view.roundInBlock, total: view.roundsPerElimination })}
+        </div>
+      )}
       {canGuess && <GuessPanel onSubmit={() => submit(false)} submitting={submitting} hidden={countingDown} />}
       {guessing && !view.isEliminated && view.hasGuessed && (
         <GamePanel className="waiting" accent="lime">

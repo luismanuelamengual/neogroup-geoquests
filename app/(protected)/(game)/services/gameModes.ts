@@ -91,6 +91,7 @@ export function getGameSettings<Settings>(
   const settings = { ...defaults } as Settings & {
     rounds?: number
     timeLimitSeconds?: number | null
+    roundsPerElimination?: number
     difficulty?: DetectiveDifficulty
   }
 
@@ -103,6 +104,14 @@ export function getGameSettings<Settings>(
       input?.timeLimitSeconds,
       configurable.timeLimitSeconds,
       settings.timeLimitSeconds
+    )
+  }
+
+  if (configurable.roundsPerElimination && settings.roundsPerElimination !== undefined) {
+    settings.roundsPerElimination = pickAllowed(
+      input?.roundsPerElimination,
+      configurable.roundsPerElimination,
+      settings.roundsPerElimination
     )
   }
 

@@ -20,6 +20,20 @@
     transform: translateX(-50%);
   }
 
+  .block-info {
+    position: absolute;
+    top: calc(132px + var(--safe-top));
+    left: 50%;
+    z-index: 6;
+    padding: 4px 12px;
+    border-radius: 14px;
+    background: rgba(27, 35, 80, 0.85);
+    font-size: 0.8rem;
+    font-weight: 800;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
   .waiting {
     position: absolute;
     bottom: calc(24px + var(--safe-bottom));

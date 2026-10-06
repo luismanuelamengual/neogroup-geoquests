@@ -163,7 +163,8 @@ export const es = {
     },
     'battle-royale': {
       name: 'Battle Royale',
-      description: 'De 3 a 8 jugadores: en cada ronda queda eliminado el que marcó más lejos. El último en pie gana.'
+      description:
+        'De 3 a 8 jugadores: cada tanda de rondas queda eliminado el que menos puntos sumó. El último en pie gana.'
     },
     detective: {
       name: 'Detective',
@@ -175,6 +176,7 @@ export const es = {
     playersRange: '{min} a {max} jugadores',
     rounds: '{count} rondas',
     elimination: 'Eliminación',
+    eliminationEvery: 'Eliminación cada {count} rondas',
     timePerRound: '{time} por ronda',
     noTime: 'Sin tiempo',
     configurable: 'Reglas a elección',
@@ -225,6 +227,7 @@ export const es = {
     chooseWhere: 'Elegí dónde jugar',
     rules: 'Reglas de la partida',
     rounds: 'Rondas',
+    roundsPerElimination: 'Cantidad de rondas por eliminación',
     timePerRound: 'Tiempo por ronda',
     noMaps: 'Todavía no hay mapas para jugar.',
     places: { one: '{count} lugar', other: '{count} lugares' },
@@ -304,6 +307,8 @@ export const es = {
     eliminatedIn: 'Eliminado en la ronda {round}',
     stoodUp: 'Quedó en pie',
     eliminatedBadge: 'Eliminado',
+    blockProgress: 'Ronda {number} de {total} para la eliminación',
+    eliminationRound: '¡Ronda de eliminación!',
     won: '¡Ganaste!',
     wonStanding: '¡Ganaste! Quedaste en pie',
     draw: '¡Empate en el primer puesto!',
@@ -331,6 +336,10 @@ export const es = {
     seeResults: 'Ver resultados',
     next: 'Siguiente',
     nobodyEliminated: 'Nadie quedó eliminado',
+    roundsToElimination: {
+      one: 'Falta {count} ronda para la eliminación',
+      other: 'Faltan {count} rondas para la eliminación'
+    },
     eliminated: { one: '¡Eliminado: {names}!', other: '¡Eliminados: {names}!' }
   },
   lobby: {

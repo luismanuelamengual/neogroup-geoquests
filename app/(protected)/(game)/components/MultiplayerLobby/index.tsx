@@ -37,7 +37,7 @@ export default function MultiplayerLobby() {
   const userId = useUserStore((state) => state.user?.id)
   const [starting, setStarting] = useState(false)
   const [leaving, setLeaving] = useState(false)
-  const view = game.modeView as MultiplayerGameView & { roundsCount?: number }
+  const view = game.modeView as MultiplayerGameView & { roundsCount?: number; roundsPerElimination?: number }
   const players = game.players.filter((player) => player.status === GamePlayerStatus.ACTIVE)
   const colors = getPlayerColors(game.players)
   const isHost = userId != null && userId === game.hostUserId
@@ -86,7 +86,11 @@ export default function MultiplayerLobby() {
         <div className="map">{getMapName(t, game.mapSlug)}</div>
         <div className="rules">
           {t('lobby.rules', {
-            rounds: view.roundsCount ? t('modes.rounds', { count: view.roundsCount }) : t('modes.elimination'),
+            rounds: view.roundsCount
+              ? t('modes.rounds', { count: view.roundsCount })
+              : (view.roundsPerElimination ?? 1) > 1
+                ? t('modes.eliminationEvery', { count: view.roundsPerElimination! })
+                : t('modes.elimination'),
             time: formatTimeLimit(view.timeLimitSeconds, t)
           })}
         </div>

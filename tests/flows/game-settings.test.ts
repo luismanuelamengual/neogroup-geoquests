@@ -43,7 +43,10 @@ describe('rules chosen by the player', () => {
       rounds: [3, 5, 10],
       timeLimitSeconds: [30, 60, 120, 180, 300]
     })
-    expect(configurable[GameMode.BATTLE_ROYALE]).toEqual({ timeLimitSeconds: [30, 60, 120, 180, 300] })
+    expect(configurable[GameMode.BATTLE_ROYALE]).toEqual({
+      timeLimitSeconds: [30, 60, 120, 180, 300],
+      roundsPerElimination: [1, 2, 3]
+    })
   })
 
   it('creates a classic game with the chosen rounds and time limit', async () => {
@@ -92,6 +95,18 @@ describe('rules chosen by the player', () => {
 
     expect(settings).toMatchObject({ timeLimitSeconds: 120 })
     expect(settings).not.toHaveProperty('rounds')
+    expect(settings).toMatchObject({ roundsPerElimination: 1 })
+  })
+
+  it('lets a battle royale choose the rounds per elimination (1, 2 or 3)', async () => {
+    const game = await create(GameMode.BATTLE_ROYALE, { roundsPerElimination: 3 })
+
+    expect(await storedSettings(game.id)).toMatchObject({ roundsPerElimination: 3 })
+    expect(game.modeView).toMatchObject({ roundsPerElimination: 3 })
+
+    const invalid = await create(GameMode.BATTLE_ROYALE, { roundsPerElimination: 5 })
+
+    expect(await storedSettings(invalid.id)).toMatchObject({ roundsPerElimination: 1 })
   })
 })
 

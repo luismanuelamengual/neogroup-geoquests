@@ -76,17 +76,34 @@ export default function BattleRoyaleRoundResult({
       }
     ]
   }, [round, game.players, colors])
-  const entries = round.guesses.map((playerGuess, index): ScoreboardEntry => ({
-    userId: playerGuess.userId,
-    position: index + 1,
-    score: playerGuess.score,
-    detail:
-      playerGuess.distanceMeters != null
-        ? t('game.at', { distance: formatDistance(playerGuess.distanceMeters, locale) })
-        : t('game.noAnswer'),
-    badge: view.eliminatedThisRound.includes(playerGuess.userId) ? t('game.eliminatedBadge') : undefined,
-    hideScore: true
-  }))
+  const blockMode = view.roundsPerElimination > 1
+  const guessOf = (playerId: number) => round.guesses.find((playerGuess) => playerGuess.userId === playerId)
+  const detailOf = (distanceMeters: number | null | undefined) =>
+    distanceMeters != null ? t('game.at', { distance: formatDistance(distanceMeters, locale) }) : t('game.noAnswer')
+  // With several rounds per elimination the points of the block decide: ranked by them (ties share the position).
+  const entries: ScoreboardEntry[] = blockMode
+    ? view.blockScores.map((blockScore, _index, all) => {
+        const playerGuess = guessOf(blockScore.userId)
+        const firstTied = all.findIndex((other) => other.score === blockScore.score)
+
+        return {
+          userId: blockScore.userId,
+          position: firstTied + 1,
+          score: blockScore.score,
+          roundScore: playerGuess?.score ?? 0,
+          detail: detailOf(playerGuess?.distanceMeters),
+          badge: view.eliminatedThisRound.includes(blockScore.userId) ? t('game.eliminatedBadge') : undefined
+        }
+      })
+    : round.guesses.map((playerGuess, index): ScoreboardEntry => ({
+        userId: playerGuess.userId,
+        position: index + 1,
+        score: playerGuess.score,
+        detail: detailOf(playerGuess.distanceMeters),
+        badge: view.eliminatedThisRound.includes(playerGuess.userId) ? t('game.eliminatedBadge') : undefined,
+        hideScore: true
+      }))
+  const roundsLeft = view.roundsPerElimination - view.roundInBlock
 
   // Frame the pins in the area left visible above the result panel.
   useLayoutEffect(() => {
@@ -110,7 +127,9 @@ export default function BattleRoyaleRoundResult({
         </div>
         <div className="fallen">
           {view.eliminatedThisRound.length === 0
-            ? t('result.nobodyEliminated')
+            ? blockMode && !view.eliminationRound && roundsLeft > 0
+              ? t('result.roundsToElimination', { count: roundsLeft })
+              : t('result.nobodyEliminated')
             : t('result.eliminated', {
                 count: view.eliminatedThisRound.length,
                 names: view.eliminatedThisRound.map(nameOf).join(', ')

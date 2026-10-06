@@ -161,7 +161,8 @@ export const en: Messages = {
     },
     'battle-royale': {
       name: 'Battle Royale',
-      description: '3 to 8 players: every round, whoever marked the farthest is eliminated. The last one standing wins.'
+      description:
+        '3 to 8 players: after every set of rounds, whoever scored the fewest points is eliminated. The last one standing wins.'
     },
     detective: {
       name: 'Detective',
@@ -173,6 +174,7 @@ export const en: Messages = {
     playersRange: '{min} to {max} players',
     rounds: '{count} rounds',
     elimination: 'Elimination',
+    eliminationEvery: 'Elimination every {count} rounds',
     timePerRound: '{time} per round',
     noTime: 'No time limit',
     configurable: 'Custom rules',
@@ -222,6 +224,7 @@ export const en: Messages = {
     chooseWhere: 'Choose where to play',
     rules: 'Game rules',
     rounds: 'Rounds',
+    roundsPerElimination: 'Rounds per elimination',
     timePerRound: 'Time per round',
     noMaps: 'There are no maps to play yet.',
     places: { one: '{count} place', other: '{count} places' },
@@ -301,6 +304,8 @@ export const en: Messages = {
     eliminatedIn: 'Eliminated in round {round}',
     stoodUp: 'Still standing',
     eliminatedBadge: 'Eliminated',
+    blockProgress: 'Round {number} of {total} before the elimination',
+    eliminationRound: 'Elimination round!',
     won: 'You won!',
     wonStanding: 'You won! You were the last one standing',
     draw: "It's a tie for first place!",
@@ -328,6 +333,7 @@ export const en: Messages = {
     seeResults: 'See results',
     next: 'Next',
     nobodyEliminated: 'Nobody was eliminated',
+    roundsToElimination: { one: '{count} round to the elimination', other: '{count} rounds to the elimination' },
     eliminated: { one: 'Eliminated: {names}!', other: 'Eliminated: {names}!' }
   },
   lobby: {

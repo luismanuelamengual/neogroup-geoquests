@@ -1,3 +1,4 @@
+import { BattleRoyaleBlockScoreView } from '@/app/(protected)/(game)/models/BattleRoyaleBlockScoreView'
 import { BattleRoyaleGameData } from '@/app/(protected)/(game)/models/BattleRoyaleGameData'
 import { BattleRoyaleGameSettings } from '@/app/(protected)/(game)/models/BattleRoyaleGameSettings'
 import { BattleRoyaleGameView } from '@/app/(protected)/(game)/models/BattleRoyaleGameView'
@@ -20,6 +21,7 @@ import {
   initGuesses,
   isRevealOver,
   isRoundDone,
+  MISSING_GUESS_DISTANCE_METERS,
   rankPlayers,
   recordGuess,
   toMultiplayerGameView
@@ -29,8 +31,9 @@ import { DEFAULT_SCORE_MAX_DISTANCE_KM } from '@/app/(protected)/(game)/utils/sc
 import { ApiException } from '@/app/models/ApiException'
 
 /**
- * Rounds chosen beyond the minimum (players − 1): a round where nobody
- * guessed eliminates nobody, so a few spare locations keep the game going.
+ * Rounds chosen beyond the minimum (one block of rounds per elimination): a
+ * block where nobody guessed eliminates nobody, so a few spare locations keep
+ * the game going.
  */
 export const SPARE_ROUNDS = 2
 
@@ -38,7 +41,8 @@ const definition: GameModeDefinition<BattleRoyaleGameSettings> = {
   mode: GameMode.BATTLE_ROYALE,
   slug: 'battle-royale',
   name: 'Battle Royale',
-  description: 'De 3 a 8 jugadores: en cada ronda queda eliminado el que marcó más lejos. El último en pie gana.',
+  description:
+    'De 3 a 8 jugadores: cada tanda de rondas queda eliminado el que menos puntos sumó. El último en pie gana.',
   image: '/modes/battle-royale.png',
   minPlayers: 3,
   maxPlayers: 8,
@@ -48,9 +52,10 @@ const definition: GameModeDefinition<BattleRoyaleGameSettings> = {
     maxPlayers: 8,
     revealSeconds: 15,
     countdownSeconds: 3,
-    scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM
+    scoreMaxDistanceKm: DEFAULT_SCORE_MAX_DISTANCE_KM,
+    roundsPerElimination: 1
   },
-  configurable: { timeLimitSeconds: [30, 60, 120, 180, 300] },
+  configurable: { timeLimitSeconds: [30, 60, 120, 180, 300], roundsPerElimination: [1, 2, 3] },
   // Nobody asked for the game in 5 minutes (every round writes while someone plays): finished as it is.
   abandonAfterMs: 5 * 60 * 1000,
   abandonAction: 'finish'
@@ -76,54 +81,146 @@ function getPlayingPlayers(data: BattleRoyaleGameData, { players }: GameMembers)
   return players.filter((player) => player.status === GamePlayerStatus.ACTIVE && alive.has(player.userId))
 }
 
+/** Rounds played between one elimination and the next (games created before this rule: 1). */
+function getRoundsPerElimination(data: BattleRoyaleGameData): number {
+  return Math.max(1, data.settings.roundsPerElimination ?? 1)
+}
+
+/**
+ * First round of the block the current round belongs to: the one after the
+ * last elimination decided by points (the points start again from 0 there).
+ */
+function getBlockStartRound(data: BattleRoyaleGameData): number {
+  const resets = data.eliminations
+    .filter((elimination) => elimination.scoresReset && elimination.roundNumber < data.currentRound)
+    .map((elimination) => elimination.roundNumber)
+
+  return Math.max(0, ...resets) + 1
+}
+
+/** Number of the current round within its block (1-based). */
+function getRoundInBlock(data: BattleRoyaleGameData): number {
+  return data.currentRound - getBlockStartRound(data) + 1
+}
+
+/** Whether the current round is the one that ends with an elimination (the block is complete). */
+function isEliminationRound(data: BattleRoyaleGameData): boolean {
+  return getRoundInBlock(data) >= getRoundsPerElimination(data)
+}
+
+/** What a player did in the rounds of the current block (up to the current one). */
+function getBlockResult(data: BattleRoyaleGameData, userId: number) {
+  const guesses = (data.guesses[String(userId)] ?? []).slice(getBlockStartRound(data) - 1, data.currentRound)
+  const answered = guesses.filter((guess) => guess && !guess.timedOut)
+
+  return {
+    userId,
+    answered: answered.length,
+    score: guesses.reduce((total, guess) => total + (guess?.score ?? 0), 0),
+    distanceMeters: guesses.reduce(
+      (total, guess) => total + (guess ? (guess.distanceMeters ?? MISSING_GUESS_DISTANCE_METERS) : 0),
+      0
+    ),
+    lastGuessedAt: Math.max(0, ...answered.map((guess) => new Date(guess!.guessedAt ?? 0).getTime()))
+  }
+}
+
+/**
+ * Who falls because of the points when a block of several rounds is complete
+ * (among the players still playing):
+ *
+ *   - if nobody guessed in the whole block, nobody (the block goes on);
+ *   - otherwise, whoever did not guess in any round; if everybody did, the one
+ *     with the fewest points — on a tie, the one who added up more distance,
+ *     and then the one who guessed last.
+ */
+function getFallenByBlock(data: BattleRoyaleGameData, stillPlaying: number[]): number[] {
+  const results = stillPlaying.map((userId) => getBlockResult(data, userId))
+
+  if (results.every((result) => result.answered === 0)) {
+    return []
+  }
+
+  const missing = results.filter((result) => result.answered === 0)
+
+  if (missing.length > 0) {
+    return missing.map((result) => result.userId)
+  }
+
+  const [worst] = [...results].sort(
+    (a, b) => a.score - b.score || b.distanceMeters - a.distanceMeters || b.lastGuessedAt - a.lastGuessedAt
+  )
+
+  return [worst.userId]
+}
+
+/** Who falls because of the single round that just closed (1 round per elimination): see getFallen. */
+function getFallenByRound(data: BattleRoyaleGameData, alive: number[]): number[] {
+  const roundNumber = data.currentRound
+  const guesses = alive.map((userId) => ({ userId, guess: guessOf(data, userId, roundNumber)! }))
+  const guessers = guesses.filter(({ guess }) => !guess.timedOut)
+
+  if (guessers.length === 0) {
+    return []
+  }
+
+  const missing = guesses.filter(({ guess }) => guess.timedOut)
+
+  if (missing.length > 0) {
+    return missing.map(({ userId }) => userId)
+  }
+
+  const farthest = Math.max(...guessers.map(({ guess }) => guess.distanceMeters ?? 0))
+  const tied = guessers.filter(({ guess }) => (guess.distanceMeters ?? 0) === farthest)
+  const lastTime = Math.max(...tied.map(({ guess }) => new Date(guess.guessedAt ?? 0).getTime()))
+
+  return tied.filter(({ guess }) => new Date(guess.guessedAt ?? 0).getTime() === lastTime).map(({ userId }) => userId)
+}
+
 /**
  * Who falls when a round closes (among the `alive` players):
  *
- *   - if nobody guessed, nobody (a spare round is played);
- *   - otherwise, whoever did not guess; if everybody guessed, the farthest
- *     one — on a tie, the one who guessed last;
- *   - players who left the game fall too.
+ *   - when the round ends a block (`roundsPerElimination` rounds since the last
+ *     elimination), whoever is last by points: with 1 round, the one who did not
+ *     guess or, if everybody guessed, the farthest (on a tie, the one who guessed
+ *     last); with more, see getFallenByBlock. If nobody guessed, nobody falls and
+ *     the block goes on;
+ *   - players who left the game fall too, in any round.
  *
  * It never eliminates everybody still playing (e.g. an exact tie between the
  * last two): then only those who left fall.
+ *
+ * `reset` tells whether somebody fell because of the points (the points start again from 0).
  */
-function getFallen(data: BattleRoyaleGameData, alive: number[], { players }: GameMembers): number[] {
-  const roundNumber = data.currentRound
+function getFallen(
+  data: BattleRoyaleGameData,
+  alive: number[],
+  { players }: GameMembers
+): { fallen: number[]; reset: boolean } {
   const left = alive.filter(
     (userId) => players.find((player) => player.userId === userId)?.status !== GamePlayerStatus.ACTIVE
   )
-  const guesses = alive.map((userId) => ({ userId, guess: guessOf(data, userId, roundNumber)! }))
-  const guessers = guesses.filter(({ guess }) => !guess.timedOut)
-  let fallen: number[] = []
-
-  if (guessers.length > 0) {
-    const missing = guesses.filter(({ guess }) => guess.timedOut)
-
-    if (missing.length > 0) {
-      fallen = missing.map(({ userId }) => userId)
-    } else {
-      const farthest = Math.max(...guessers.map(({ guess }) => guess.distanceMeters ?? 0))
-      const tied = guessers.filter(({ guess }) => (guess.distanceMeters ?? 0) === farthest)
-      const lastTime = Math.max(...tied.map(({ guess }) => new Date(guess.guessedAt ?? 0).getTime()))
-
-      fallen = tied
-        .filter(({ guess }) => new Date(guess.guessedAt ?? 0).getTime() === lastTime)
-        .map(({ userId }) => userId)
-    }
-  }
-
-  fallen = [...new Set([...fallen, ...left])]
-
   const stillPlaying = alive.filter((userId) => !left.includes(userId))
+  let byPoints: number[] = []
 
-  if (stillPlaying.length > 0 && stillPlaying.every((userId) => fallen.includes(userId))) {
-    return left
+  if (isEliminationRound(data)) {
+    byPoints = getRoundsPerElimination(data) > 1 ? getFallenByBlock(data, stillPlaying) : getFallenByRound(data, alive)
   }
 
-  return fallen
+  byPoints = byPoints.filter((userId) => !left.includes(userId))
+
+  if (stillPlaying.length > 0 && stillPlaying.every((userId) => byPoints.includes(userId))) {
+    byPoints = []
+  }
+
+  return { fallen: [...new Set([...byPoints, ...left])], reset: byPoints.length > 0 }
 }
 
-/** Closes the current round when it is done: whoever did not guess scores 0, and the fallen are eliminated. */
+function isLeft(userId: number, { players }: GameMembers): boolean {
+  return players.find((player) => player.userId === userId)?.status !== GamePlayerStatus.ACTIVE
+}
+
+/** Closes the current round when it is done: whoever did not guess scores 0, and the fallen (if the block is complete) are eliminated. */
 function closeRoundIfDone(
   data: BattleRoyaleGameData,
   members: GameMembers,
@@ -138,8 +235,10 @@ function closeRoundIfDone(
 
   closeRound(data, alive, now)
 
-  for (const userId of getFallen(data, alive, members)) {
-    data.eliminations.push({ userId, roundNumber: data.currentRound })
+  const { fallen, reset } = getFallen(data, alive, members)
+
+  for (const userId of fallen) {
+    data.eliminations.push({ userId, roundNumber: data.currentRound, scoresReset: reset && !isLeft(userId, members) })
   }
 
   return true
@@ -154,6 +253,27 @@ function goToNextRound(data: BattleRoyaleGameData, now: Date): boolean {
   }
 
   return true
+}
+
+/** Points added up in the current block by the players who played its last round, best first. */
+function getBlockScores(data: BattleRoyaleGameData): BattleRoyaleBlockScoreView[] {
+  if (data.currentRound === 0) {
+    return []
+  }
+
+  const fellNow = data.phase === 'reveal' ? data.eliminations.filter((e) => e.roundNumber === data.currentRound) : []
+  const players = new Set([...getAliveUserIds(data), ...fellNow.map((elimination) => elimination.userId)])
+  const hidden = data.phase === 'guessing' && !data.finished ? 1 : 0
+  const from = getBlockStartRound(data) - 1
+
+  return [...players]
+    .map((userId) => ({
+      userId,
+      score: (data.guesses[String(userId)] ?? [])
+        .slice(from, data.currentRound - hidden)
+        .reduce((total, guess) => total + (guess?.score ?? 0), 0)
+    }))
+    .sort((a, b) => b.score - a.score)
 }
 
 /**
@@ -191,9 +311,11 @@ function getStandings(data: BattleRoyaleGameData): BattleRoyaleStandingView[] {
 
 /**
  * Battle royale mode: 3 to 8 friends play the same rounds at the same time,
- * with the same clock (like the classic multiplayer mode). Every round, the
- * player whose pin landed farthest is eliminated — and keeps watching the
- * game —, until a single player is left: the winner.
+ * with the same clock (like the classic multiplayer mode). Every
+ * `roundsPerElimination` rounds (1 by default) the player with the fewest points
+ * in them — the one whose pin landed farthest, with a single round — is
+ * eliminated (and keeps watching the game) and the points start again from 0,
+ * until a single player is left: the winner.
  */
 export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyaleGameSettings, BattleRoyaleGameView> = {
   definition,
@@ -214,7 +336,11 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
   async start(data, { players }, ctx: GameContext) {
     const playersCount = players.filter((player) => player.status === GamePlayerStatus.ACTIVE).length
 
-    data.rounds = await planGameRounds(data.mapId, playersCount - 1 + SPARE_ROUNDS, ctx)
+    data.rounds = await planGameRounds(
+      data.mapId,
+      (playersCount - 1) * getRoundsPerElimination(data) + SPARE_ROUNDS,
+      ctx
+    )
     data.eliminations = []
     initGuesses(data, players)
     beginRound(data, 1, ctx.now)
@@ -298,6 +424,10 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
         ctx.now
       ),
       aliveUserIds: getAliveUserIds(data),
+      roundsPerElimination: getRoundsPerElimination(data),
+      roundInBlock: data.currentRound > 0 ? getRoundInBlock(data) : 1,
+      eliminationRound: data.currentRound > 0 && isEliminationRound(data),
+      blockScores: getBlockScores(data),
       isEliminated: eliminated.has(userId),
       eliminatedThisRound:
         data.phase === 'reveal'
@@ -318,8 +448,8 @@ export const battleRoyaleMode: GameModeEngine<BattleRoyaleGameData, BattleRoyale
       score: (getScoredGuesses(data)[String(userId)] ?? []).reduce((total, guess) => total + (guess?.score ?? 0), 0),
       maxScore: null,
       completedSteps: closedRounds,
-      // Rounds needed to have a winner: one elimination per round.
-      totalSteps: Math.max(1, Object.keys(data.guesses).length - 1)
+      // Rounds needed to have a winner: one elimination per block of rounds.
+      totalSteps: Math.max(1, (Object.keys(data.guesses).length - 1) * getRoundsPerElimination(data))
     }
   }
 }

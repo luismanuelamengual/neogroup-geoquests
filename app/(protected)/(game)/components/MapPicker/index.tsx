@@ -25,7 +25,8 @@ export default function MapPicker({ mode, maps }: { mode: GameModeView; maps: Ma
   const multiplayer = mode.maxPlayers > 1
   const [settings, setSettings] = useState<GameSettingsInput>(() => ({
     rounds: 'rounds' in mode.settings ? mode.settings.rounds : undefined,
-    timeLimitSeconds: 'timeLimitSeconds' in mode.settings ? mode.settings.timeLimitSeconds : undefined
+    timeLimitSeconds: 'timeLimitSeconds' in mode.settings ? mode.settings.timeLimitSeconds : undefined,
+    roundsPerElimination: 'roundsPerElimination' in mode.settings ? mode.settings.roundsPerElimination : undefined
   }))
 
   return (

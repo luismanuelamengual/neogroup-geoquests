@@ -8,5 +8,5 @@ export interface QuickPlayView {
   key: string
   mode: GameMode
   map: MapView
-  settings: Required<Omit<GameSettingsInput, 'difficulty'>>
+  settings: Required<Omit<GameSettingsInput, 'difficulty' | 'roundsPerElimination'>>
 }

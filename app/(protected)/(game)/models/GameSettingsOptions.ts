@@ -9,6 +9,8 @@ export interface GameSettingsOptions {
   rounds?: number[]
   /** Time limit of each round in seconds (null = no limit). */
   timeLimitSeconds?: (number | null)[]
+  /** Rounds played between one elimination and the next (battle royale mode). */
+  roundsPerElimination?: number[]
   /** Difficulties a case can have (detective mode). */
   difficulty?: DetectiveDifficulty[]
 }
