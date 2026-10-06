@@ -5,22 +5,31 @@ import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
 import PersonPinCircleIcon from '@mui/icons-material/PersonPinCircle'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 import SportsScoreIcon from '@mui/icons-material/SportsScore'
-import { DetectiveGameSettings } from '@/app/(protected)/(game)/models/DetectiveGameSettings'
-import { MAX_MISTAKES, WITNESS_MINUTES } from '@/app/(protected)/(game)/utils/detective'
+import { DetectiveDifficultySettings } from '@/app/(protected)/(game)/models/DetectiveDifficultySettings'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
 import { useT } from '@/app/i18n/I18nProvider'
 
 /** The rules of the detective mode in four steps (mode page and case briefing). */
-export default function DetectiveHowTo({ settings }: { settings: DetectiveGameSettings }) {
+export default function DetectiveHowTo({
+  settings
+}: {
+  settings: Pick<DetectiveDifficultySettings, 'hops' | 'options' | 'suspects' | 'witnessMinutes' | 'maxMistakes'>
+}) {
   const t = useT()
   const steps = [
     { icon: <PersonPinCircleIcon />, text: t('detective.howTo.eyes') },
-    { icon: <RecordVoiceOverIcon />, text: t('detective.howTo.witnesses', { time: formatDuration(WITNESS_MINUTES) }) },
+    {
+      icon: <RecordVoiceOverIcon />,
+      text: t('detective.howTo.witnesses', { time: formatDuration(settings.witnessMinutes) })
+    },
     {
       icon: <FlightTakeoffIcon />,
-      text: t('detective.howTo.travel', { options: settings.options, mistakes: MAX_MISTAKES })
+      text: t('detective.howTo.travel', { options: settings.options, mistakes: settings.maxMistakes })
     },
-    { icon: <SportsScoreIcon />, text: t('detective.howTo.catch', { hops: settings.hops }) }
+    {
+      icon: <SportsScoreIcon />,
+      text: t('detective.howTo.catch', { hops: settings.hops, suspects: settings.suspects })
+    }
   ]
 
   return (

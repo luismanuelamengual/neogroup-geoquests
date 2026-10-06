@@ -1,11 +1,11 @@
-/** Settings of a detective game: fixed rules (the player chooses none of them). */
-export interface DetectiveGameSettings {
-  /** Places the suspect travels to after the crime scene (the case ends when the detective reaches the last one). */
-  hops: number
-  /** Destinations offered to the detective at each stage (the right one and decoys). */
-  options: number
-  /** Witnesses at each stage: each one knows one clue about the next destination. */
-  witnesses: number
-  /** Shortest distance (km) between two consecutive places of the route. */
-  minHopKm: number
+import { DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDifficulty'
+import { DetectiveDifficultySettings } from '@/app/(protected)/(game)/models/DetectiveDifficultySettings'
+
+/**
+ * Settings of a detective game (stored in `games.data`): the difficulty the
+ * player chose and the rules of that difficulty as they were when the case
+ * was created, so retuning a difficulty never changes a case in progress.
+ */
+export interface DetectiveGameSettings extends DetectiveDifficultySettings {
+  difficulty: DetectiveDifficulty
 }

@@ -15,14 +15,9 @@ import { DETECTIVE_MAP_SLUG } from '@/app/(protected)/(game)/services/detectiveM
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGames, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
-import {
-  distanceKm,
-  getDetectiveMaxScore,
-  getTravelMinutes,
-  MAX_MISTAKES,
-  WITNESS_BUDGET_MINUTES,
-  WITNESS_MINUTES
-} from '@/app/(protected)/(game)/utils/detective'
+import { distanceKm, getDetectiveMaxScore, getTravelMinutes } from '@/app/(protected)/(game)/utils/detective'
+import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
+import { countContradictions, generateSuspect } from '@/app/(protected)/(game)/utils/suspects'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
@@ -119,6 +114,12 @@ function detective(game: GameView): DetectiveGameView {
   return game.modeView as DetectiveGameView
 }
 
+const {
+  maxMistakes: MAX_MISTAKES,
+  witnessBudgetMinutes: WITNESS_BUDGET_MINUTES,
+  witnessMinutes: WITNESS_MINUTES
+} = DETECTIVE_DIFFICULTIES.medium
+
 describe('detective game flow', () => {
   let userId: number
 
@@ -138,6 +139,18 @@ describe('detective game flow', () => {
   /** The case as stored in the database (with the answers). */
   async function stored(gameId: number): Promise<DetectiveGameData> {
     return (await Game.find(gameId))!.data as DetectiveGameData
+  }
+
+  /** Travels to the right destination of every stage (asking the first witness of each): the detective gets to the suspects. */
+  async function reachLastStop(gameId: number): Promise<GameView> {
+    let view: GameView | null = null
+
+    for (let stage = 1; stage <= 5; stage++) {
+      await act(gameId, { type: 'askWitness', stageNumber: stage, witness: 0 })
+      view = await travelRight(gameId)
+    }
+
+    return view!
   }
 
   /** Travels to the right destination of the current stage. */
@@ -197,6 +210,20 @@ describe('detective game flow', () => {
       expect(stage.witnesses.some((witness) => witness.clueIndex <= 1)).toBe(true)
       expect(stage.askedWitnesses).toEqual([])
       expect(stage.travel).toBeNull()
+
+      // One of the three witnesses also tells a trait of the thief.
+      expect(stage.witnesses.filter((witness) => witness.suspectClue)).toHaveLength(1)
+    })
+
+    // The thief and its decoys: the traits told along the case (one per stage) tell the thief from each of them.
+    const clues = data.stages.map((stage) => stage.witnesses.find((witness) => witness.suspectClue)!.suspectClue!)
+
+    expect(data.lineup!.seeds).toHaveLength(4)
+    expect(new Set(data.lineup!.seeds).size).toBe(4)
+    expect(data.lineup!.accused).toBeNull()
+    expect(new Set(clues.map((clue) => clue.trait)).size).toBe(5)
+    data.lineup!.seeds.forEach((seed, index) => {
+      expect(countContradictions(generateSuspect(seed), clues) === 0).toBe(index === data.lineup!.thief)
     })
 
     // The time is enough for the perfect route (with the witnesses budgeted).
@@ -209,6 +236,70 @@ describe('detective game flow', () => {
     // Every landmark with clues exists in the seed (names must match exactly).
     for (const name of Object.keys(LANDMARK_CLUES)) {
       expect(seeded.has(name), name).toBe(true)
+    }
+  })
+
+  it('plans each difficulty with its own rules, kept in the case', async () => {
+    for (const difficulty of ['easy', 'medium', 'hard'] as const) {
+      const rules = DETECTIVE_DIFFICULTIES[difficulty]
+
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const game = await createGame(
+          userId,
+          { mode: GameMode.DETECTIVE, settings: { difficulty } },
+          { finder: new FakePanoramaFinder() }
+        )
+        const data = await stored(game.id)
+
+        expect(data.settings).toMatchObject({ difficulty, hops: rules.hops, maxMistakes: rules.maxMistakes })
+        expect(data.stages).toHaveLength(rules.hops)
+        expect(data.lineup!.seeds).toHaveLength(rules.suspects)
+
+        const clues = data.stages.map((stage) => stage.witnesses.find((witness) => witness.suspectClue)?.suspectClue)
+
+        for (const stage of data.stages) {
+          expect(stage.options).toHaveLength(rules.options)
+          expect(stage.witnesses).toHaveLength(rules.witnesses)
+        }
+
+        // Only the traits the difficulty allows, and the thief is the only one that matches them all.
+        expect(clues.every((clue) => clue && rules.suspectTraits.includes(clue.trait))).toBe(true)
+        data.lineup!.seeds.forEach((seed, index) => {
+          expect(countContradictions(generateSuspect(seed), clues as never) === 0).toBe(index === data.lineup!.thief)
+        })
+
+        expect(detective(game)).toMatchObject({
+          difficulty,
+          stagesCount: rules.hops,
+          suspectsCount: rules.suspects,
+          witnessMinutes: rules.witnessMinutes,
+          maxMistakes: rules.maxMistakes
+        })
+      }
+    }
+  })
+
+  it('plays a case of the difficulty chosen: its witnesses cost what it says', async () => {
+    const game = await createGame(
+      userId,
+      { mode: GameMode.DETECTIVE, settings: { difficulty: 'hard' } },
+      { finder: new FakePanoramaFinder() }
+    )
+    const asked = await act(game.id, { type: 'askWitness', stageNumber: 1, witness: 0 })
+
+    expect(detective(asked).elapsedMinutes).toBe(DETECTIVE_DIFFICULTIES.hard.witnessMinutes)
+  })
+
+  it('falls back to the medium difficulty when it is missing or not valid', async () => {
+    for (const settings of [undefined, { difficulty: 'nightmare' }]) {
+      const game = await createGame(
+        userId,
+        { mode: GameMode.DETECTIVE, settings: settings as never },
+        { finder: new FakePanoramaFinder() }
+      )
+
+      expect(detective(game).difficulty).toBe('medium')
+      expect((await stored(game.id)).settings).toMatchObject({ hops: DETECTIVE_DIFFICULTIES.medium.hops })
     }
   })
 
@@ -244,12 +335,15 @@ describe('detective game flow', () => {
     expect(view.currentStage!.options).toHaveLength(4)
     expect(view.currentStage!.witnesses.every((witness) => !witness.asked && witness.clue === null)).toBe(true)
     expect(view.route).toBeNull()
+    expect(view.lineup).toBeNull()
+    expect(view.suspectsCount).toBe(4)
     expect(view.playedStages).toEqual([])
     expect(view.maxScore).toBe(getDetectiveMaxScore(5))
 
     const json = JSON.stringify(view)
 
     expect(json).not.toContain('clueIndex')
+    expect(json).not.toContain('suspectClue":{')
     expect(json).not.toContain('destination')
     expect(json).not.toContain(data.stages[0].destination.panoId)
     expect(json).not.toContain(data.stages[1].destination.panoId)
@@ -269,6 +363,12 @@ describe('detective game flow', () => {
       role: witness.role,
       clue: { es: clues.es[witness.clueIndex], en: clues.en[witness.clueIndex] }
     })
+
+    // Only the witness that knows a trait of the thief tells it (the others, nothing).
+    expect(detective(asked).currentStage!.witnesses[1].suspectClue).toEqual(witness.suspectClue ?? null)
+    expect(
+      detective(asked).currentStage!.witnesses.every((item, index) => index === 1 || item.suspectClue === null)
+    ).toBe(true)
 
     // Asking again is free (and nothing is written).
     const again = await act(game.id, { type: 'askWitness', stageNumber: 1, witness: 1 })
@@ -316,15 +416,46 @@ describe('detective game flow', () => {
     ).rejects.toThrow()
   })
 
-  it('catches the suspect at the last stop', async () => {
+  it('does not end the case at the last stop: the detective has to point at the thief among the suspects', async () => {
     const game = await create()
-    let view = game
+    const data = await stored(game.id)
+    const view = await reachLastStop(game.id)
+    const result = detective(view)
 
-    for (let stage = 1; stage <= 5; stage++) {
-      view = await act(game.id, { type: 'askWitness', stageNumber: stage, witness: 0 })
-      view = await travelRight(game.id)
-    }
+    expect(view.status).toBe(GameStatus.IN_PROGRESS)
+    expect(result.outcome).toBeNull()
+    expect(result.currentStage).toBeNull()
+    expect(result.currentStageNumber).toBeNull()
+    expect(result.playedStages).toHaveLength(5)
 
+    // The suspects are shown (not who the thief is), where the detective is.
+    const last = data.stages[4].destination
+
+    expect(result.lineup).toEqual({
+      location: expect.objectContaining({ placeId: last.placeId }),
+      panoId: last.panoId,
+      suspects: data.lineup!.seeds,
+      thief: null,
+      accused: null
+    })
+    expect(JSON.stringify(result)).not.toContain(`"thief":${data.lineup!.thief}`)
+
+    // Nothing else can be done there but accusing.
+    await expect(act(game.id, { type: 'askWitness', stageNumber: 6, witness: 0 })).rejects.toThrow()
+    await expect(act(game.id, { type: 'travel', stageNumber: 6, placeId: last.placeId })).rejects.toThrow()
+    await expect(act(game.id, { type: 'accuse', suspect: -1 })).rejects.toThrow()
+    await expect(act(game.id, { type: 'accuse', suspect: 4 })).rejects.toThrow()
+    await expect(act(game.id, { type: 'accuse', suspect: 1.5 })).rejects.toThrow()
+    expect((await stored(game.id)).outcome).toBeNull()
+  })
+
+  it('catches the thief when the detective points at it', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    await reachLastStop(game.id)
+
+    const view = await act(game.id, { type: 'accuse', suspect: data.lineup!.thief })
     const result = detective(view)
 
     expect(view.status).toBe(GameStatus.FINISHED)
@@ -332,6 +463,7 @@ describe('detective game flow', () => {
     expect(result.currentStage).toBeNull()
     expect(result.route).toHaveLength(6)
     expect(result.playedStages).toHaveLength(5)
+    expect(result.lineup).toMatchObject({ thief: data.lineup!.thief, accused: data.lineup!.thief })
     expect(result.score).toBeGreaterThan(5 * 400 + 1000)
     expect(result.score).toBeLessThanOrEqual(result.maxScore)
 
@@ -341,6 +473,51 @@ describe('detective game flow', () => {
     expect((await getGames(userId)).items[0]).toMatchObject({ score: result.score, completedSteps: 5, totalSteps: 5 })
 
     await expect(act(game.id, { type: 'askWitness', stageNumber: 5, witness: 1 })).rejects.toThrow()
+    await expect(act(game.id, { type: 'accuse', suspect: data.lineup!.thief })).rejects.toThrow()
+  })
+
+  it('lets the thief escape when the detective points at somebody else', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+    const other = data.lineup!.seeds.findIndex((_, index) => index !== data.lineup!.thief)
+
+    await reachLastStop(game.id)
+
+    const view = await act(game.id, { type: 'accuse', suspect: other })
+    const result = detective(view)
+
+    expect(view.status).toBe(GameStatus.FINISHED)
+    expect(result.outcome).toBe('wrongSuspect')
+    // The destinations count, the catch (and its time bonus) does not.
+    expect(result.score).toBe(5 * 400)
+    expect(result.lineup).toMatchObject({ thief: data.lineup!.thief, accused: other })
+    expect(result.route).toHaveLength(6)
+    expect(await GamePlayer.where('gameId', game.id).first()).toMatchObject({ outcome: GameOutcome.LOST })
+
+    await expect(act(game.id, { type: 'accuse', suspect: data.lineup!.thief })).rejects.toThrow()
+  })
+
+  it('does not accuse before getting to the last stop', async () => {
+    const game = await create()
+
+    await expect(act(game.id, { type: 'accuse', suspect: 0 })).rejects.toThrow()
+    expect(detective(game).lineup).toBeNull()
+  })
+
+  it('ends as before, caught at the last stop, the cases created without suspects', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    delete data.lineup
+    await DB.table('games')
+      .where('id', game.id)
+      .update({ data: JSON.stringify(data) })
+
+    const view = await reachLastStop(game.id)
+
+    expect(view.status).toBe(GameStatus.FINISHED)
+    expect(detective(view)).toMatchObject({ outcome: 'caught', lineup: null, suspectsCount: 0 })
+    expect(detective(view).currentStage).toBeNull()
   })
 
   it('lets the suspect escape when the time runs out', async () => {

@@ -11,7 +11,7 @@ import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
 import { DetectiveWitnessView } from '@/app/(protected)/(game)/models/DetectiveGameView'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
 import { generateWitness } from '@/app/(protected)/(game)/utils/witnesses'
-import { getWitnessIntro, getWitnessRoleName } from '@/app/(protected)/(game)/utils/witnessText'
+import { getSuspectClueText, getWitnessIntro, getWitnessRoleName } from '@/app/(protected)/(game)/utils/witnessText'
 import { useI18n } from '@/app/i18n/I18nProvider'
 
 interface DetectiveWitnessesProps {
@@ -80,7 +80,13 @@ export default function DetectiveWitnesses({
               <SpeechBubble
                 className="bubble"
                 speaker={`${traits.name} · ${getWitnessRoleName(t, witness.role, traits.presentation)}`}
-                text={`${getWitnessIntro(t, traits.introIndex)} ${witness.clue![locale]}`}
+                text={[
+                  getWitnessIntro(t, traits.introIndex),
+                  witness.clue![locale],
+                  witness.suspectClue ? getSuspectClueText(t, witness.suspectClue) : null
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
                 typing={talking}
                 tail={index === 0 ? 'left' : index === witnesses.length - 1 ? 'right' : 'center'}
                 onDone={() => setTyping((current) => (current === index ? null : current))}

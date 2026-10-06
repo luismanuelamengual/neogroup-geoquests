@@ -168,7 +168,7 @@ export const es = {
     detective: {
       name: 'Detective',
       description:
-        'Seguí el rastro de un ladrón por cinco lugares icónicos del mundo: hablá con testigos, elegí a dónde viajar y atrapalo antes de que se acabe el tiempo.'
+        'Seguí el rastro de un ladrón por lugares icónicos del mundo: hablá con testigos, elegí a dónde viajar y, al final, señalá al ladrón entre los sospechosos antes de que se acabe el tiempo.'
     },
     onePlayer: '1 jugador',
     playersExact: '{count} jugadores',
@@ -370,16 +370,24 @@ export const es = {
   detective: {
     intro: {
       subtitle: 'Un caso nuevo en cada partida',
+      difficulty: 'Dificultad',
       howTo: 'Cómo se juega',
       newCase: 'Nuevo caso',
       preparing: 'Armando el caso…'
     },
+    difficulty: {
+      easy: { name: 'Fácil', summary: 'Más tiempo y más errores permitidos' },
+      medium: { name: 'Medio', summary: 'El desafío de siempre' },
+      hard: { name: 'Difícil', summary: 'Más lugares, poco margen de error' }
+    },
     howTo: {
       eyes: 'Recorrés el lugar donde estás. El ladrón ya se fue: solo los testigos saben a dónde.',
-      witnesses: 'Hablás con los testigos del lugar: cada uno te da una pista, pero te cuesta {time}.',
+      witnesses:
+        'Hablás con los testigos del lugar: cada uno te da una pista del destino y uno de ellos, además, un rasgo del ladrón. Cada testigo te cuesta {time}.',
       travel:
         'Elegís a dónde viajar entre {options} destinos. Si te equivocás, perdés el viaje; con más de {mistakes} errores, perdés el rastro.',
-      catch: 'Lo atrapás si llegás a su lugar número {hops} antes de que se acabe el tiempo.'
+      catch:
+        'Si llegás a su lugar número {hops} a tiempo, tenés que señalar al ladrón entre {suspects} sospechosos: acordate de los rasgos que te contaron.'
     },
     briefing: {
       caseNumber: 'Caso #{id}',
@@ -438,6 +446,8 @@ export const es = {
       follow: 'Seguir el rastro',
       continue: 'Continuar',
       caught: '¡Lo atrapaste!',
+      lastStop: '¡Llegaste a tiempo! El ladrón está acá, mezclado entre la gente.',
+      identify: 'Identificar al ladrón',
       escaped: '¡Se acabó el tiempo! El ladrón escapó.',
       lostTrail: 'Fueron demasiados errores: perdiste el rastro y el ladrón escapó.',
       seeSummary: 'Ver resumen'
@@ -449,6 +459,10 @@ export const es = {
       escapedText: 'El ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
       lostTrail: 'Perdiste el rastro',
       lostTrailText: 'Demasiados destinos equivocados: el ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
+      wrongSuspect: 'Era otra persona',
+      wrongSuspectText:
+        'Llegaste a tiempo, pero acusaste a la persona equivocada: el ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
+      thiefWas: 'El ladrón era',
       timeUsed: 'Tiempo usado',
       witnesses: 'Testigos',
       mistakes: 'Errores',
@@ -474,7 +488,71 @@ export const es = {
       intro4: 'Claro, era muy sospechosa.',
       intro5: 'Me hizo una pregunta rara…',
       intro6: 'La escuché hablar por teléfono…',
-      nothingSeen: 'No vi a nadie así por acá. ¿Seguro que viniste al lugar correcto?'
+      nothingSeen: 'No vi a nadie así por acá. ¿Seguro que viniste al lugar correcto?',
+      suspectLead: 'Ah, y me fijé que {trait}.'
+    },
+    lineup: {
+      title: '¿Quién es el ladrón?',
+      subtitle: 'Acordate de los rasgos que te contaron los testigos y señalá al ladrón.',
+      suspect: 'Sospechoso {letter}',
+      choose: 'Elegí al ladrón',
+      accuse: 'Acusar al sospechoso {letter}',
+      thiefTag: 'El ladrón',
+      accusedTag: 'Tu acusación',
+      caughtTitle: '¡Lo atrapaste!',
+      caughtText: 'Era el sospechoso {letter}. Los testigos no se equivocaban.',
+      wrongTitle: '¡Ese no era!',
+      wrongText: 'El ladrón era el sospechoso {letter}: aprovechó la confusión y se escapó.',
+      seeSummary: 'Ver resumen'
+    },
+    suspect: {
+      clues: {
+        gender: { f: 'era una mujer', m: 'era un hombre' },
+        hairColor: {
+          dark: 'tenía el pelo oscuro',
+          brown: 'tenía el pelo castaño',
+          red: 'tenía el pelo colorado',
+          blond: 'tenía el pelo rubio',
+          grey: 'tenía el pelo canoso',
+          blue: 'tenía el pelo azul',
+          pink: 'tenía el pelo rosa'
+        },
+        hairStyle: {
+          short: 'tenía el pelo corto',
+          spiky: 'tenía el pelo de punta',
+          curly: 'tenía rulos',
+          long: 'tenía el pelo largo',
+          bob: 'tenía el pelo a la altura del mentón',
+          bun: 'tenía el pelo recogido en un rodete',
+          ponytail: 'tenía una cola de caballo',
+          mohawk: 'tenía una cresta',
+          buzz: 'tenía la cabeza rapada',
+          bald: 'no tenía nada de pelo'
+        },
+        eyeColor: {
+          brown: 'tenía los ojos marrones',
+          green: 'tenía los ojos verdes',
+          blue: 'tenía los ojos azules',
+          grey: 'tenía los ojos grises'
+        },
+        glasses: { none: 'no usaba anteojos', clear: 'usaba anteojos', sun: 'usaba anteojos de sol' },
+        facialHair: {
+          none: 'no tenía barba ni bigote',
+          mustache: 'tenía bigote',
+          beard: 'tenía barba',
+          goatee: 'tenía perilla',
+          stubble: 'tenía barba de unos días'
+        },
+        headwear: {
+          none: 'no llevaba nada en la cabeza',
+          beret: 'llevaba una boina',
+          cap: 'llevaba una gorra',
+          sunHat: 'llevaba un sombrero',
+          beanie: 'llevaba un gorro de lana'
+        },
+        freckles: { yes: 'tenía pecas' },
+        earrings: { yes: 'llevaba aros' }
+      }
     },
     gallery: {
       title: 'Testigos',

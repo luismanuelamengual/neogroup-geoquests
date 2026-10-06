@@ -1,3 +1,4 @@
+import { DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDifficulty'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeEngine } from '@/app/(protected)/(game)/models/GameModeEngine'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
@@ -87,7 +88,11 @@ export function getGameSettings<Settings>(
   input?: GameSettingsInput | null
 ): Settings {
   const { settings: defaults, configurable } = engine.definition
-  const settings = { ...defaults } as Settings & { rounds?: number; timeLimitSeconds?: number | null }
+  const settings = { ...defaults } as Settings & {
+    rounds?: number
+    timeLimitSeconds?: number | null
+    difficulty?: DetectiveDifficulty
+  }
 
   if (configurable.rounds && settings.rounds !== undefined) {
     settings.rounds = pickAllowed(input?.rounds, configurable.rounds, settings.rounds)
@@ -99,6 +104,10 @@ export function getGameSettings<Settings>(
       configurable.timeLimitSeconds,
       settings.timeLimitSeconds
     )
+  }
+
+  if (configurable.difficulty && settings.difficulty !== undefined) {
+    settings.difficulty = pickAllowed(input?.difficulty, configurable.difficulty, settings.difficulty)
   }
 
   const scoreMaxDistanceKm = Number(map.settings?.scoreMaxDistanceKm)

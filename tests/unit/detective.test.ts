@@ -9,13 +9,12 @@ import {
   getDetectiveScore,
   getMistakeMinutes,
   getTravelMinutes,
-  MISTAKES_MARGIN,
   randomCaseStartMinute,
   TRAVEL_FIXED_MINUTES,
-  TRAVEL_ROUNDING_MINUTES,
-  WITNESS_BUDGET_MINUTES
+  TRAVEL_ROUNDING_MINUTES
 } from '@/app/(protected)/(game)/utils/detective'
 import { formatCaseTime, formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
+import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
 import {
   CLUES_PER_LANDMARK,
   GEOGRAPHY_CLUES,
@@ -26,6 +25,7 @@ import {
 import { LOCALES } from '@/app/i18n/config'
 import { createTranslator } from '@/app/i18n/translate'
 
+const RULES = DETECTIVE_DIFFICULTIES.medium
 const PARIS = { latitude: 48.8584, longitude: 2.2945 }
 const ROME = { latitude: 41.8902, longitude: 12.4922 }
 const TOKYO = { latitude: 35.6586, longitude: 139.7454 }
@@ -73,19 +73,21 @@ describe('detective travel time', () => {
       { from: PARIS, to: ROME, decoys: [TOKYO] },
       { from: ROME, to: TOKYO, decoys: [SYDNEY, PARIS] }
     ]
-    const perfect = getTravelMinutes(PARIS, ROME) + getTravelMinutes(ROME, TOKYO) + 2 * 3 * WITNESS_BUDGET_MINUTES
+    const perfect = getTravelMinutes(PARIS, ROME) + getTravelMinutes(ROME, TOKYO) + 2 * 3 * RULES.witnessBudgetMinutes
     const mistakes = [
       getMistakeMinutes(PARIS, TOKYO, ROME),
       getMistakeMinutes(ROME, SYDNEY, TOKYO),
       getMistakeMinutes(ROME, PARIS, TOKYO)
     ]
     const average = mistakes.reduce((a, b) => a + b, 0) / mistakes.length
-    const limit = computeTimeLimitMinutes(hops, 3)
+    const limit = computeTimeLimitMinutes(hops, RULES)
 
     expect(limit % 60).toBe(0)
-    expect(limit).toBe(Math.ceil((perfect + MISTAKES_MARGIN * average) / 60) * 60)
+    expect(limit).toBe(Math.ceil((perfect + RULES.mistakesMargin * average) / 60) * 60)
     // A longer route gives more time.
-    expect(computeTimeLimitMinutes([...hops, { from: TOKYO, to: SYDNEY, decoys: [PARIS] }], 3)).toBeGreaterThan(limit)
+    expect(computeTimeLimitMinutes([...hops, { from: TOKYO, to: SYDNEY, decoys: [PARIS] }], RULES)).toBeGreaterThan(
+      limit
+    )
   })
 
   it('scores the first-try destinations, the catch and the time left over the spare time of the case', () => {
@@ -174,8 +176,8 @@ describe('landmark clues', () => {
 describe('detective clock', () => {
   it('formats the fictional time of a case, which starts at a random day and hour', () => {
     const t = createTranslator('es')
-
     const monday9 = 9 * 60
+
     expect(formatCaseTime(t, monday9, 0)).toBe('lunes 09:00')
     expect(formatCaseTime(t, monday9, 90)).toBe('lunes 10:30')
     expect(formatCaseTime(t, monday9, 2 * 24 * 60 + 90, { short: true })).toBe('mié 10:30')

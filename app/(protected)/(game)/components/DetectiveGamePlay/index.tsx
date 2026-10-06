@@ -6,6 +6,7 @@ import { ReactNode, useCallback, useState } from 'react'
 import BackgroundMusic from '@/app/(protected)/(game)/components/BackgroundMusic'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
 import DetectiveHud from '@/app/(protected)/(game)/components/DetectiveHud'
+import DetectiveLineup from '@/app/(protected)/(game)/components/DetectiveLineup'
 import DetectiveTravelPanel from '@/app/(protected)/(game)/components/DetectiveTravelPanel'
 import DetectiveTravelResult from '@/app/(protected)/(game)/components/DetectiveTravelResult'
 import DetectiveWitnesses from '@/app/(protected)/(game)/components/DetectiveWitnesses'
@@ -21,7 +22,9 @@ import { useT } from '@/app/i18n/I18nProvider'
  * at every stage: where the detective is (Street View of the current stop), the
  * HUD with the fictional clock, the witnesses (tap to hear their clues) and
  * the button to travel. After a trip, the trip itself (phase "result" of the
- * game store), and then the next stage — or the summary, once the case is closed.
+ * game store), and then the next stage. After the last trip, in time, the
+ * suspects (the detective points at the thief) and who the thief was (phase
+ * "result" again); then the summary, once the case is closed.
  */
 export default function DetectiveGamePlay() {
   const t = useT()
@@ -48,6 +51,15 @@ export default function DetectiveGamePlay() {
     },
     [game.id, stage, sendGameAction, setGame]
   )
+  const handleAccuse = useCallback(
+    async (suspect: number) => {
+      const updated = await sendGameAction(game.id, { type: 'accuse', suspect })
+
+      // The reveal of the thief is shown like the result of one more stage.
+      showResult(updated, view.stagesCount + 1)
+    },
+    [game.id, view.stagesCount, sendGameAction, showResult]
+  )
   const handleTravel = useCallback(
     async (placeId: number) => {
       if (!stage) {
@@ -61,13 +73,16 @@ export default function DetectiveGamePlay() {
     },
     [game.id, stage, sendGameAction, showResult]
   )
-
   let screen: ReactNode
 
-  if (phase === 'result' && resultStage != null) {
+  if (phase === 'result' && resultStage != null && resultStage > view.stagesCount && view.lineup) {
+    screen = <DetectiveLineup view={view} onAccuse={handleAccuse} revealed onContinue={closeResult} />
+  } else if (phase === 'result' && resultStage != null) {
     screen = <DetectiveTravelResult gameId={game.id} view={view} stageNumber={resultStage} onContinue={closeResult} />
   } else if (fresh && !accepted) {
     screen = <DetectiveBriefing gameId={game.id} view={view} onAccept={() => setAccepted(true)} />
+  } else if (view.lineup && view.outcome === null) {
+    screen = <DetectiveLineup view={view} onAccuse={handleAccuse} />
   } else if (!stage) {
     screen = null
   } else {

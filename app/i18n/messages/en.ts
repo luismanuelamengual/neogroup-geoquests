@@ -166,7 +166,7 @@ export const en: Messages = {
     detective: {
       name: 'Detective',
       description:
-        'Follow a thief through five iconic places of the world: talk to witnesses, choose where to travel and catch them before time runs out.'
+        'Follow a thief through iconic places of the world: talk to witnesses, choose where to travel and, in the end, point at the thief among the suspects before time runs out.'
     },
     onePlayer: '1 player',
     playersExact: '{count} players',
@@ -367,16 +367,24 @@ export const en: Messages = {
   detective: {
     intro: {
       subtitle: 'A new case every game',
+      difficulty: 'Difficulty',
       howTo: 'How to play',
       newCase: 'New case',
       preparing: 'Preparing the case…'
     },
+    difficulty: {
+      easy: { name: 'Easy', summary: 'More time and more mistakes allowed' },
+      medium: { name: 'Medium', summary: 'The usual challenge' },
+      hard: { name: 'Hard', summary: 'More places, little room for mistakes' }
+    },
     howTo: {
       eyes: 'You explore the place where you are. The thief already left: only the witnesses know where to.',
-      witnesses: 'You talk to the witnesses: each one gives you a clue, but it costs you {time}.',
+      witnesses:
+        'You talk to the witnesses: each one gives you a clue about the destination, and one of them also a trait of the thief. Each witness costs you {time}.',
       travel:
         'You choose where to travel among {options} destinations. If you are wrong, you waste the trip; after more than {mistakes} mistakes, you lose the trail.',
-      catch: 'You catch the thief if you reach their place number {hops} before time runs out.'
+      catch:
+        'If you reach their place number {hops} in time, you have to point at the thief among {suspects} suspects: remember the traits you were told.'
     },
     briefing: {
       caseNumber: 'Case #{id}',
@@ -435,6 +443,8 @@ export const en: Messages = {
       follow: 'Follow the trail',
       continue: 'Continue',
       caught: 'You caught the thief!',
+      lastStop: 'You made it in time! The thief is here, mixed in with the crowd.',
+      identify: 'Identify the thief',
       escaped: 'Time is up! The thief escaped.',
       lostTrail: 'Too many mistakes: you lost the trail and the thief escaped.',
       seeSummary: 'See summary'
@@ -446,6 +456,10 @@ export const en: Messages = {
       escapedText: 'The thief got away with {loot}. Good luck on the next case!',
       lostTrail: 'You lost the trail',
       lostTrailText: 'Too many wrong destinations: the thief got away with {loot}. Good luck on the next case!',
+      wrongSuspect: 'It was somebody else',
+      wrongSuspectText:
+        'You made it in time, but you accused the wrong person: the thief got away with {loot}. Good luck on the next case!',
+      thiefWas: 'The thief was',
       timeUsed: 'Time used',
       witnesses: 'Witnesses',
       mistakes: 'Mistakes',
@@ -471,7 +485,71 @@ export const en: Messages = {
       intro4: 'Sure, they looked very suspicious.',
       intro5: 'They asked me a strange question…',
       intro6: 'I heard them on the phone…',
-      nothingSeen: "I haven't seen anyone like that around here. Are you sure you came to the right place?"
+      nothingSeen: "I haven't seen anyone like that around here. Are you sure you came to the right place?",
+      suspectLead: 'Oh, and one more thing: the thief {trait}.'
+    },
+    lineup: {
+      title: 'Who is the thief?',
+      subtitle: 'Remember the traits the witnesses told you and point at the thief.',
+      suspect: 'Suspect {letter}',
+      choose: 'Choose the thief',
+      accuse: 'Accuse suspect {letter}',
+      thiefTag: 'The thief',
+      accusedTag: 'Your accusation',
+      caughtTitle: 'You caught them!',
+      caughtText: 'It was suspect {letter}. The witnesses were right.',
+      wrongTitle: 'Not them!',
+      wrongText: 'The thief was suspect {letter}: they took advantage of the confusion and got away.',
+      seeSummary: 'See summary'
+    },
+    suspect: {
+      clues: {
+        gender: { f: 'was a woman', m: 'was a man' },
+        hairColor: {
+          dark: 'had dark hair',
+          brown: 'had brown hair',
+          red: 'had red hair',
+          blond: 'had blond hair',
+          grey: 'had grey hair',
+          blue: 'had blue hair',
+          pink: 'had pink hair'
+        },
+        hairStyle: {
+          short: 'had short hair',
+          spiky: 'had spiky hair',
+          curly: 'had curly hair',
+          long: 'had long hair',
+          bob: 'had chin-length hair',
+          bun: 'had their hair in a bun',
+          ponytail: 'had a ponytail',
+          mohawk: 'had a mohawk',
+          buzz: 'had a shaved head',
+          bald: 'was bald'
+        },
+        eyeColor: {
+          brown: 'had brown eyes',
+          green: 'had green eyes',
+          blue: 'had blue eyes',
+          grey: 'had grey eyes'
+        },
+        glasses: { none: "wasn't wearing glasses", clear: 'wore glasses', sun: 'wore sunglasses' },
+        facialHair: {
+          none: 'had no beard or mustache',
+          mustache: 'had a mustache',
+          beard: 'had a beard',
+          goatee: 'had a goatee',
+          stubble: 'had stubble'
+        },
+        headwear: {
+          none: "wasn't wearing anything on their head",
+          beret: 'wore a beret',
+          cap: 'wore a cap',
+          sunHat: 'wore a sun hat',
+          beanie: 'wore a beanie'
+        },
+        freckles: { yes: 'had freckles' },
+        earrings: { yes: 'wore earrings' }
+      }
     },
     gallery: {
       title: 'Witnesses',

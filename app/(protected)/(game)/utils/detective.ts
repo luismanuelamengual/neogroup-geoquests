@@ -1,3 +1,4 @@
+import { DetectiveDifficultySettings } from '@/app/(protected)/(game)/models/DetectiveDifficultySettings'
 import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 import { haversineDistance } from '@/app/(protected)/(game)/utils/geo'
@@ -5,8 +6,8 @@ import { haversineDistance } from '@/app/(protected)/(game)/utils/geo'
 /**
  * Fictional time of the detective mode. Every trip and every witness costs
  * minutes of a fictional clock; the time available for a case is computed
- * from its route, so short and long routes are equally hard. The numbers are
- * kept together here to tune the balance.
+ * from its route, so short and long routes are equally hard. The numbers that
+ * are the same for every difficulty are kept together here to tune the balance.
  */
 
 /** Speed of every trip (a plane), in km/h. */
@@ -15,27 +16,10 @@ export const TRAVEL_SPEED_KMH = 900
 export const TRAVEL_FIXED_MINUTES = 60
 /** Trips are rounded to this many minutes. */
 export const TRAVEL_ROUNDING_MINUTES = 30
-/** Minutes each witness costs. */
-export const WITNESS_MINUTES = 120
-/**
- * Minutes per witness the time limit of a case allows for. Less than what a
- * witness costs: asking every witness eats into the margin for mistakes.
+/*
+ * What changes with the difficulty (witness cost, time margin, mistakes allowed...)
+ * is in utils/detectiveDifficulty.ts.
  */
-export const WITNESS_BUDGET_MINUTES = 60
-/**
- * Spare time of a case, in "average mistakes": the time limit allows the
- * perfect route (every witness asked) plus this many times the average extra
- * time a wrong destination costs. 1.25: a mistake has to be paid with fewer
- * witnesses; two are only possible asking very few (tuned simulating cases of
- * the map).
- */
-export const MISTAKES_MARGIN = 1.25
-/**
- * Wrong destinations allowed in a case: the next one loses the trail of the
- * suspect (the case is lost), however much time is left. Without it, skipping
- * the witnesses and guessing would be enough to catch the suspect.
- */
-export const MAX_MISTAKES = 2
 
 /** Different things a thief can steal (detective.loot.loot1… in the dictionaries). */
 export const LOOT_COUNT = 10
@@ -88,16 +72,19 @@ export interface CaseHop {
 
 /**
  * Time limit of a case (minutes, rounded up to the hour): the trips of the
- * perfect route, WITNESS_BUDGET_MINUTES for every witness and MISTAKES_MARGIN
+ * perfect route, `witnessBudgetMinutes` for every witness and `mistakesMargin`
  * times the average cost of a mistake in this route.
  */
-export function computeTimeLimitMinutes(hops: CaseHop[], witnessesPerStage: number): number {
+export function computeTimeLimitMinutes(
+  hops: CaseHop[],
+  rules: Pick<DetectiveDifficultySettings, 'witnesses' | 'witnessBudgetMinutes' | 'mistakesMargin'>
+): number {
   const travel = hops.reduce((total, hop) => total + getTravelMinutes(hop.from, hop.to), 0)
-  const witnesses = hops.length * witnessesPerStage * WITNESS_BUDGET_MINUTES
+  const witnesses = hops.length * rules.witnesses * rules.witnessBudgetMinutes
   const mistakes = hops.flatMap((hop) => hop.decoys.map((decoy) => getMistakeMinutes(hop.from, decoy, hop.to)))
   const averageMistake = mistakes.length > 0 ? mistakes.reduce((a, b) => a + b, 0) / mistakes.length : 0
 
-  return Math.ceil((travel + witnesses + MISTAKES_MARGIN * averageMistake) / 60) * 60
+  return Math.ceil((travel + witnesses + rules.mistakesMargin * averageMistake) / 60) * 60
 }
 
 /** Minutes of the trips of the perfect route of a case (straight from stop to stop, no witnesses). */

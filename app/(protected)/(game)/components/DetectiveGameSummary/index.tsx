@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import DetectiveMap, { DetectiveMapLeg, DetectiveMapMarker } from '@/app/(protected)/(game)/components/DetectiveMap'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
+import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
 import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
@@ -18,6 +19,7 @@ import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
+import { SUSPECT_ROLE } from '@/app/(protected)/(game)/utils/suspects'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
@@ -38,8 +40,13 @@ export default function DetectiveGameSummary() {
   const [starting, setStarting] = useState(false)
   const animatedScore = useCountUp(view.score, 1800, 300)
   const caught = view.outcome === 'caught'
-  // Title and story of the outcome: caught, escaped (time) or lost trail (mistakes).
-  const ending = caught ? 'caught' : view.outcome === 'lostTrail' ? 'lostTrail' : 'escaped'
+  // Title and story of the outcome: caught, escaped (time), lost trail (mistakes) or wrong suspect.
+  const ending = caught
+    ? 'caught'
+    : view.outcome === 'lostTrail' || view.outcome === 'wrongSuspect'
+      ? view.outcome
+      : 'escaped'
+  const thief = view.lineup && view.lineup.thief !== null ? view.lineup.suspects[view.lineup.thief] : null
   const loot = t(`detective.loot.loot${view.loot + 1}` as MessageKey)
   const route = useMemo(() => view.route ?? [], [view.route])
   const mistakes = view.playedStages.filter((stage) => !stage.travel.correct).length
@@ -78,7 +85,7 @@ export default function DetectiveGameSummary() {
     setStarting(true)
 
     try {
-      const created = await createGame(null, game.mode)
+      const created = await createGame(null, game.mode, { difficulty: view.difficulty })
 
       router.push(`/game/${created.id}`)
     } catch {
@@ -91,11 +98,23 @@ export default function DetectiveGameSummary() {
       {starting && <Loading message={t('detective.intro.preparing')} />}
       <GamePanel
         className={classNames('hero', { caught })}
-        title={t('detective.briefing.caseNumber', { id: game.id })}
+        title={`${t('detective.briefing.caseNumber', { id: game.id })} · ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
         accent={caught ? 'lime' : 'magenta'}
       >
         <h1 className="outcome">{t(`detective.summary.${ending}`)}</h1>
         <p className="story">{t(`detective.summary.${ending}Text`, { loot })}</p>
+        {thief !== null && (
+          <div className="thief">
+            <WitnessAvatar
+              seed={thief}
+              role={SUSPECT_ROLE}
+              suspect
+              expression={caught ? 'neutral' : 'smile'}
+              size={96}
+            />
+            <span className="caption">{t('detective.summary.thiefWas')}</span>
+          </div>
+        )}
         <div className="total">
           <span className="value">{formatScore(animatedScore, locale)}</span>
           <span className="max">

@@ -25,12 +25,14 @@ interface DetectiveBriefingProps {
 export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveBriefingProps) {
   const t = useT()
   const place = view.origin.placeName
-  const witnesses = view.currentStage?.witnesses.length ?? 3
   const options = view.currentStage?.options.length ?? 4
 
   return (
     <div className="detective-briefing">
-      <GamePanel className="dossier" title={t('detective.briefing.caseNumber', { id: gameId })}>
+      <GamePanel
+        className="dossier"
+        title={`${t('detective.briefing.caseNumber', { id: gameId })} · ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
+      >
         <div className="scene">
           <span className="flag" aria-hidden="true">
             {countryFlag(view.origin.countryCode)}
@@ -48,7 +50,15 @@ export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveB
         <p className="deadline">
           {t('detective.briefing.deadline', { time: formatCaseTime(t, view.startMinute, view.timeLimitMinutes) })}
         </p>
-        <DetectiveHowTo settings={{ hops: view.stagesCount, options, witnesses, minHopKm: 0 }} />
+        <DetectiveHowTo
+          settings={{
+            hops: view.stagesCount,
+            options,
+            suspects: view.suspectsCount,
+            witnessMinutes: view.witnessMinutes,
+            maxMistakes: view.maxMistakes
+          }}
+        />
         <GameButton size="large" fullWidth startIcon={<AssignmentTurnedInIcon />} onClick={onAccept}>
           {t('detective.briefing.accept')}
         </GameButton>

@@ -29,7 +29,7 @@ export default function DetectiveHud({ view }: { view: DetectiveGameView }) {
   const [confirmExit, setConfirmExit] = useState(false)
   const left = Math.max(0, view.timeLimitMinutes - view.elapsedMinutes)
   const ratio = left / view.timeLimitMinutes
-  const location = view.currentStage?.location
+  const location = view.currentStage?.location ?? view.lineup?.location
 
   return (
     <div className="round-hud detective-hud">

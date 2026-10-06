@@ -280,8 +280,8 @@ describe('classic game flow', () => {
         minPlayers: 1,
         maxPlayers: 1,
         mapSlug: 'landmarks',
-        settings: { hops: 5, options: 4, witnesses: 3, minHopKm: 500 },
-        configurable: {}
+        settings: expect.objectContaining({ difficulty: 'medium', hops: 5, options: 4, witnesses: 3, suspects: 4 }),
+        configurable: { difficulty: ['easy', 'medium', 'hard'] }
       })
     ])
   })

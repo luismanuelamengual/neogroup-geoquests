@@ -1,4 +1,5 @@
 import { DetectiveGameSettings } from '@/app/(protected)/(game)/models/DetectiveGameSettings'
+import { DetectiveLineup } from '@/app/(protected)/(game)/models/DetectiveLineup'
 import { DetectivePlace } from '@/app/(protected)/(game)/models/DetectivePlace'
 import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
 import { DetectiveStop } from '@/app/(protected)/(game)/models/DetectiveStop'
@@ -12,26 +13,16 @@ import { computeTimeLimitMinutes, distanceKm } from '@/app/(protected)/(game)/ut
 import { circleCenter, polygonBoundingBox, RandomFn } from '@/app/(protected)/(game)/utils/geo'
 import { hasLandmarkClues, pickClueIndices } from '@/app/(protected)/(game)/utils/landmarkClues'
 import { pickRandom, shuffle } from '@/app/(protected)/(game)/utils/random'
+import { planLineup } from '@/app/(protected)/(game)/utils/suspects'
 import { ApiException } from '@/app/models/ApiException'
 
 /** Routes tried before giving up when some of their places have no Street View imagery. */
 export const MAX_ROUTE_ATTEMPTS = 4
-/**
- * Distance bands (as a fraction of the distance to the right destination)
- * where the decoys are looked for, from the preferred one to the last resort:
- * decoys about as far as the right destination, so a mistake costs about the
- * same whichever decoy it is.
- */
-export const DECOY_DISTANCE_BANDS: [number, number][] = [
-  [0.6, 1.5],
-  [0.35, 2.5],
-  [0, Infinity]
-]
-
-/** A new detective case: the route of the suspect, its stages and the time available. */
+/** A new detective case: the route of the thief, its stages, the suspects of the last stop and the time available. */
 export interface PlannedCase {
   origin: DetectiveStop
   stages: DetectiveStage[]
+  lineup: DetectiveLineup
   timeLimitMinutes: number
 }
 
@@ -109,7 +100,7 @@ export function chooseRoute(
  * `count` decoys for a stage: places not in the route, each in a different
  * country (and none in the country of the right destination, so the clues
  * always tell them apart), about as far from where the detective is as the
- * right destination (see DECOY_DISTANCE_BANDS).
+ * right destination (see DetectiveDifficultySettings.decoyDistanceBands).
  */
 export function chooseDecoys(
   places: Place[],
@@ -117,6 +108,7 @@ export function chooseDecoys(
   destination: Place,
   routeIds: Set<number>,
   count: number,
+  distanceBands: [number, number][],
   random: RandomFn = Math.random
 ): Place[] {
   const target = distanceKm(getPlaceCenter(from), getPlaceCenter(destination))
@@ -126,7 +118,7 @@ export function chooseDecoys(
   )
   const decoys: Place[] = []
 
-  for (const [min, max] of DECOY_DISTANCE_BANDS) {
+  for (const [min, max] of distanceBands) {
     const band = shuffle(
       pool.filter((place) => {
         const distance = distanceKm(getPlaceCenter(from), getPlaceCenter(place))
@@ -166,8 +158,9 @@ async function findPanorama(
  * Plans a new detective case in a map: the route of the suspect (see
  * chooseRoute) with a Street View panorama at every stop — a place without
  * imagery is replaced by another route — and, for every stage, the decoys,
- * the witnesses (each one with a different clue of the destination) and,
- * from all that, the time available.
+ * the witnesses (each one with a different clue of the destination, and one of
+ * them also with a trait of the thief, see utils/suspects.ts), the suspects of
+ * the last stop and, from all that, the time available.
  */
 export async function planDetectiveCase(
   places: Place[],
@@ -226,13 +219,25 @@ export async function planDetectiveCase(
   const routeIds = new Set(route.map((place) => place.id))
   const stages: DetectiveStage[] = []
   const hops = []
+  // One trait of the thief for every stage: the detective has to remember them to tell it at the end.
+  const lineup = planLineup(settings.suspects, route.length - 1, random, {
+    traits: settings.suspectTraits,
+    decoyContradictions: settings.decoyContradictions
+  })
 
   for (let index = 1; index < route.length; index++) {
-    const decoys = chooseDecoys(places, route[index - 1], route[index], routeIds, settings.options - 1, random).map(
-      toDetectivePlace
-    )
+    const decoys = chooseDecoys(
+      places,
+      route[index - 1],
+      route[index],
+      routeIds,
+      settings.options - 1,
+      settings.decoyDistanceBands,
+      random
+    ).map(toDetectivePlace)
     const clues = pickClueIndices(settings.witnesses, random)
     const roles = shuffle(WITNESS_ROLES, random)
+    const suspectWitness = Math.floor(random() * settings.witnesses)
 
     stages.push({
       destination: stops[index],
@@ -240,7 +245,8 @@ export async function planDetectiveCase(
       witnesses: clues.map((clueIndex, witness) => ({
         seed: Math.floor(random() * 2 ** 31),
         role: roles[witness % roles.length],
-        clueIndex
+        clueIndex,
+        suspectClue: witness === suspectWitness ? lineup.clues[index - 1] : null
       })),
       askedWitnesses: [],
       travel: null
@@ -248,5 +254,10 @@ export async function planDetectiveCase(
     hops.push({ from: stops[index - 1], to: stops[index], decoys })
   }
 
-  return { origin: stops[0], stages, timeLimitMinutes: computeTimeLimitMinutes(hops, settings.witnesses) }
+  return {
+    origin: stops[0],
+    stages,
+    lineup: { seeds: lineup.seeds, thief: lineup.thief, accused: null },
+    timeLimitMinutes: computeTimeLimitMinutes(hops, settings)
+  }
 }

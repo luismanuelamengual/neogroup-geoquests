@@ -19,6 +19,7 @@ export type BrowStyle = 'thin' | 'thick' | 'arched'
 export type NoseStyle = 'button' | 'line' | 'round'
 export type FacialHair = 'none' | 'mustache' | 'beard' | 'goatee' | 'stubble'
 export type Glasses = 'none' | 'round' | 'square' | 'sun'
+export type EyeColor = 'brown' | 'green' | 'blue' | 'grey'
 export type Headwear = 'none' | 'policeCap' | 'flatCap' | 'cap' | 'sunHat' | 'beanie'
 
 export interface WitnessTraits {
@@ -29,6 +30,8 @@ export interface WitnessTraits {
   hairStyle: HairStyle
   hairColor: string
   eyes: EyeStyle
+  /** Color of the iris (seen in every eye style but `happy`, closed). */
+  eyeColor: EyeColor
   brows: BrowStyle
   nose: NoseStyle
   facialHair: FacialHair
@@ -59,6 +62,21 @@ const HAIR_COLORS: [string, number][] = [
   ['#e9e7ee', 0.5],
   ['#3b82f6', 0.2],
   ['#ff6fae', 0.2]
+]
+
+/** Color of the iris of each eye color. */
+export const EYE_COLORS: Record<EyeColor, string> = {
+  brown: '#8a5224',
+  green: '#2fa35b',
+  blue: '#2f86e8',
+  grey: '#9aa6b5'
+}
+
+const EYE_COLOR_WEIGHTS: [EyeColor, number][] = [
+  ['brown', 5],
+  ['green', 2],
+  ['blue', 2.5],
+  ['grey', 1]
 ]
 
 export const OUTFIT_COLORS = [
@@ -233,8 +251,13 @@ function pickGlasses(role: WitnessRole, random: RandomFn): Glasses {
   )
 }
 
+export interface GenerateWitnessOptions {
+  /** Never closed eyes (`happy`): the color of the eyes has to be seen (the suspects). */
+  openEyes?: boolean
+}
+
 /** The look and name of a witness: always the same for the same seed and job. */
-export function generateWitness(seed: number, role: WitnessRole): WitnessTraits {
+export function generateWitness(seed: number, role: WitnessRole, options: GenerateWitnessOptions = {}): WitnessTraits {
   const random = seededRandom(seed)
   const presentation: WitnessPresentation = chance(0.5, random) ? 'f' : 'm'
   const outfitColor = ROLE_OUTFIT[role] ?? pick(OUTFIT_COLORS, random)
@@ -242,8 +265,7 @@ export function generateWitness(seed: number, role: WitnessRole): WitnessTraits 
     OUTFIT_COLORS.filter((color) => color !== outfitColor),
     random
   )
-
-  return {
+  const traits: WitnessTraits = {
     presentation,
     name: pick(WITNESS_NAMES[presentation], random),
     skin: pick(SKIN_TONES, random),
@@ -259,6 +281,8 @@ export function generateWitness(seed: number, role: WitnessRole): WitnessTraits 
       ],
       random
     ),
+    // Never before the traits above: the look of the witnesses already seen must not change.
+    eyeColor: 'brown',
     brows: pick<BrowStyle>(['thin', 'thick', 'arched'], random),
     nose: pick<NoseStyle>(['button', 'line', 'round'], random),
     facialHair: presentation === 'm' ? pickWeighted(FACIAL_HAIR, random) : 'none',
@@ -270,6 +294,15 @@ export function generateWitness(seed: number, role: WitnessRole): WitnessTraits 
     accentColor,
     introIndex: Math.floor(random() * WITNESS_INTROS_COUNT)
   }
+
+  // Drawn last, so the other traits are the same as before the eye colors existed.
+  traits.eyeColor = pickWeighted(EYE_COLOR_WEIGHTS, random)
+
+  if (options.openEyes && traits.eyes === 'happy') {
+    traits.eyes = 'oval'
+  }
+
+  return traits
 }
 
 /** A color made darker (amount 0-1): for shadows of the skin, hair... */

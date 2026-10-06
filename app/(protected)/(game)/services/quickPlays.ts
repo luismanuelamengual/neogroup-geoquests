@@ -4,7 +4,7 @@ import { MapView } from '@/app/(protected)/(game)/models/MapView'
 import { QuickPlayView } from '@/app/(protected)/(game)/models/QuickPlayView'
 
 /** Rules of every quick game: a classic game of 5 rounds of 3 minutes. */
-export const QUICK_PLAY_SETTINGS: Required<GameSettingsInput> = { rounds: 5, timeLimitSeconds: 180 }
+export const QUICK_PLAY_SETTINGS: Required<Omit<GameSettingsInput, 'difficulty'>> = { rounds: 5, timeLimitSeconds: 180 }
 
 /**
  * Quick games of the main menu, in order. Maps are matched by their slug

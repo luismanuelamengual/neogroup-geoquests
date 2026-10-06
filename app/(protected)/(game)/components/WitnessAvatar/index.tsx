@@ -2,7 +2,7 @@ import './index.scss'
 import classNames from 'classnames'
 import { ReactNode, useId, useMemo } from 'react'
 import { WitnessRole } from '@/app/(protected)/(game)/models/WitnessRole'
-import { darken, generateWitness, lighten, WitnessTraits } from '@/app/(protected)/(game)/utils/witnesses'
+import { darken, EYE_COLORS, generateWitness, lighten, WitnessTraits } from '@/app/(protected)/(game)/utils/witnesses'
 
 /** Color of every outline (cartoon style). */
 const INK = '#1a1530'
@@ -14,6 +14,8 @@ interface WitnessAvatarProps {
   seed: number
   role: WitnessRole
   expression?: WitnessExpression
+  /** A suspect: always with its eyes open, so their color can be seen. */
+  suspect?: boolean
   /** Width in pixels (the height follows: the drawing is 200×220). */
   size?: number
   className?: string
@@ -40,15 +42,18 @@ function Ears({ skin }: { skin: string }) {
   )
 }
 
-function Eyes({ eyes }: { eyes: WitnessTraits['eyes'] }) {
+function Eyes({ eyes, color }: { eyes: WitnessTraits['eyes']; color: string }) {
   const positions = [82, 118]
 
   switch (eyes) {
     case 'dot':
       return (
-        <g fill={INK} stroke="none">
+        <g>
           {positions.map((x) => (
-            <circle key={x} cx={x} cy={93} r={5.5} />
+            <g key={x}>
+              <circle cx={x} cy={93} r={6.4} fill={color} strokeWidth={2.2} />
+              <circle cx={x} cy={93} r={2.8} fill={INK} stroke="none" />
+            </g>
           ))}
         </g>
       )
@@ -66,7 +71,8 @@ function Eyes({ eyes }: { eyes: WitnessTraits['eyes'] }) {
           {positions.map((x) => (
             <g key={x}>
               <ellipse cx={x} cy={94} rx={8} ry={7} fill="#fff" strokeWidth={2.5} />
-              <circle cx={x} cy={96} r={3.8} fill={INK} stroke="none" />
+              <circle cx={x} cy={96} r={4.6} fill={color} stroke="none" />
+              <circle cx={x} cy={96} r={2.1} fill={INK} stroke="none" />
               <path d={`M${x - 9} 92 Q${x} 86 ${x + 9} 92`} fill="none" strokeWidth={3} />
             </g>
           ))}
@@ -78,8 +84,9 @@ function Eyes({ eyes }: { eyes: WitnessTraits['eyes'] }) {
           {positions.map((x) => (
             <g key={x}>
               <ellipse cx={x} cy={93} rx={8} ry={9.5} fill="#fff" strokeWidth={2.5} />
-              <circle cx={x + 1} cy={94} r={4.6} fill={INK} stroke="none" />
-              <circle cx={x + 2.6} cy={91.6} r={1.6} fill="#fff" stroke="none" />
+              <circle cx={x + 1} cy={94} r={5.6} fill={color} stroke="none" />
+              <circle cx={x + 1} cy={94} r={2.6} fill={INK} stroke="none" />
+              <circle cx={x + 2.8} cy={91.6} r={1.6} fill="#fff" stroke="none" />
             </g>
           ))}
         </g>
@@ -569,10 +576,11 @@ export default function WitnessAvatar({
   seed,
   role,
   expression = 'neutral',
+  suspect = false,
   size = 120,
   className
 }: WitnessAvatarProps) {
-  const traits = useMemo(() => generateWitness(seed, role), [seed, role])
+  const traits = useMemo(() => generateWitness(seed, role, { openEyes: suspect }), [seed, role, suspect])
   const clipId = `witness-${useId().replace(/[^a-zA-Z0-9-]/g, '')}`
   const { skin, hairColor, hairStyle, headwear } = traits
   const browColor = darken(hairColor === '#e9e7ee' || hairColor === '#9a9aa5' ? '#6b6b75' : hairColor, 0.15)
@@ -619,7 +627,7 @@ export default function WitnessAvatar({
           </g>
         )}
         <FacialHairLayer facialHair={traits.facialHair} color={hairColor} />
-        <Eyes eyes={traits.eyes} />
+        <Eyes eyes={traits.eyes} color={EYE_COLORS[traits.eyeColor]} />
         <Brows brows={traits.brows} color={browColor} raised={raised} />
         <Nose nose={traits.nose} skin={skin} />
         <Mouth expression={expression} />

@@ -30,7 +30,7 @@ interface DetectiveTravelResultProps {
 
 /**
  * The trip of a stage, after choosing a destination: the plane flies there
- * on the map. Right: the thief was there (or is caught, at the last stop).
+ * on the map. Right: the thief was there (at the last stop, the suspects come next).
  * Wrong: nobody saw the thief, and a second flight takes the detective to
  * the right destination (or, one mistake too many, the trail is lost there).
  * It ends telling whether the time ran out.
@@ -43,6 +43,8 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
   const lostTrail = view.outcome === 'lostTrail'
   const finished = step === 'redirected' || (step === 'arrived' && (travel.correct || lostTrail))
   const caught = view.outcome === 'caught'
+  // At the last stop, in time: next come the suspects.
+  const identifying = view.lineup !== null && view.outcome === null
   const escaped = view.outcome === 'escaped' || lostTrail
   const showDestination = travel.correct || step === 'redirecting' || step === 'redirected'
   const markers = useMemo<DetectiveMapMarker[]>(() => {
@@ -125,7 +127,10 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
     message = t('detective.travel.correct')
   }
 
-  if (finished && caught) {
+  if (finished && identifying) {
+    message = t('detective.travel.lastStop')
+    detail = null
+  } else if (finished && caught) {
     message = t('detective.travel.caught')
     detail = null
   } else if (finished && lostTrail) {
@@ -176,7 +181,11 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
             endIcon={caught || escaped ? undefined : <ArrowForwardIcon />}
             onClick={onContinue}
           >
-            {caught || escaped ? t('detective.travel.seeSummary') : t('detective.travel.continue')}
+            {caught || escaped
+              ? t('detective.travel.seeSummary')
+              : identifying
+                ? t('detective.travel.identify')
+                : t('detective.travel.continue')}
           </GameButton>
         )}
       </div>
