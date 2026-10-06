@@ -194,7 +194,12 @@ describe('classic multiplayer flow', () => {
     expect(anaView.rounds[0]).toMatchObject({ panoId: mp(game).rounds[0].panoId, location: null, guesses: [] })
 
     // The last guess closes the round for everybody.
-    const closed = mp(await guess(ana, game.id, 1, ATLANTIC, 8000))
+    // Ana guesses the antipode of the answer (the answers are random), so she is as far as possible.
+    const antipode = {
+      latitude: -answer.latitude,
+      longitude: answer.longitude > 0 ? answer.longitude - 180 : answer.longitude + 180
+    }
+    const closed = mp(await guess(ana, game.id, 1, antipode, 8000))
 
     expect(closed.phase).toBe('reveal')
     expect(closed.revealTimeLeftMs).toBe(REVEAL_MS)
@@ -202,7 +207,7 @@ describe('classic multiplayer flow', () => {
       closed: true,
       location: { latitude: answer.latitude, longitude: answer.longitude }
     })
-    // Ana's guess is in the middle of the Atlantic: far from the answer, so (almost) no points.
+    // Ana's guess is on the other side of the world: far from the answer, so (almost) no points.
     const [hostGuess, anaGuess] = closed.rounds[0].guesses
 
     expect([hostGuess.userId, hostGuess.score]).toEqual([host, 5000])
