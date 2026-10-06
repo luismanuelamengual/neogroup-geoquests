@@ -104,7 +104,13 @@ describe('rules chosen by the player', () => {
     expect(await storedSettings(game.id)).toMatchObject({ roundsPerElimination: 3 })
     expect(game.modeView).toMatchObject({ roundsPerElimination: 3 })
 
-    const invalid = await create(GameMode.BATTLE_ROYALE, { roundsPerElimination: 5 })
+    // a player can only be in one multiplayer game at a time
+    const otherUserId = await createUser('other@geoquests.test')
+    const invalid = await createGame(
+      otherUserId,
+      { mapId, mode: GameMode.BATTLE_ROYALE, settings: { roundsPerElimination: 5 } },
+      { finder: new FakePanoramaFinder() }
+    )
 
     expect(await storedSettings(invalid.id)).toMatchObject({ roundsPerElimination: 1 })
   })

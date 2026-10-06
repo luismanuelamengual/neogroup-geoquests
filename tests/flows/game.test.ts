@@ -270,8 +270,10 @@ describe('classic game flow', () => {
           maxPlayers: 8,
           revealSeconds: 15,
           countdownSeconds: 3,
-          scoreMaxDistanceKm: 3000
-        }
+          scoreMaxDistanceKm: 3000,
+          roundsPerElimination: 1
+        },
+        configurable: { timeLimitSeconds: [30, 60, 120, 180, 300], roundsPerElimination: [1, 2, 3] }
       }),
       expect.objectContaining({
         mode: GameMode.DETECTIVE,
