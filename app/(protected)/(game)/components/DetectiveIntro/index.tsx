@@ -3,14 +3,14 @@
 import './index.scss'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import TravelExploreIcon from '@mui/icons-material/TravelExplore'
-import classNames from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import DetectiveDifficultyPicker from '@/app/(protected)/(game)/components/DetectiveDifficultyPicker'
 import DetectiveHowTo from '@/app/(protected)/(game)/components/DetectiveHowTo'
 import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
-import { DETECTIVE_DIFFICULTY_LEVELS, DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDifficulty'
+import { DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDifficulty'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import {
   DEFAULT_DETECTIVE_DIFFICULTY,
@@ -21,7 +21,6 @@ import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
 import { useT } from '@/app/i18n/I18nProvider'
-import type { MessageKey } from '@/app/i18n/messages'
 
 /**
  * Page of the detective mode (/play/detective), instead of the map picker:
@@ -67,24 +66,12 @@ export default function DetectiveIntro({ mode }: { mode: GameModeView }) {
         <div className="content">
           <p className="description">{mode.description}</p>
           <h2 className="how-to-title">{t('detective.intro.difficulty')}</h2>
-          <div className="difficulties" role="radiogroup" aria-label={t('detective.intro.difficulty')}>
-            {DETECTIVE_DIFFICULTY_LEVELS.filter((level) => mode.configurable.difficulty?.includes(level)).map(
-              (level) => (
-                <button
-                  key={level}
-                  type="button"
-                  role="radio"
-                  aria-checked={level === difficulty}
-                  className={classNames('difficulty', level, { selected: level === difficulty })}
-                  disabled={creating}
-                  onClick={() => setDifficulty(level)}
-                >
-                  <span className="name">{t(`detective.difficulty.${level}.name` as MessageKey)}</span>
-                  <span className="summary">{t(`detective.difficulty.${level}.summary` as MessageKey)}</span>
-                </button>
-              )
-            )}
-          </div>
+          <DetectiveDifficultyPicker
+            value={difficulty}
+            onChange={setDifficulty}
+            levels={mode.configurable.difficulty}
+            disabled={creating}
+          />
           <h2 className="how-to-title">{t('detective.intro.howTo')}</h2>
           <DetectiveHowTo settings={DETECTIVE_DIFFICULTIES[difficulty]} />
           <GameButton

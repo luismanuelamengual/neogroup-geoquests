@@ -463,6 +463,7 @@ export const es = {
       wrongSuspectText:
         'Llegaste a tiempo, pero acusaste a la persona equivocada: el ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
       thiefWas: 'El ladrón era',
+      nextDifficulty: 'Dificultad del próximo caso',
       timeUsed: 'Tiempo usado',
       witnesses: 'Testigos',
       mistakes: 'Errores',

@@ -460,6 +460,7 @@ export const en: Messages = {
       wrongSuspectText:
         'You made it in time, but you accused the wrong person: the thief got away with {loot}. Good luck on the next case!',
       thiefWas: 'The thief was',
+      nextDifficulty: 'Difficulty of the next case',
       timeUsed: 'Time used',
       witnesses: 'Witnesses',
       mistakes: 'Mistakes',
