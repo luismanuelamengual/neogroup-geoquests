@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ReactNode, useCallback, useState } from 'react'
 import BackgroundMusic from '@/app/(protected)/(game)/components/BackgroundMusic'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
+import DetectiveEvents from '@/app/(protected)/(game)/components/DetectiveEvents'
 import DetectiveHud from '@/app/(protected)/(game)/components/DetectiveHud'
 import DetectiveLineup from '@/app/(protected)/(game)/components/DetectiveLineup'
 import DetectiveTravelPanel from '@/app/(protected)/(game)/components/DetectiveTravelPanel'
@@ -22,8 +23,9 @@ import { useT } from '@/app/i18n/I18nProvider'
 /**
  * Play screen of a detective game. A new case opens with its briefing. Then,
  * at every stage: where the detective is (Street View of the current stop), the
- * HUD with the fictional clock, the witnesses (tap to hear their clues) and
- * the button to travel. After a trip, the trip itself (phase "result" of the
+ * HUD with the fictional clock, what happened when the detective got there
+ * (the random events of the stage), the witnesses (tap to hear their clues)
+ * and the button to travel (where the central office can also be called). After a trip, the trip itself (phase "result" of the
  * game store), and then the next stage. After the last trip, in time, the
  * suspects (the detective points at the thief) and who the thief was (phase
  * "result" again); then the summary, once the case is closed.
@@ -65,6 +67,13 @@ export default function DetectiveGamePlay() {
     },
     [game.id, stage, sendGameAction, setGame]
   )
+  const handleCall = useCallback(async () => {
+    if (!stage) {
+      return
+    }
+
+    setGame(await sendGameAction(game.id, { type: 'callCentral', stageNumber: stage.stageNumber }))
+  }, [game.id, stage, sendGameAction, setGame])
   const handleAccuse = useCallback(
     async (suspect: number) => {
       const updated = await sendGameAction(game.id, { type: 'accuse', suspect })
@@ -106,14 +115,21 @@ export default function DetectiveGamePlay() {
       <div className="detective-game-play">
         <StreetView panoId={stage.panoId} />
         <DetectiveHud view={view} onExit={handleExit} />
+        {/* Remounted at every stage: its events are shown as soon as it opens. */}
+        <DetectiveEvents
+          key={`events-${stage.stageNumber}`}
+          gameId={game.id}
+          stage={stage}
+          usualWitnessMinutes={view.witnessMinutes}
+        />
         <div className="bottom">
           {/* Remounted at every stage: new witnesses, no bubble open. */}
           <DetectiveWitnesses
             key={stage.stageNumber}
             witnesses={stage.witnesses}
-            witnessMinutes={view.witnessMinutes}
+            witnessMinutes={stage.witnessMinutes}
             onAsk={handleAsk}
-            noTime={view.timeLimitMinutes - view.elapsedMinutes < view.witnessMinutes}
+            noTime={view.timeLimitMinutes - view.elapsedMinutes < stage.witnessMinutes}
           />
           <GameButton
             size="large"
@@ -131,6 +147,8 @@ export default function DetectiveGamePlay() {
           onClose={() => setTraveling(false)}
           lastChance={view.mistakes >= view.maxMistakes}
           onTravel={handleTravel}
+          timeLeft={view.timeLimitMinutes - view.elapsedMinutes}
+          onCall={handleCall}
         />
       </div>
     )

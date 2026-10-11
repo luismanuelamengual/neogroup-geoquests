@@ -25,7 +25,6 @@ interface DetectiveBriefingProps {
 export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveBriefingProps) {
   const t = useT()
   const place = view.origin.placeName
-  const options = view.currentStage?.options.length ?? 4
 
   return (
     <div className="detective-briefing">
@@ -53,10 +52,13 @@ export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveB
         <DetectiveHowTo
           settings={{
             hops: view.stagesCount,
-            options,
+            options: view.optionsCount,
             suspects: view.suspectsCount,
             witnessMinutes: view.witnessMinutes,
-            maxMistakes: view.maxMistakes
+            maxMistakes: view.maxMistakes,
+            centralCalls: view.centralCalls,
+            centralCallMinutes: view.centralCallMinutes,
+            centralCallEliminates: view.centralCallEliminates
           }}
         />
         <GameButton size="large" fullWidth startIcon={<AssignmentTurnedInIcon />} onClick={onAccept}>

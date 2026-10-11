@@ -1,9 +1,11 @@
 import { AccuseAction } from '@/app/(protected)/(game)/models/AccuseAction'
 import { AskWitnessAction } from '@/app/(protected)/(game)/models/AskWitnessAction'
+import { CallCentralAction } from '@/app/(protected)/(game)/models/CallCentralAction'
 import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import { DetectiveGameSettings } from '@/app/(protected)/(game)/models/DetectiveGameSettings'
 import {
   DetectiveCurrentStageView,
+  DetectiveEventView,
   DetectiveGameView,
   DetectiveLineupView,
   DetectivePlayedStageView
@@ -12,6 +14,7 @@ import { DetectivePlace } from '@/app/(protected)/(game)/models/DetectivePlace'
 import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
 import { DetectiveStop } from '@/app/(protected)/(game)/models/DetectiveStop'
 import { GameAction } from '@/app/(protected)/(game)/models/GameAction'
+import { GameContext } from '@/app/(protected)/(game)/models/GameContext'
 import { GameMembers } from '@/app/(protected)/(game)/models/GameMembers'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeDefinition } from '@/app/(protected)/(game)/models/GameModeDefinition'
@@ -35,7 +38,20 @@ import {
   DEFAULT_DETECTIVE_DIFFICULTY,
   getDetectiveGameSettings
 } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
+import {
+  applyFlightEvents,
+  getAllowedMistakes,
+  getCallsLeft,
+  getExpectedSuspects,
+  getStageCallRules,
+  getStageEvents,
+  getStageFlightMinutes,
+  getStageWitnessMinutes,
+  isGoodEvent,
+  revealStage
+} from '@/app/(protected)/(game)/utils/detectiveEvents'
 import { getLandmarkClue } from '@/app/(protected)/(game)/utils/landmarkClues'
+import { shuffle } from '@/app/(protected)/(game)/utils/random'
 import { ApiException } from '@/app/models/ApiException'
 
 /** The only map of the mode: its landmarks have the clues the witnesses give. */
@@ -105,9 +121,10 @@ function spend(data: DetectiveGameData, minutes: number): boolean {
 }
 
 /**
- * Talks to a witness of the current stage: it costs `witnessMinutes` the first
- * time; asking again is free. Only while there is time for it: witnesses never
- * end a case, the time runs out (if it does) on the next trip.
+ * Talks to a witness of the current stage: it costs `witnessMinutes` (or what
+ * the events of the stage say) the first time; asking again is free. Only
+ * while there is time for it: witnesses never end a case, the time runs out
+ * (if it does) on the next trip.
  */
 function askWitness(data: DetectiveGameData, action: AskWitnessAction): boolean {
   const stage = getCurrentStage(data, action.stageNumber)
@@ -121,12 +138,58 @@ function askWitness(data: DetectiveGameData, action: AskWitnessAction): boolean 
     return false
   }
 
-  if (data.timeLimitMinutes - data.elapsedMinutes < data.settings.witnessMinutes) {
+  const minutes = getStageWitnessMinutes(data.settings, stage)
+
+  if (data.timeLimitMinutes - data.elapsedMinutes < minutes) {
     throw new ApiException('errors.noTimeForWitness')
   }
 
   stage.askedWitnesses.push(witness)
-  spend(data, data.settings.witnessMinutes)
+  spend(data, minutes)
+
+  return true
+}
+
+/**
+ * Calls the central office from the current stage: it costs time (what the
+ * difficulty and the events of the stage say) and rules out some wrong
+ * destinations, at random — never all of them, there is always a choice. Only
+ * with calls left, the lines up, something to rule out and time for it (like a
+ * witness, a call never ends a case).
+ */
+function callCentral(data: DetectiveGameData, action: CallCentralAction, ctx: GameContext): boolean {
+  const stage = getCurrentStage(data, action.stageNumber)
+  const rules = getStageCallRules(data.settings, stage)
+  const eliminated = stage.eliminated ?? []
+  const decoys = stage.options.filter(
+    (option) => option.placeId !== stage.destination.placeId && !eliminated.includes(option.placeId)
+  )
+  const count = Math.min(rules.eliminates, decoys.length - 1)
+
+  if (getCallsLeft(data) <= 0) {
+    throw new ApiException('errors.noCallsLeft')
+  }
+
+  if (!rules.available) {
+    throw new ApiException('errors.centralLinesDown')
+  }
+
+  if (count <= 0) {
+    throw new ApiException('errors.nothingToRuleOut')
+  }
+
+  if (data.timeLimitMinutes - data.elapsedMinutes < rules.minutes) {
+    throw new ApiException('errors.noTimeForCall')
+  }
+
+  stage.eliminated = [
+    ...eliminated,
+    ...shuffle(decoys, ctx.random)
+      .slice(0, count)
+      .map((option) => option.placeId)
+  ]
+  stage.calls = (stage.calls ?? 0) + 1
+  spend(data, rules.minutes)
 
   return true
 }
@@ -135,7 +198,8 @@ function askWitness(data: DetectiveGameData, action: AskWitnessAction): boolean 
  * Travels to one of the destinations of the current stage. Right: the
  * detective arrives where the suspect was. Wrong: the trip there is wasted and
  * the detective still has to travel to the right one — unless it is one
- * mistake too many (`maxMistakes`): then the trail is lost there. Otherwise the
+ * mistake too many (`maxMistakes`, changed by the events): then the trail is
+ * lost there. Ruled out destinations can not be chosen. Otherwise the
  * case goes on to the next stage — or, at the last stop, to the suspects (see
  * accuse) — or ends: escaped when the time runs out.
  */
@@ -143,14 +207,14 @@ function travel(data: DetectiveGameData, action: TravelAction): boolean {
   const stage = getCurrentStage(data, action.stageNumber)
   const chosen = stage.options.find((option) => option.placeId === Number(action.placeId))
 
-  if (!chosen) {
+  if (!chosen || stage.eliminated?.includes(chosen.placeId)) {
     throw new ApiException('errors.invalidAction')
   }
 
   const from = getStageLocation(data, data.currentStage)
   const correct = chosen.placeId === stage.destination.placeId
-  const travelMinutes = getTravelMinutes(from, chosen)
-  const lostTrail = !correct && countMistakes(data) >= data.settings.maxMistakes
+  const travelMinutes = applyFlightEvents(getTravelMinutes(from, chosen), stage)
+  const lostTrail = !correct && countMistakes(data) >= getAllowedMistakes(data)
   const redirectMinutes =
     correct || lostTrail ? 0 : getRedirectMinutes(from, chosen, stage.destination, data.settings.witnessMinutes)
 
@@ -168,6 +232,8 @@ function travel(data: DetectiveGameData, action: TravelAction): boolean {
   }
 
   data.currentStage++
+  // Getting to the next stage: its events happen.
+  revealStage(data, data.currentStage)
 
   // Cases created before the suspects existed end as soon as the detective gets to the last stop.
   if (data.currentStage > data.stages.length && !data.lineup) {
@@ -195,6 +261,15 @@ function accuse(data: DetectiveGameData, action: AccuseAction): boolean {
   return true
 }
 
+function toEventViews(stage: DetectiveStage): DetectiveEventView[] {
+  return getStageEvents(stage).map((event) => ({
+    type: event.type,
+    good: isGoodEvent(event.type),
+    ...(event.minutes != null ? { minutes: event.minutes } : {}),
+    ...(event.placeId != null ? { placeId: event.placeId } : {})
+  }))
+}
+
 function toCurrentStageView(data: DetectiveGameData): DetectiveCurrentStageView | null {
   if (isFinished(data) || isIdentifying(data)) {
     return null
@@ -213,11 +288,22 @@ function toCurrentStageView(data: DetectiveGameData): DetectiveCurrentStageView 
         seed: witness.seed,
         role: witness.role,
         asked,
-        clue: asked ? getLandmarkClue(stage.destination.placeName, witness.clueIndex) : null,
+        clues: asked
+          ? [witness.clueIndex, ...(witness.extraClueIndices ?? [])].flatMap((index) => {
+              const clue = getLandmarkClue(stage.destination.placeName, index)
+
+              return clue ? [clue] : []
+            })
+          : [],
         suspectClue: asked ? (witness.suspectClue ?? null) : null
       }
     }),
-    options: stage.options.map(toPlace)
+    witnessMinutes: getStageWitnessMinutes(data.settings, stage),
+    options: stage.options.map(toPlace),
+    eliminated: [...(stage.eliminated ?? [])],
+    flightMinutes: getStageFlightMinutes(stage),
+    events: toEventViews(stage),
+    call: { left: getCallsLeft(data), ...getStageCallRules(data.settings, stage) }
   }
 }
 
@@ -256,7 +342,9 @@ function toPlayedStagesView(data: DetectiveGameData): DetectivePlayedStageView[]
         destination: toPlace(stage.destination),
         chosen: toPlace(chosen),
         travel: { ...stage.travel },
-        askedWitnesses: stage.askedWitnesses.length
+        askedWitnesses: stage.askedWitnesses.length,
+        calls: stage.calls ?? 0,
+        events: toEventViews(stage)
       }
     ]
   })
@@ -283,8 +371,7 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
     // The rules of the difficulty chosen, kept in the case.
     const rules = getDetectiveGameSettings(settings.difficulty)
     const plan = await planDetectiveCase(await getMapPlaces(mapId), rules, ctx.finder, ctx.random)
-
-    return {
+    const data: DetectiveGameData = {
       v: 1,
       settings: rules,
       loot: Math.floor(ctx.random() * LOOT_COUNT),
@@ -297,6 +384,11 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
       timeLimitMinutes: plan.timeLimitMinutes,
       outcome: null
     }
+
+    // The detective starts at the crime scene: the events of the first stage happen right away.
+    revealStage(data, 1)
+
+    return data
   },
 
   getMaxPlayers() {
@@ -311,7 +403,7 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
     return false
   },
 
-  handleAction(data, _userId, action: GameAction) {
+  handleAction(data, _userId, action: GameAction, _members, ctx) {
     if (isFinished(data)) {
       throw new ApiException('errors.gameAlreadyOver')
     }
@@ -323,6 +415,8 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
         return travel(data, action)
       case 'accuse':
         return accuse(data, action)
+      case 'callCentral':
+        return callCentral(data, action, ctx)
       default:
         throw new ApiException('errors.invalidAction')
     }
@@ -347,9 +441,18 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
       timeLimitMinutes: data.timeLimitMinutes,
       difficulty: data.settings.difficulty,
       witnessMinutes: data.settings.witnessMinutes,
-      suspectsCount: data.lineup?.seeds.length ?? 0,
+      // Before the last stop, as many as the events revealed so far say (the rest are still to come).
+      suspectsCount: !data.lineup
+        ? 0
+        : finished || isIdentifying(data)
+          ? data.lineup.seeds.length
+          : getExpectedSuspects(data),
       mistakes: countMistakes(data),
-      maxMistakes: data.settings.maxMistakes,
+      maxMistakes: getAllowedMistakes(data),
+      optionsCount: data.settings.options,
+      centralCalls: data.settings.centralCalls ?? 0,
+      centralCallMinutes: data.settings.centralCallMinutes ?? 0,
+      centralCallEliminates: data.settings.centralCallEliminates ?? 0,
       outcome: data.outcome,
       score: getDetectiveScore(data),
       maxScore: getDetectiveMaxScore(data.stages.length),

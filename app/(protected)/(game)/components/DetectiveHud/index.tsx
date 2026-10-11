@@ -28,6 +28,7 @@ export default function DetectiveHud({ view, onExit }: { view: DetectiveGameView
   const left = Math.max(0, view.timeLimitMinutes - view.elapsedMinutes)
   const ratio = left / view.timeLimitMinutes
   const location = view.currentStage?.location ?? view.lineup?.location
+  const witnessMinutes = view.currentStage?.witnessMinutes ?? view.witnessMinutes
 
   return (
     <div className="round-hud detective-hud">
@@ -52,7 +53,7 @@ export default function DetectiveHud({ view, onExit }: { view: DetectiveGameView
           <span className="short">{formatCaseTime(t, view.startMinute, view.elapsedMinutes, { short: true })}</span>
         </span>
       </div>
-      <div className={classNames('chip time-left', { low: ratio < 0.2 || left < view.witnessMinutes })}>
+      <div className={classNames('chip time-left', { low: ratio < 0.2 || left < witnessMinutes })}>
         <span className="caption">{t('detective.play.timeLeft')}</span>
         <span className="value">{formatDuration(left)}</span>
         <span className="bar" aria-hidden="true">

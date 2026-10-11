@@ -51,6 +51,14 @@
     animation-delay: 180ms;
   }
 
+  .witness:nth-child(4) .avatar {
+    animation-delay: 270ms;
+  }
+
+  .witness:nth-child(5) .avatar {
+    animation-delay: 360ms;
+  }
+
   .tag {
     display: flex;
     align-items: center;
@@ -65,6 +73,35 @@
     font-weight: 800;
     white-space: nowrap;
     z-index: 10;
+
+    // Kind of clue the witness knows about (by its job).
+    .kind {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-left: -5px;
+      border-radius: 50%;
+      color: #111;
+
+      svg {
+        font-size: 0.85rem;
+      }
+
+      &.geography {
+        background: var(--color-cyan, #22d3ee);
+      }
+
+      &.culture {
+        background: var(--color-orange, #fb923c);
+      }
+
+      &.history {
+        background: var(--color-violet, #a78bfa);
+      }
+    }
 
     .cost {
       display: inline-flex;
@@ -143,7 +180,7 @@
   .detective-witnesses {
     gap: 4px;
 
-    // The three share the width, however narrow.
+    // They share the width, however narrow.
     .witness {
       flex: 1 1 0;
       min-width: 0;
@@ -159,11 +196,26 @@
       height: auto;
     }
 
+    // The kind of clue goes over the avatar (top corner): the name keeps the room of the tag.
+    .person {
+      position: relative;
+    }
+
     .tag {
       gap: 4px;
       max-width: 100%;
       padding: 3px 4px 3px 8px;
       font-size: 0.75rem;
+
+      .kind {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        width: 22px;
+        height: 22px;
+        margin: 0;
+        border: 2px solid rgba(0, 0, 0, 0.35);
+      }
 
       .name {
         min-width: 0;

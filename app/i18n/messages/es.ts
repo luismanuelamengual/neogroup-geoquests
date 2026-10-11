@@ -395,9 +395,16 @@ export const es = {
     howTo: {
       eyes: 'Recorrés el lugar donde estás. El ladrón ya se fue: solo los testigos saben a dónde.',
       witnesses:
-        'Hablás con los testigos del lugar: cada uno te da una pista del destino y uno de ellos, además, un rasgo del ladrón. Cada testigo te cuesta {time}.',
+        'Hablás con los testigos del lugar: cada uno te da una pista del destino y uno de ellos, además, un rasgo del ladrón. Según su oficio, saben de geografía (taxistas, mochileros, policías), de costumbres (camareros, vendedores) o de historia (guías, turistas). Cada testigo te cuesta {time}.',
       travel:
         'Elegís a dónde viajar entre {options} destinos. Si te equivocás, perdés el viaje; con más de {mistakes} errores, perdés el rastro.',
+      call: {
+        one: 'Si estás trabado, podés llamar a la central: descarta {eliminates} destinos equivocados a cambio de {time}. Tenés {count} llamada por caso.',
+        other:
+          'Si estás trabado, podés llamar a la central: descarta {eliminates} destinos equivocados a cambio de {time}. Tenés {count} llamadas por caso.'
+      },
+      events:
+        'Al llegar a cada lugar puede pasar algo imprevisto, bueno o malo: más o menos testigos, tiempo, destinos o sospechosos… ¡estate atento!',
       catch:
         'Si llegás a su lugar número {hops} a tiempo, tenés que señalar al ladrón entre {suspects} sospechosos: acordate de los rasgos que te contaron.'
     },
@@ -492,6 +499,112 @@ export const es = {
       taxiDriver: { m: 'Taxista', f: 'Taxista' },
       tourist: { m: 'Turista', f: 'Turista' },
       backpacker: { m: 'Mochilero', f: 'Mochilera' }
+    },
+    clueKinds: {
+      geography: 'Sabe de geografía',
+      culture: 'Sabe de costumbres',
+      history: 'Sabe de historia'
+    },
+    call: {
+      button: 'Llamar a la central',
+      detail: 'Descarta {count} · {time}',
+      left: { one: 'Te queda {count} llamada', other: 'Te quedan {count} llamadas' },
+      noneLeft: 'Ya no te quedan llamadas a la central',
+      linesDown: 'Las líneas están caídas: hoy no podés llamar desde acá',
+      nothingToRuleOut: 'No queda nada que descartar',
+      noTime: 'No te queda tiempo para llamar',
+      ruledOut: 'Descartado'
+    },
+    events: {
+      title: 'Al llegar…',
+      good: 'Buena noticia',
+      bad: 'Mala noticia',
+      continue: 'A investigar',
+      show: 'Ver novedades',
+      extraWitness: {
+        title: 'Un testigo más',
+        text: 'Alguien más vio al ladrón y se acercó a contarte: hay un testigo más para preguntar.'
+      },
+      talkative: {
+        title: 'Testigos charlatanes',
+        text: 'Hoy todos tienen ganas de hablar: cada testigo te va a dar dos pistas del destino.'
+      },
+      sharpEye: {
+        title: 'Buena memoria',
+        text: 'Dos testigos le vieron bien la cara al ladrón: acá vas a escuchar dos de sus rasgos.'
+      },
+      suspectCleared: {
+        title: 'Un sospechoso menos',
+        text: 'La central ya descartó a uno de los sospechosos: al final vas a tener uno menos entre quien elegir.'
+      },
+      extraTime: {
+        title: 'El ladrón se demoró',
+        text: 'Al ladrón se le complicó la fuga: tenés {time} más para atraparlo.'
+      },
+      ruledOut: {
+        title: 'Un destino descartado',
+        text: 'Un informante te asegura que el ladrón no fue a {place}: ya lo tachaste de la lista.'
+      },
+      quickWitnesses: {
+        title: 'Testigos apurados',
+        text: 'Los testigos están con prisa: hablar con cada uno te cuesta {time} en vez de {usual}.'
+      },
+      extraCall: {
+        title: 'Llamada extra',
+        text: 'Tu jefa te habilita una llamada más a la central para el resto del caso.'
+      },
+      hotline: {
+        title: 'Línea directa',
+        text: 'La central está muy atenta: si llamás desde acá, te cuesta {time} y descarta {count} destinos.'
+      },
+      secondChance: {
+        title: 'Margen extra',
+        text: 'La central te banca: podés equivocarte de destino una vez más en el resto del caso.'
+      },
+      directFlight: {
+        title: 'Vuelo directo',
+        text: 'Conseguiste un vuelo directo: el viaje que sale de acá dura {time} menos.'
+      },
+      missingWitness: {
+        title: 'Un testigo se fue',
+        text: 'Uno de los testigos se fue antes de que llegaras: hay uno menos para preguntar.'
+      },
+      noSighting: {
+        title: 'Nadie le vio la cara',
+        text: 'El ladrón pasó por acá con la cara tapada: nadie te va a poder contar cómo era.'
+      },
+      accomplice: {
+        title: 'Un cómplice',
+        text: 'El ladrón tiene un cómplice que se le parece: al final vas a tener un sospechoso más.'
+      },
+      lostTime: {
+        title: 'El ladrón aceleró',
+        text: 'El ladrón consiguió un vuelo antes de lo previsto: perdiste {time}.'
+      },
+      moreRumors: {
+        title: 'Rumores',
+        text: 'Corren rumores de que el ladrón pudo haber ido a otro lugar: hay un destino más para elegir.'
+      },
+      slowWitnesses: {
+        title: 'Testigos lentos',
+        text: 'Los testigos se van por las ramas: hablar con cada uno te cuesta {time} en vez de {usual}.'
+      },
+      linesDown: {
+        title: 'Líneas caídas',
+        text: 'Se cortaron las líneas: desde acá no podés llamar a la central.'
+      },
+      badSignal: {
+        title: 'Mala señal',
+        text: 'Casi no hay señal: si llamás a la central desde acá, te cuesta {time} y descarta solo {count}.'
+      },
+      pressure: {
+        title: 'Presión de arriba',
+        text: 'Tu jefa perdió la paciencia: tenés un error permitido menos en el resto del caso.'
+      },
+      delayedFlight: {
+        title: 'Vuelo demorado',
+        text: 'Tu próximo vuelo se demoró: el viaje que sale de acá dura {time} más.'
+      }
     },
     witness: {
       intro1: '¡Sí, vi a esa persona!',
@@ -606,6 +719,10 @@ export const es = {
     notEnoughPlayers: 'Hacen falta al menos {minPlayers} jugadores para empezar',
     onlyHostCanAdvance: 'Solo el anfitrión puede pasar a la siguiente ronda',
     roundNotFinished: 'La ronda todavía no terminó',
+    noTimeForCall: 'No te queda tiempo para llamar a la central',
+    noCallsLeft: 'Ya no te quedan llamadas a la central',
+    centralLinesDown: 'Las líneas están caídas: no podés llamar a la central desde acá',
+    nothingToRuleOut: 'No queda ningún destino para descartar',
     noTimeForWitness: 'No te queda tiempo para hablar con otro testigo',
     roundAlreadyPlayed: 'Esa ronda ya fue jugada',
     markAPlace: 'Marcá un lugar en el mapa',

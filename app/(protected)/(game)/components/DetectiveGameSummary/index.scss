@@ -187,6 +187,31 @@
       font-size: 0.85rem;
     }
 
+    // What happened at the stage (its random events).
+    .events {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .event {
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+
+      &.good {
+        background: var(--color-lime);
+        color: #111;
+      }
+
+      &.bad {
+        background: var(--color-magenta);
+        color: #fff;
+      }
+    }
+
     .icon {
       display: flex;
 

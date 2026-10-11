@@ -1,5 +1,5 @@
 import { DB } from '@neogroup/neorm'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { LANDMARK_CLUES } from '@/app/(protected)/(game)/data/landmarkClues'
 import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
@@ -11,6 +11,7 @@ import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { Place } from '@/app/(protected)/(game)/models/Place'
+import { ROLE_CLUE_KIND } from '@/app/(protected)/(game)/models/WitnessRole'
 import { DETECTIVE_MAP_SLUG } from '@/app/(protected)/(game)/services/detectiveMode'
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGames, sendGameAction } from '@/app/(protected)/(game)/services/games'
@@ -22,6 +23,8 @@ import {
   getTravelMinutes
 } from '@/app/(protected)/(game)/utils/detective'
 import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
+import { DETECTIVE_EVENTS, getStagePlan } from '@/app/(protected)/(game)/utils/detectiveEvents'
+import { getClueKind } from '@/app/(protected)/(game)/utils/landmarkClues'
 import { countContradictions, generateSuspect } from '@/app/(protected)/(game)/utils/suspects'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
@@ -124,6 +127,21 @@ const {
   witnessBudgetMinutes: WITNESS_BUDGET_MINUTES,
   witnessMinutes: WITNESS_MINUTES
 } = DETECTIVE_DIFFICULTIES.medium
+/** The chances of the random events of every difficulty, as tuned (the tests set them at will). */
+const EVENT_CHANCES = Object.fromEntries(
+  Object.entries(DETECTIVE_DIFFICULTIES).map(([difficulty, rules]) => [
+    difficulty,
+    { eventChance: rules.eventChance, doubleEventChance: rules.doubleEventChance }
+  ])
+)
+
+/** Sets the chances of the random events of every difficulty (0: cases without events). */
+function setEventChances(eventChance: number, doubleEventChance: number): void {
+  for (const rules of Object.values(DETECTIVE_DIFFICULTIES)) {
+    rules.eventChance = eventChance
+    rules.doubleEventChance = doubleEventChance
+  }
+}
 
 describe('detective game flow', () => {
   let userId: number
@@ -131,7 +149,22 @@ describe('detective game flow', () => {
   beforeEach(async () => {
     await resetDatabase()
     userId = await createUser()
+    // Without random events, unless a test asks for them: every case is played by the book.
+    setEventChances(0, 0)
   })
+
+  afterEach(() => {
+    for (const [difficulty, chances] of Object.entries(EVENT_CHANCES)) {
+      Object.assign(DETECTIVE_DIFFICULTIES[difficulty as keyof typeof DETECTIVE_DIFFICULTIES], chances)
+    }
+  })
+
+  /** Saves a case as it is (to set it up for a test). */
+  async function save(gameId: number, data: DetectiveGameData): Promise<void> {
+    await DB.table('games')
+      .where('id', gameId)
+      .update({ data: JSON.stringify(data) })
+  }
 
   function create(finder = new FakePanoramaFinder()): Promise<GameView> {
     return createGame(userId, { mode: GameMode.DETECTIVE }, { finder })
@@ -213,6 +246,12 @@ describe('detective game flow', () => {
       expect(stage.witnesses).toHaveLength(3)
       expect(new Set(stage.witnesses.map((witness) => witness.clueIndex)).size).toBe(3)
       expect(stage.witnesses.some((witness) => witness.clueIndex <= 1)).toBe(true)
+      // Each one knows about what its job knows about, and no two have the same job.
+      stage.witnesses.forEach((witness) => {
+        expect(getClueKind(witness.clueIndex)).toBe(ROLE_CLUE_KIND[witness.role])
+      })
+      expect(new Set(stage.witnesses.map((witness) => witness.role)).size).toBe(3)
+      expect(stage.events).toEqual([])
       expect(stage.askedWitnesses).toEqual([])
       expect(stage.travel).toBeNull()
 
@@ -338,7 +377,7 @@ describe('detective game flow', () => {
     expect(view.currentStage!.panoId).toBe(data.origin.panoId)
     expect(view.currentStage!.location.placeId).toBe(data.origin.placeId)
     expect(view.currentStage!.options).toHaveLength(5)
-    expect(view.currentStage!.witnesses.every((witness) => !witness.asked && witness.clue === null)).toBe(true)
+    expect(view.currentStage!.witnesses.every((witness) => !witness.asked && witness.clues.length === 0)).toBe(true)
     expect(view.route).toBeNull()
     expect(view.lineup).toBeNull()
     expect(view.suspectsCount).toBe(4)
@@ -366,7 +405,7 @@ describe('detective game flow', () => {
       asked: true,
       seed: witness.seed,
       role: witness.role,
-      clue: { es: clues.es[witness.clueIndex], en: clues.en[witness.clueIndex] }
+      clues: [{ es: clues.es[witness.clueIndex], en: clues.en[witness.clueIndex] }]
     })
 
     // Only the witness that knows a trait of the thief tells it (the others, nothing).
@@ -614,5 +653,310 @@ describe('detective game flow', () => {
 
       expect(route.map((stop) => stop.placeName)).not.toContain(excluded)
     }
+  })
+
+  it('plans random events, as many good as bad, and builds every stage with its events', async () => {
+    setEventChances(1, 1)
+
+    for (const difficulty of ['easy', 'medium', 'hard'] as const) {
+      const rules = DETECTIVE_DIFFICULTIES[difficulty]
+
+      for (let attempt = 0; attempt < 6; attempt++) {
+        const game = await createGame(
+          userId,
+          { mode: GameMode.DETECTIVE, settings: { difficulty } },
+          { finder: new FakePanoramaFinder() }
+        )
+        const data = await stored(game.id)
+        const events = data.stages.flatMap((stage) => stage.events ?? [])
+        const good = events.filter((event) => DETECTIVE_EVENTS[event.type].good).length
+
+        // Every stage gets two (when two can happen there): as many good as bad ones overall.
+        expect(events.length).toBeGreaterThanOrEqual(data.stages.length)
+        expect(Math.abs(good - (events.length - good))).toBeLessThanOrEqual(1)
+
+        for (const stage of data.stages) {
+          const stageEvents = stage.events ?? []
+          const plan = getStagePlan(rules, stageEvents)
+          const has = (type: string) => stageEvents.some((event) => event.type === type)
+          const clueIndices = stage.witnesses.flatMap((witness) => [
+            witness.clueIndex,
+            ...(witness.extraClueIndices ?? [])
+          ])
+
+          // Never two events that change the same thing in a stage.
+          expect(new Set(stageEvents.map((event) => DETECTIVE_EVENTS[event.type].group)).size).toBe(stageEvents.length)
+          expect(stage.witnesses).toHaveLength(plan.witnesses)
+          expect(stage.options).toHaveLength(plan.decoys + 1)
+          expect(stage.options.map((option) => option.placeId)).toContain(stage.destination.placeId)
+          // Every clue once, at least one of geography, and the first clue of each witness of the kind of its job.
+          expect(new Set(clueIndices).size).toBe(clueIndices.length)
+          expect(clueIndices.some((index) => getClueKind(index) === 'geography')).toBe(true)
+          expect(clueIndices).toHaveLength(Math.min(5, plan.witnesses * plan.cluesPerWitness))
+          stage.witnesses.forEach((witness) => {
+            expect(getClueKind(witness.clueIndex)).toBe(ROLE_CLUE_KIND[witness.role])
+          })
+          expect(stage.witnesses.filter((witness) => witness.suspectClue).length).toBeLessThanOrEqual(plan.suspectClues)
+
+          if (has('noSighting')) {
+            expect(stage.witnesses.every((witness) => !witness.suspectClue)).toBe(true)
+          }
+
+          if (has('ruledOut')) {
+            const ruledOut = stageEvents.find((event) => event.type === 'ruledOut')!.placeId
+
+            expect(stage.options.map((option) => option.placeId)).toContain(ruledOut)
+            expect(ruledOut).not.toBe(stage.destination.placeId)
+          }
+        }
+
+        // The suspects at the end, as the events say; the traits told tell the thief from all of them.
+        const suspects =
+          rules.suspects +
+          events.filter((event) => event.type === 'accomplice').length -
+          events.filter((event) => event.type === 'suspectCleared').length
+        const clues = data.stages.flatMap((stage) =>
+          stage.witnesses.flatMap((witness) => (witness.suspectClue ? [witness.suspectClue] : []))
+        )
+
+        expect(data.lineup!.seeds).toHaveLength(suspects)
+        expect(suspects).toBeGreaterThanOrEqual(2)
+        expect(suspects).toBeLessThanOrEqual(6)
+        data.lineup!.seeds.forEach((seed, index) => {
+          expect(countContradictions(generateSuspect(seed), clues) === 0).toBe(index === data.lineup!.thief)
+        })
+      }
+    }
+  })
+
+  it('reveals the events of a stage only when the detective gets there', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    data.stages[1].events = [{ type: 'extraTime', minutes: 180 }]
+    data.stages[2].events = [{ type: 'lostTime', minutes: 240 }, { type: 'accomplice' }]
+    await save(game.id, data)
+
+    expect(detective(await act(game.id, { type: 'askWitness', stageNumber: 1, witness: 0 }))).toMatchObject({
+      timeLimitMinutes: data.timeLimitMinutes,
+      currentStage: { events: [] }
+    })
+    // Nothing of what is still to come is shown.
+    expect(JSON.stringify(detective(game))).not.toContain('extraTime')
+
+    const second = detective(await travelRight(game.id))
+
+    expect(second.timeLimitMinutes).toBe(data.timeLimitMinutes + 180)
+    expect(second.currentStage!.events).toEqual([{ type: 'extraTime', good: true, minutes: 180 }])
+    expect(second.suspectsCount).toBe(4)
+
+    // Less time, but never so little that the case ends right there.
+    let current = await stored(game.id)
+
+    // After the trip only 150 minutes are left: the event can take 90 at most.
+    current.elapsedMinutes =
+      current.timeLimitMinutes - getTravelMinutes(current.stages[0].destination, current.stages[1].destination) - 150
+    await save(game.id, current)
+
+    const third = detective(await travelRight(game.id))
+
+    current = await stored(game.id)
+    expect(third.outcome).toBeNull()
+    expect(third.currentStage!.events).toEqual([
+      { type: 'lostTime', good: false, minutes: current.stages[2].events![0].minutes },
+      { type: 'accomplice', good: false }
+    ])
+    expect(current.stages[2].events![0].minutes).toBe(90)
+    expect(third.timeLimitMinutes - third.elapsedMinutes).toBe(60)
+    expect(third.suspectsCount).toBe(5)
+  })
+
+  it('charges the witnesses of a stage what its events say', async () => {
+    for (const [type, minutes] of [
+      ['quickWitnesses', WITNESS_MINUTES / 2],
+      ['slowWitnesses', WITNESS_MINUTES * 1.5]
+    ] as const) {
+      const game = await create()
+      const data = await stored(game.id)
+
+      data.stages[0].events = [{ type }]
+      await save(game.id, data)
+
+      const asked = detective(await act(game.id, { type: 'askWitness', stageNumber: 1, witness: 0 }))
+
+      expect(asked.elapsedMinutes).toBe(minutes)
+      expect(asked.currentStage!.witnessMinutes).toBe(minutes)
+    }
+  })
+
+  it('tells more clues and traits at a stage with talkative witnesses and a sharp eye', async () => {
+    setEventChances(1, 1)
+
+    for (let attempt = 0; attempt < 30; attempt++) {
+      const game = await create()
+      const data = await stored(game.id)
+      const index = data.stages.findIndex((stage) => stage.events?.some((event) => event.type === 'talkative'))
+
+      if (index !== 0) {
+        continue
+      }
+
+      const witness = data.stages[0].witnesses.findIndex((item) => (item.extraClueIndices ?? []).length > 0)
+      const asked = detective(await act(game.id, { type: 'askWitness', stageNumber: 1, witness }))
+
+      expect(asked.currentStage!.witnesses[witness].clues).toHaveLength(2)
+
+      return
+    }
+
+    throw new Error('No case with talkative witnesses at its first stage')
+  })
+
+  it('calls the central office: it costs its time and rules out wrong destinations, never all of them', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+    const { centralCallMinutes, centralCallEliminates } = DETECTIVE_DIFFICULTIES.medium
+
+    expect(detective(game).currentStage!.call).toEqual({
+      left: 1,
+      available: true,
+      minutes: centralCallMinutes,
+      eliminates: centralCallEliminates
+    })
+
+    const called = detective(await act(game.id, { type: 'callCentral', stageNumber: 1 }))
+    const eliminated = called.currentStage!.eliminated
+
+    expect(called.elapsedMinutes).toBe(centralCallMinutes)
+    expect(eliminated).toHaveLength(centralCallEliminates)
+    expect(eliminated).not.toContain(data.stages[0].destination.placeId)
+    expect(called.currentStage!.call.left).toBe(0)
+
+    // One call per case, and the ruled out destinations can not be chosen.
+    await expect(act(game.id, { type: 'callCentral', stageNumber: 1 })).rejects.toThrow()
+    await expect(act(game.id, { type: 'travel', stageNumber: 1, placeId: eliminated[0] })).rejects.toThrow()
+    expect(detective(await travelRight(game.id)).playedStages[0].calls).toBe(1)
+  })
+
+  it('changes the calls to the central office with the events of the stage', async () => {
+    const { centralCallMinutes, centralCallEliminates } = DETECTIVE_DIFFICULTIES.medium
+    // Lines down: no call from here.
+    let game = await create()
+    let data = await stored(game.id)
+
+    data.stages[0].events = [{ type: 'linesDown' }]
+    await save(game.id, data)
+    await expect(act(game.id, { type: 'callCentral', stageNumber: 1 })).rejects.toThrow()
+
+    // A direct line: cheaper, and one more destination ruled out (one wrong destination always stays).
+    game = await create()
+    data = await stored(game.id)
+    data.stages[0].events = [{ type: 'hotline' }]
+    await save(game.id, data)
+
+    let called = detective(await act(game.id, { type: 'callCentral', stageNumber: 1 }))
+
+    expect(called.elapsedMinutes).toBe(centralCallMinutes / 2)
+    expect(called.currentStage!.eliminated).toHaveLength(centralCallEliminates + 1)
+
+    // Bad signal: dearer, and one destination less.
+    game = await create()
+    data = await stored(game.id)
+    data.stages[0].events = [{ type: 'badSignal' }]
+    await save(game.id, data)
+    called = detective(await act(game.id, { type: 'callCentral', stageNumber: 1 }))
+    expect(called.elapsedMinutes).toBe(centralCallMinutes * 1.5)
+    expect(called.currentStage!.eliminated).toHaveLength(centralCallEliminates - 1)
+
+    // An extra call, from the stage where it is given on.
+    game = await create()
+    data = await stored(game.id)
+    data.timeLimitMinutes = 100000
+    data.stages[1].events = [{ type: 'extraCall' }]
+    await save(game.id, data)
+    await act(game.id, { type: 'callCentral', stageNumber: 1 })
+    expect(detective(await travelRight(game.id)).currentStage!.call.left).toBe(1)
+    expect(detective(await act(game.id, { type: 'callCentral', stageNumber: 2 })).currentStage!.call.left).toBe(0)
+  })
+
+  it('does not let a call end the case: without time for it, it can not be made', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    data.timeLimitMinutes = DETECTIVE_DIFFICULTIES.medium.centralCallMinutes - 30
+    await save(game.id, data)
+
+    await expect(act(game.id, { type: 'callCentral', stageNumber: 1 })).rejects.toThrow()
+    expect((await stored(game.id)).elapsedMinutes).toBe(0)
+  })
+
+  it('rules out a destination as soon as the detective gets to a stage with an informant', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+    const decoy = data.stages[1].options.find((option) => option.placeId !== data.stages[1].destination.placeId)!
+
+    data.stages[1].events = [{ type: 'ruledOut', placeId: decoy.placeId }]
+    await save(game.id, data)
+
+    const second = detective(await travelRight(game.id))
+
+    expect(second.currentStage!.eliminated).toEqual([decoy.placeId])
+    expect(second.currentStage!.events).toEqual([{ type: 'ruledOut', good: true, placeId: decoy.placeId }])
+    await expect(act(game.id, { type: 'travel', stageNumber: 2, placeId: decoy.placeId })).rejects.toThrow()
+  })
+
+  it('changes the mistakes allowed and the trips with the events', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    data.timeLimitMinutes = 100000
+    data.stages[0].events = [{ type: 'delayedFlight' }]
+    data.stages[1].events = [{ type: 'pressure' }, { type: 'directFlight' }]
+    await save(game.id, data)
+
+    // A delayed flight: the trip out of the stage takes longer.
+    const second = detective(await travelRight(game.id))
+    // (The trip is to the destination as offered, like every trip.)
+    const firstOption = data.stages[0].options.find((option) => option.placeId === data.stages[0].destination.placeId)!
+
+    expect(second.elapsedMinutes).toBe(getTravelMinutes(data.origin, firstOption) + 90)
+    expect(second.maxMistakes).toBe(MAX_MISTAKES - 1)
+    expect(second.currentStage!.flightMinutes).toBe(-90)
+
+    // No mistake allowed any more: the first one loses the trail.
+    const stage = data.stages[1]
+    const wrong = stage.options.find((option) => option.placeId !== stage.destination.placeId)!
+    const lost = detective(await act(game.id, { type: 'travel', stageNumber: 2, placeId: wrong.placeId }))
+
+    expect(lost.outcome).toBe('lostTrail')
+    expect(lost.playedStages[1].travel.travelMinutes).toBe(
+      Math.max(30, getTravelMinutes(data.stages[0].destination, wrong) - 90)
+    )
+  })
+
+  it('allows one more mistake after a second chance', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    data.timeLimitMinutes = 100000
+    data.stages[1].events = [{ type: 'secondChance' }]
+    await save(game.id, data)
+
+    let view = detective(await travelRight(game.id))
+
+    expect(view.maxMistakes).toBe(MAX_MISTAKES + 1)
+
+    for (let mistake = 1; mistake <= MAX_MISTAKES + 1; mistake++) {
+      const current = await stored(game.id)
+      const stage = current.stages[current.currentStage - 1]
+      const wrong = stage.options.find((option) => option.placeId !== stage.destination.placeId)!
+
+      view = detective(
+        await act(game.id, { type: 'travel', stageNumber: current.currentStage, placeId: wrong.placeId })
+      )
+    }
+
+    expect(view.outcome).toBeNull()
+    expect(view.mistakes).toBe(MAX_MISTAKES + 1)
   })
 })

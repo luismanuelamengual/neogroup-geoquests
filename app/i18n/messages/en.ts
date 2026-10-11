@@ -389,9 +389,16 @@ export const en: Messages = {
     howTo: {
       eyes: 'You explore the place where you are. The thief already left: only the witnesses know where to.',
       witnesses:
-        'You talk to the witnesses: each one gives you a clue about the destination, and one of them also a trait of the thief. Each witness costs you {time}.',
+        'You talk to the witnesses: each one gives you a clue about the destination, and one of them also a trait of the thief. Depending on their job, they know about geography (taxi drivers, backpackers, police), customs (waiters, vendors) or history (guides, tourists). Each witness costs you {time}.',
       travel:
         'You choose where to travel among {options} destinations. If you are wrong, you waste the trip; after more than {mistakes} mistakes, you lose the trail.',
+      call: {
+        one: 'If you are stuck, you can call the central office: it rules out {eliminates} wrong destinations for {time}. You have {count} call per case.',
+        other:
+          'If you are stuck, you can call the central office: it rules out {eliminates} wrong destinations for {time}. You have {count} calls per case.'
+      },
+      events:
+        'Something unexpected may happen at every place, good or bad: more or fewer witnesses, time, destinations or suspects… stay alert!',
       catch:
         'If you reach their place number {hops} in time, you have to point at the thief among {suspects} suspects: remember the traits you were told.'
     },
@@ -486,6 +493,112 @@ export const en: Messages = {
       taxiDriver: { m: 'Taxi driver', f: 'Taxi driver' },
       tourist: { m: 'Tourist', f: 'Tourist' },
       backpacker: { m: 'Backpacker', f: 'Backpacker' }
+    },
+    clueKinds: {
+      geography: 'Knows about geography',
+      culture: 'Knows about customs',
+      history: 'Knows about history'
+    },
+    call: {
+      button: 'Call the central office',
+      detail: 'Rules out {count} · {time}',
+      left: { one: '{count} call left', other: '{count} calls left' },
+      noneLeft: 'You have no calls to the central office left',
+      linesDown: 'The lines are down: you can not call from here',
+      nothingToRuleOut: 'There is nothing left to rule out',
+      noTime: 'There is no time left for a call',
+      ruledOut: 'Ruled out'
+    },
+    events: {
+      title: 'When you arrive…',
+      good: 'Good news',
+      bad: 'Bad news',
+      continue: 'Investigate',
+      show: 'See news',
+      extraWitness: {
+        title: 'One more witness',
+        text: 'Someone else saw the thief and came to tell you: there is one more witness to ask.'
+      },
+      talkative: {
+        title: 'Chatty witnesses',
+        text: 'Everyone feels like talking today: each witness will give you two clues about the destination.'
+      },
+      sharpEye: {
+        title: 'Sharp memory',
+        text: "Two witnesses got a good look at the thief's face: here you will hear two of their traits."
+      },
+      suspectCleared: {
+        title: 'One suspect less',
+        text: 'The central office already cleared one of the suspects: at the end you will have one less to choose from.'
+      },
+      extraTime: {
+        title: 'The thief got delayed',
+        text: 'The getaway got complicated for the thief: you have {time} more to catch them.'
+      },
+      ruledOut: {
+        title: 'A destination ruled out',
+        text: 'An informant assures you the thief did not go to {place}: you already crossed it off the list.'
+      },
+      quickWitnesses: {
+        title: 'Witnesses in a hurry',
+        text: 'The witnesses are in a hurry: talking to each one costs you {time} instead of {usual}.'
+      },
+      extraCall: {
+        title: 'Extra call',
+        text: 'Your boss gives you one more call to the central office for the rest of the case.'
+      },
+      hotline: {
+        title: 'Direct line',
+        text: 'The central office is on alert: calling from here costs you {time} and rules out {count} destinations.'
+      },
+      secondChance: {
+        title: 'Extra margin',
+        text: 'The central office has your back: you can choose a wrong destination once more in the rest of the case.'
+      },
+      directFlight: {
+        title: 'Direct flight',
+        text: 'You got a direct flight: the trip out of here takes {time} less.'
+      },
+      missingWitness: {
+        title: 'A witness left',
+        text: 'One of the witnesses left before you arrived: there is one less to ask.'
+      },
+      noSighting: {
+        title: 'Nobody saw their face',
+        text: 'The thief went through here with their face covered: nobody will be able to tell you what they looked like.'
+      },
+      accomplice: {
+        title: 'An accomplice',
+        text: 'The thief has an accomplice who looks like them: at the end you will have one more suspect.'
+      },
+      lostTime: {
+        title: 'The thief sped up',
+        text: 'The thief caught an earlier flight than expected: you lost {time}.'
+      },
+      moreRumors: {
+        title: 'Rumors',
+        text: 'There are rumors the thief may have gone somewhere else: there is one more destination to choose from.'
+      },
+      slowWitnesses: {
+        title: 'Slow witnesses',
+        text: 'The witnesses beat around the bush: talking to each one costs you {time} instead of {usual}.'
+      },
+      linesDown: {
+        title: 'Lines down',
+        text: 'The lines are down: you can not call the central office from here.'
+      },
+      badSignal: {
+        title: 'Bad signal',
+        text: 'There is hardly any signal: calling the central office from here costs you {time} and rules out only {count}.'
+      },
+      pressure: {
+        title: 'Pressure from above',
+        text: 'Your boss lost patience: you have one less mistake allowed in the rest of the case.'
+      },
+      delayedFlight: {
+        title: 'Delayed flight',
+        text: 'Your next flight got delayed: the trip out of here takes {time} more.'
+      }
     },
     witness: {
       intro1: 'Yes, I saw that person!',
@@ -600,6 +713,10 @@ export const en: Messages = {
     notEnoughPlayers: 'At least {minPlayers} players are needed to start',
     onlyHostCanAdvance: 'Only the host can move on to the next round',
     roundNotFinished: "The round hasn't ended yet",
+    noTimeForCall: 'There is no time left to call the central office',
+    noCallsLeft: 'You have no calls to the central office left',
+    centralLinesDown: 'The lines are down: you can not call the central office from here',
+    nothingToRuleOut: 'There is no destination left to rule out',
     noTimeForWitness: 'There is no time left to talk to another witness',
     roundAlreadyPlayed: 'That round has already been played',
     markAPlace: 'Drop a pin on the map',

@@ -1,18 +1,30 @@
 'use client'
 
 import './index.scss'
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import CheckIcon from '@mui/icons-material/Check'
 import HourglassDisabledIcon from '@mui/icons-material/HourglassDisabled'
+import PublicIcon from '@mui/icons-material/Public'
+import RestaurantIcon from '@mui/icons-material/Restaurant'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import classNames from 'classnames'
 import { useState } from 'react'
 import SpeechBubble from '@/app/(protected)/(game)/components/SpeechBubble'
 import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
 import { DetectiveWitnessView } from '@/app/(protected)/(game)/models/DetectiveGameView'
+import { ClueKind, ROLE_CLUE_KIND } from '@/app/(protected)/(game)/models/WitnessRole'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
 import { generateWitness } from '@/app/(protected)/(game)/utils/witnesses'
 import { getSuspectClueText, getWitnessIntro, getWitnessRoleName } from '@/app/(protected)/(game)/utils/witnessText'
 import { useI18n } from '@/app/i18n/I18nProvider'
+import type { MessageKey } from '@/app/i18n/messages'
+
+/** Icon of the kind of clue each witness knows about (by its job). */
+const CLUE_KIND_ICONS: Record<ClueKind, typeof PublicIcon> = {
+  geography: PublicIcon,
+  culture: RestaurantIcon,
+  history: AccountBalanceIcon
+}
 
 interface DetectiveWitnessesProps {
   witnesses: DetectiveWitnessView[]
@@ -26,8 +38,9 @@ interface DetectiveWitnessesProps {
 }
 
 /**
- * The witnesses of a stage, standing over the Street View. Tapping one asks
- * it (the first time it costs fictional time) and it says its clue in a
+ * The witnesses of a stage, standing over the Street View, each with an icon of
+ * the kind of clue its job knows about (geography, customs or history). Tapping
+ * one asks it (the first time it costs fictional time) and it says its clues in a
  * speech bubble, written letter by letter; tapping it again shows it again,
  * for free. Without time for a new witness, the others stay silent.
  */
@@ -71,8 +84,11 @@ export default function DetectiveWitnesses({
       {witnesses.map((witness, index) => {
         const traits = generateWitness(witness.seed, witness.role)
         const talking = typing === index
-        const isOpen = open === index && witness.clue
+        const isOpen = open === index && witness.clues.length > 0
         const silent = noTime && !witness.asked
+        const kind = ROLE_CLUE_KIND[witness.role]
+        const KindIcon = CLUE_KIND_ICONS[kind]
+        const kindLabel = t(`detective.clueKinds.${kind}` as MessageKey)
 
         return (
           <div key={witness.seed} className={classNames('witness', { open: isOpen, asked: witness.asked, silent })}>
@@ -82,7 +98,7 @@ export default function DetectiveWitnesses({
                 speaker={`${traits.name} · ${getWitnessRoleName(t, witness.role, traits.presentation)}`}
                 text={[
                   getWitnessIntro(t, traits.introIndex),
-                  witness.clue![locale],
+                  ...witness.clues.map((clue) => clue[locale]),
                   witness.suspectClue ? getSuspectClueText(t, witness.suspectClue) : null
                 ]
                   .filter(Boolean)
@@ -97,7 +113,8 @@ export default function DetectiveWitnesses({
               className="person"
               disabled={disabled || asking !== null || silent}
               onClick={() => handleClick(index)}
-              aria-label={`${traits.name}, ${getWitnessRoleName(t, witness.role, traits.presentation)}`}
+              aria-label={`${traits.name}, ${getWitnessRoleName(t, witness.role, traits.presentation)}. ${kindLabel}`}
+              title={kindLabel}
             >
               <WitnessAvatar
                 seed={witness.seed}
@@ -107,6 +124,9 @@ export default function DetectiveWitnesses({
                 className="avatar"
               />
               <span className="tag">
+                <span className={classNames('kind', kind)} aria-hidden="true">
+                  <KindIcon />
+                </span>
                 <span className="name">{traits.name}</span>
                 <span className={classNames('cost', { done: witness.asked, none: silent })}>
                   {witness.asked ? <CheckIcon /> : silent ? <HourglassDisabledIcon /> : <ScheduleIcon />}

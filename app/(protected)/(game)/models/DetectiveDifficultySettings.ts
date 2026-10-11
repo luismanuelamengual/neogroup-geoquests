@@ -54,4 +54,18 @@ export interface DetectiveDifficultySettings {
    * thief can be told). Lower = decoys more like the thief = harder.
    */
   decoyContradictions: [number, number]
+
+  /* ---- calls to the central office ---- */
+  /** Calls to the central office the detective can make in a case (0: none; some events give one more). */
+  centralCalls: number
+  /** Fictional minutes each call costs. */
+  centralCallMinutes: number
+  /** Wrong destinations each call rules out (always leaving at least one, so there is still a choice). */
+  centralCallEliminates: number
+
+  /* ---- random events (see utils/detectiveEvents.ts) ---- */
+  /** Chance (0 to 1) that something happens when the detective gets to a stage. */
+  eventChance: number
+  /** Chance (0 to 1) that, when something happens at a stage, a second thing happens too. */
+  doubleEventChance: number
 }

@@ -3,15 +3,18 @@ import { DetectiveLineup } from '@/app/(protected)/(game)/models/DetectiveLineup
 import { DetectivePlace } from '@/app/(protected)/(game)/models/DetectivePlace'
 import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
 import { DetectiveStop } from '@/app/(protected)/(game)/models/DetectiveStop'
+import { DetectiveWitness } from '@/app/(protected)/(game)/models/DetectiveWitness'
 import { LatLng } from '@/app/(protected)/(game)/models/LatLng'
 import { Place } from '@/app/(protected)/(game)/models/Place'
 import { isCircleGeometry } from '@/app/(protected)/(game)/models/PlaceGeometry'
-import { WITNESS_ROLES } from '@/app/(protected)/(game)/models/WitnessRole'
+import { SuspectClue } from '@/app/(protected)/(game)/models/SuspectClue'
+import { CLUE_KINDS, ClueKind, getClueKindRoles, WitnessRole } from '@/app/(protected)/(game)/models/WitnessRole'
 import { findCachedLocation, findLiveLocation } from '@/app/(protected)/(game)/services/locations'
 import { Panorama, PanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { computeTimeLimitMinutes, distanceKm } from '@/app/(protected)/(game)/utils/detective'
+import { getStagePlan, planCaseEvents, StageWitnessPlan } from '@/app/(protected)/(game)/utils/detectiveEvents'
 import { circleCenter, polygonBoundingBox, RandomFn } from '@/app/(protected)/(game)/utils/geo'
-import { hasLandmarkClues, pickClueIndices } from '@/app/(protected)/(game)/utils/landmarkClues'
+import { hasLandmarkClues, planWitnessClues } from '@/app/(protected)/(game)/utils/landmarkClues'
 import { pickRandom, shuffle } from '@/app/(protected)/(game)/utils/random'
 import { planLineup } from '@/app/(protected)/(game)/utils/suspects'
 import { ApiException } from '@/app/models/ApiException'
@@ -157,12 +160,49 @@ async function findPanorama(
 }
 
 /**
+ * The witnesses of a stage (see utils/landmarkClues.ts planWitnessClues): each
+ * one with a job that knows about the kind of its first clue (never two with
+ * the same job), and the traits of the thief of the stage told by different
+ * witnesses, at random.
+ */
+export function planStageWitnesses(
+  plan: StageWitnessPlan,
+  suspectClues: SuspectClue[],
+  random: RandomFn = Math.random
+): DetectiveWitness[] {
+  const roles = Object.fromEntries(CLUE_KINDS.map((kind) => [kind, shuffle(getClueKindRoles(kind), random)])) as Record<
+    ClueKind,
+    WitnessRole[]
+  >
+  const planned = planWitnessClues(plan.witnesses, plan.cluesPerWitness, random)
+  const tellers = shuffle(
+    planned.map((_, index) => index),
+    random
+  ).slice(0, suspectClues.length)
+
+  return planned.map(({ kind, clueIndices: [clueIndex, ...extra] }, index) => {
+    const teller = tellers.indexOf(index)
+
+    return {
+      seed: Math.floor(random() * 2 ** 31),
+      // Never more witnesses of a kind than jobs that know about it (there are not more clues of it either).
+      role: roles[kind].pop() ?? pickRandom(getClueKindRoles(kind), random)!,
+      clueIndex,
+      ...(extra.length > 0 ? { extraClueIndices: extra } : {}),
+      suspectClue: teller >= 0 ? (suspectClues[teller] ?? null) : null
+    }
+  })
+}
+
+/**
  * Plans a new detective case in a map: the route of the suspect (see
  * chooseRoute) with a Street View panorama at every stop — a place without
- * imagery is replaced by another route — and, for every stage, the decoys,
- * the witnesses (each one with a different clue of the destination, and one of
- * them also with a trait of the thief, see utils/suspects.ts), the suspects of
- * the last stop and, from all that, the time available.
+ * imagery is replaced by another route — and, for every stage, its random
+ * events (see utils/detectiveEvents.ts), the decoys, the witnesses (each one
+ * with different clues of the destination, of the kind its job knows about,
+ * and usually one of them also with a trait of the thief, see
+ * utils/suspects.ts), the suspects of the last stop and, from all that, the
+ * time available (the events do not count: they are as often good as bad).
  */
 export async function planDetectiveCase(
   places: Place[],
@@ -221,36 +261,50 @@ export async function planDetectiveCase(
   const routeIds = new Set(route.map((place) => place.id))
   const stages: DetectiveStage[] = []
   const hops = []
-  // One trait of the thief for every stage: the detective has to remember them to tell it at the end.
-  const lineup = planLineup(settings.suspects, route.length - 1, random, {
-    traits: settings.suspectTraits,
-    decoyContradictions: settings.decoyContradictions
-  })
+  // The random events of every stage: they change its witnesses, clues and destinations, and the suspects at the end.
+  const events = planCaseEvents(settings, route.length - 1, random)
+  const stagePlans = events.stages.map((stageEvents) => getStagePlan(settings, stageEvents))
+  // The traits of the thief the witnesses tell (usually one per stage): the detective has to remember them to tell it at the end.
+  const lineup = planLineup(
+    events.suspects,
+    stagePlans.reduce((total, plan) => total + plan.suspectClues, 0),
+    random,
+    { traits: settings.suspectTraits, decoyContradictions: settings.decoyContradictions }
+  )
+  const suspectClues = [...lineup.clues]
 
   for (let index = 1; index < route.length; index++) {
+    const plan = stagePlans[index - 1]
+    const stageEvents = events.stages[index - 1]
     const decoys = chooseDecoys(
       places,
       route[index - 1],
       route[index],
       routeIds,
-      settings.options - 1,
+      plan.decoys,
       settings.decoyDistanceBands,
       random
     ).map(toDetectivePlace)
-    const clues = pickClueIndices(settings.witnesses, random)
-    const roles = shuffle(WITNESS_ROLES, random)
-    const suspectWitness = Math.floor(random() * settings.witnesses)
+    const witnesses = planStageWitnesses(plan, suspectClues.splice(0, plan.suspectClues), random)
+    const ruledOut = stageEvents.find((event) => event.type === 'ruledOut')
+
+    // The wrong destination ruled out (at least one more stays); without decoys enough, the event does not happen.
+    if (ruledOut) {
+      if (decoys.length >= 2) {
+        ruledOut.placeId = pickRandom(decoys, random)!.placeId
+      } else {
+        stageEvents.splice(stageEvents.indexOf(ruledOut), 1)
+      }
+    }
 
     stages.push({
       destination: stops[index],
       options: shuffle([toDetectivePlace(route[index]), ...decoys], random),
-      witnesses: clues.map((clueIndex, witness) => ({
-        seed: Math.floor(random() * 2 ** 31),
-        role: roles[witness % roles.length],
-        clueIndex,
-        suspectClue: witness === suspectWitness ? lineup.clues[index - 1] : null
-      })),
+      witnesses,
       askedWitnesses: [],
+      events: stageEvents,
+      eliminated: [],
+      calls: 0,
       travel: null
     })
     hops.push({ from: stops[index - 1], to: stops[index], decoys })

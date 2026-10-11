@@ -12,6 +12,11 @@ import { SuspectTrait } from '@/app/(protected)/(game)/models/SuspectClue'
  *     (and the more, the better: not every thief shows all of them).
  *   - `witnessBudgetMinutes` should stay under `witnessMinutes`, so asking
  *     every witness leaves less time for mistakes.
+ *   - A call to the central office (`centralCalls`, `centralCallMinutes`,
+ *     `centralCallEliminates`) should cost more than a witness: it is a sure
+ *     thing, a witness is not.
+ *   - The random events (`eventChance`, `doubleEventChance`) are as often
+ *     good as bad: they change the case, not how hard it is on average.
  *   - The tests of the mode read the medium difficulty.
  */
 
@@ -44,7 +49,12 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     maxMistakes: 2,
     suspects: 3,
     suspectTraits: ['gender', 'hairColor', 'hairStyle', 'eyeColor', 'glasses', 'headwear'],
-    decoyContradictions: [0.6, 1]
+    decoyContradictions: [0.6, 1],
+    centralCalls: 1,
+    centralCallMinutes: 180,
+    centralCallEliminates: 2,
+    eventChance: 0.7,
+    doubleEventChance: 0.2
   },
   medium: {
     hops: 5,
@@ -62,7 +72,12 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     maxMistakes: 1,
     suspects: 4,
     suspectTraits: ALL_TRAITS,
-    decoyContradictions: [0, 0.5]
+    decoyContradictions: [0, 0.5],
+    centralCalls: 1,
+    centralCallMinutes: 180,
+    centralCallEliminates: 2,
+    eventChance: 0.75,
+    doubleEventChance: 0.25
   },
   hard: {
     hops: 6,
@@ -80,7 +95,12 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     maxMistakes: 1,
     suspects: 5,
     suspectTraits: ALL_TRAITS,
-    decoyContradictions: [0, 0.3]
+    decoyContradictions: [0, 0.3],
+    centralCalls: 1,
+    centralCallMinutes: 180,
+    centralCallEliminates: 2,
+    eventChance: 0.8,
+    doubleEventChance: 0.3
   }
 }
 

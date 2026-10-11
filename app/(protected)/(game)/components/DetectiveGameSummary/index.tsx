@@ -158,6 +158,15 @@ export default function DetectiveGameSummary() {
                               time: formatDuration(played.travel.travelMinutes + played.travel.redirectMinutes)
                             })}
                     </span>
+                    {played && played.events.length > 0 && (
+                      <span className="events">
+                        {played.events.map((event) => (
+                          <span key={event.type} className={classNames('event', event.good ? 'good' : 'bad')}>
+                            {t(`detective.events.${event.type}.title` as MessageKey)}
+                          </span>
+                        ))}
+                      </span>
+                    )}
                   </div>
                   <span className="icon">
                     {!played ? (
