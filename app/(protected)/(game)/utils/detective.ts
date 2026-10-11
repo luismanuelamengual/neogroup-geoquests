@@ -58,9 +58,38 @@ export function getTravelMinutes(from: LatLng, to: LatLng): number {
   return Math.max(TRAVEL_ROUNDING_MINUTES, Math.round(minutes / TRAVEL_ROUNDING_MINUTES) * TRAVEL_ROUNDING_MINUTES)
 }
 
-/** Extra minutes a wrong destination costs: going there and then to the right one, instead of straight. */
-export function getMistakeMinutes(from: LatLng, wrong: LatLng, right: LatLng): number {
-  return getTravelMinutes(from, wrong) + getTravelMinutes(wrong, right) - getTravelMinutes(from, right)
+/**
+ * A wrong destination always costs more than asking one more witness: at least
+ * this many minutes over `witnessMinutes` (so a mistake is never as cheap as a
+ * hint, however close the wrong destination is to the right one).
+ */
+export const MISTAKE_PENALTY_MARGIN_MINUTES = 30
+
+/**
+ * Minutes of the trip from a wrong destination to the right one: the flight
+ * itself, or more when the mistake would otherwise cost no more than a witness
+ * (the detective loses time finding out where to go next).
+ */
+export function getRedirectMinutes(from: LatLng, wrong: LatLng, right: LatLng, witnessMinutes: number): number {
+  const minimumExtra = witnessMinutes + MISTAKE_PENALTY_MARGIN_MINUTES
+
+  return Math.max(
+    getTravelMinutes(wrong, right),
+    getTravelMinutes(from, right) + minimumExtra - getTravelMinutes(from, wrong)
+  )
+}
+
+/**
+ * Extra minutes a wrong destination costs: going there and then to the right
+ * one, instead of straight (and always more than a witness: see
+ * MISTAKE_PENALTY_MARGIN_MINUTES).
+ */
+export function getMistakeMinutes(from: LatLng, wrong: LatLng, right: LatLng, witnessMinutes: number): number {
+  return (
+    getTravelMinutes(from, wrong) +
+    getRedirectMinutes(from, wrong, right, witnessMinutes) -
+    getTravelMinutes(from, right)
+  )
 }
 
 /** What the time limit of a case is computed from: each hop with its decoys. */
@@ -77,11 +106,13 @@ export interface CaseHop {
  */
 export function computeTimeLimitMinutes(
   hops: CaseHop[],
-  rules: Pick<DetectiveDifficultySettings, 'witnesses' | 'witnessBudgetMinutes' | 'mistakesMargin'>
+  rules: Pick<DetectiveDifficultySettings, 'witnesses' | 'witnessMinutes' | 'witnessBudgetMinutes' | 'mistakesMargin'>
 ): number {
   const travel = hops.reduce((total, hop) => total + getTravelMinutes(hop.from, hop.to), 0)
   const witnesses = hops.length * rules.witnesses * rules.witnessBudgetMinutes
-  const mistakes = hops.flatMap((hop) => hop.decoys.map((decoy) => getMistakeMinutes(hop.from, decoy, hop.to)))
+  const mistakes = hops.flatMap((hop) =>
+    hop.decoys.map((decoy) => getMistakeMinutes(hop.from, decoy, hop.to, rules.witnessMinutes))
+  )
   const averageMistake = mistakes.length > 0 ? mistakes.reduce((a, b) => a + b, 0) / mistakes.length : 0
 
   return Math.ceil((travel + witnesses + rules.mistakesMargin * averageMistake) / 60) * 60

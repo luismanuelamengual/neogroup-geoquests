@@ -15,9 +15,10 @@ export interface DetectiveDifficultySettings {
   options: number
   /**
    * Where the decoy destinations are looked for, from the preferred band to
-   * the last resort: as a fraction of the distance to the right destination
-   * ([0.6, 1.5] = from 60% to 150% of it). Decoys about as far as the right
-   * destination make a mistake cost about the same whichever it is.
+   * the last resort: as a fraction of the distance of the hop (from where the
+   * detective is to the right destination), measured from the RIGHT
+   * destination ([0, 0.5] = within half of the hop of it). The closer the
+   * decoys are to the right destination, the harder it is to tell it from them.
    */
   decoyDistanceBands: [number, number][]
 

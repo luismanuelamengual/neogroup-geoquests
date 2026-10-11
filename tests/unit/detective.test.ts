@@ -8,6 +8,8 @@ import {
   getDetectiveMaxScore,
   getDetectiveScore,
   getMistakeMinutes,
+  getRedirectMinutes,
+  MISTAKE_PENALTY_MARGIN_MINUTES,
   getTravelMinutes,
   randomCaseStartMinute,
   TRAVEL_FIXED_MINUTES,
@@ -62,10 +64,30 @@ describe('detective travel time', () => {
   })
 
   it('makes a mistake cost the wasted trip and the way back to the right destination', () => {
-    expect(getMistakeMinutes(PARIS, TOKYO, ROME)).toBe(
+    expect(getMistakeMinutes(PARIS, TOKYO, ROME, 60)).toBe(
       getTravelMinutes(PARIS, TOKYO) + getTravelMinutes(TOKYO, ROME) - getTravelMinutes(PARIS, ROME)
     )
-    expect(getMistakeMinutes(PARIS, TOKYO, ROME)).toBeGreaterThan(0)
+    expect(getMistakeMinutes(PARIS, TOKYO, ROME, 60)).toBeGreaterThan(0)
+  })
+
+  it('never makes a mistake as cheap as asking one more witness, however close the wrong destination is', () => {
+    const NAPLES = { latitude: 40.8518, longitude: 14.2681 }
+
+    for (const witnessMinutes of [30, 60, 120, 240]) {
+      for (const [from, wrong, right] of [
+        [PARIS, NAPLES, ROME],
+        [PARIS, ROME, NAPLES],
+        [TOKYO, SYDNEY, TOKYO],
+        [PARIS, TOKYO, ROME]
+      ]) {
+        const extra = getMistakeMinutes(from, wrong, right, witnessMinutes)
+
+        expect(extra).toBeGreaterThanOrEqual(witnessMinutes + MISTAKE_PENALTY_MARGIN_MINUTES)
+        expect(getTravelMinutes(from, wrong) + getRedirectMinutes(from, wrong, right, witnessMinutes)).toBe(
+          getTravelMinutes(from, right) + extra
+        )
+      }
+    }
   })
 
   it('computes the time limit from the route: perfect route plus a margin for mistakes, in whole hours', () => {
@@ -75,9 +97,9 @@ describe('detective travel time', () => {
     ]
     const perfect = getTravelMinutes(PARIS, ROME) + getTravelMinutes(ROME, TOKYO) + 2 * 3 * RULES.witnessBudgetMinutes
     const mistakes = [
-      getMistakeMinutes(PARIS, TOKYO, ROME),
-      getMistakeMinutes(ROME, SYDNEY, TOKYO),
-      getMistakeMinutes(ROME, PARIS, TOKYO)
+      getMistakeMinutes(PARIS, TOKYO, ROME, RULES.witnessMinutes),
+      getMistakeMinutes(ROME, SYDNEY, TOKYO, RULES.witnessMinutes),
+      getMistakeMinutes(ROME, PARIS, TOKYO, RULES.witnessMinutes)
     ]
     const average = mistakes.reduce((a, b) => a + b, 0) / mistakes.length
     const limit = computeTimeLimitMinutes(hops, RULES)

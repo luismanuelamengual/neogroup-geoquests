@@ -99,8 +99,10 @@ export function chooseRoute(
 /**
  * `count` decoys for a stage: places not in the route, each in a different
  * country (and none in the country of the right destination, so the clues
- * always tell them apart), about as far from where the detective is as the
- * right destination (see DetectiveDifficultySettings.decoyDistanceBands).
+ * always tell them apart), as close as possible to the right destination — the
+ * closer they are, the harder it is to tell which one the clues point at (see
+ * DetectiveDifficultySettings.decoyDistanceBands). Inside a band the decoys
+ * are random.
  */
 export function chooseDecoys(
   places: Place[],
@@ -111,7 +113,7 @@ export function chooseDecoys(
   distanceBands: [number, number][],
   random: RandomFn = Math.random
 ): Place[] {
-  const target = distanceKm(getPlaceCenter(from), getPlaceCenter(destination))
+  const hopKm = distanceKm(getPlaceCenter(from), getPlaceCenter(destination))
   const pool = places.filter(
     (place) =>
       !routeIds.has(place.id) && place.countryCode !== destination.countryCode && place.countryCode !== from.countryCode
@@ -121,9 +123,9 @@ export function chooseDecoys(
   for (const [min, max] of distanceBands) {
     const band = shuffle(
       pool.filter((place) => {
-        const distance = distanceKm(getPlaceCenter(from), getPlaceCenter(place))
+        const distance = distanceKm(getPlaceCenter(destination), getPlaceCenter(place))
 
-        return distance >= target * min && distance <= target * max
+        return distance >= hopKm * min && distance <= hopKm * max
       }),
       random
     )

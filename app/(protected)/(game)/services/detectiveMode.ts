@@ -26,6 +26,7 @@ import {
   countMistakes,
   getDetectiveMaxScore,
   getDetectiveScore,
+  getRedirectMinutes,
   getTravelMinutes,
   LOOT_COUNT,
   randomCaseStartMinute
@@ -150,7 +151,8 @@ function travel(data: DetectiveGameData, action: TravelAction): boolean {
   const correct = chosen.placeId === stage.destination.placeId
   const travelMinutes = getTravelMinutes(from, chosen)
   const lostTrail = !correct && countMistakes(data) >= data.settings.maxMistakes
-  const redirectMinutes = correct || lostTrail ? 0 : getTravelMinutes(chosen, stage.destination)
+  const redirectMinutes =
+    correct || lostTrail ? 0 : getRedirectMinutes(from, chosen, stage.destination, data.settings.witnessMinutes)
 
   stage.travel = { placeId: chosen.placeId, correct, travelMinutes, redirectMinutes }
 

@@ -31,16 +31,16 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
   easy: {
     hops: 4,
     minHopKm: 500,
-    options: 3,
+    options: 4,
     decoyDistanceBands: [
-      [0.5, 2],
-      [0.25, 3],
+      [0.1, 0.8],
+      [0, 1.2],
       [0, Infinity]
     ],
     witnesses: 3,
     witnessMinutes: 60,
     witnessBudgetMinutes: 45,
-    mistakesMargin: 1.5,
+    mistakesMargin: 1.3,
     maxMistakes: 2,
     suspects: 3,
     suspectTraits: ['gender', 'hairColor', 'hairStyle', 'eyeColor', 'glasses', 'headwear'],
@@ -49,17 +49,17 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
   medium: {
     hops: 5,
     minHopKm: 600,
-    options: 4,
+    options: 5,
     decoyDistanceBands: [
-      [0.6, 1.5],
-      [0.35, 2.5],
+      [0.05, 0.6],
+      [0, 1],
       [0, Infinity]
     ],
     witnesses: 3,
     witnessMinutes: 120,
     witnessBudgetMinutes: 70,
-    mistakesMargin: 1.25,
-    maxMistakes: 2,
+    mistakesMargin: 1.1,
+    maxMistakes: 1,
     suspects: 4,
     suspectTraits: ALL_TRAITS,
     decoyContradictions: [0, 0.5]
@@ -67,16 +67,16 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
   hard: {
     hops: 6,
     minHopKm: 700,
-    options: 5,
+    options: 6,
     decoyDistanceBands: [
-      [0.8, 1.25],
-      [0.5, 2],
+      [0, 0.4],
+      [0, 0.7],
       [0, Infinity]
     ],
     witnesses: 3,
     witnessMinutes: 120,
     witnessBudgetMinutes: 60,
-    mistakesMargin: 1.1,
+    mistakesMargin: 0.9,
     maxMistakes: 1,
     suspects: 5,
     suspectTraits: ALL_TRAITS,

@@ -15,7 +15,12 @@ import { DETECTIVE_MAP_SLUG } from '@/app/(protected)/(game)/services/detectiveM
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGames, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
-import { distanceKm, getDetectiveMaxScore, getTravelMinutes } from '@/app/(protected)/(game)/utils/detective'
+import {
+  distanceKm,
+  getDetectiveMaxScore,
+  getRedirectMinutes,
+  getTravelMinutes
+} from '@/app/(protected)/(game)/utils/detective'
 import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
 import { countContradictions, generateSuspect } from '@/app/(protected)/(game)/utils/suspects'
 import { createUser, resetDatabase } from '@/tests/setup/database'
@@ -199,10 +204,10 @@ describe('detective game flow', () => {
       expect(distanceKm(route[index], stage.destination)).toBeGreaterThan(400)
       expect(stage.destination.panoId).toBeTruthy()
 
-      // Four options: the right one and decoys of other countries (all different).
-      expect(stage.options).toHaveLength(4)
+      // Five options (medium): the right one and decoys of other countries (all different).
+      expect(stage.options).toHaveLength(5)
       expect(stage.options.map((option) => option.placeId)).toContain(stage.destination.placeId)
-      expect(new Set(stage.options.map((option) => option.countryCode)).size).toBe(4)
+      expect(new Set(stage.options.map((option) => option.countryCode)).size).toBe(5)
 
       // Three witnesses with three different clues, at least one about geography.
       expect(stage.witnesses).toHaveLength(3)
@@ -332,7 +337,7 @@ describe('detective game flow', () => {
     expect(view.currentStageNumber).toBe(1)
     expect(view.currentStage!.panoId).toBe(data.origin.panoId)
     expect(view.currentStage!.location.placeId).toBe(data.origin.placeId)
-    expect(view.currentStage!.options).toHaveLength(4)
+    expect(view.currentStage!.options).toHaveLength(5)
     expect(view.currentStage!.witnesses.every((witness) => !witness.asked && witness.clue === null)).toBe(true)
     expect(view.route).toBeNull()
     expect(view.lineup).toBeNull()
@@ -399,7 +404,12 @@ describe('detective game flow', () => {
     const wrongOption = second.options.find((option) => option.placeId !== second.destination.placeId)!
     const wrong = await act(game.id, { type: 'travel', stageNumber: 2, placeId: wrongOption.placeId })
     const wasted = getTravelMinutes(first.destination, wrongOption)
-    const redirect = getTravelMinutes(wrongOption, second.destination)
+    const redirect = getRedirectMinutes(
+      first.destination,
+      wrongOption,
+      second.destination,
+      data.settings.witnessMinutes
+    )
 
     expect(detective(wrong).currentStageNumber).toBe(3)
     expect(detective(wrong).elapsedMinutes).toBe(detective(right).elapsedMinutes + wasted + redirect)
