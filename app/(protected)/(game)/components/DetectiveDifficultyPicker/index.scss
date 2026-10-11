@@ -1,57 +1,71 @@
 .detective-difficulty-picker {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 14px;
   width: 100%;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
   .difficulty {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 12px 8px;
-    border: 3px solid var(--color-panel-border);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.06);
+    gap: 8px;
+    padding: 20px 14px;
+    border: 3px solid var(--color-gold);
+    border-radius: 18px;
+    background: rgba(255, 194, 51, 0.12);
     color: inherit;
     font: inherit;
     text-align: center;
     cursor: pointer;
     transition:
       transform 120ms ease,
-      border-color 120ms ease,
       background 120ms ease;
 
     &:not(:disabled):hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    &.easy {
+      border-color: var(--color-lime);
+      background: rgba(132, 240, 107, 0.12);
+    }
+
+    &.hard {
+      border-color: var(--color-magenta);
+      background: rgba(255, 77, 141, 0.12);
     }
 
     .name {
       font-family: var(--font-display);
-      font-size: 1.1rem;
+      font-size: 1.5rem;
+      text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
     }
 
     .summary {
       color: var(--color-text-secondary);
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 700;
       line-height: 1.25;
     }
 
-    &.selected {
-      border-color: var(--color-gold);
-      background: rgba(255, 194, 51, 0.16);
-      transform: translateY(-2px);
-
-      &.easy {
-        border-color: var(--color-lime);
-        background: rgba(132, 240, 107, 0.16);
-      }
-
-      &.hard {
-        border-color: var(--color-magenta);
-        background: rgba(255, 77, 141, 0.16);
-      }
+    .rules {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.85rem;
+      font-weight: 800;
     }
   }
 }

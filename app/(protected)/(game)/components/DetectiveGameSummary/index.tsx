@@ -7,15 +7,11 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import TravelExploreIcon from '@mui/icons-material/TravelExplore'
 import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import classNames from 'classnames'
-import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
-import DetectiveDifficultyPicker from '@/app/(protected)/(game)/components/DetectiveDifficultyPicker'
+import { useMemo } from 'react'
 import DetectiveMap, { DetectiveMapLeg, DetectiveMapMarker } from '@/app/(protected)/(game)/components/DetectiveMap'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
 import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
-import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
-import { DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDifficulty'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
@@ -24,9 +20,11 @@ import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import { SUSPECT_ROLE } from '@/app/(protected)/(game)/utils/suspects'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
-import Loading from '@/app/components/Loading'
 import { useI18n } from '@/app/i18n/I18nProvider'
 import type { MessageKey } from '@/app/i18n/messages'
+
+/** Page where the difficulty of a new case is chosen. */
+const NEW_CASE_PATH = '/play/detective'
 
 /**
  * End of a detective case: caught or escaped, the score, the route of the
@@ -35,13 +33,8 @@ import type { MessageKey } from '@/app/i18n/messages'
  */
 export default function DetectiveGameSummary() {
   const { t, locale } = useI18n()
-  const router = useRouter()
-  const { createGame } = useGames()
   const game = useGameStore((state) => state.game)!
   const view = game.modeView as DetectiveGameView
-  const [starting, setStarting] = useState(false)
-  // Difficulty of the next case: the one just played, unless the player picks another.
-  const [nextDifficulty, setNextDifficulty] = useState<DetectiveDifficulty>(view.difficulty)
   const animatedScore = useCountUp(view.score, 1800, 300)
   const caught = view.outcome === 'caught'
   // Title and story of the outcome: caught, escaped (time), lost trail (mistakes) or wrong suspect.
@@ -85,21 +78,8 @@ export default function DetectiveGameSummary() {
     [route, view.playedStages]
   )
 
-  const handleNewCase = async () => {
-    setStarting(true)
-
-    try {
-      const created = await createGame(null, game.mode, { difficulty: nextDifficulty })
-
-      router.push(`/game/${created.id}`)
-    } catch {
-      setStarting(false)
-    }
-  }
-
   return (
     <div className="detective-game-summary">
-      {starting && <Loading message={t('detective.intro.preparing')} />}
       <GamePanel
         className={classNames('hero', { caught })}
         title={`${t('detective.briefing.caseNumber', { id: game.id })} · ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
@@ -143,12 +123,8 @@ export default function DetectiveGameSummary() {
             <dd>{mistakes}</dd>
           </div>
         </dl>
-        <div className="next-case">
-          <h2 className="next-case-title">{t('detective.summary.nextDifficulty')}</h2>
-          <DetectiveDifficultyPicker value={nextDifficulty} onChange={setNextDifficulty} disabled={starting} />
-        </div>
         <div className="actions">
-          <GameButton size="large" startIcon={<TravelExploreIcon />} loading={starting} onClick={handleNewCase}>
+          <GameButton size="large" startIcon={<TravelExploreIcon />} href={NEW_CASE_PATH}>
             {t('detective.intro.newCase')}
           </GameButton>
           <GameButton color="ghost" size="large" startIcon={<HomeIcon />} href="/play">

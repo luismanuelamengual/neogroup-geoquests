@@ -372,12 +372,16 @@ export const en: Messages = {
   detective: {
     intro: {
       subtitle: 'A new case every game',
-      difficulty: 'Difficulty',
+      difficulty: 'Choose the difficulty',
       howTo: 'How to play',
       newCase: 'New case',
       preparing: 'Preparing the case…'
     },
     difficulty: {
+      places: '{count} places',
+      options: '{count} destinations per trip',
+      suspects: '{count} suspects',
+      mistakes: 'Mistakes allowed: {count}',
       easy: { name: 'Easy', summary: 'More time and more mistakes allowed' },
       medium: { name: 'Medium', summary: 'The usual challenge' },
       hard: { name: 'Hard', summary: 'More places, little room for mistakes' }
@@ -465,7 +469,6 @@ export const en: Messages = {
       wrongSuspectText:
         'You made it in time, but you accused the wrong person: the thief got away with {loot}. Good luck on the next case!',
       thiefWas: 'The thief was',
-      nextDifficulty: 'Difficulty of the next case',
       timeUsed: 'Time used',
       witnesses: 'Witnesses',
       mistakes: 'Mistakes',

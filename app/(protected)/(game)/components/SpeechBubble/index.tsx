@@ -2,7 +2,7 @@
 
 import './index.scss'
 import classNames from 'classnames'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 /** Milliseconds per character of the typewriter effect. */
 const TYPING_MS_PER_CHAR = 22
@@ -20,6 +20,31 @@ interface SpeechBubbleProps {
   className?: string
 }
 
+/** Splits a text with **bold** parts into segments. */
+function parseSegments(text: string): { text: string; bold: boolean }[] {
+  return text
+    .split('**')
+    .map((part, index) => ({ text: part, bold: index % 2 === 1 }))
+    .filter((segment) => segment.text)
+}
+
+/** Renders the first `limit` visible characters of the segments, keeping the bold ones. */
+function renderSegments(segments: { text: string; bold: boolean }[], limit: number) {
+  let remaining = limit
+
+  return segments.map((segment, index) => {
+    const chunk = segment.text.slice(0, Math.max(0, remaining))
+
+    remaining -= segment.text.length
+
+    if (!chunk) {
+      return null
+    }
+
+    return <Fragment key={index}>{segment.bold ? <strong>{chunk}</strong> : chunk}</Fragment>
+  })
+}
+
 function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 }
@@ -31,13 +56,15 @@ function prefersReducedMotion(): boolean {
  * typing, and screen readers get it whole.
  */
 export default function SpeechBubble({
-  text,
+  text: rawText,
   speaker,
   typing = false,
   tail = 'center',
   onDone,
   className
 }: SpeechBubbleProps) {
+  const segments = parseSegments(rawText)
+  const text = segments.map((segment) => segment.text).join('')
   const [shown, setShown] = useState(typing ? 0 : text.length)
   const done = shown >= text.length
 
@@ -79,10 +106,10 @@ export default function SpeechBubble({
       {speaker && <span className="speaker">{speaker}</span>}
       <span className="text">
         <span className="full" aria-hidden={!done}>
-          {text}
+          {renderSegments(segments, text.length)}
         </span>
         <span className="typed" aria-hidden="true">
-          {text.slice(0, shown)}
+          {renderSegments(segments, shown)}
           {!done && <span className="caret" />}
         </span>
       </span>

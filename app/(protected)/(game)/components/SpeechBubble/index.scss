@@ -35,6 +35,12 @@
   .text {
     position: relative;
     display: block;
+    font-weight: 500;
+
+    // Clues about the thief ("tenía los ojos verdes") stand out from the rest.
+    strong {
+      font-weight: 900;
+    }
 
     .full {
       visibility: hidden;

@@ -18,5 +18,6 @@ export function getWitnessIntro(t: Translator, introIndex: number): string {
 export function getSuspectClueText(t: Translator, clue: SuspectClue): string {
   const trait = t(`detective.suspect.clues.${clue.trait}.${clue.value}` as MessageKey)
 
-  return t('detective.witness.suspectLead', { trait })
+  // The trait goes between ** so the speech bubble shows it in bold.
+  return t('detective.witness.suspectLead', { trait: `**${trait}**` })
 }

@@ -378,12 +378,16 @@ export const es = {
   detective: {
     intro: {
       subtitle: 'Un caso nuevo en cada partida',
-      difficulty: 'Dificultad',
+      difficulty: 'Elegí la dificultad',
       howTo: 'Cómo se juega',
       newCase: 'Nuevo caso',
       preparing: 'Armando el caso…'
     },
     difficulty: {
+      places: '{count} lugares',
+      options: '{count} destinos por viaje',
+      suspects: '{count} sospechosos',
+      mistakes: 'Errores permitidos: {count}',
       easy: { name: 'Fácil', summary: 'Más tiempo y más errores permitidos' },
       medium: { name: 'Medio', summary: 'El desafío de siempre' },
       hard: { name: 'Difícil', summary: 'Más lugares, poco margen de error' }
@@ -471,7 +475,6 @@ export const es = {
       wrongSuspectText:
         'Llegaste a tiempo, pero acusaste a la persona equivocada: el ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
       thiefWas: 'El ladrón era',
-      nextDifficulty: 'Dificultad del próximo caso',
       timeUsed: 'Tiempo usado',
       witnesses: 'Testigos',
       mistakes: 'Errores',

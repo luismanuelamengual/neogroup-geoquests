@@ -3,22 +3,22 @@
 import './index.scss'
 import classNames from 'classnames'
 import { DETECTIVE_DIFFICULTY_LEVELS, DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDifficulty'
+import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
 import { useT } from '@/app/i18n/I18nProvider'
 import type { MessageKey } from '@/app/i18n/messages'
 
 interface DetectiveDifficultyPickerProps {
-  value: DetectiveDifficulty
-  onChange: (difficulty: DetectiveDifficulty) => void
-  /** Difficulties that can be chosen (all of them by default). */
+  /** A card was pressed: the case of that difficulty starts. */
+  onSelect: (difficulty: DetectiveDifficulty) => void
+  /** Difficulties offered (all of them by default). */
   levels?: DetectiveDifficulty[]
   disabled?: boolean
   className?: string
 }
 
-/** Chooser of the difficulty of a new detective case (easy, medium or hard). */
+/** One card per difficulty of a detective case (easy, medium or hard), with its main rules. */
 export default function DetectiveDifficultyPicker({
-  value,
-  onChange,
+  onSelect,
   levels,
   disabled,
   className
@@ -26,25 +26,29 @@ export default function DetectiveDifficultyPicker({
   const t = useT()
 
   return (
-    <div
-      className={classNames('detective-difficulty-picker', className)}
-      role="radiogroup"
-      aria-label={t('detective.intro.difficulty')}
-    >
-      {DETECTIVE_DIFFICULTY_LEVELS.filter((level) => !levels || levels.includes(level)).map((level) => (
-        <button
-          key={level}
-          type="button"
-          role="radio"
-          aria-checked={level === value}
-          className={classNames('difficulty', level, { selected: level === value })}
-          disabled={disabled}
-          onClick={() => onChange(level)}
-        >
-          <span className="name">{t(`detective.difficulty.${level}.name` as MessageKey)}</span>
-          <span className="summary">{t(`detective.difficulty.${level}.summary` as MessageKey)}</span>
-        </button>
-      ))}
+    <div className={classNames('detective-difficulty-picker', className)}>
+      {DETECTIVE_DIFFICULTY_LEVELS.filter((level) => !levels || levels.includes(level)).map((level) => {
+        const rules = DETECTIVE_DIFFICULTIES[level]
+
+        return (
+          <button
+            key={level}
+            type="button"
+            className={classNames('difficulty', level)}
+            disabled={disabled}
+            onClick={() => onSelect(level)}
+          >
+            <span className="name">{t(`detective.difficulty.${level}.name` as MessageKey)}</span>
+            <span className="summary">{t(`detective.difficulty.${level}.summary` as MessageKey)}</span>
+            <ul className="rules">
+              <li>{t('detective.difficulty.places', { count: rules.hops })}</li>
+              <li>{t('detective.difficulty.options', { count: rules.options })}</li>
+              <li>{t('detective.difficulty.suspects', { count: rules.suspects })}</li>
+              <li>{t('detective.difficulty.mistakes', { count: rules.maxMistakes })}</li>
+            </ul>
+          </button>
+        )
+      })}
     </div>
   )
 }
