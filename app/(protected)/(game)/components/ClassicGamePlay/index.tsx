@@ -1,6 +1,7 @@
 'use client'
 
 import './index.scss'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import GuessPanel from '@/app/(protected)/(game)/components/GuessPanel'
 import RoundHud from '@/app/(protected)/(game)/components/RoundHud'
@@ -29,7 +30,8 @@ function classicView(game: GameView): ClassicGameView {
  * sent.
  */
 export default function ClassicGamePlay() {
-  const { sendGameAction } = useGames()
+  const router = useRouter()
+  const { sendGameAction, leaveGame } = useGames()
   const game = useGameStore((state) => state.game)!
   const phase = useGameStore((state) => state.phase)
   const resultRoundNumber = useGameStore((state) => state.resultRoundNumber)
@@ -95,6 +97,18 @@ export default function ClassicGamePlay() {
   const displayedRoundNumber = phase === 'result' ? resultRoundNumber! : (currentRoundNumber ?? view.roundsCount)
   const round = view.rounds[displayedRoundNumber - 1]
 
+  // Exiting cancels the game: it can not be resumed.
+  const handleExit = async () => {
+    try {
+      // A finished game has nothing to cancel.
+      if (game.status !== GameStatus.FINISHED) {
+        await leaveGame(game.id)
+      }
+    } finally {
+      router.push('/play')
+    }
+  }
+
   return (
     <div className="classic-game-play">
       <StreetView panoId={round.panoId} />
@@ -103,6 +117,7 @@ export default function ClassicGamePlay() {
         roundNumber={displayedRoundNumber}
         roundsCount={view.roundsCount}
         totalScore={view.totalScore}
+        onExit={handleExit}
         timer={phase === 'guessing' && deadline != null && <RoundTimer deadline={deadline} onExpire={submit} />}
       />
       {phase === 'guessing' && <GuessPanel onSubmit={submit} submitting={submitting} />}

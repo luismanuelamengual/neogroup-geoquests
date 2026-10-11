@@ -9,7 +9,6 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import classNames from 'classnames'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import MusicToggle from '@/app/(protected)/(game)/components/MusicToggle'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
@@ -23,9 +22,8 @@ import { useT } from '@/app/i18n/I18nProvider'
  * fictional clock, the time left (red when little is left, or not enough for a witness) and the
  * destination being followed.
  */
-export default function DetectiveHud({ view }: { view: DetectiveGameView }) {
+export default function DetectiveHud({ view, onExit }: { view: DetectiveGameView; onExit: () => void }) {
   const t = useT()
-  const router = useRouter()
   const [confirmExit, setConfirmExit] = useState(false)
   const left = Math.max(0, view.timeLimitMinutes - view.elapsedMinutes)
   const ratio = left / view.timeLimitMinutes
@@ -74,7 +72,7 @@ export default function DetectiveHud({ view }: { view: DetectiveGameView }) {
           <GameButton color="ghost" size="small" onClick={() => setConfirmExit(false)}>
             {t('game.keepPlaying')}
           </GameButton>
-          <GameButton color="magenta" size="small" onClick={() => router.push('/play')}>
+          <GameButton color="magenta" size="small" onClick={onExit}>
             {t('game.exit')}
           </GameButton>
         </DialogActions>

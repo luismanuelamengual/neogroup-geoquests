@@ -270,8 +270,7 @@ export const es = {
     exitAria: 'Salir de la partida',
     exitTitle: '¿Salir de la partida?',
     keepPlaying: 'Seguir jugando',
-    exitDefault:
-      'La partida queda guardada: podés retomarla desde el menú principal. Si la ronda tiene tiempo, el reloj sigue corriendo.',
+    exitDefault: 'Si salís, la partida se cancela: no vas a poder retomarla.',
     exitMultiplayer:
       'Si salís, abandonás la partida: tus puntos quedan en los resultados, pero no vas a poder volver a entrar.',
     exitEliminated: 'Ya quedaste eliminado: si salís, dejás de mirar la partida.',
@@ -435,7 +434,7 @@ export const es = {
       destination: 'Destino',
       travel: 'Viajar',
       noTime: 'Sin tiempo',
-      exitMessage: 'El caso queda guardado: podés retomarlo cuando quieras desde el menú.'
+      exitMessage: 'Si salís, el caso se cancela: no vas a poder retomarlo.'
     },
     travelPanel: {
       title: '¿A dónde fue el ladrón?',

@@ -20,6 +20,7 @@ interface DetectiveLineupProps {
   view: DetectiveGameView
   /** The detective points at a suspect (the case ends: the server says whether it was the thief). */
   onAccuse: (suspect: number) => Promise<void>
+  onExit: () => void
   /** The case is closed: shows who the thief was instead of asking. */
   revealed?: boolean
   /** Leaves the reveal (to the summary of the case). */
@@ -32,7 +33,7 @@ interface DetectiveLineupProps {
  * told along the case (nothing reminds them here: the detective has to
  * remember). Pointing at one ends the case; then the thief is revealed.
  */
-export default function DetectiveLineup({ view, onAccuse, revealed, onContinue }: DetectiveLineupProps) {
+export default function DetectiveLineup({ view, onAccuse, onExit, revealed, onContinue }: DetectiveLineupProps) {
   const t = useT()
   const lineup = view.lineup!
   const [selected, setSelected] = useState<number | null>(null)
@@ -56,7 +57,7 @@ export default function DetectiveLineup({ view, onAccuse, revealed, onContinue }
   return (
     <div className="detective-lineup">
       <StreetView panoId={lineup.panoId} />
-      <DetectiveHud view={view} />
+      <DetectiveHud view={view} onExit={onExit} />
       <div className={classNames('panel', { revealed, caught, missed: revealed && !caught })}>
         <h2 className="title">
           {revealed

@@ -17,7 +17,14 @@ import { PlaceLocation } from '@/app/(protected)/(game)/models/PlaceLocation'
 import { classicMode } from '@/app/(protected)/(game)/services/classicMode'
 import { cleanupGames, GAME_RETENTION_MS, LOBBY_MAX_AGE_MS } from '@/app/(protected)/(game)/services/gameCleanup'
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
-import { createGame, getGame, getGames, getPlayerStats, sendGameAction } from '@/app/(protected)/(game)/services/games'
+import {
+  createGame,
+  getGame,
+  getGames,
+  getPlayerStats,
+  leaveGame,
+  sendGameAction
+} from '@/app/(protected)/(game)/services/games'
 import {
   findLiveLocation,
   getSearchRadii,
@@ -397,6 +404,16 @@ describe('classic game flow', () => {
       expect(classic(result.game).currentRoundNumber).toBe(2)
       expect(classic(result.game).rounds[0].guessed).toBe(true)
     }
+  })
+
+  it('cancels the game when the player exits: it can not be resumed', async () => {
+    const game = await create()
+
+    await play(game.id, ATLANTIC)
+    await leaveGame(userId, { gameId: game.id })
+
+    expect(await Game.where('id', game.id).first()).toBeNull()
+    await expect(getGame(userId, { gameId: game.id })).rejects.toThrow()
   })
 
   it('answers "unchanged" when the client already has the current version', async () => {

@@ -267,8 +267,7 @@ export const en: Messages = {
     exitAria: 'Exit the game',
     exitTitle: 'Exit the game?',
     keepPlaying: 'Keep playing',
-    exitDefault:
-      'The game is saved: you can resume it from the main menu. If the round is timed, the clock keeps running.',
+    exitDefault: "If you exit, the game is cancelled: you won't be able to resume it.",
     exitMultiplayer:
       "If you exit, you abandon the game: your points stay in the results, but you won't be able to rejoin.",
     exitEliminated: "You're already eliminated: if you exit, you stop watching the game.",
@@ -429,7 +428,7 @@ export const en: Messages = {
       destination: 'Destination',
       travel: 'Travel',
       noTime: 'No time',
-      exitMessage: 'The case stays saved: you can resume it from the menu whenever you want.'
+      exitMessage: "If you exit, the case is cancelled: you won't be able to resume it."
     },
     travelPanel: {
       title: 'Where did the thief go?',

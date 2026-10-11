@@ -2,6 +2,7 @@
 
 import './index.scss'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
+import { useRouter } from 'next/navigation'
 import { ReactNode, useCallback, useState } from 'react'
 import BackgroundMusic from '@/app/(protected)/(game)/components/BackgroundMusic'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
@@ -13,6 +14,7 @@ import DetectiveWitnesses from '@/app/(protected)/(game)/components/DetectiveWit
 import StreetView from '@/app/(protected)/(game)/components/StreetView'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
+import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import GameButton from '@/app/components/GameButton'
 import { useT } from '@/app/i18n/I18nProvider'
@@ -28,7 +30,8 @@ import { useT } from '@/app/i18n/I18nProvider'
  */
 export default function DetectiveGamePlay() {
   const t = useT()
-  const { sendGameAction } = useGames()
+  const router = useRouter()
+  const { sendGameAction, leaveGame } = useGames()
   const game = useGameStore((state) => state.game)!
   const phase = useGameStore((state) => state.phase)
   const resultStage = useGameStore((state) => state.resultRoundNumber)
@@ -41,6 +44,17 @@ export default function DetectiveGamePlay() {
   const stage = view.currentStage
   const fresh =
     view.currentStageNumber === 1 && view.elapsedMinutes === 0 && !!stage?.witnesses.every((witness) => !witness.asked)
+  // Exiting cancels the case: it can not be resumed.
+  const handleExit = useCallback(async () => {
+    try {
+      // A finished case has nothing to cancel.
+      if (game.status !== GameStatus.FINISHED) {
+        await leaveGame(game.id)
+      }
+    } finally {
+      router.push('/play')
+    }
+  }, [game.id, game.status, leaveGame, router])
   const handleAsk = useCallback(
     async (witness: number) => {
       if (!stage) {
@@ -76,20 +90,22 @@ export default function DetectiveGamePlay() {
   let screen: ReactNode
 
   if (phase === 'result' && resultStage != null && resultStage > view.stagesCount && view.lineup) {
-    screen = <DetectiveLineup view={view} onAccuse={handleAccuse} revealed onContinue={closeResult} />
+    screen = (
+      <DetectiveLineup view={view} onAccuse={handleAccuse} onExit={handleExit} revealed onContinue={closeResult} />
+    )
   } else if (phase === 'result' && resultStage != null) {
     screen = <DetectiveTravelResult gameId={game.id} view={view} stageNumber={resultStage} onContinue={closeResult} />
   } else if (fresh && !accepted) {
     screen = <DetectiveBriefing gameId={game.id} view={view} onAccept={() => setAccepted(true)} />
   } else if (view.lineup && view.outcome === null) {
-    screen = <DetectiveLineup view={view} onAccuse={handleAccuse} />
+    screen = <DetectiveLineup view={view} onAccuse={handleAccuse} onExit={handleExit} />
   } else if (!stage) {
     screen = null
   } else {
     screen = (
       <div className="detective-game-play">
         <StreetView panoId={stage.panoId} />
-        <DetectiveHud view={view} />
+        <DetectiveHud view={view} onExit={handleExit} />
         <div className="bottom">
           {/* Remounted at every stage: new witnesses, no bubble open. */}
           <DetectiveWitnesses

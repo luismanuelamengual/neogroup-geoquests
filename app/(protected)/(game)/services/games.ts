@@ -342,7 +342,7 @@ export async function joinGame(userId: number, input: JoinGameInput, options: Ga
 }
 
 /**
- * Leaves a multiplayer game. Before it starts the player is removed; once
+ * Leaves a game. A single-player game is cancelled (deleted). Before a multiplayer game starts the player is removed; once
  * started it stays in the results (with the points it made) but is not
  * waited for anymore. The host role passes to the player who joined first;
  * a game left without players is deleted (not started) or finished.
@@ -355,12 +355,15 @@ export async function leaveGame(userId: number, input: GameIdInput, options: Gam
 
   const { game, players } = await loadGame(gameId)
 
-  if (getGameModeEngine(game.mode).definition.maxPlayers === 1) {
-    throw new ApiException('errors.gameCannotBeAbandoned')
-  }
-
   if (game.status === GameStatus.FINISHED) {
     throw new ApiException('errors.gameAlreadyOver')
+  }
+
+  // A single-player game that is left is cancelled: it is deleted, so it can not be resumed.
+  if (getGameModeEngine(game.mode).definition.maxPlayers === 1) {
+    await deleteGames([gameId])
+
+    return
   }
 
   if (game.status === GameStatus.LOBBY) {
