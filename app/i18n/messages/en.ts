@@ -559,6 +559,10 @@ export const en: Messages = {
         title: 'Direct flight',
         text: 'You got a direct flight: the trip out of here takes {time} less.'
       },
+      witnessFiles: {
+        title: 'Witness files',
+        text: 'The central office sent you the files of the witnesses: here you know what each one knows about (geography, customs or history).'
+      },
       missingWitness: {
         title: 'A witness left',
         text: 'One of the witnesses left before you arrived: there is one less to ask.'

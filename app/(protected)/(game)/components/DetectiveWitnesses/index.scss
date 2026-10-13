@@ -74,7 +74,7 @@
     white-space: nowrap;
     z-index: 10;
 
-    // Kind of clue the witness knows about (by its job).
+    // Kind of clue the witness knows about (by its job): only with the event `witnessFiles`.
     .kind {
       display: inline-flex;
       align-items: center;

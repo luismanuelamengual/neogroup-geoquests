@@ -20,7 +20,17 @@ import { chance } from '@/app/(protected)/(game)/utils/seededRandom'
 
 /** What an event changes: two events of the same stage never change the same thing. */
 type EventGroup =
-  'witnesses' | 'clues' | 'traits' | 'suspects' | 'time' | 'options' | 'witnessCost' | 'calls' | 'mistakes' | 'flight'
+  | 'witnesses'
+  | 'clues'
+  | 'clueKinds'
+  | 'traits'
+  | 'suspects'
+  | 'time'
+  | 'options'
+  | 'witnessCost'
+  | 'calls'
+  | 'mistakes'
+  | 'flight'
 
 /** How the case stands while its events are planned (to never plan an event that would do nothing, or too much). */
 interface PlanState {
@@ -95,6 +105,8 @@ export const DETECTIVE_EVENTS: Record<DetectiveEventType, EventDefinition> = {
   hotline: { good: true, group: 'calls', eligible: (state) => state.calls > 0 },
   secondChance: { good: true, group: 'mistakes', apply: (state) => void state.mistakes++ },
   directFlight: { good: true, group: 'flight' },
+  // With a single witness, knowing what it knows about changes nothing.
+  witnessFiles: { good: true, group: 'clueKinds', eligible: (state) => state.witnesses >= 2 },
   // ---- bad ----
   missingWitness: {
     good: false,

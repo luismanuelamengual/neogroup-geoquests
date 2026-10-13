@@ -34,12 +34,15 @@ interface DetectiveWitnessesProps {
   onAsk: (index: number) => Promise<void>
   /** Not enough time left for a new witness: only the ones already asked can be listened to again. */
   noTime?: boolean
+  /** Shows the kind of clue each witness knows about: hidden unless an event of the stage tells it (`witnessFiles`). */
+  showClueKinds?: boolean
   disabled?: boolean
 }
 
 /**
- * The witnesses of a stage, standing over the Street View, each with an icon of
- * the kind of clue its job knows about (geography, customs or history). Tapping
+ * The witnesses of a stage, standing over the Street View; only with the event
+ * `witnessFiles`, each with an icon of the kind of clue its job knows about
+ * (geography, customs or history). Tapping
  * one asks it (the first time it costs fictional time) and it says its clues in a
  * speech bubble, written letter by letter; tapping it again shows it again,
  * for free. Without time for a new witness, the others stay silent.
@@ -49,6 +52,7 @@ export default function DetectiveWitnesses({
   witnessMinutes,
   onAsk,
   noTime,
+  showClueKinds,
   disabled
 }: DetectiveWitnessesProps) {
   const { t, locale } = useI18n()
@@ -88,14 +92,15 @@ export default function DetectiveWitnesses({
         const silent = noTime && !witness.asked
         const kind = ROLE_CLUE_KIND[witness.role]
         const KindIcon = CLUE_KIND_ICONS[kind]
-        const kindLabel = t(`detective.clueKinds.${kind}` as MessageKey)
+        const kindLabel = showClueKinds ? t(`detective.clueKinds.${kind}` as MessageKey) : null
+        const roleName = getWitnessRoleName(t, witness.role, traits.presentation)
 
         return (
           <div key={witness.seed} className={classNames('witness', { open: isOpen, asked: witness.asked, silent })}>
             {isOpen && (
               <SpeechBubble
                 className="bubble"
-                speaker={`${traits.name} · ${getWitnessRoleName(t, witness.role, traits.presentation)}`}
+                speaker={`${traits.name} · ${roleName}`}
                 text={[
                   getWitnessIntro(t, traits.introIndex),
                   ...witness.clues.map((clue) => clue[locale]),
@@ -113,8 +118,8 @@ export default function DetectiveWitnesses({
               className="person"
               disabled={disabled || asking !== null || silent}
               onClick={() => handleClick(index)}
-              aria-label={`${traits.name}, ${getWitnessRoleName(t, witness.role, traits.presentation)}. ${kindLabel}`}
-              title={kindLabel}
+              aria-label={kindLabel ? `${traits.name}, ${roleName}. ${kindLabel}` : `${traits.name}, ${roleName}`}
+              title={kindLabel ?? undefined}
             >
               <WitnessAvatar
                 seed={witness.seed}
@@ -124,9 +129,11 @@ export default function DetectiveWitnesses({
                 className="avatar"
               />
               <span className="tag">
-                <span className={classNames('kind', kind)} aria-hidden="true">
-                  <KindIcon />
-                </span>
+                {showClueKinds && (
+                  <span className={classNames('kind', kind)} aria-hidden="true">
+                    <KindIcon />
+                  </span>
+                )}
                 <span className="name">{traits.name}</span>
                 <span className={classNames('cost', { done: witness.asked, none: silent })}>
                   {witness.asked ? <CheckIcon /> : silent ? <HourglassDisabledIcon /> : <ScheduleIcon />}

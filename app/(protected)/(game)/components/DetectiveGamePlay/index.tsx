@@ -130,6 +130,7 @@ export default function DetectiveGamePlay() {
             witnessMinutes={stage.witnessMinutes}
             onAsk={handleAsk}
             noTime={view.timeLimitMinutes - view.elapsedMinutes < stage.witnessMinutes}
+            showClueKinds={stage.events.some((event) => event.type === 'witnessFiles')}
           />
           <GameButton
             size="large"

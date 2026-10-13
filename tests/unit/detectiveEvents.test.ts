@@ -124,6 +124,26 @@ describe('random events', () => {
     expect([...seen].sort()).toEqual([...DETECTIVE_EVENT_TYPES].sort())
   })
 
+  it('tells what the witnesses know about only where there is more than one of them', () => {
+    for (let seed = 1; seed <= 200; seed++) {
+      const { stages } = planCaseEvents(
+        { ...MEDIUM, witnesses: 1, eventChance: 1, doubleEventChance: 1 },
+        6,
+        seededRandom(seed)
+      )
+
+      for (const events of stages) {
+        const types = events.map((event) => event.type)
+        const files = types.indexOf('witnessFiles')
+
+        // With a single witness, only after another one showed up.
+        expect(files === -1 || (types.indexOf('extraWitness') !== -1 && types.indexOf('extraWitness') < files)).toBe(
+          true
+        )
+      }
+    }
+  })
+
   it('plans the witnesses and destinations of a stage with its events', () => {
     expect(getStagePlan(MEDIUM, [])).toEqual({ witnesses: 3, cluesPerWitness: 1, suspectClues: 1, decoys: 4 })
     expect(

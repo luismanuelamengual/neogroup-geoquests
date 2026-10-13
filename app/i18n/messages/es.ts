@@ -565,6 +565,10 @@ export const es = {
         title: 'Vuelo directo',
         text: 'Conseguiste un vuelo directo: el viaje que sale de acá dura {time} menos.'
       },
+      witnessFiles: {
+        title: 'Fichas de los testigos',
+        text: 'La central te mandó las fichas de los testigos: acá sabés de qué sabe cada uno (geografía, costumbres o historia).'
+      },
       missingWitness: {
         title: 'Un testigo se fue',
         text: 'Uno de los testigos se fue antes de que llegaras: hay uno menos para preguntar.'

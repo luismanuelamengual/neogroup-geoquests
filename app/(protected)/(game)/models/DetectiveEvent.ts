@@ -28,6 +28,8 @@ export type DetectiveEventType =
   | 'secondChance'
   /** The trip out of this stage is shorter. */
   | 'directFlight'
+  /** The detective knows what each witness of this stage knows about (geography, customs or history). */
+  | 'witnessFiles'
   // ---- bad ----
   /** One witness less at this stage (never less than one). */
   | 'missingWitness'

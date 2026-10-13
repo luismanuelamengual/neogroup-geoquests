@@ -3,6 +3,7 @@
 import './index.scss'
 import AddIcCallIcon from '@mui/icons-material/AddIcCall'
 import AirplanemodeInactiveIcon from '@mui/icons-material/AirplanemodeInactive'
+import BadgeIcon from '@mui/icons-material/Badge'
 import BlockIcon from '@mui/icons-material/Block'
 import CampaignIcon from '@mui/icons-material/Campaign'
 import FastForwardIcon from '@mui/icons-material/FastForward'
@@ -46,6 +47,7 @@ const EVENT_ICONS: Record<DetectiveEventType, typeof FlightIcon> = {
   hotline: PhoneInTalkIcon,
   secondChance: ShieldIcon,
   directFlight: FlightIcon,
+  witnessFiles: BadgeIcon,
   missingWitness: PersonRemoveIcon,
   noSighting: VisibilityOffIcon,
   accomplice: GroupAddIcon,

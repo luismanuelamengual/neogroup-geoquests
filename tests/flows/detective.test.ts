@@ -792,7 +792,7 @@ describe('detective game flow', () => {
   it('tells more clues and traits at a stage with talkative witnesses and a sharp eye', async () => {
     setEventChances(1, 1)
 
-    for (let attempt = 0; attempt < 30; attempt++) {
+    for (let attempt = 0; attempt < 80; attempt++) {
       const game = await create()
       const data = await stored(game.id)
       const index = data.stages.findIndex((stage) => stage.events?.some((event) => event.type === 'talkative'))
