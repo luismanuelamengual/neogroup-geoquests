@@ -50,12 +50,15 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
   const markers = useMemo<DetectiveMapMarker[]>(() => {
     const list: DetectiveMapMarker[] = [
       { id: 'from', position: from, label: '★', color: '#22d3ee' },
-      {
-        id: 'chosen',
-        position: chosen,
-        label: travel.correct ? '✓' : '✗',
-        variant: travel.correct ? 'target' : 'guess'
-      }
+      // A mystery until the plane lands: the pin tells right or wrong only on arrival.
+      step === 'flying'
+        ? { id: 'chosen', position: chosen, label: '?', color: '#ffffff' }
+        : {
+            id: 'chosen',
+            position: chosen,
+            label: travel.correct ? '✓' : '✗',
+            variant: travel.correct ? 'target' : 'guess'
+          }
     ]
 
     if (!travel.correct && showDestination) {
@@ -63,7 +66,7 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
     }
 
     return list
-  }, [from, chosen, destination, travel.correct, showDestination])
+  }, [step, from, chosen, destination, travel.correct, showDestination])
   const flight = useMemo<DetectiveMapFlight | null>(() => {
     if (step === 'flying') {
       return {
