@@ -172,13 +172,19 @@ export default function DetectiveTravelResult({ gameId, view, stageNumber, onCon
         </p>
         {detail && <p className="detail">{detail}</p>}
         {step === 'arrived' && !travel.correct && !lostTrail && (
-          <GameButton size="large" startIcon={<TravelExploreIcon />} onClick={() => setStep('redirecting')}>
+          <GameButton
+            size="large"
+            className="action"
+            startIcon={<TravelExploreIcon />}
+            onClick={() => setStep('redirecting')}
+          >
             {t('detective.travel.follow')}
           </GameButton>
         )}
         {finished && (
           <GameButton
             size="large"
+            className="action"
             color={escaped ? 'magenta' : caught ? 'lime' : 'gold'}
             startIcon={caught ? <EmojiEventsIcon /> : undefined}
             endIcon={caught || escaped ? undefined : <ArrowForwardIcon />}

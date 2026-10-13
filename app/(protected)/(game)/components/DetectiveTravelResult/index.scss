@@ -104,3 +104,28 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .detective-travel-result {
+    .card {
+      right: calc(10px + var(--safe-right));
+      left: calc(10px + var(--safe-left));
+      padding: 14px 12px 16px;
+    }
+
+    // The call to action fits the card: long labels ("Identificar al ladrón") wrap instead of overflowing.
+    .game-button.MuiButtonBase-root.action {
+      max-width: 100%;
+      padding: 12px 18px;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+
+      .label {
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.2;
+      }
+    }
+  }
+}

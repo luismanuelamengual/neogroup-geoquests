@@ -112,6 +112,7 @@ export default function DetectiveLineup({ view, onAccuse, onExit, revealed, onCo
         {revealed ? (
           <GameButton
             size="large"
+            className="action"
             color={caught ? 'lime' : 'magenta'}
             endIcon={<ArrowForwardIcon />}
             onClick={onContinue}
@@ -121,6 +122,7 @@ export default function DetectiveLineup({ view, onAccuse, onExit, revealed, onCo
         ) : (
           <GameButton
             size="large"
+            className="action"
             startIcon={<GavelIcon />}
             disabled={selected === null}
             loading={accusing}
