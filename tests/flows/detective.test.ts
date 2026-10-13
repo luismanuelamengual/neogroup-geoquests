@@ -16,12 +16,7 @@ import { DETECTIVE_MAP_SLUG } from '@/app/(protected)/(game)/services/detectiveM
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame, getGames, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
-import {
-  distanceKm,
-  getDetectiveMaxScore,
-  getRedirectMinutes,
-  getTravelMinutes
-} from '@/app/(protected)/(game)/utils/detective'
+import { distanceKm, getRedirectMinutes, getTravelMinutes } from '@/app/(protected)/(game)/utils/detective'
 import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
 import { DETECTIVE_EVENTS, getStagePlan } from '@/app/(protected)/(game)/utils/detectiveEvents'
 import { getClueKind } from '@/app/(protected)/(game)/utils/landmarkClues'
@@ -382,7 +377,8 @@ describe('detective game flow', () => {
     expect(view.lineup).toBeNull()
     expect(view.suspectsCount).toBe(4)
     expect(view.playedStages).toEqual([])
-    expect(view.maxScore).toBe(getDetectiveMaxScore(5))
+    expect(view).not.toHaveProperty('score')
+    expect(view).not.toHaveProperty('maxScore')
 
     const json = JSON.stringify(view)
 
@@ -513,13 +509,17 @@ describe('detective game flow', () => {
     expect(result.route).toHaveLength(6)
     expect(result.playedStages).toHaveLength(5)
     expect(result.lineup).toMatchObject({ thief: data.lineup!.thief, accused: data.lineup!.thief })
-    expect(result.score).toBeGreaterThan(5 * 400 + 1000)
-    expect(result.score).toBeLessThanOrEqual(result.maxScore)
 
     const player = await GamePlayer.where('gameId', game.id).first()
 
-    expect(player).toMatchObject({ outcome: GameOutcome.WON, score: result.score })
-    expect((await getGames(userId)).items[0]).toMatchObject({ score: result.score, completedSteps: 5, totalSteps: 5 })
+    expect(player).toMatchObject({ outcome: GameOutcome.WON, score: 0 })
+    expect((await getGames(userId)).items[0]).toMatchObject({
+      score: 0,
+      maxScore: null,
+      difficulty: 'medium',
+      completedSteps: 5,
+      totalSteps: 5
+    })
 
     await expect(act(game.id, { type: 'askWitness', stageNumber: 5, witness: 1 })).rejects.toThrow()
     await expect(act(game.id, { type: 'accuse', suspect: data.lineup!.thief })).rejects.toThrow()
@@ -537,8 +537,6 @@ describe('detective game flow', () => {
 
     expect(view.status).toBe(GameStatus.FINISHED)
     expect(result.outcome).toBe('wrongSuspect')
-    // The destinations count, the catch (and its time bonus) does not.
-    expect(result.score).toBe(5 * 400)
     expect(result.lineup).toMatchObject({ thief: data.lineup!.thief, accused: other })
     expect(result.route).toHaveLength(6)
     expect(await GamePlayer.where('gameId', game.id).first()).toMatchObject({ outcome: GameOutcome.LOST })
@@ -583,7 +581,6 @@ describe('detective game flow', () => {
 
     expect(view.status).toBe(GameStatus.FINISHED)
     expect(detective(view).outcome).toBe('escaped')
-    expect(detective(view).score).toBe(400)
     expect(await GamePlayer.where('gameId', game.id).first()).toMatchObject({ outcome: GameOutcome.LOST })
   })
 
@@ -613,7 +610,6 @@ describe('detective game flow', () => {
     expect(view.status).toBe(GameStatus.FINISHED)
     expect(result.outcome).toBe('lostTrail')
     expect(result.maxMistakes).toBe(MAX_MISTAKES)
-    expect(result.score).toBe(0)
     // The last trip ends where the trail was lost: no redirect.
     expect(result.playedStages.at(-1)!.travel).toMatchObject({ correct: false, redirectMinutes: 0 })
     expect(await GamePlayer.where('gameId', game.id).first()).toMatchObject({ outcome: GameOutcome.LOST })

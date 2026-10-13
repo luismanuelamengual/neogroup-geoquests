@@ -509,6 +509,7 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
         playersCount: participants.filter((participant) => participant.gameId === game.id).length,
         score: game.status === GameStatus.FINISHED ? row.score : summary.score,
         maxScore: summary.maxScore,
+        difficulty: summary.difficulty ?? null,
         position: row.position,
         outcome: row.outcome,
         completedSteps: summary.completedSteps,

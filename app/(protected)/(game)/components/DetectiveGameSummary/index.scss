@@ -51,28 +51,6 @@
       }
     }
 
-    .total {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-
-      .value {
-        color: var(--color-gold);
-        font-family: var(--font-display);
-        font-size: clamp(2.2rem, 8vw, 3.4rem);
-        text-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
-      }
-
-      .max {
-        color: var(--color-text-secondary);
-        font-weight: 800;
-      }
-    }
-
-    .score-bar {
-      width: min(100%, 520px);
-    }
-
     .stats {
       display: flex;
       flex-wrap: wrap;

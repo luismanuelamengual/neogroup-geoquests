@@ -1,16 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { LANDMARK_CLUES } from '@/app/(protected)/(game)/data/landmarkClues'
-import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import {
-  CAUGHT_SCORE,
   computeTimeLimitMinutes,
-  CORRECT_STAGE_SCORE,
-  getDetectiveMaxScore,
-  getDetectiveScore,
   getMistakeMinutes,
   getRedirectMinutes,
-  MISTAKE_PENALTY_MARGIN_MINUTES,
   getTravelMinutes,
+  MISTAKE_PENALTY_MARGIN_MINUTES,
   randomCaseStartMinute,
   TRAVEL_FIXED_MINUTES,
   TRAVEL_ROUNDING_MINUTES
@@ -110,39 +105,6 @@ describe('detective travel time', () => {
     expect(computeTimeLimitMinutes([...hops, { from: TOKYO, to: SYDNEY, decoys: [PARIS] }], RULES)).toBeGreaterThan(
       limit
     )
-  })
-
-  it('scores the first-try destinations, the catch and the time left over the spare time of the case', () => {
-    const stop = (placeId: number, at: { latitude: number; longitude: number }) => ({
-      placeId,
-      placeName: `p${placeId}`,
-      countryCode: 'XX',
-      panoId: 'pano',
-      ...at
-    })
-    const perfect = getTravelMinutes(PARIS, ROME) + getTravelMinutes(ROME, TOKYO)
-    const stage = (destination: ReturnType<typeof stop>, correct: boolean) =>
-      ({
-        destination,
-        travel: { placeId: destination.placeId, correct, travelMinutes: 0, redirectMinutes: 0 }
-      }) as never
-    const data = {
-      origin: stop(1, PARIS),
-      stages: [stage(stop(2, ROME), true), stage(stop(3, TOKYO), false)],
-      timeLimitMinutes: perfect + 600,
-      elapsedMinutes: perfect,
-      outcome: 'caught'
-    } as unknown as DetectiveGameData
-
-    // No witness, no mistake (but one): all the time bonus.
-    expect(getDetectiveScore(data)).toBe(CORRECT_STAGE_SCORE + CAUGHT_SCORE + 2000)
-    // Half of the spare time used: half of it.
-    expect(getDetectiveScore({ ...data, elapsedMinutes: perfect + 300 })).toBe(
-      CORRECT_STAGE_SCORE + CAUGHT_SCORE + 1000
-    )
-    // Escaped: only the destinations.
-    expect(getDetectiveScore({ ...data, outcome: 'escaped' })).toBe(CORRECT_STAGE_SCORE)
-    expect(getDetectiveMaxScore(2)).toBe(2 * CORRECT_STAGE_SCORE + CAUGHT_SCORE + 2000)
   })
 })
 

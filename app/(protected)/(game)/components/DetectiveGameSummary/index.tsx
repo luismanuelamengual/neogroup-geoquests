@@ -9,14 +9,11 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 import DetectiveMap, { DetectiveMapLeg, DetectiveMapMarker } from '@/app/(protected)/(game)/components/DetectiveMap'
-import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
-import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
-import { formatScore } from '@/app/(protected)/(game)/utils/score'
 import { SUSPECT_ROLE } from '@/app/(protected)/(game)/utils/suspects'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
@@ -27,15 +24,14 @@ import type { MessageKey } from '@/app/i18n/messages'
 const NEW_CASE_PATH = '/play/detective'
 
 /**
- * End of a detective case: caught or escaped, the score, the route of the
+ * End of a detective case: caught or escaped, the route of the
  * thief on the map (with the detective's wrong trips) and every destination
  * with how the detective got there.
  */
 export default function DetectiveGameSummary() {
-  const { t, locale } = useI18n()
+  const { t } = useI18n()
   const game = useGameStore((state) => state.game)!
   const view = game.modeView as DetectiveGameView
-  const animatedScore = useCountUp(view.score, 1800, 300)
   const caught = view.outcome === 'caught'
   // Title and story of the outcome: caught, escaped (time), lost trail (mistakes) or wrong suspect.
   const ending = caught
@@ -99,13 +95,6 @@ export default function DetectiveGameSummary() {
             <span className="caption">{t('detective.summary.thiefWas')}</span>
           </div>
         )}
-        <div className="total">
-          <span className="value">{formatScore(animatedScore, locale)}</span>
-          <span className="max">
-            / {formatScore(view.maxScore, locale)} {t('common.points')}
-          </span>
-        </div>
-        <ScoreBar value={animatedScore} max={view.maxScore} />
         <dl className="stats">
           <div>
             <dt>{t('detective.summary.timeUsed')}</dt>

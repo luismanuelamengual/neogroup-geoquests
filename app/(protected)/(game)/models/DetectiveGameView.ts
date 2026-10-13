@@ -112,8 +112,6 @@ export interface DetectiveGameView {
   centralCallMinutes: number
   centralCallEliminates: number
   outcome: DetectiveOutcome | null
-  score: number
-  maxScore: number
   /** What was stolen (index of the loot texts: detective.loot.loot{n + 1}). */
   loot: number
   /** Crime scene. */

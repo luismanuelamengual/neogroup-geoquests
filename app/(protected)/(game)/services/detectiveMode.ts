@@ -27,8 +27,6 @@ import { planDetectiveCase } from '@/app/(protected)/(game)/services/detectiveCa
 import { getMapPlaces } from '@/app/(protected)/(game)/services/maps'
 import {
   countMistakes,
-  getDetectiveMaxScore,
-  getDetectiveScore,
   getRedirectMinutes,
   getTravelMinutes,
   LOOT_COUNT,
@@ -427,7 +425,7 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
   finalize(data, { players }: GameMembers): GamePlayerResult[] {
     const outcome = data.outcome === 'caught' ? GameOutcome.WON : GameOutcome.LOST
 
-    return players.map((player) => ({ userId: player.userId, score: getDetectiveScore(data), position: 1, outcome }))
+    return players.map((player) => ({ userId: player.userId, score: 0, position: 1, outcome }))
   },
 
   toView(data): DetectiveGameView {
@@ -454,8 +452,6 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
       centralCallMinutes: data.settings.centralCallMinutes ?? 0,
       centralCallEliminates: data.settings.centralCallEliminates ?? 0,
       outcome: data.outcome,
-      score: getDetectiveScore(data),
-      maxScore: getDetectiveMaxScore(data.stages.length),
       loot: data.loot,
       origin: toPlace(data.origin),
       currentStage: toCurrentStageView(data),
@@ -467,8 +463,10 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
 
   summarize(data): GameSummary {
     return {
-      score: getDetectiveScore(data),
-      maxScore: getDetectiveMaxScore(data.stages.length),
+      // Cases have no score: only the difficulty and whether the thief was caught.
+      score: 0,
+      maxScore: null,
+      difficulty: data.settings.difficulty,
       completedSteps: data.stages.filter((stage) => stage.travel !== null).length,
       totalSteps: data.stages.length
     }

@@ -52,6 +52,9 @@ export default function GameListRow({ game, detailed }: GameListRowProps) {
           {t(`modes.${game.modeSlug}.name` as MessageKey)}
         </span>
         {!detective && <span className="map">{getMapName(t, game.mapSlug)}</span>}
+        {detective && game.difficulty && (
+          <span className="map">{t(`detective.difficulty.${game.difficulty}.name` as MessageKey)}</span>
+        )}
         <span className="date">{formatDate(new Date(game.createdAt))}</span>
         {detailed && finished && game.maxScore != null && (
           <ScoreBar value={game.score} max={game.maxScore} className="bar" />
@@ -76,7 +79,7 @@ export default function GameListRow({ game, detailed }: GameListRowProps) {
               ))}
             </span>
           )}
-          <span className="score">{formatScore(game.score, locale)}</span>
+          {!detective && <span className="score">{formatScore(game.score, locale)}</span>}
         </div>
       )}
       {inProgress && (

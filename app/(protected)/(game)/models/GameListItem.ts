@@ -14,6 +14,8 @@ export interface GameListItem {
   playersCount: number
   score: number
   maxScore: number | null
+  /** Difficulty of the game, in the modes that have one (e.g. detective). */
+  difficulty: string | null
   /** Position and outcome of the player, once the game is over. */
   position: number | null
   outcome: GameOutcome | null

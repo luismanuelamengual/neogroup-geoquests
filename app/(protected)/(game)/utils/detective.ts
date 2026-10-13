@@ -35,17 +35,6 @@ export function randomCaseStartMinute(random: () => number): number {
   return day * 24 * 60 + hour * 60
 }
 
-/** Points of each destination guessed at the first try. */
-export const CORRECT_STAGE_SCORE = 400
-/** Points for catching the suspect. */
-export const CAUGHT_SCORE = 1000
-/**
- * Points for the time left when the suspect is caught, in proportion to the
- * spare time of the case (its limit minus the trips of the perfect route):
- * all of them without asking any witness nor making mistakes.
- */
-export const TIME_LEFT_SCORE = 2000
-
 /** Distance between two points in km. */
 export function distanceKm(from: LatLng, to: LatLng): number {
   return haversineDistance(from, to) / 1000
@@ -118,34 +107,7 @@ export function computeTimeLimitMinutes(
   return Math.ceil((travel + witnesses + rules.mistakesMargin * averageMistake) / 60) * 60
 }
 
-/** Minutes of the trips of the perfect route of a case (straight from stop to stop, no witnesses). */
-export function getPerfectTravelMinutes(data: DetectiveGameData): number {
-  const route = [data.origin, ...data.stages.map((stage) => stage.destination)]
-
-  return data.stages.reduce((total, stage, index) => total + getTravelMinutes(route[index], stage.destination), 0)
-}
-
-/** Best possible score of a case of `hops` stages. */
-export function getDetectiveMaxScore(hops: number): number {
-  return hops * CORRECT_STAGE_SCORE + CAUGHT_SCORE + TIME_LEFT_SCORE
-}
-
 /** Wrong destinations of a case so far. */
 export function countMistakes(data: DetectiveGameData): number {
   return data.stages.filter((stage) => stage.travel && !stage.travel.correct).length
-}
-
-/** Score of a case: the destinations guessed at the first try, and catching the suspect with time to spare. */
-export function getDetectiveScore(data: DetectiveGameData): number {
-  const correct = data.stages.filter((stage) => stage.travel?.correct).length
-  let score = correct * CORRECT_STAGE_SCORE
-
-  if (data.outcome === 'caught') {
-    const left = Math.max(0, data.timeLimitMinutes - data.elapsedMinutes)
-    const spare = Math.max(1, data.timeLimitMinutes - getPerfectTravelMinutes(data))
-
-    score += CAUGHT_SCORE + Math.min(TIME_LEFT_SCORE, Math.round((TIME_LEFT_SCORE * left) / spare))
-  }
-
-  return score
 }
