@@ -136,9 +136,6 @@ export const es = {
     noModes: 'Todavía no hay modos de juego disponibles.',
     subtitle: 'Un jugador: jugá solo, a tu ritmo.',
     modesTitle: 'Modos de juego',
-    quickPlaysTitle: 'Partida clásica rápida',
-    quickPlaysSubtitle: 'Arrancan al toque, con las reglas ya elegidas.',
-    playNow: 'Jugar ya',
     customClassic: {
       name: 'Partida clásica',
       description: 'Elegí el mapa, la cantidad de rondas y el tiempo por ronda, y jugá solo, a tu ritmo.'

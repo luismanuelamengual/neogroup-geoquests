@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { auth } from '@/app/(auth)/services/auth'
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
-import { getMaps } from '@/app/(protected)/(game)/services/maps'
-import { getQuickPlays } from '@/app/(protected)/(game)/services/quickPlays'
 import HomeMenu from '@/app/(protected)/(home)/components/HomeMenu'
 import { getT } from '@/app/i18n/server'
 
@@ -13,7 +11,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const session = await auth()
   const modes = getGameModes(await getT()).filter((mode) => mode.maxPlayers === 1)
-  const quickPlays = getQuickPlays(await getMaps())
 
-  return <HomeMenu playerName={session?.user?.name ?? ''} modes={modes} quickPlays={quickPlays} />
+  return <HomeMenu playerName={session?.user?.name ?? ''} modes={modes} />
 }

@@ -6,7 +6,6 @@ import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsI
 import { getGameModes } from '@/app/(protected)/(game)/services/gameModes'
 import { createGame } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
-import { getQuickPlays, QUICK_PLAY_SETTINGS } from '@/app/(protected)/(game)/services/quickPlays'
 import { getModeColor, isMultiplayerMode } from '@/app/(protected)/(game)/utils/modeColor'
 import { getModeMenuPath, getModePath } from '@/app/(protected)/(game)/utils/modeRoutes'
 import { createUser, resetDatabase } from '@/tests/setup/database'
@@ -113,43 +112,6 @@ describe('rules chosen by the player', () => {
     )
 
     expect(await storedSettings(invalid.id)).toMatchObject({ roundsPerElimination: 1 })
-  })
-})
-
-describe('quick games', () => {
-  beforeEach(async () => {
-    await resetDatabase()
-  })
-
-  it('are classic games of 5 rounds of 3 minutes in their maps', async () => {
-    const quickPlays = getQuickPlays(await getMaps())
-
-    expect(quickPlays.map((quickPlay) => [quickPlay.key, quickPlay.map.slug])).toEqual([
-      ['famous-cities', 'famous-cities'],
-      ['world-cities', 'world-cities'],
-      ['landmarks', 'landmarks']
-    ])
-    expect(quickPlays.every((quickPlay) => quickPlay.mode === GameMode.CLASSIC)).toBe(true)
-    expect(QUICK_PLAY_SETTINGS).toEqual({ rounds: 5, timeLimitSeconds: 180 })
-  })
-
-  it('are hidden when their map is not available', async () => {
-    const maps = (await getMaps()).filter((map) => map.slug !== 'landmarks')
-
-    expect(getQuickPlays(maps).map((quickPlay) => quickPlay.key)).toEqual(['famous-cities', 'world-cities'])
-  })
-
-  it('start a game with their rules', async () => {
-    const userId = await createUser()
-    const [quickPlay] = getQuickPlays(await getMaps())
-    const game = await createGame(
-      userId,
-      { mapId: quickPlay.map.id, mode: quickPlay.mode, settings: quickPlay.settings },
-      { finder: new FakePanoramaFinder() }
-    )
-
-    expect(game.mapId).toBe(quickPlay.map.id)
-    expect(await storedSettings(game.id)).toMatchObject({ rounds: 5, timeLimitSeconds: 180 })
   })
 })
 
