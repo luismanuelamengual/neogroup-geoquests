@@ -409,7 +409,8 @@ export const es = {
         'Si llegás a su lugar número {hops} a tiempo, tenés que señalar al ladrón entre {suspects} sospechosos: acordate de los rasgos que te contaron.'
     },
     briefing: {
-      caseNumber: 'Caso #{id}',
+      newCase: 'Nuevo caso',
+      case: 'Caso',
       title: 'Robo en {place}',
       story:
         'El {time} se robaron {loot} en {place}. El ladrón escapó y va a pasar por {hops} lugares del mundo antes de desaparecer para siempre.',

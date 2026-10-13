@@ -12,7 +12,6 @@ import { useT } from '@/app/i18n/I18nProvider'
 import type { MessageKey } from '@/app/i18n/messages'
 
 interface DetectiveBriefingProps {
-  gameId: number
   view: DetectiveGameView
   onAccept: () => void
 }
@@ -22,7 +21,7 @@ interface DetectiveBriefingProps {
  * where, how many places the thief will go through, until when the detective
  * has, and the rules.
  */
-export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveBriefingProps) {
+export default function DetectiveBriefing({ view, onAccept }: DetectiveBriefingProps) {
   const t = useT()
   const place = view.origin.placeName
 
@@ -30,7 +29,7 @@ export default function DetectiveBriefing({ gameId, view, onAccept }: DetectiveB
     <div className="detective-briefing">
       <GamePanel
         className="dossier"
-        title={`${t('detective.briefing.caseNumber', { id: gameId })} · ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
+        title={`${t('detective.briefing.newCase')} - ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
       >
         <div className="scene">
           <span className="flag" aria-hidden="true">

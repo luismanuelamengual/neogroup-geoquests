@@ -105,7 +105,7 @@ export default function DetectiveGamePlay() {
   } else if (phase === 'result' && resultStage != null) {
     screen = <DetectiveTravelResult gameId={game.id} view={view} stageNumber={resultStage} onContinue={closeResult} />
   } else if (fresh && !accepted) {
-    screen = <DetectiveBriefing gameId={game.id} view={view} onAccept={() => setAccepted(true)} />
+    screen = <DetectiveBriefing view={view} onAccept={() => setAccepted(true)} />
   } else if (view.lineup && view.outcome === null) {
     screen = <DetectiveLineup view={view} onAccuse={handleAccuse} onExit={handleExit} />
   } else if (!stage) {

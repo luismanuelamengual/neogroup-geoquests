@@ -82,7 +82,7 @@ export default function DetectiveGameSummary() {
     <div className="detective-game-summary">
       <GamePanel
         className={classNames('hero', { caught })}
-        title={`${t('detective.briefing.caseNumber', { id: game.id })} · ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
+        title={`${t('detective.briefing.case')} - ${t(`detective.difficulty.${view.difficulty}.name` as MessageKey)}`}
         accent={caught ? 'lime' : 'magenta'}
       >
         <h1 className="outcome">{t(`detective.summary.${ending}`)}</h1>

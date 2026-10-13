@@ -403,7 +403,8 @@ export const en: Messages = {
         'If you reach their place number {hops} in time, you have to point at the thief among {suspects} suspects: remember the traits you were told.'
     },
     briefing: {
-      caseNumber: 'Case #{id}',
+      newCase: 'New case',
+      case: 'Case',
       title: 'Robbery at {place}',
       story:
         'On {time} someone stole {loot} at {place}. The thief escaped and will go through {hops} places of the world before vanishing forever.',
