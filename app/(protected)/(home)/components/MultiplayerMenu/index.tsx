@@ -5,14 +5,16 @@ import GroupsIcon from '@mui/icons-material/Groups'
 import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBanner'
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
 import JoinGameDialog from '@/app/(protected)/(game)/components/JoinGameDialog'
+import PublicGamesList from '@/app/(protected)/(game)/components/PublicGamesList'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
 import { useT } from '@/app/i18n/I18nProvider'
 
 /**
  * "Multijugador" menu (/multiplayer): joining a friend's game by its code —
- * one button for every mode — and the multiplayer modes, each of which opens
- * the page where the host chooses the rules and the map of a new room. Above
- * it, when there is one, the way back to a multiplayer game in progress.
+ * one button for every mode —, the public games anybody can join, and the
+ * multiplayer modes, each of which opens the page where the host chooses the
+ * rules, the map and whether a new room is public or private. Above it, when
+ * there is one, the way back to a multiplayer game in progress.
  */
 export default function MultiplayerMenu({ modes }: { modes: GameModeView[] }) {
   const t = useT()
@@ -33,6 +35,7 @@ export default function MultiplayerMenu({ modes }: { modes: GameModeView[] }) {
         </div>
         <JoinGameDialog size="large" className="join-button" />
       </section>
+      <PublicGamesList />
       <h2 className="section-title">{t('multiplayerMenu.createTitle')}</h2>
       <section className="modes">
         {modes.map((mode) => (

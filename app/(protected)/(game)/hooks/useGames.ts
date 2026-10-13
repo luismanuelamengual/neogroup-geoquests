@@ -7,14 +7,15 @@ import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsI
 import { GamesPage } from '@/app/(protected)/(game)/models/GamesPage'
 import { GameSyncResponse } from '@/app/(protected)/(game)/models/GameSyncResponse'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
+import { PublicGameItem } from '@/app/(protected)/(game)/models/PublicGameItem'
 import { useRequests } from '@/app/hooks/useRequests'
 
 /** API calls of the game module. */
 export function useGames() {
   const executeRequest = useRequests()
   const createGame = useCallback(
-    (mapId: number | null, mode: GameMode, settings?: GameSettingsInput): Promise<GameView> =>
-      executeRequest<GameView>('/createGame', { mapId, mode, settings }),
+    (mapId: number | null, mode: GameMode, settings?: GameSettingsInput, isPublic = false): Promise<GameView> =>
+      executeRequest<GameView>('/createGame', { mapId, mode, settings, isPublic }),
     [executeRequest]
   )
   const getGame = useCallback(
@@ -29,6 +30,14 @@ export function useGames() {
   )
   const joinGame = useCallback(
     (code: string): Promise<GameView> => executeRequest<GameView>('/joinGame', { code }),
+    [executeRequest]
+  )
+  const joinPublicGame = useCallback(
+    (gameId: number): Promise<GameView> => executeRequest<GameView>('/joinGame', { gameId }),
+    [executeRequest]
+  )
+  const getPublicGames = useCallback(
+    (): Promise<PublicGameItem[]> => executeRequest<PublicGameItem[]>('/getPublicGames', {}, false),
     [executeRequest]
   )
   const leaveGame = useCallback(
@@ -57,6 +66,8 @@ export function useGames() {
     getGame,
     sendGameAction,
     joinGame,
+    joinPublicGame,
+    getPublicGames,
     leaveGame,
     kickPlayer,
     startGame,

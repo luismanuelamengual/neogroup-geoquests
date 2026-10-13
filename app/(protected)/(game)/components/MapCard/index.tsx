@@ -22,10 +22,12 @@ interface MapCardProps {
   mode: GameModeView
   /** Rules chosen by the player in the map picker. */
   settings?: GameSettingsInput
+  /** Multiplayer games: listed for everybody, who can join without the code. */
+  isPublic?: boolean
 }
 
 /** Card of a map in the map picker of a game mode: its image, its number of places and the button to play it. */
-export default function MapCard({ map, mode, settings }: MapCardProps) {
+export default function MapCard({ map, mode, settings, isPublic = false }: MapCardProps) {
   const t = useT()
   const router = useRouter()
   const { createGame } = useGames()
@@ -36,7 +38,7 @@ export default function MapCard({ map, mode, settings }: MapCardProps) {
     setStarting(true)
 
     try {
-      const game = await createGame(map.id, mode.mode, settings)
+      const game = await createGame(map.id, mode.mode, settings, isPublic)
 
       router.push(`/game/${game.id}`)
     } catch {

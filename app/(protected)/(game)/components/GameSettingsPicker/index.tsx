@@ -14,6 +14,10 @@ interface GameSettingsPickerProps {
   onChange: (value: GameSettingsInput) => void
   /** Accent: the one of the mode (single player or multiplayer). */
   multiplayer?: boolean
+  /** Multiplayer games: whether the game is public (listed for everybody) or private (only with the code). */
+  isPublic?: boolean
+  /** Shows the public / private choice (multiplayer games). */
+  onPublicChange?: (isPublic: boolean) => void
   disabled?: boolean
 }
 
@@ -53,18 +57,21 @@ function ChoiceGroup<T>({ label, options, value, format, onChange, disabled }: C
 /**
  * Rules of the game the player is about to create (map picker of a mode):
  * only the ones the mode lets choose — e.g. rounds and time per round in the
- * classic modes, the time per round and the rounds per elimination in battle royale.
+ * classic modes, the time per round and the rounds per elimination in battle royale —
+ * and, for multiplayer games, whether the game is private or public.
  */
 export default function GameSettingsPicker({
   options,
   value,
   onChange,
   multiplayer,
+  isPublic = false,
+  onPublicChange,
   disabled
 }: GameSettingsPickerProps) {
   const t = useT()
 
-  if (!options.rounds && !options.timeLimitSeconds && !options.roundsPerElimination) {
+  if (!options.rounds && !options.timeLimitSeconds && !options.roundsPerElimination && !onPublicChange) {
     return null
   }
 
@@ -102,7 +109,18 @@ export default function GameSettingsPicker({
             disabled={disabled}
           />
         )}
+        {onPublicChange && (
+          <ChoiceGroup
+            label={t('picker.visibility')}
+            options={[false, true]}
+            value={isPublic}
+            format={(option) => (option ? t('picker.public') : t('picker.private'))}
+            onChange={onPublicChange}
+            disabled={disabled}
+          />
+        )}
       </div>
+      {onPublicChange && <p className="hint">{isPublic ? t('picker.publicHint') : t('picker.privateHint')}</p>}
     </section>
   )
 }

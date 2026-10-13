@@ -149,6 +149,13 @@ export const es = {
     joinText: 'Ingresá el código que te pasaron y entrá a la sala.',
     createTitle: 'Creá tu propia sala'
   },
+  publicGames: {
+    title: 'Partidas públicas',
+    text: 'Salas abiertas esperando jugadores. Entrá a cualquiera, sin código.',
+    empty: 'No hay partidas públicas esperando jugadores. ¡Creá una!',
+    host: 'Creada por {name}',
+    join: 'Unirme'
+  },
   modes: {
     classic: {
       name: 'Clásico',
@@ -236,7 +243,12 @@ export const es = {
     joinTitle: 'Unirme a una partida',
     codeLabel: 'Código de la partida',
     codePlaceholder: 'Ej: K7QX2M',
-    join: 'Unirme'
+    join: 'Unirme',
+    visibility: 'Partida',
+    private: 'Privada',
+    public: 'Pública',
+    privateHint: 'Solo pueden entrar quienes tengan el código.',
+    publicHint: 'Aparece en la lista de partidas públicas y cualquiera puede unirse sin código.'
   },
   invitation: {
     title: '¡Te invitaron!',
@@ -349,7 +361,9 @@ export const es = {
     waitingPlayers: 'Esperando jugadores (mínimo {min})',
     waitingHost: 'Esperando a que {name} empiece la partida…',
     theHost: 'el anfitrión',
-    leave: 'Salir de la sala'
+    leave: 'Salir de la sala',
+    publicGame: 'Partida pública',
+    privateGame: 'Partida privada'
   },
   myGames: {
     title: 'Mis partidas',

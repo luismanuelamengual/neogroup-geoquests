@@ -2,8 +2,11 @@
 
 import './index.scss'
 import CloseIcon from '@mui/icons-material/Close'
+import LockIcon from '@mui/icons-material/Lock'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import PublicIcon from '@mui/icons-material/Public'
 import IconButton from '@mui/material/IconButton'
+import classNames from 'classnames'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import InviteButton from '@/app/(protected)/(game)/components/InviteButton'
@@ -24,8 +27,8 @@ import PlayerAvatar from '@/app/components/PlayerAvatar'
 import { useT } from '@/app/i18n/I18nProvider'
 
 /**
- * Waiting room of a multiplayer game: the invitation code (and the button to
- * share it), the players who joined — kept up to date by polling — and, for
+ * Waiting room of a multiplayer game: whether it is public or private, the
+ * invitation code (and the button to share it), the players who joined — kept up to date by polling — and, for
  * the host, the button that starts the game.
  */
 export default function MultiplayerLobby() {
@@ -93,6 +96,10 @@ export default function MultiplayerLobby() {
                 : t('modes.elimination'),
             time: formatTimeLimit(view.timeLimitSeconds, t)
           })}
+        </div>
+        <div className={classNames('visibility', { public: game.isPublic })}>
+          {game.isPublic ? <PublicIcon fontSize="small" /> : <LockIcon fontSize="small" />}
+          {game.isPublic ? t('lobby.publicGame') : t('lobby.privateGame')}
         </div>
         {game.code && (
           <div className="code-box">

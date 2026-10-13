@@ -8,4 +8,6 @@ export interface CreateGameInput {
   mode: GameMode
   /** Rules chosen by the player (missing: the defaults of the mode). */
   settings?: GameSettingsInput
+  /** Multiplayer games: listed for everybody, who can join without the code (missing: private). */
+  isPublic?: boolean
 }

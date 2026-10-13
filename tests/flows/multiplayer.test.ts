@@ -18,6 +18,7 @@ import {
   getActiveGame,
   getGame,
   getGames,
+  getPublicGames,
   joinGame,
   kickPlayer,
   leaveGame,
@@ -128,6 +129,53 @@ describe('classic multiplayer flow', () => {
     // Joining again just returns the game.
     expect((await joinGame(ana, { code: lobby.code! }, at(3000))).players).toHaveLength(2)
     await expect(joinGame(beto, { code: 'ZZZZZZ' }, at(0))).rejects.toThrow('No encontramos una partida')
+  })
+
+  describe('public games', () => {
+    function createPublicLobby(userId = host, ms = 0): Promise<GameView> {
+      return createGame(userId, { mapId, mode: GameMode.CLASSIC_MULTIPLAYER, isPublic: true }, at(ms))
+    }
+
+    it('are private by default: not listed and only joined with the code', async () => {
+      const lobby = await createLobby()
+
+      expect(lobby.isPublic).toBe(false)
+      expect(await getPublicGames(at(0))).toEqual([])
+      await expect(joinGame(ana, { gameId: lobby.id }, at(0))).rejects.toThrow('Partida no encontrada')
+    })
+
+    it('are listed for everybody while they wait for players and have room', async () => {
+      const lobby = await createPublicLobby()
+
+      expect(lobby.isPublic).toBe(true)
+      // They keep their code, so they can be shared too.
+      expect(lobby.code).toMatch(/^[A-Z2-9]{6}$/)
+      expect(await getPublicGames(at(1000))).toMatchObject([
+        { id: lobby.id, mode: GameMode.CLASSIC_MULTIPLAYER, hostName: 'Player', playersCount: 1, maxPlayers: 8 }
+      ])
+
+      await startGame(host, { gameId: (await joinGame(ana, { gameId: lobby.id }, at(1000))).id }, at(2000))
+
+      expect(await getPublicGames(at(3000))).toEqual([])
+    })
+
+    it('are joined without the code', async () => {
+      const lobby = await createPublicLobby()
+      const joined = await joinGame(ana, { gameId: lobby.id }, at(1000))
+
+      expect(joined.players.map((player) => player.userId)).toEqual([host, ana])
+      expect((await getPublicGames(at(1000)))[0].playersCount).toBe(2)
+    })
+
+    it('are not listed once they are full', async () => {
+      classicMultiplayerMode.definition.settings = { ...classicMultiplayerMode.definition.settings, maxPlayers: 2 }
+
+      const lobby = await createPublicLobby()
+
+      await joinGame(ana, { gameId: lobby.id }, at(0))
+      expect(await getPublicGames(at(0))).toEqual([])
+      await expect(joinGame(beto, { gameId: lobby.id }, at(0))).rejects.toThrow('completa')
+    })
   })
 
   it('allows only one multiplayer game at a time per player', async () => {

@@ -20,7 +20,8 @@ import { JoinGameInput } from '@/app/(protected)/(game)/models/JoinGameInput'
 import { KickPlayerInput } from '@/app/(protected)/(game)/models/KickPlayerInput'
 import { LoadedGame } from '@/app/(protected)/(game)/models/LoadedGame'
 import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
-import { cleanupGames, deleteGames } from '@/app/(protected)/(game)/services/gameCleanup'
+import { PublicGameItem } from '@/app/(protected)/(game)/models/PublicGameItem'
+import { cleanupGames, deleteGames, LOBBY_MAX_AGE_MS } from '@/app/(protected)/(game)/services/gameCleanup'
 import { findGameModeEngine, getGameModeEngine, getGameSettings } from '@/app/(protected)/(game)/services/gameModes'
 import { loadGame, updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
 import { findMap, findMapBySlug } from '@/app/(protected)/(game)/services/maps'
@@ -39,6 +40,8 @@ import { getUserDisplayName } from '@/app/utils/users'
 const MAX_CODE_ATTEMPTS = 10
 /** The presence of a player (`game_players.lastSeenAt`) is written at most this often. */
 const PRESENCE_WRITE_INTERVAL_MS = 10_000
+/** At most this many public games are listed (the newest ones). */
+const MAX_PUBLIC_GAMES = 30
 
 /** The context of a request: one fixed "now", and the Street View finder only created if a mode needs it. */
 function resolveContext(options: GameOptions = {}): GameContext {
@@ -74,6 +77,7 @@ function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameCont
     mapSlug: game.map?.slug ?? null,
     code: game.code,
     hostUserId: game.hostUserId,
+    isPublic: !!game.isPublic,
     version: game.version,
     players: players.map(toPlayerView),
     createdAt: game.createdAt.toISOString(),
@@ -150,7 +154,9 @@ async function generateUniqueCode(ctx: GameContext): Promise<string> {
 /**
  * Creates a game in a map with one of the game modes. Single player games start
  * right away; multiplayer games wait for players (status LOBBY) with an
- * invitation code, and their creator is the host.
+ * invitation code, and their creator is the host. A multiplayer game may be
+ * public (`input.isPublic`): it is listed for everybody, who can join it
+ * without the code; by default it is private.
  */
 export async function createGame(userId: number, input: CreateGameInput, options: GameOptions = {}): Promise<GameView> {
   const ctx = resolveContext(options)
@@ -182,6 +188,7 @@ export async function createGame(userId: number, input: CreateGameInput, options
   game.status = multiplayer ? GameStatus.LOBBY : GameStatus.IN_PROGRESS
   game.code = multiplayer ? await generateUniqueCode(ctx) : null
   game.hostUserId = multiplayer ? userId : null
+  game.isPublic = multiplayer && input?.isPublic === true
   game.version = 1
   game.createdAt = ctx.now
   game.startedAt = multiplayer ? null : ctx.now
@@ -282,20 +289,38 @@ export async function sendGameAction(
   return toGameView(loaded, userId, ctx)
 }
 
+/** The game to join: by its invitation code, or by its id when it is public (private games need the code). */
+async function findGameToJoin(input: JoinGameInput): Promise<Game> {
+  if (input?.code != null) {
+    const code = normalizeGameCode(input.code)
+    const game = code ? await Game.where('code', code).first() : null
+
+    if (!game) {
+      throw new ApiException('errors.gameCodeNotFound', 404)
+    }
+
+    return game
+  }
+
+  const gameId = Number(input?.gameId)
+  const game = Number.isInteger(gameId) ? await Game.where('id', gameId).where('isPublic', true).first() : null
+
+  if (!game) {
+    throw new ApiException('errors.gameNotFound', 404)
+  }
+
+  return game
+}
+
 /**
- * Joins a multiplayer game waiting for players, by its invitation code. A
- * player of the game just gets it back. Rejected when the game already
- * started, is full, or the player is in another multiplayer game.
+ * Joins a multiplayer game waiting for players, by its invitation code or —
+ * public games only — by its id. A player of the game just gets it back.
+ * Rejected when the game already started, is full, or the player is in
+ * another multiplayer game.
  */
 export async function joinGame(userId: number, input: JoinGameInput, options: GameOptions = {}): Promise<GameView> {
   const ctx = resolveContext(options)
-  const code = normalizeGameCode(input?.code)
-  const game = code ? await Game.where('code', code).first() : null
-
-  if (!game) {
-    throw new ApiException('errors.gameCodeNotFound', 404)
-  }
-
+  const game = await findGameToJoin(input)
   const current = await GamePlayer.where('gameId', game.id).where('userId', userId).first()
 
   if (current?.status === GamePlayerStatus.ACTIVE) {
@@ -455,6 +480,52 @@ export async function startGame(userId: number, input: GameIdInput, options: Gam
   })
 
   return toGameView(loaded, userId, ctx)
+}
+
+/**
+ * Public multiplayer games waiting for players that still have room, newest
+ * first (at most MAX_PUBLIC_GAMES): the ones anybody can join from the
+ * "Multijugador" menu without a code.
+ */
+export async function getPublicGames(options: GameOptions = {}): Promise<PublicGameItem[]> {
+  const ctx = resolveContext(options)
+  const games = await Game.where('isPublic', true)
+    .where('status', GameStatus.LOBBY)
+    // Lobbies older than this are about to be deleted (see gameCleanup.ts): nobody is waiting there anymore.
+    .where('createdAt', '>=', new Date(ctx.now.getTime() - LOBBY_MAX_AGE_MS))
+    .orderByDesc('id')
+    .limit(MAX_PUBLIC_GAMES)
+    .with('map')
+    .get()
+  const gameIds = games.map((game) => game.id)
+  const players =
+    gameIds.length > 0
+      ? await GamePlayer.whereIn('gameId', gameIds).where('status', GamePlayerStatus.ACTIVE).with('user').get()
+      : []
+
+  return games.flatMap((game): PublicGameItem[] => {
+    const engine = findGameModeEngine(game.mode)
+    const gamePlayers = players.filter((player) => player.gameId === game.id)
+    const host = gamePlayers.find((player) => player.userId === game.hostUserId)
+    const maxPlayers = engine?.getMaxPlayers(game.data) ?? 0
+
+    if (!engine || !host || gamePlayers.length >= maxPlayers) {
+      return []
+    }
+
+    return [
+      {
+        id: game.id,
+        mode: game.mode,
+        modeSlug: engine.definition.slug,
+        mapSlug: game.map?.slug ?? null,
+        hostName: toPlayerView(host).name,
+        playersCount: gamePlayers.length,
+        maxPlayers,
+        createdAt: game.createdAt.toISOString()
+      }
+    ]
+  })
 }
 
 /** The multiplayer game the user is waiting for or playing, if any (to get back to it from the menu). */

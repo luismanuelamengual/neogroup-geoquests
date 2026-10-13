@@ -16,6 +16,8 @@ export interface GameView<ModeView = unknown> {
   /** Invitation code (multiplayer games waiting for players or being played). */
   code: string | null
   hostUserId: number | null
+  /** Multiplayer games anybody can join without the code (listed in the "Multijugador" menu). */
+  isPublic: boolean
   /** Version of the game: sent back when polling (GetGameInput.sinceVersion). */
   version: number
   players: GamePlayerView[]

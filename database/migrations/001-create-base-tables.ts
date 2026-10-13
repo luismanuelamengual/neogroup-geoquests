@@ -127,6 +127,8 @@ export default {
         // Invitation code of multiplayer games (cleared when the game ends).
         table.string('code', 6).nullable().unique()
         table.integer('hostUserId').nullable()
+        // Multiplayer games listed for everybody, who can join them without the code (false: only with the code).
+        table.boolean('isPublic').default(false)
         // Increased on every write (optimistic locking + polling).
         table.integer('version').default(1)
         // State of the game mode (see the note at the top).
@@ -137,6 +139,8 @@ export default {
         table.timestamp('updatedAt').useCurrent()
 
         table.index(['status', 'updatedAt'], 'idx_games_status')
+        // List of open public games (isPublic + status LOBBY).
+        table.index(['isPublic', 'status'], 'idx_games_public')
         table.foreign('mapId').references('id').on('maps').nullOnDelete()
         table.foreign('hostUserId').references('id').on('users').nullOnDelete()
       })

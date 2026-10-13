@@ -31,6 +31,10 @@ export class Game extends BaseEntity {
   @Column({ cast: 'number' })
   hostUserId!: number | null
 
+  /** Multiplayer games listed for everybody, who can join them without the code (false: only with the code). */
+  @Column({ cast: 'boolean' })
+  isPublic!: boolean
+
   /**
    * Increased on every write. Updates are conditional on it (optimistic
    * locking: several players may act at the same time) and clients poll with

@@ -146,6 +146,13 @@ export const en: Messages = {
     joinText: 'Enter the code you were given and join the room.',
     createTitle: 'Create your own room'
   },
+  publicGames: {
+    title: 'Public games',
+    text: 'Open rooms waiting for players. Join any of them, no code needed.',
+    empty: 'There are no public games waiting for players. Create one!',
+    host: 'Created by {name}',
+    join: 'Join'
+  },
   modes: {
     classic: {
       name: 'Classic',
@@ -233,7 +240,12 @@ export const en: Messages = {
     joinTitle: 'Join a game',
     codeLabel: 'Game code',
     codePlaceholder: 'E.g. K7QX2M',
-    join: 'Join'
+    join: 'Join',
+    visibility: 'Game',
+    private: 'Private',
+    public: 'Public',
+    privateHint: 'Only people with the code can join.',
+    publicHint: 'It shows up in the list of public games and anyone can join without a code.'
   },
   invitation: {
     title: "You're invited!",
@@ -343,7 +355,9 @@ export const en: Messages = {
     waitingPlayers: 'Waiting for players (minimum {min})',
     waitingHost: 'Waiting for {name} to start the game…',
     theHost: 'the host',
-    leave: 'Leave the room'
+    leave: 'Leave the room',
+    publicGame: 'Public game',
+    privateGame: 'Private game'
   },
   myGames: {
     title: 'My games',

@@ -17,7 +17,8 @@ import { useT } from '@/app/i18n/I18nProvider'
 /**
  * Second step of the menus (/play/[mode], /multiplayer/[mode]): after
  * choosing the game mode, the player chooses the rules of the game (the ones
- * the mode lets choose: rounds, time per round) and where to play — the maps,
+ * the mode lets choose: rounds, time per round; public or private in the
+ * multiplayer modes) and where to play — the maps,
  * as a grid that grows with them.
  */
 export default function MapPicker({ mode, maps }: { mode: GameModeView; maps: MapView[] }) {
@@ -28,6 +29,8 @@ export default function MapPicker({ mode, maps }: { mode: GameModeView; maps: Ma
     timeLimitSeconds: 'timeLimitSeconds' in mode.settings ? mode.settings.timeLimitSeconds : undefined,
     roundsPerElimination: 'roundsPerElimination' in mode.settings ? mode.settings.roundsPerElimination : undefined
   }))
+  // Multiplayer games are private (only with the code) unless the host makes them public.
+  const [isPublic, setIsPublic] = useState(false)
 
   return (
     <div className={classNames('map-picker', { multi: multiplayer })}>
@@ -47,11 +50,13 @@ export default function MapPicker({ mode, maps }: { mode: GameModeView; maps: Ma
           value={settings}
           onChange={setSettings}
           multiplayer={multiplayer}
+          isPublic={isPublic}
+          onPublicChange={multiplayer ? setIsPublic : undefined}
         />
       )}
       <section className="maps">
         {maps.map((map) => (
-          <MapCard key={map.id} map={map} mode={mode} settings={settings} />
+          <MapCard key={map.id} map={map} mode={mode} settings={settings} isPublic={multiplayer && isPublic} />
         ))}
       </section>
       {maps.length === 0 && <p className="empty">{t('picker.noMaps')}</p>}
