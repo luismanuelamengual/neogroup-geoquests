@@ -31,6 +31,10 @@ export class User extends BaseEntity {
   @Column({ cast: 'boolean' })
   active!: boolean
 
+  /** Until when the player plays without ads (freemium, see app/(protected)/(premium)). Null: never paid. */
+  @Column({ cast: 'date' })
+  premiumUntil!: Date | null
+
   @Column({ cast: 'date' })
   createdAt!: Date
 

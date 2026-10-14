@@ -7,6 +7,7 @@ import { DB, Schema } from '@neogroup/neorm'
  * PostgreSQL in production and to SQLite in tests):
  *
  *   - users / email_verification_tokens / password_reset_tokens → authentication
+ *   - payments        → purchases of the ad-free year (freemium, see app/(protected)/(premium))
  *   - maps            → where to play, chosen after the game mode (name, description, image)
  *   - places          → playable areas (a circle or a GeoJSON polygon)
  *   - map_places      → which places each map draws its locations from (many-to-many)
@@ -45,7 +46,27 @@ export default {
         table.string('locale', 5).default('es')
         table.boolean('emailVerified').default(false)
         table.boolean('active').default(true)
+        // Until when the player plays without ads (freemium). Null: never paid.
+        table.timestamp('premiumUntil').nullable()
         table.timestamp('createdAt').useCurrent()
+      })
+
+      await Schema.createIfNotExists('payments', (table) => {
+        table.increments('id')
+        table.integer('userId')
+        // Payment provider ('lemonsqueezy') and its id of the order: unique, so a webhook delivered twice is applied once.
+        table.string('provider', 30)
+        table.string('providerPaymentId', 100).unique()
+        // Amount in cents, in `currency` (ISO 4217).
+        table.integer('amount')
+        table.string('currency', 3)
+        // 'paid' | 'refunded'
+        table.string('status', 20)
+        // Ad-free days the payment granted (taken back on a refund).
+        table.integer('daysGranted')
+        table.timestamp('createdAt').useCurrent()
+
+        table.foreign('userId').references('id').on('users').cascadeOnDelete()
       })
 
       await Schema.createIfNotExists('email_verification_tokens', (table) => {

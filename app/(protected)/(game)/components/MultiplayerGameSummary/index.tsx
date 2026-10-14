@@ -18,6 +18,7 @@ import { MULTIPLAYER_MENU_PATH } from '@/app/(protected)/(game)/utils/modeRoutes
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatPosition, getPlayerColors } from '@/app/(protected)/(game)/utils/players'
 import { formatDistance, formatScore } from '@/app/(protected)/(game)/utils/score'
+import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
@@ -123,6 +124,7 @@ export default function MultiplayerGameSummary() {
           </GameButton>
         </div>
       </GamePanel>
+      <AdSlot />
       <div className="details">
         <GamePanel className="map-panel" title={t('game.yourAnswers')} accent="cyan">
           <ResultMap pairs={pairs} className="summary-map" />

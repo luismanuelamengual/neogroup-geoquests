@@ -5,6 +5,7 @@ import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBann
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
+import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import InstallAppBanner from '@/app/(pwa)/components/InstallAppBanner'
 import { useT } from '@/app/i18n/I18nProvider'
 
@@ -53,6 +54,7 @@ export default function HomeMenu({ playerName, modes }: HomeMenuProps) {
         </section>
       )}
       {modes.length === 0 && <p className="no-modes">{t('home.noModes')}</p>}
+      <AdSlot />
     </div>
   )
 }

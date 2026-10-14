@@ -7,6 +7,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameListItem } from '@/app/(protected)/(game)/models/GameListItem'
 import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
+import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import { useI18n } from '@/app/i18n/I18nProvider'
@@ -77,6 +78,7 @@ export default function MyGames({ stats }: MyGamesProps) {
         </ul>
         {loading && <p className="loading-more">{t('common.loading')}</p>}
       </GamePanel>
+      <AdSlot className="ad" />
     </div>
   )
 }
