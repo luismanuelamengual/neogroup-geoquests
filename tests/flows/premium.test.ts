@@ -20,6 +20,8 @@ function order(userId: number, providerPaymentId = 'order-1') {
 }
 
 describe('freemium', () => {
+  // The environment running the tests may define FREEMIUM_ENABLED (e.g. a Vercel build): each test sets its own.
+  const originalFreemiumEnabled = process.env.FREEMIUM_ENABLED
   let userId: number
 
   beforeEach(async () => {
@@ -28,7 +30,11 @@ describe('freemium', () => {
   })
 
   afterEach(() => {
-    delete process.env.FREEMIUM_ENABLED
+    if (originalFreemiumEnabled === undefined) {
+      delete process.env.FREEMIUM_ENABLED
+    } else {
+      process.env.FREEMIUM_ENABLED = originalFreemiumEnabled
+    }
   })
 
   it('shows ads only with freemium on and no ad-free time left', () => {
@@ -36,6 +42,7 @@ describe('freemium', () => {
     const paid = { premiumUntil: new Date(NOW.getTime() + DAY_MS) }
     const expired = { premiumUntil: new Date(NOW.getTime() - DAY_MS) }
 
+    process.env.FREEMIUM_ENABLED = 'false'
     expect(shouldShowAds(free, NOW)).toBe(false)
     process.env.FREEMIUM_ENABLED = 'true'
     expect(shouldShowAds(free, NOW)).toBe(true)
