@@ -102,7 +102,7 @@ app/(protected)/
   (home)/                 Menú principal: la elección del modo de juego
   (game)/                 ⭐ Módulo core del juego (ver abajo)
   (account)/              Perfil del jugador (nombre, estadísticas)
-  (premium)/              Freemium: publicidad (AdSense) y el año sin publicidad (Lemon Squeezy)
+  (ads)/                  Publicidad (Google AdSense)
 ```
 
 ### Anatomía de un módulo
@@ -277,16 +277,14 @@ La ciudad no se revela hasta responder. El puntaje decae exponencialmente con la
 
 La página `/games` (menú principal → "Mis partidas") lista todas las partidas del jugador, de la más nueva a la más vieja, de a 20 (`/api/getGames`): mapa, fecha, puntaje, estrellas, posición (multijugador) y estado. Las terminadas abren su resumen y las que están en curso se pueden seguir desde cualquier dispositivo. Las estadísticas se calculan por modo con `game_players`. El perfil (nombre y estadísticas) sigue disponible desde el menú del usuario.
 
-## Freemium — `app/(protected)/(premium)`
+## Publicidad — `app/(protected)/(ads)`
 
-Se juega gratis con publicidad, o con un **pago único** (USD 10, configurado en el producto de Lemon Squeezy) se juega **1 año sin publicidad**. No hay renovación automática: si se compra otro año antes de que venza, se suma al que queda.
+La app muestra anuncios de Google AdSense a los jugadores.
 
-- **Interruptor:** `FREEMIUM_ENABLED=true` lo activa. Con cualquier otro valor la app no muestra publicidad, no carga el script de AdSense, no muestra el panel de compra en el perfil, `/api/createCheckout` responde 404 y `/ads.txt` también. Se lee en runtime (en Vercel hay que redeployar después de cambiarla). `users.premiumUntil` se conserva, así que reactivarlo no le quita a nadie los días que pagó.
-- **Datos:** `users.premiumUntil` (hasta cuándo no ve publicidad; null si nunca pagó) y la tabla `payments` (una fila por orden; `providerPaymentId` es único, por lo que un webhook repetido se aplica una sola vez).
-- **Compra:** el panel "Sin publicidad" de `/account` llama a `/api/createCheckout`, que crea un checkout de Lemon Squeezy con el id del jugador en `custom.user_id` y redirige a pagar. Al volver (`/account?upgraded=1`) la página se refresca hasta que llega la confirmación.
-- **Webhook:** `POST /api/lemonSqueezyWebhook` (sin sesión, verifica la firma `X-Signature` con `LEMONSQUEEZY_WEBHOOK_SECRET`). `order_created` pagada suma 365 días; `order_refunded` los descuenta. Se aplica aunque el freemium esté apagado.
-- **Publicidad:** `<AdSlot />` (un bloque responsive de AdSense, con un link a "Quitar publicidad") en el menú de un jugador, el de multijugador, "Mis partidas" y el resumen final de cada modo. Nunca durante una partida. No renderiza nada para quien pagó; sin `ADSENSE_CLIENT_ID`/`ADSENSE_SLOT_ID`, fuera de producción muestra un recuadro que marca dónde va. El layout raíz agrega la meta `google-adsense-account` (verificación del sitio) y `/ads.txt` se genera desde `ADSENSE_CLIENT_ID`. El service worker no cachea los dominios de anuncios.
-- **Configuración:** ver las variables `FREEMIUM_ENABLED`, `ADSENSE_*` y `LEMONSQUEEZY_*` en `.env.example`. En modo test de Lemon Squeezy se puede probar todo con tarjetas de prueba.
+- **Interruptor:** `ADS_ENABLED=true` los activa para todos. Con cualquier otro valor no se carga el script de AdSense, no se muestra ningún anuncio, no se agrega la meta de verificación y `/ads.txt` responde 404. Se lee en runtime (en Vercel hay que redeployar después de cambiarla).
+- **Excepción por jugador:** `users.adsDisabled = true` le quita los anuncios a un jugador en particular. Se cambia a mano en la base: `UPDATE users SET "adsDisabled" = true WHERE email = '...'`.
+- **Dónde:** `<AdSlot />` (un bloque responsive de AdSense) en el menú de un jugador, el de multijugador, "Mis partidas" y el resumen final de cada modo. Nunca durante una partida. Sin `ADSENSE_CLIENT_ID`/`ADSENSE_SLOT_ID`, fuera de producción muestra un recuadro que marca dónde va.
+- **AdSense:** el layout raíz agrega la meta `google-adsense-account` (verificación del sitio) y `/ads.txt` se genera desde `ADSENSE_CLIENT_ID`. El service worker no cachea los dominios de anuncios.
 
 ## Diseño (look & feel de videojuego)
 

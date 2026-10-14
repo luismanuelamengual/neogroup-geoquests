@@ -1,13 +1,13 @@
-import { isFreemiumEnabled } from '@/app/(protected)/(premium)/services/premium'
+import { isAdsEnabled } from '@/app/(protected)/(ads)/services/ads'
 
 /**
  * GET /ads.txt — authorizes Google AdSense to sell the ads of this site (AdSense
- * asks for it). Built from ADSENSE_CLIENT_ID; 404 while freemium is off.
+ * asks for it). Built from ADSENSE_CLIENT_ID; 404 while ads are off.
  */
 export function GET(): Response {
   const client = process.env.ADSENSE_CLIENT_ID
 
-  if (!isFreemiumEnabled() || !client) {
+  if (!isAdsEnabled() || !client) {
     return new Response('Not found', { status: 404 })
   }
 

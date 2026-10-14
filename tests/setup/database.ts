@@ -10,7 +10,6 @@ const TABLES = [
   'map_places',
   'places',
   'maps',
-  'payments',
   'password_reset_tokens',
   'email_verification_tokens',
   'users'

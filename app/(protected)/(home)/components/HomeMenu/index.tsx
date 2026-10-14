@@ -1,11 +1,11 @@
 'use client'
 
 import './index.scss'
+import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBanner'
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
-import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import InstallAppBanner from '@/app/(pwa)/components/InstallAppBanner'
 import { useT } from '@/app/i18n/I18nProvider'
 

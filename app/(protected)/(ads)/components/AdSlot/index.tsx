@@ -2,9 +2,8 @@
 
 import './index.scss'
 import classNames from 'classnames'
-import Link from 'next/link'
 import { useEffect } from 'react'
-import { useAds } from '@/app/(protected)/(premium)/components/AdsProvider'
+import { useAds } from '@/app/(protected)/(ads)/components/AdsProvider'
 import { useT } from '@/app/i18n/I18nProvider'
 import { isProduction } from '@/app/utils/environment'
 
@@ -36,8 +35,8 @@ function AdUnit({ client, slot }: { client: string; slot: string }) {
 }
 
 /**
- * A responsive AdSense banner, with a link to remove the ads. Renders nothing
- * for ad-free players or with freemium off. Without AdSense configured it shows
+ * A responsive AdSense banner. Renders nothing with ADS_ENABLED off or for
+ * players exempted from the ads (users.adsDisabled). Without AdSense configured it shows
  * a placeholder outside production, to see where the ads go.
  */
 export default function AdSlot({ className }: { className?: string }) {
@@ -51,11 +50,8 @@ export default function AdSlot({ className }: { className?: string }) {
 
   return (
     <aside className={classNames('ad-slot', className)}>
-      <span className="label">{t('premium.adLabel')}</span>
-      {configured ? <AdUnit client={client} slot={slot} /> : <div className="placeholder">{t('premium.adLabel')}</div>}
-      <Link href="/account#premium" className="remove">
-        {t('premium.removeAds')}
-      </Link>
+      <span className="label">{t('ads.label')}</span>
+      {configured ? <AdUnit client={client} slot={slot} /> : <div className="placeholder">{t('ads.label')}</div>}
     </aside>
   )
 }

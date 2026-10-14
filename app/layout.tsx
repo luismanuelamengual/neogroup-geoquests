@@ -7,7 +7,7 @@ import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
-import { isFreemiumEnabled } from '@/app/(protected)/(premium)/services/premium'
+import { isAdsEnabled } from '@/app/(protected)/(ads)/services/ads'
 import { PWA_CONFIG } from '@/app/(pwa)/services/pwa'
 import ThemeRegistry from '@/app/components/ThemeRegistry'
 import I18nProvider from '@/app/i18n/I18nProvider'
@@ -39,8 +39,8 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: '/favicon.ico',
       apple: '/apple-touch-icon.png'
     },
-    // Lets AdSense verify the site (freemium): every page carries it, the public ones included.
-    other: isFreemiumEnabled() && adsenseClient ? { 'google-adsense-account': adsenseClient } : undefined
+    // Lets AdSense verify the site: every page carries it, the public ones included.
+    other: isAdsEnabled() && adsenseClient ? { 'google-adsense-account': adsenseClient } : undefined
   }
 }
 

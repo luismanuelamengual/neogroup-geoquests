@@ -2,12 +2,12 @@
 
 import './index.scss'
 import { useCallback, useEffect, useState } from 'react'
+import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import GameListRow from '@/app/(protected)/(game)/components/GameListRow'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameListItem } from '@/app/(protected)/(game)/models/GameListItem'
 import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { formatScore } from '@/app/(protected)/(game)/utils/score'
-import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import { useI18n } from '@/app/i18n/I18nProvider'

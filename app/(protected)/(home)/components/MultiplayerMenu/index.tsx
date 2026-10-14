@@ -2,12 +2,12 @@
 
 import './index.scss'
 import GroupsIcon from '@mui/icons-material/Groups'
+import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBanner'
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
 import JoinGameDialog from '@/app/(protected)/(game)/components/JoinGameDialog'
 import PublicGamesList from '@/app/(protected)/(game)/components/PublicGamesList'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
-import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import { useT } from '@/app/i18n/I18nProvider'
 
 /**

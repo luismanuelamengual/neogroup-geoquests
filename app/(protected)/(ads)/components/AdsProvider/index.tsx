@@ -2,7 +2,7 @@
 
 import Script from 'next/script'
 import { createContext, ReactNode, useContext } from 'react'
-import { AdsConfig } from '@/app/(protected)/(premium)/models/AdsConfig'
+import { AdsConfig } from '@/app/(protected)/(ads)/models/AdsConfig'
 
 const NO_ADS: AdsConfig = { showAds: false, client: null, slot: null }
 const AdsContext = createContext<AdsConfig>(NO_ADS)

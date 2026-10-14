@@ -127,19 +127,8 @@ export const en: Messages = {
     saved: 'Profile updated!',
     languageLabel: 'App language'
   },
-  premium: {
-    title: 'No ads',
-    adLabel: 'Advertisement',
-    removeAds: 'Remove ads',
-    pitch: 'Play for 1 year without ads for {price}.',
-    oneOffNote:
-      'One-off payment, no automatic renewal. Buying another year before it expires adds it to the time you have left.',
-    buy: 'Remove ads for {price}',
-    addYear: 'Add 1 more year for {price}',
-    activeUntil: 'You play without ads until {date}.',
-    expired: 'Your ad-free year expired on {date}.',
-    confirming: 'Confirming your payment, this takes a few seconds...',
-    thanks: 'Thanks for supporting GeoQuests!'
+  ads: {
+    label: 'Advertisement'
   },
   home: {
     greeting: 'Hi, {name}!',
@@ -760,8 +749,6 @@ export const en: Messages = {
     emailAlreadyRegistered: 'The email is already registered',
     fillAllFields: 'Fill in all the fields',
     linkInvalidOrUsed: 'The link is not valid or has already been used',
-    linkExpired: 'The link has expired. Request a new one',
-    freemiumDisabled: 'Buying the ad-free year is not available',
-    paymentsNotConfigured: 'Payments are not configured yet'
+    linkExpired: 'The link has expired. Request a new one'
   }
 }

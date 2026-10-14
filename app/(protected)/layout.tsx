@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation'
 import { ReactNode, Suspense } from 'react'
 import { auth } from '@/app/(auth)/services/auth'
-import AdsProvider from '@/app/(protected)/(premium)/components/AdsProvider'
-import { AdsConfig } from '@/app/(protected)/(premium)/models/AdsConfig'
-import { shouldShowAds } from '@/app/(protected)/(premium)/services/premium'
+import AdsProvider from '@/app/(protected)/(ads)/components/AdsProvider'
+import { AdsConfig } from '@/app/(protected)/(ads)/models/AdsConfig'
+import { shouldShowAds } from '@/app/(protected)/(ads)/services/ads'
 import AppShell from '@/app/(protected)/components/AppShell'
 import UserStoreHydrator from '@/app/(protected)/components/UserStoreHydrator'
 import { SessionUser } from '@/app/(protected)/models/SessionUser'
@@ -13,7 +13,7 @@ import { User } from '@/app/models/User'
 /**
  * Shared layout for every authenticated page: requires a session whose user
  * still exists and is active, hydrates the user store and wraps the content
- * with the application shell and the ads of the free players (freemium).
+ * with the application shell and the ads (see app/(protected)/(ads)).
  */
 export default async function Layout({ children }: { children: ReactNode }) {
   const session = await auth()
