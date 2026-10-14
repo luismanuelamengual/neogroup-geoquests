@@ -4,6 +4,10 @@
   margin: 0 auto;
   padding: 44px 16px 40px;
 
+  .ad {
+    margin-top: 32px;
+  }
+
   .stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

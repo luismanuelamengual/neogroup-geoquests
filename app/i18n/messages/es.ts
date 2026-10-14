@@ -130,6 +130,20 @@ export const es = {
     saved: '¡Perfil actualizado!',
     languageLabel: 'Idioma de la aplicación'
   },
+  premium: {
+    title: 'Sin publicidad',
+    adLabel: 'Publicidad',
+    removeAds: 'Quitar publicidad',
+    pitch: 'Jugá durante 1 año sin publicidad por {price}.',
+    oneOffNote:
+      'Pago único, sin renovación automática. Si comprás otro año antes de que venza, se suma al que te queda.',
+    buy: 'Quitar publicidad por {price}',
+    addYear: 'Sumar 1 año más por {price}',
+    activeUntil: 'Jugás sin publicidad hasta el {date}.',
+    expired: 'Tu año sin publicidad venció el {date}.',
+    confirming: 'Estamos confirmando tu pago, esto tarda unos segundos...',
+    thanks: '¡Gracias por apoyar GeoQuests!'
+  },
   home: {
     greeting: '¡Hola, {name}!',
     title: '¿Cómo querés jugar?',
@@ -752,7 +766,9 @@ export const es = {
     emailAlreadyRegistered: 'El email ya está registrado',
     fillAllFields: 'Completá todos los campos',
     linkInvalidOrUsed: 'El enlace no es válido o ya fue utilizado',
-    linkExpired: 'El enlace expiró. Pedí uno nuevo'
+    linkExpired: 'El enlace expiró. Pedí uno nuevo',
+    freemiumDisabled: 'La compra sin publicidad no está disponible',
+    paymentsNotConfigured: 'Los pagos todavía no están configurados'
   }
 }
 

@@ -15,6 +15,7 @@ import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { SUSPECT_ROLE } from '@/app/(protected)/(game)/utils/suspects'
+import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import { useI18n } from '@/app/i18n/I18nProvider'
@@ -121,6 +122,7 @@ export default function DetectiveGameSummary() {
           </GameButton>
         </div>
       </GamePanel>
+      <AdSlot />
       <div className="details">
         <GamePanel className="map-panel" title={t('detective.summary.route')} accent="cyan">
           <DetectiveMap className="summary-map" markers={markers} legs={legs} fitTo={route} />

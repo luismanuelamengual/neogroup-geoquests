@@ -4,7 +4,7 @@ import './index.scss'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import { useRouter } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { FormEvent, ReactNode, useState } from 'react'
 import { useAccount } from '@/app/(protected)/(account)/hooks/useAccount'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import GameButton from '@/app/components/GameButton'
@@ -18,9 +18,11 @@ import { createTranslator } from '@/app/i18n/translate'
 /** Player profile: a single panel with the badge and every setting, saved together with one button. */
 interface AccountFormProps {
   account: { name: string; displayName: string; email: string }
+  /** Panels shown below the profile (e.g. playing without ads). */
+  children?: ReactNode
 }
 
-export default function AccountForm({ account }: AccountFormProps) {
+export default function AccountForm({ account, children }: AccountFormProps) {
   const router = useRouter()
   const { t, locale } = useI18n()
   const { updateAccount } = useAccount()
@@ -93,6 +95,7 @@ export default function AccountForm({ account }: AccountFormProps) {
           </GameButton>
         </form>
       </GamePanel>
+      {children}
     </div>
   )
 }

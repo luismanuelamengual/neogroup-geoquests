@@ -16,6 +16,7 @@ import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import { countryFlag } from '@/app/(protected)/(game)/utils/places'
 import { formatDistance, formatScore, getGameStars, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
+import AdSlot from '@/app/(protected)/(premium)/components/AdSlot'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Loading from '@/app/components/Loading'
@@ -92,6 +93,7 @@ export default function ClassicGameSummary() {
           </GameButton>
         </div>
       </GamePanel>
+      <AdSlot />
       <div className="details">
         <GamePanel className="map-panel" title={t('game.yourAnswers')} accent="cyan">
           <ResultMap pairs={pairs} className="summary-map" />
