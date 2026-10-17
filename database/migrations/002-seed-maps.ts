@@ -113,7 +113,6 @@ const UNITED_STATES_SCORE_MAX_DISTANCE_KM = 3000 // Coast to coast: ~4500 km
 const EUROPE_SCORE_MAX_DISTANCE_KM = 3000 // Reikiavik - Athens: ~3700 km
 const ARGENTINA_SCORE_MAX_DISTANCE_KM = 2200 // La Quiaca - Río Gallegos: ~3500 km
 const SPAIN_SCORE_MAX_DISTANCE_KM = 800 // Galicia - Almería: ~850 km
-
 const ARGENTINA_MAP = 'argentina'
 const SPAIN_MAP = 'spain'
 const UNITED_STATES_MAP = 'united-states'
@@ -130,6 +129,12 @@ function countryMap(slug: string, scoreMaxDistanceKm: number): SeedMap {
 
 const MAPS: SeedMap[] = [
   {
+    slug: LANDMARKS_MAP,
+    image: null,
+    places: (place) => place.onlyMap === LANDMARKS_MAP,
+    settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
+  },
+  {
     slug: 'famous-cities',
     image: null,
     places: (place) => !!place.famous,
@@ -139,12 +144,6 @@ const MAPS: SeedMap[] = [
     slug: 'world-cities',
     image: null,
     places: (place) => !place.onlyMap,
-    settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
-  },
-  {
-    slug: LANDMARKS_MAP,
-    image: null,
-    places: (place) => place.onlyMap === LANDMARKS_MAP,
     settings: { scoreMaxDistanceKm: WORLD_SCORE_MAX_DISTANCE_KM }
   },
   countryMap(ARGENTINA_MAP, ARGENTINA_SCORE_MAX_DISTANCE_KM),
@@ -1269,7 +1268,6 @@ const LANDMARKS: PlaceRow[] = [
   ['Glaciar Franz Josef', 'NZ', -43.467, 170.183, 800],
   ['Rocas Moeraki', 'NZ', -45.346, 170.827, 400]
 ]
-
 /**
  * Capitals of the provinces of Argentina (the 23 provinces + Buenos Aires
  * city), only in `argentina`. The ones that are already places of another map
@@ -1302,7 +1300,6 @@ const ARGENTINA_CAPITALS: PlaceRow[] = [
   ['Ushuaia', 'AR', -54.8019, -68.303, 3000],
   ['San Miguel de Tucumán', 'AR', -26.8083, -65.2176, 5000]
 ]
-
 /**
  * Capitals of the provinces of the Iberian Peninsula of Spain (47 of the 50
  * provinces: the Balearic and Canary islands are left out, as they were of the
@@ -1358,7 +1355,6 @@ const SPAIN_CAPITALS: PlaceRow[] = [
   ['Zamora', 'ES', 41.5033, -5.7446, 2000],
   ['Zaragoza', 'ES', 41.6488, -0.8891, 5000]
 ]
-
 /**
  * Capitals of the 48 continental states of the United States (Alaska and
  * Hawaii are left out), only in `united-states`. Those whose name is shared
@@ -1415,7 +1411,6 @@ const UNITED_STATES_CAPITALS: PlaceRow[] = [
   ['Madison', 'US', 43.0731, -89.4012, 4500],
   ['Cheyenne', 'US', 41.14, -104.8202, 3000]
 ]
-
 const PLACES: SeedPlace[] = [
   ...BASE_PLACES,
   ...circlesOf(LATIN_AMERICA_CITIES, LATIN_AMERICA_MAP),
