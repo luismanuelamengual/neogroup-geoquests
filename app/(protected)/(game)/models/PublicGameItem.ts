@@ -11,5 +11,11 @@ export interface PublicGameItem {
   hostName: string
   playersCount: number
   maxPlayers: number
+  /** Rounds of the game (null in the modes without a fixed number, e.g. battle royale). */
+  roundsCount: number | null
+  /** Time limit of each round in seconds (null = no limit). */
+  timeLimitSeconds: number | null
+  /** Rounds played between one elimination and the next (battle royale only, else null). */
+  roundsPerElimination: number | null
   createdAt: string
 }

@@ -3,12 +3,15 @@
 import './index.scss'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import PublicIcon from '@mui/icons-material/Public'
+import ReplayIcon from '@mui/icons-material/Replay'
+import TimerIcon from '@mui/icons-material/Timer'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import GameModeIcon from '@/app/(protected)/(game)/components/GameModeIcon'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { PublicGameItem } from '@/app/(protected)/(game)/models/PublicGameItem'
 import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { formatTimeLimit } from '@/app/(protected)/(game)/utils/score'
 import GameButton from '@/app/components/GameButton'
 import { useFocusDetector } from '@/app/hooks/useFocusDetector'
 import { useT } from '@/app/i18n/I18nProvider'
@@ -92,6 +95,29 @@ export default function PublicGamesList() {
                 </span>
                 <span className="map">{getMapName(t, game.mapSlug)}</span>
                 <span className="host">{t('publicGames.host', { name: game.hostName })}</span>
+                <ul className="rules" aria-label={t('picker.rules')}>
+                  {game.roundsPerElimination !== null ? (
+                    <li className="rule">
+                      <ReplayIcon className="rule-icon" />
+                      {game.roundsPerElimination > 1
+                        ? t('modes.eliminationEvery', { count: game.roundsPerElimination })
+                        : t('modes.elimination')}
+                    </li>
+                  ) : (
+                    game.roundsCount !== null && (
+                      <li className="rule">
+                        <ReplayIcon className="rule-icon" />
+                        {t('modes.rounds', { count: game.roundsCount })}
+                      </li>
+                    )
+                  )}
+                  <li className="rule">
+                    <TimerIcon className="rule-icon" />
+                    {game.timeLimitSeconds
+                      ? t('publicGames.timePerRound', { time: formatTimeLimit(game.timeLimitSeconds, t) })
+                      : t('modes.noTime')}
+                  </li>
+                </ul>
               </div>
               <span className="players">
                 {game.playersCount}/{game.maxPlayers}

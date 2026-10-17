@@ -151,7 +151,16 @@ describe('classic multiplayer flow', () => {
       // They keep their code, so they can be shared too.
       expect(lobby.code).toMatch(/^[A-Z2-9]{6}$/)
       expect(await getPublicGames(at(1000))).toMatchObject([
-        { id: lobby.id, mode: GameMode.CLASSIC_MULTIPLAYER, hostName: 'Player', playersCount: 1, maxPlayers: 8 }
+        {
+          id: lobby.id,
+          mode: GameMode.CLASSIC_MULTIPLAYER,
+          hostName: 'Player',
+          playersCount: 1,
+          maxPlayers: 8,
+          roundsCount: 5,
+          timeLimitSeconds: 180,
+          roundsPerElimination: null
+        }
       ])
 
       await startGame(host, { gameId: (await joinGame(ana, { gameId: lobby.id }, at(1000))).id }, at(2000))

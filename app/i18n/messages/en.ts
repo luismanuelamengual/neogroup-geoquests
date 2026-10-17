@@ -154,6 +154,7 @@ export const en: Messages = {
     text: 'Open rooms waiting for players. Join any of them, no code needed.',
     empty: 'There are no public games waiting for players. Create one!',
     host: 'Created by {name}',
+    timePerRound: '{time} per round',
     join: 'Join'
   },
   modes: {

@@ -95,6 +95,32 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    .rules {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .rule {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border: 2px solid var(--color-panel-border);
+      border-radius: 999px;
+      color: var(--color-cyan);
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+
+      .rule-icon {
+        font-size: 0.95rem;
+      }
+    }
   }
 
   .players {

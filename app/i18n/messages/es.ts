@@ -157,6 +157,7 @@ export const es = {
     text: 'Salas abiertas esperando jugadores. Entrá a cualquiera, sin código.',
     empty: 'No hay partidas públicas esperando jugadores. ¡Creá una!',
     host: 'Creada por {name}',
+    timePerRound: '{time} por ronda',
     join: 'Unirme'
   },
   modes: {

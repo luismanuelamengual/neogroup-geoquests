@@ -513,6 +513,10 @@ export async function getPublicGames(options: GameOptions = {}): Promise<PublicG
       return []
     }
 
+    // Rules chosen when the game was created (the multiplayer modes keep them in `data.settings`).
+    const settings: { rounds?: number; timeLimitSeconds?: number | null; roundsPerElimination?: number } =
+      (game.data as { settings?: object } | null)?.settings ?? {}
+
     return [
       {
         id: game.id,
@@ -522,6 +526,10 @@ export async function getPublicGames(options: GameOptions = {}): Promise<PublicG
         hostName: toPlayerView(host).name,
         playersCount: gamePlayers.length,
         maxPlayers,
+        roundsCount: settings.rounds ?? null,
+        timeLimitSeconds: settings.timeLimitSeconds ?? null,
+        roundsPerElimination:
+          game.mode === GameMode.BATTLE_ROYALE ? Math.max(1, settings.roundsPerElimination ?? 1) : null,
         createdAt: game.createdAt.toISOString()
       }
     ]
