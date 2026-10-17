@@ -47,11 +47,6 @@
     }
   }
 
-  .loading-screen {
-    position: fixed;
-    z-index: 1400;
-  }
-
   .art {
     position: relative;
     height: 190px;
@@ -118,4 +113,9 @@
     font-weight: 800;
     text-transform: uppercase;
   }
+}
+
+// Loading of the game the card starts, over the whole screen (rendered in the body, see index.tsx).
+.map-card-loading .loading-screen {
+  z-index: 1400;
 }

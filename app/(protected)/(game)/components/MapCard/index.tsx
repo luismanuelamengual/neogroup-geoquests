@@ -5,6 +5,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import classNames from 'classnames'
 import { useRouter } from 'next/navigation'
 import { KeyboardEvent, useState } from 'react'
+import { createPortal } from 'react-dom'
 import MapArt from '@/app/(protected)/(game)/components/MapArt'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
@@ -69,7 +70,15 @@ export default function MapCard({ map, mode, settings, isPublic = false }: MapCa
       onClick={handlePlay}
       onKeyDown={handleKeyDown}
     >
-      {starting && <Loading message={multiplayer ? t('picker.preparingRoom') : t('picker.searchingPlaces')} />}
+      {/* In the body: inside the card (moved up by a transform on hover) the
+          fixed overlay would only cover the card, not the whole screen. */}
+      {starting &&
+        createPortal(
+          <div className="map-card-loading">
+            <Loading message={multiplayer ? t('picker.preparingRoom') : t('picker.searchingPlaces')} />
+          </div>,
+          document.body
+        )}
       <div className="art" aria-hidden="true">
         {map.image && map.photos.length === 0 ? (
           // eslint-disable-next-line @next/next/no-img-element
