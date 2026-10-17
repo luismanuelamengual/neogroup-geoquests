@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
+import { useFocusDetector } from '@/app/hooks/useFocusDetector'
 
 /** Time between two polls while everything goes well. */
 const POLL_INTERVAL_MS = 1500
@@ -13,20 +14,30 @@ const MAX_BACKOFF_MS = 10_000
  * Keeps the game of the game store in sync with the server while `enabled`
  * (real time modes): polls /api/getGame every POLL_INTERVAL_MS with the
  * version it has (the server answers "unchanged" when nothing happened),
- * pauses while the tab is hidden and polls right away when it comes back.
+ * pauses while the window is not active (hidden tab, focus in another app or
+ * window) and polls right away when it comes back.
  * After an error it waits longer each time; `onError` gets every error (e.g.
  * the player was removed from the game).
  */
 export function useGameSync(gameId: number, enabled: boolean, onError?: (error: Error) => void) {
   const { getGame } = useGames()
   const onErrorRef = useRef(onError)
+  const focused = useFocusDetector()
+  /** Whether polling was paused for lack of focus: when it resumes, it polls right away. */
+  const pausedRef = useRef(false)
 
   useEffect(() => {
     onErrorRef.current = onError
   }, [onError])
 
   useEffect(() => {
-    if (!enabled) {
+    if (!focused) {
+      pausedRef.current = true
+    }
+  }, [focused])
+
+  useEffect(() => {
+    if (!enabled || !focused) {
       return
     }
 
@@ -42,11 +53,6 @@ export function useGameSync(gameId: number, enabled: boolean, onError?: (error: 
 
     async function poll() {
       if (stopped || polling) {
-        return
-      }
-
-      if (document.hidden) {
-        // Resumed by the visibilitychange listener.
         return
       }
 
@@ -73,19 +79,12 @@ export function useGameSync(gameId: number, enabled: boolean, onError?: (error: 
       }
     }
 
-    const handleVisibility = () => {
-      if (!document.hidden) {
-        schedule(0)
-      }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibility)
-    schedule(POLL_INTERVAL_MS)
+    schedule(pausedRef.current ? 0 : POLL_INTERVAL_MS)
+    pausedRef.current = false
 
     return () => {
       stopped = true
       window.clearTimeout(timer)
-      document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [gameId, enabled, getGame])
+  }, [gameId, enabled, focused, getGame])
 }

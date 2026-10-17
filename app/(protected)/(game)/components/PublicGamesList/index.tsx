@@ -10,6 +10,7 @@ import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { PublicGameItem } from '@/app/(protected)/(game)/models/PublicGameItem'
 import { getMapName } from '@/app/(protected)/(game)/utils/mapText'
 import GameButton from '@/app/components/GameButton'
+import { useFocusDetector } from '@/app/hooks/useFocusDetector'
 import { useT } from '@/app/i18n/I18nProvider'
 import type { MessageKey } from '@/app/i18n/messages'
 
@@ -19,8 +20,8 @@ const REFRESH_INTERVAL_MS = 5000
 /**
  * Public games of the "Multijugador" menu: the multiplayer games other
  * players made public that are waiting for players and still have room —
- * kept up to date by polling — each one with the button to join it, no code
- * needed.
+ * kept up to date by polling while the window is active (refreshed right away
+ * when it comes back) — each one with the button to join it, no code needed.
  */
 export default function PublicGamesList() {
   const t = useT()
@@ -28,8 +29,13 @@ export default function PublicGamesList() {
   const { getPublicGames, joinPublicGame } = useGames()
   const [games, setGames] = useState<PublicGameItem[] | null>(null)
   const [joiningId, setJoiningId] = useState<number | null>(null)
+  const focused = useFocusDetector()
 
   useEffect(() => {
+    if (!focused) {
+      return
+    }
+
     let active = true
     const load = () =>
       getPublicGames()
@@ -50,7 +56,7 @@ export default function PublicGamesList() {
       active = false
       clearInterval(interval)
     }
-  }, [getPublicGames])
+  }, [focused, getPublicGames])
 
   const handleJoin = async (gameId: number) => {
     setJoiningId(gameId)
