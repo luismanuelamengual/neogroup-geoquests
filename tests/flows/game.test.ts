@@ -64,7 +64,7 @@ describe('classic game flow', () => {
   beforeEach(async () => {
     await resetDatabase()
     userId = await createUser()
-    mapId = (await getMaps())[0].id
+    mapId = (await getMaps()).find((map) => map.slug === 'famous-cities')!.id
   })
 
   function create(options: GameOptions = {}, targetMapId = mapId): Promise<GameView> {
@@ -121,9 +121,9 @@ describe('classic game flow', () => {
     const maps = await getMaps()
 
     expect(maps.map((map) => [map.slug, map.placesCount])).toEqual([
+      ['landmarks', 582],
       ['famous-cities', 20],
       ['world-cities', 150],
-      ['landmarks', 582],
       ['argentina', 24],
       ['spain', 47],
       ['united-states', 48],
@@ -143,9 +143,9 @@ describe('classic game flow', () => {
 
     // Every seeded map sets the score scale (distance that scores 0) proportional to the area it covers.
     expect(await Promise.all(maps.map(async (map) => [map.slug, (await GameMap.find(map.id))!.settings]))).toEqual([
+      ['landmarks', { scoreMaxDistanceKm: 10000 }],
       ['famous-cities', { scoreMaxDistanceKm: 10000 }],
       ['world-cities', { scoreMaxDistanceKm: 10000 }],
-      ['landmarks', { scoreMaxDistanceKm: 10000 }],
       ['argentina', { scoreMaxDistanceKm: 2200 }],
       ['spain', { scoreMaxDistanceKm: 800 }],
       ['united-states', { scoreMaxDistanceKm: 3000 }],
@@ -154,7 +154,7 @@ describe('classic game flow', () => {
     ])
 
     const famous = await getMapPlaces(mapId)
-    const world = await getMapPlaces(maps[1].id)
+    const world = await getMapPlaces(maps.find((map) => map.slug === 'world-cities')!.id)
 
     expect(famous.filter((place) => place.geometry.type === 'Polygon')).toHaveLength(3)
     expect(famous.map((place) => place.name)).toEqual(expect.arrayContaining(['París', 'Roma', 'Buenos Aires']))
@@ -191,7 +191,7 @@ describe('classic game flow', () => {
   it('seeds the regional maps and the landmarks without touching `world-cities`', async () => {
     const maps = await getMaps()
     const placesOf = async (slug: string) => getMapPlaces(maps.find((map) => map.slug === slug)!.id)
-    const world = await getMapPlaces(maps[1].id)
+    const world = await getMapPlaces(maps.find((map) => map.slug === 'world-cities')!.id)
     const worldIds = new Set(world.map((place) => place.id))
     const latinAmerica = await placesOf('latin-america')
     const europe = await placesOf('europe')
@@ -486,8 +486,9 @@ describe('classic game flow', () => {
 
       expect(classic(game).timeLimitSeconds).toBeNull()
       expect(classic(await act(game.id, { type: 'startRound' })).roundTimeLeftMs).toBeNull()
-      await expect(guess(game.id, 1, null)).rejects.toThrow('Marcá un lugar')
-      expect(classic(await guess(game.id, 1, ATLANTIC)).rounds[0].timedOut).toBe(false)
+      // A round without a pin (skipped because the map got frozen) scores 0.
+      expect(classic(await guess(game.id, 1, null)).rounds[0]).toMatchObject({ score: 0, guess: null })
+      expect(classic(await guess(game.id, 2, ATLANTIC)).rounds[1].timedOut).toBe(false)
     })
   })
 

@@ -103,7 +103,8 @@ describe('localized formats', () => {
     ])
     expect(formatTimeLimit(90, createTranslator('en'))).toBe('1 min 30 s')
     expect(getRoundVerdict(5000, 5000, createTranslator('en'))).toBe('PERFECT!')
-    expect(getRoundVerdict(5000, 5000)).toBe('¡PERFECTO!')
+    expect(getRoundVerdict(5000, 5000)).toBe('PERFECT!')
+    expect(getRoundVerdict(5000, 5000, createTranslator('es'))).toBe('¡PERFECTO!')
   })
 })
 

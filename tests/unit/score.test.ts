@@ -38,7 +38,8 @@ describe('calculateRoundScore', () => {
 describe('formatDistance', () => {
   it('uses meters below 1 km and kilometers above', () => {
     expect(formatDistance(85.4)).toBe('85 m')
-    expect(formatDistance(1234)).toBe('1,2 km')
+    expect(formatDistance(1234)).toBe('1.2 km')
+    expect(formatDistance(1234, 'es')).toBe('1,2 km')
     expect(formatDistance(356_400)).toBe('356 km')
   })
 })
