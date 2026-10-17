@@ -308,11 +308,11 @@ yarn test
 
 ## Idiomas (i18n)
 
-La app está disponible en español (idioma por defecto) e inglés. El jugador elige el idioma en **Mi perfil**.
+La app está disponible en inglés (idioma por defecto) y español. El jugador elige el idioma en **Mi perfil**.
 
 - **Diccionarios**: `app/i18n/messages/es.ts` (referencia) y `en.ts` (debe tener la misma forma; el compilador y `tests/unit/i18n.test.ts` lo verifican). Las claves se usan con `t('grupo.clave', { param })`; un mensaje `{ one, other }` es un plural que se elige con `count`.
 - **Componentes cliente**: `const t = useT()` (o `const { t, locale } = useI18n()`) de `app/i18n/I18nProvider`. **Servidor** (páginas, rutas API): `const t = await getT()` de `app/i18n/server`.
-- **Idioma de cada request**: el guardado en el usuario (viaja en la sesión JWT) → cookie `locale` → cabecera `Accept-Language` → español.
+- **Idioma de cada request**: el guardado en el usuario (viaja en la sesión JWT) → cookie `locale` → cabecera `Accept-Language` → inglés.
 - **Persistencia**: columna `users.locale` (definida en `001-create-base-tables`) y cookie `locale` (para las páginas anteriores al login). Se guarda con `POST /api/updateAccount { locale }`.
 - **Errores de la API**: `new ApiException('errors.clave', status, params)`; la respuesta los envía traducidos al idioma del request (más `error.key`, que el cliente usa para decidir sin depender del texto).
 - **Emails**: se envían en el idioma guardado del destinatario.

@@ -3,7 +3,7 @@ export const LOCALES = ['es', 'en'] as const
 
 export type Locale = (typeof LOCALES)[number]
 
-export const DEFAULT_LOCALE: Locale = 'es'
+export const DEFAULT_LOCALE: Locale = 'en'
 
 /** Cookie that remembers the language of the visitor (and of the signed-in user, for the pages rendered before login). */
 export const LOCALE_COOKIE = 'locale'
