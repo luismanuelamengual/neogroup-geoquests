@@ -91,8 +91,9 @@ function startRound(data: ClassicGameData, ctx: GameContext): boolean {
 /**
  * Registers the guess of the current round: distance to the real location and
  * score. Timed games: the round must have been started, and a guess arriving
- * after the time limit (plus the grace period) — or no guess at all, when the
- * countdown ended before a pin was placed — scores 0.
+ * after the time limit (plus the grace period) scores 0. No guess at all (the
+ * countdown ended before a pin was placed, or the round was skipped because the
+ * map got frozen) also scores 0.
  */
 function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): boolean {
   const position = parseGuessPosition(action.latitude, action.longitude)
@@ -105,10 +106,6 @@ function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): bo
 
   if (timed && !data.roundStartedAt) {
     throw new ApiException('errors.roundNotStarted')
-  }
-
-  if (!timed && !position) {
-    throw new ApiException('errors.markAPlace')
   }
 
   const index = data.currentRound - 1

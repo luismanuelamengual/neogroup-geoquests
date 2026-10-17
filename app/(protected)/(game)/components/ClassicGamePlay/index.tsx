@@ -14,9 +14,23 @@ import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
+import { useFocusDetector } from '@/app/hooks/useFocusDetector'
 
 function classicView(game: GameView): ClassicGameView {
   return game.modeView as ClassicGameView
+}
+
+/** sessionStorage key marking a round whose map got frozen (so a reload does not unfreeze it). */
+function frozenRoundKey(gameId: number, roundNumber: number) {
+  return `geoquests:classic-frozen:${gameId}:${roundNumber}`
+}
+
+function isRoundFrozen(gameId: number, roundNumber: number | null) {
+  try {
+    return roundNumber != null && window.sessionStorage.getItem(frozenRoundKey(gameId, roundNumber)) === '1'
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -28,6 +42,10 @@ function classicView(game: GameView): ClassicGameView {
  * time a timed round is shown the server is told (startRound action), which
  * starts its clock; when the countdown ends the pin placed so far (if any) is
  * sent.
+ *
+ * Anti-cheat: if the window loses the focus while guessing (e.g. to search the
+ * place on Google or ask an AI), the guess map stays frozen until the round
+ * ends; only the pin already placed can be sent (or the round skipped).
  */
 export default function ClassicGamePlay() {
   const router = useRouter()
@@ -43,6 +61,30 @@ export default function ClassicGamePlay() {
   const submittingRef = useRef(false)
   const view = classicView(game)
   const { currentRoundNumber, timeLimitSeconds, roundTimeLeftMs } = view
+  const focused = useFocusDetector()
+  const [frozenRound, setFrozenRound] = useState<number | null>(() =>
+    isRoundFrozen(game.id, currentRoundNumber) ? currentRoundNumber : null
+  )
+  const guessing = phase === 'guessing' && currentRoundNumber != null
+
+  // Losing the focus mid-round freezes the map of that round (going back does not unfreeze it).
+  if (guessing && !focused && frozenRound !== currentRoundNumber) {
+    setFrozenRound(currentRoundNumber)
+  }
+
+  const frozen = guessing && frozenRound === currentRoundNumber
+
+  useEffect(() => {
+    if (!frozen) {
+      return
+    }
+
+    try {
+      window.sessionStorage.setItem(frozenRoundKey(game.id, currentRoundNumber!), '1')
+    } catch {
+      // Without storage a reload unfreezes the round.
+    }
+  }, [frozen, game.id, currentRoundNumber])
 
   // Starts the clock of the round on screen (timed games) — idempotent on the server,
   // so a reload keeps the original start time. Also sets the countdown of a resumed round.
@@ -120,7 +162,7 @@ export default function ClassicGamePlay() {
         onExit={handleExit}
         timer={phase === 'guessing' && deadline != null && <RoundTimer deadline={deadline} onExpire={submit} />}
       />
-      {phase === 'guessing' && <GuessPanel onSubmit={submit} submitting={submitting} />}
+      {phase === 'guessing' && <GuessPanel onSubmit={submit} submitting={submitting} frozen={frozen} />}
       {phase === 'result' && round.guessed && (
         <RoundResult
           round={round}
