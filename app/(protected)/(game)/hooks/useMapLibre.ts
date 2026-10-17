@@ -11,7 +11,8 @@ type MapLibreOptions = Omit<MapOptions, 'container' | 'style'>
  * it after its style has loaded (null until then). The library is imported
  * dynamically: it touches `window` and is only needed on the play screens.
  * The map follows the size of its container (it is resized when the guess
- * panel expands, the phone rotates, etc.) and is disposed on unmount.
+ * panel expands, the phone rotates, etc.) and is disposed on unmount. The
+ * attribution is shown collapsed by default.
  */
 export function useMapLibre(containerRef: RefObject<HTMLDivElement | null>, options: MapLibreOptions = {}) {
   const [map, setMap] = useState<MapLibreMap | null>(null)
@@ -44,6 +45,24 @@ export function useMapLibre(containerRef: RefObject<HTMLDivElement | null>, opti
         ...options
       })
       instance.touchZoomRotate.disableRotation()
+
+      // The compact attribution starts expanded and only collapses on the
+      // first drag; collapse it as soon as it is built so it shows as the
+      // (i) button. It stays accessible, as the OSM license requires.
+      const collapseAttribution = () => {
+        const attribution = container.querySelector('.maplibregl-ctrl-attrib.maplibregl-compact')
+
+        if (!attribution) {
+          return
+        }
+
+        attribution.classList.remove('maplibregl-compact-show')
+        instance?.off('styledata', collapseAttribution)
+        instance?.off('sourcedata', collapseAttribution)
+      }
+
+      instance.on('styledata', collapseAttribution)
+      instance.on('sourcedata', collapseAttribution)
       instance.on('load', () => {
         if (!disposed) {
           setMap(instance)
