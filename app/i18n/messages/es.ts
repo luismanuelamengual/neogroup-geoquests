@@ -239,8 +239,6 @@ export const es = {
     timePerRound: 'Tiempo por ronda',
     noMaps: 'Todavía no hay mapas para jugar.',
     places: { one: '{count} lugar', other: '{count} lugares' },
-    createRoom: 'Crear sala',
-    play: 'Jugar',
     preparingRoom: 'Preparando la sala...',
     searchingPlaces: 'Buscando lugares por el mundo...',
     joinWithCode: 'Unirme con código',

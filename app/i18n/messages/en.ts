@@ -236,8 +236,6 @@ export const en: Messages = {
     timePerRound: 'Time per round',
     noMaps: 'There are no maps to play yet.',
     places: { one: '{count} place', other: '{count} places' },
-    createRoom: 'Create room',
-    play: 'Play',
     preparingRoom: 'Preparing the room...',
     searchingPlaces: 'Looking for places around the world...',
     joinWithCode: 'Join with code',
