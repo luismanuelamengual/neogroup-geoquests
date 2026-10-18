@@ -12,6 +12,7 @@ export function useAccount() {
       executeRequest<{ name: string; displayName: string; locale: Locale }>('/updateAccount', input),
     [executeRequest]
   )
+  const deleteAccount = useCallback(() => executeRequest<null>('/deleteAccount', {}), [executeRequest])
 
-  return { updateAccount }
+  return { updateAccount, deleteAccount }
 }

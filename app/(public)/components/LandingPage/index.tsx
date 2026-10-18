@@ -1,4 +1,5 @@
 import './index.scss'
+import Link from 'next/link'
 import GameButton from '@/app/components/GameButton'
 import GamePanel from '@/app/components/GamePanel'
 import Logo from '@/app/components/Logo'
@@ -38,7 +39,12 @@ export default async function LandingPage() {
           </GamePanel>
         ))}
       </section>
-      <footer className="footer">{t('landing.credits')}</footer>
+      <footer className="footer">
+        {t('landing.credits')} ·{' '}
+        <Link href="/privacy" className="privacy-link">
+          {t('legal.privacyLink')}
+        </Link>
+      </footer>
     </main>
   )
 }

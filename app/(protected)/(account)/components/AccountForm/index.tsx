@@ -3,8 +3,10 @@
 import './index.scss'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
+import DeleteAccountDialog from '@/app/(protected)/(account)/components/DeleteAccountDialog'
 import { useAccount } from '@/app/(protected)/(account)/hooks/useAccount'
 import { useUserStore } from '@/app/(protected)/stores/users'
 import GameButton from '@/app/components/GameButton'
@@ -15,7 +17,10 @@ import { isLocale, Locale, LOCALE_FLAGS, LOCALE_NAMES, LOCALES } from '@/app/i18
 import { useI18n } from '@/app/i18n/I18nProvider'
 import { createTranslator } from '@/app/i18n/translate'
 
-/** Player profile: a single panel with the badge and every setting, saved together with one button. */
+/**
+ * Player profile: a panel with the badge and every setting, saved together with
+ * one button, plus the account deletion and a link to the privacy policy.
+ */
 interface AccountFormProps {
   account: { name: string; displayName: string; email: string }
 }
@@ -93,6 +98,13 @@ export default function AccountForm({ account }: AccountFormProps) {
           </GameButton>
         </form>
       </GamePanel>
+      <GamePanel className="danger-zone" title={t('account.delete.section')} accent="magenta">
+        <p className="danger-text">{t('account.delete.description')}</p>
+        <DeleteAccountDialog />
+      </GamePanel>
+      <Link href="/privacy" className="text-link privacy-link">
+        {t('legal.privacyLink')}
+      </Link>
     </div>
   )
 }

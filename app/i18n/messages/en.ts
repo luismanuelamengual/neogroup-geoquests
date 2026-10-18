@@ -30,7 +30,9 @@ export const en: Messages = {
     newPassword: 'New password',
     login: 'Sign in',
     offline: 'Offline',
-    profile: 'My profile'
+    profile: 'My profile',
+    privacy: 'Privacy policy',
+    deleteAccount: 'Delete account'
   },
   pwa: {
     description: 'Where are you? Explore streets of cities around the world and guess the place. Free.',
@@ -125,7 +127,78 @@ export const en: Messages = {
     playerNameTitle: 'Player name',
     save: 'Save',
     saved: 'Profile updated!',
-    languageLabel: 'App language'
+    languageLabel: 'App language',
+    delete: {
+      section: 'Delete account',
+      description: 'Your account, your player name, your email and all your games are deleted. It cannot be undone.',
+      button: 'Delete my account',
+      title: 'Delete your account?',
+      warning:
+        'You will leave the games you are playing, and your account and your history will be deleted forever. This cannot be undone.',
+      confirmWord: 'DELETE',
+      confirmLabel: 'Type {word} to confirm',
+      confirm: 'Delete forever'
+    }
+  },
+  legal: {
+    privacyLink: 'Privacy policy',
+    updatedAt: 'Last updated: {date}',
+    privacy: {
+      title: 'Privacy policy',
+      intro:
+        'GeoQuests is a geography game: you appear on a street somewhere in the world and have to guess where you are. This policy explains what data we keep, what we use it for and how you can delete it.',
+      data: {
+        title: 'What data we keep',
+        text: 'When you create your account: your email, your player name and your password (stored encrypted, never in plain text). If you sign in with Google, Google gives us your email and your name. We also keep the language you choose and your games: the mode, the map, your answers and your scores.'
+      },
+      use: {
+        title: 'What we use it for',
+        text: "Only to make the game work: signing in, showing your name to the other players of a game, building your history and your stats, and sending you the account verification and password recovery emails. We don't sell your data."
+      },
+      thirdParties: {
+        title: 'Third-party services',
+        text: 'We use Google for Google sign-in, the Google Street View imagery, the ads shown in the menus (Google AdSense) and the app usage statistics (Google Analytics through Google Tag Manager); Vercel to host the app; a PostgreSQL database provider to store the data; Resend to send the emails; and OpenStreetMap / OpenFreeMap for the maps. Each of them handles data under its own privacy policy.'
+      },
+      storage: {
+        title: 'Cookies and storage',
+        text: "We use one cookie to keep you signed in and another to remember your language. Google AdSense uses its own cookies and identifiers to show and measure ads; you can manage personalized ads in your Google account's ad settings. The browser's local storage keeps device preferences, such as having closed the install prompt."
+      },
+      retention: {
+        title: 'How long we keep it',
+        text: 'Games are deleted automatically after 7 days. Your account is kept until you delete it.'
+      },
+      deletion: {
+        title: 'How to delete your data',
+        text: "You can delete your account at any time from My profile → Delete account: your account and all your games are deleted right away. If you can't sign in, write to {email} from your account's email and we will delete it for you."
+      },
+      security: {
+        title: 'Security',
+        text: 'All communication with GeoQuests is encrypted (HTTPS) and passwords are stored with a secure hash (bcrypt).'
+      },
+      children: {
+        title: 'Children',
+        text: "GeoQuests is not directed at children under 13 and we don't knowingly collect data from children under that age. If you believe a child gave us their data, write to {email} and we will delete it."
+      },
+      changes: {
+        title: 'Changes and contact',
+        text: 'If we change this policy, we will update the date above. For any question about your data, write to {email}.'
+      }
+    },
+    deleteAccount: {
+      title: 'Delete your GeoQuests account',
+      intro: 'You can delete your account and all your data from the app, at any time:',
+      steps: {
+        signIn: 'Sign in to GeoQuests with your account.',
+        profile: "Open your player's menu and choose My profile.",
+        confirm: 'Tap Delete my account and confirm by typing DELETE.'
+      },
+      whatTitle: 'What is deleted',
+      whatText:
+        'Your account (email, player name and password) and all your games and stats are deleted right away and forever. We keep no copy.',
+      noAccessTitle: "Can't sign in?",
+      noAccessText: "Write to {email} from your account's email asking us to delete it, and we will do it for you.",
+      goToProfile: 'Go to My profile'
+    }
   },
   ads: {
     label: 'Advertisement'

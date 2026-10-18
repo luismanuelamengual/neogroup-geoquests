@@ -33,7 +33,9 @@ export const es = {
     newPassword: 'Nueva contraseña',
     login: 'Ingresar',
     offline: 'Sin conexión',
-    profile: 'Mi perfil'
+    profile: 'Mi perfil',
+    privacy: 'Política de privacidad',
+    deleteAccount: 'Eliminar cuenta'
   },
   pwa: {
     description: '¿Dónde estás? Explorá calles de ciudades del mundo y adiviná el lugar. Gratis.',
@@ -128,7 +130,78 @@ export const es = {
     playerNameTitle: 'Nombre de jugador',
     save: 'Guardar',
     saved: '¡Perfil actualizado!',
-    languageLabel: 'Idioma de la aplicación'
+    languageLabel: 'Idioma de la aplicación',
+    delete: {
+      section: 'Eliminar cuenta',
+      description: 'Se borran tu cuenta, tu nombre de jugador, tu email y todas tus partidas. No se puede deshacer.',
+      button: 'Eliminar mi cuenta',
+      title: '¿Eliminar tu cuenta?',
+      warning:
+        'Vas a salir de las partidas que estés jugando y se van a borrar para siempre tu cuenta y tu historial. Esto no se puede deshacer.',
+      confirmWord: 'ELIMINAR',
+      confirmLabel: 'Escribí {word} para confirmar',
+      confirm: 'Eliminar para siempre'
+    }
+  },
+  legal: {
+    privacyLink: 'Política de privacidad',
+    updatedAt: 'Última actualización: {date}',
+    privacy: {
+      title: 'Política de privacidad',
+      intro:
+        'GeoQuests es un juego de geografía: aparecés en una calle del mundo y tenés que adivinar dónde estás. Esta política explica qué datos guardamos, para qué los usamos y cómo podés borrarlos.',
+      data: {
+        title: 'Qué datos guardamos',
+        text: 'Al crear tu cuenta: tu email, tu nombre de jugador y tu contraseña (guardada cifrada, nunca en texto plano). Si entrás con Google, recibimos de Google tu email y tu nombre. También guardamos el idioma que elegís y tus partidas: el modo, el mapa, tus respuestas y tus puntajes.'
+      },
+      use: {
+        title: 'Para qué los usamos',
+        text: 'Solo para que el juego funcione: iniciar sesión, mostrar tu nombre a los otros jugadores de una partida, armar tu historial y tus estadísticas, y mandarte los emails de verificación de cuenta y de recuperación de contraseña. No vendemos tus datos.'
+      },
+      thirdParties: {
+        title: 'Servicios de terceros',
+        text: 'Usamos Google para el inicio de sesión con Google, las imágenes de Google Street View, los anuncios que se muestran en los menús (Google AdSense) y las estadísticas de uso de la app (Google Analytics a través de Google Tag Manager); Vercel para alojar la aplicación; un proveedor de bases de datos PostgreSQL para guardar los datos; Resend para enviar los emails; y OpenStreetMap / OpenFreeMap para los mapas. Cada uno trata los datos según su propia política de privacidad.'
+      },
+      storage: {
+        title: 'Cookies y almacenamiento',
+        text: 'Usamos una cookie para mantener tu sesión iniciada y otra para recordar tu idioma. Google AdSense usa sus propias cookies e identificadores para mostrar y medir los anuncios; podés administrar los anuncios personalizados en la configuración de anuncios de tu cuenta de Google. El almacenamiento local del navegador guarda preferencias del dispositivo, como haber cerrado el aviso de instalación.'
+      },
+      retention: {
+        title: 'Cuánto tiempo los guardamos',
+        text: 'Las partidas se borran automáticamente a los 7 días. Tu cuenta se guarda hasta que la elimines.'
+      },
+      deletion: {
+        title: 'Cómo borrar tus datos',
+        text: 'Podés eliminar tu cuenta cuando quieras desde Mi perfil → Eliminar cuenta: se borran tu cuenta y todas tus partidas en el momento. Si no podés entrar, escribinos a {email} desde el email de tu cuenta y la borramos nosotros.'
+      },
+      security: {
+        title: 'Seguridad',
+        text: 'Toda la comunicación con GeoQuests viaja cifrada (HTTPS) y las contraseñas se guardan con un hash seguro (bcrypt).'
+      },
+      children: {
+        title: 'Menores',
+        text: 'GeoQuests no está dirigido a menores de 13 años y no recolectamos a sabiendas datos de menores de esa edad. Si creés que un menor nos dio sus datos, escribinos a {email} y los borramos.'
+      },
+      changes: {
+        title: 'Cambios y contacto',
+        text: 'Si cambiamos esta política, vamos a actualizar la fecha de arriba. Para cualquier consulta sobre tus datos escribinos a {email}.'
+      }
+    },
+    deleteAccount: {
+      title: 'Eliminar tu cuenta de GeoQuests',
+      intro: 'Podés eliminar tu cuenta y todos tus datos desde la app, en cualquier momento:',
+      steps: {
+        signIn: 'Entrá a GeoQuests con tu cuenta.',
+        profile: 'Abrí el menú de tu jugador y elegí Mi perfil.',
+        confirm: 'Tocá Eliminar mi cuenta y confirmá escribiendo ELIMINAR.'
+      },
+      whatTitle: 'Qué se borra',
+      whatText:
+        'Se borran en el momento y para siempre tu cuenta (email, nombre de jugador y contraseña) y todas tus partidas y estadísticas. No guardamos ninguna copia.',
+      noAccessTitle: '¿No podés entrar?',
+      noAccessText: 'Escribinos a {email} desde el email de tu cuenta pidiendo que la borremos y lo hacemos nosotros.',
+      goToProfile: 'Ir a Mi perfil'
+    }
   },
   ads: {
     label: 'Publicidad'

@@ -297,6 +297,14 @@ La app muestra anuncios de Google AdSense a los jugadores.
 
 Manifest en `/manifest.webmanifest`, service worker de Serwist en `/serwist/sw.js`, página offline `/~offline` e íconos en `public/`. El juego necesita conexión (imágenes y mapas), por eso offline sólo se muestra la página de "sin señal".
 
+### Google Play (Trusted Web Activity)
+
+La app Android es una TWA (generada con PWABuilder o Bubblewrap) que abre este sitio. Lo que la publicación necesita del lado web:
+
+- `/privacy` (política de privacidad) y `/delete-account` (cómo borrar la cuenta): públicas con o sin sesión (`OPEN_PATHS` en `auth.config.ts`); son las URLs que se cargan en Play Console. El email de contacto sale de `CONTACT_EMAIL` (por defecto `soporte@geoquests.app`, ver `app/utils/legal.ts`).
+- Borrado de cuenta desde Mi perfil (`POST /api/deleteAccount`, `services/accounts.ts`): el jugador sale de sus partidas en curso y se borran su usuario, sus tokens y su historial.
+- `/.well-known/assetlinks.json`: se arma con `ANDROID_PACKAGE_NAME` y `ANDROID_SHA256_CERT_FINGERPRINTS` (SHA-256 separados por coma, de Play Console → Integridad de la app → Firma de apps). Sin esas variables devuelve `[]` y la TWA muestra la barra de URL.
+
 ## Testing
 
 ```bash

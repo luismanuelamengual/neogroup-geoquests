@@ -36,6 +36,18 @@
     flex-direction: column;
     gap: 20px;
   }
+
+  .danger-text {
+    margin: 0 0 20px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .privacy-link {
+    align-self: center;
+    margin-top: -16px;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 600px) {

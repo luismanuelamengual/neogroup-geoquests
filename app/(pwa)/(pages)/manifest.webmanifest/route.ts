@@ -10,6 +10,8 @@ import { createTranslator } from '@/app/i18n/translate'
 export async function GET(): Promise<NextResponse> {
   const locale = await getLocale()
   const manifest = {
+    // Stable identity of the app (Chrome and the Google Play TWA package key on it).
+    id: '/',
     name: PWA_CONFIG.name,
     short_name: PWA_CONFIG.shortName,
     description: createTranslator(locale)('pwa.description'),
