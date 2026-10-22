@@ -10,8 +10,8 @@ import { User } from '@/app/models/User'
  * Deletes a player's account and everything tied to it (required by Google
  * Play for apps that let people create an account). The player first leaves
  * the games it is still playing, the same way as with the "leave" button, so
- * the other players are not left waiting; then its user, tokens and game
- * history are removed. The rows are deleted explicitly instead of relying on
+ * the other players are not left waiting; then its user, tokens, game
+ * history, progress and daily challenge attempts are removed. The rows are deleted explicitly instead of relying on
  * the foreign keys' ON DELETE, which SQLite (tests) does not enforce.
  */
 export async function deleteAccount(userId: number, options: GameOptions = {}): Promise<void> {
@@ -36,6 +36,8 @@ export async function deleteAccount(userId: number, options: GameOptions = {}): 
 
   await DB.transaction(async () => {
     await DB.table('game_players').where('userId', userId).delete()
+    await DB.table('player_progress').where('userId', userId).delete()
+    await DB.table('daily_results').where('userId', userId).delete()
     await DB.table('games').where('hostUserId', userId).update({ hostUserId: null })
     await DB.table('email_verification_tokens').where('userId', userId).delete()
     await DB.table('password_reset_tokens').where('userId', userId).delete()

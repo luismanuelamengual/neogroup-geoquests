@@ -18,6 +18,8 @@ export interface GameView<ModeView = unknown> {
   hostUserId: number | null
   /** Multiplayer games anybody can join without the code (listed in the "Multijugador" menu). */
   isPublic: boolean
+  /** The daily challenge the game is the attempt of (null: a normal game). */
+  dailyChallengeId: number | null
   /** Version of the game: sent back when polling (GetGameInput.sinceVersion). */
   version: number
   players: GamePlayerView[]

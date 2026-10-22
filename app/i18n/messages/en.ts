@@ -11,19 +11,21 @@ export const en: Messages = {
     points: 'pts'
   },
   nav: {
+    stats: 'Stats',
+    ranking: 'Ranking',
     play: 'Play',
     multiplayer: 'Multiplayer',
-    myGames: 'My games',
     myProfile: 'My profile',
     logout: 'Sign out'
   },
   metadata: {
+    stats: 'Stats',
+    ranking: 'Ranking',
     mainMenu: 'Main menu',
     multiplayer: 'Multiplayer',
     invitation: 'Invitation',
     game: 'Game',
     chooseWhere: 'Choose where to play',
-    myGames: 'My games',
     verifyEmail: 'Verify your email',
     register: 'Create account',
     forgotPassword: 'Recover password',
@@ -57,6 +59,7 @@ export const en: Messages = {
     email: 'Email',
     password: 'Password',
     playerName: 'Player name',
+    lastName: 'Last name',
     login: {
       title: 'Sign in',
       subtitle: 'Where are you? Come in and prove it.',
@@ -125,6 +128,9 @@ export const en: Messages = {
   account: {
     profile: 'My profile',
     playerNameTitle: 'Player name',
+    lastNameTitle: 'Last name',
+    nicknameTitle: 'Nickname',
+    nicknameHint: 'If set, it is shown instead of your name and last name',
     save: 'Save',
     saved: 'Profile updated!',
     languageLabel: 'App language',
@@ -439,21 +445,14 @@ export const en: Messages = {
     publicGame: 'Public game',
     privateGame: 'Private game'
   },
-  myGames: {
-    title: 'My games',
+  stats: {
+    title: 'Stats',
     games: 'Games',
+    casesSolved: 'Cases solved',
     bestScore: 'Best score',
     average: 'Average',
-    empty: "You haven't played any games yet.",
-    letsPlay: "Let's play!",
-    loadMore: 'Load more',
-    position: '{position} of {total}',
-    stars: '{count} stars',
-    resume: 'Resume ({done}/{total})',
-    waitingRoom: 'In the waiting room',
-    casesSolved: 'Cases solved',
-    caught: 'Caught',
-    escaped: 'Escaped'
+    currentStreak: 'Current streak',
+    bestStreak: 'Best streak'
   },
   time: {
     seconds: '{count} s',
@@ -775,13 +774,61 @@ export const en: Messages = {
       reroll: 'Other witnesses'
     }
   },
+  daily: {
+    topTitle: "Today's best",
+    seeRanking: 'See ranking',
+    title: 'Daily challenge #{number}',
+    badge: 'New every day',
+    subtitle: 'The same streets for everybody. One attempt per day: how much will you score today?',
+    rules: '{rounds} rounds · {time} per round',
+    play: 'Play the challenge',
+    resume: 'Keep playing',
+    seeResult: 'See result',
+    yourScore: 'Your score today',
+    rank: 'Rank {position} of {total}',
+    top: 'Top {percent}%',
+    forfeited: "You left today's challenge. There's another one tomorrow!",
+    nextIn: 'Next challenge in {time}',
+    leaderboardTitle: 'Challenge #{number} ranking',
+    leaderboardEmpty: 'Nobody finished this challenge yet.',
+    you: 'you'
+  },
+  ranking: {
+    title: 'Ranking',
+    subtitle: 'The best scores of the daily challenge.',
+    today: 'Today',
+    previousDay: 'Previous day',
+    nextDay: 'Next day'
+  },
+  streak: {
+    tooltip: { one: 'Streak: {count} day in a row', other: 'Streak: {count} days in a row' },
+    days: { one: '{count} day', other: '{count} days' },
+    safeToday: 'Streak safe for today!',
+    playToday: 'Finish a game today to keep your streak',
+    freezes: { one: '{count} streak freeze', other: '{count} streak freezes' },
+    freezesHint: 'You earn a freeze every 7 days of streak: it saves you if you miss a day.'
+  },
+  share: {
+    button: 'Share',
+    copied: 'Result copied! Paste it anywhere.',
+    failed: 'The result could not be shared.',
+    dailyTitle: 'GeoQuests daily #{number}',
+    gameTitle: 'GeoQuests · {map}',
+    streak: { one: '🔥 Streak: {count} day', other: '🔥 Streak: {count} days' }
+  },
   errors: {
+    dailyChallengeUnavailable: "Today's challenge is not available. Try again in a while.",
+    dailyChallengeAlreadyPlayed: "You already used your attempt at today's challenge. Come back tomorrow!",
+    dailyChallengeNotFound: 'Challenge not found',
     internal: 'Internal error',
     notAuthenticated: 'User not authenticated',
     unauthorized: 'Unauthorized',
     playerNameRequired: 'Choose a player name',
     playerNameTooLong: 'The player name can have up to 40 characters',
+    lastNameTooLong: 'The last name can have up to 40 characters',
+    nicknameTooLong: 'The nickname can have up to 40 characters',
     invalidLocale: 'Invalid language',
+    invalidTimeZone: 'Invalid time zone',
     invalidPosition: 'Invalid position',
     gameModeUnavailable: 'Game mode not available',
     notPlayingThisRound: "You're not playing this round",

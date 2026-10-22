@@ -8,8 +8,14 @@ import type { Locale } from '@/app/i18n/config'
 export function useAccount() {
   const executeRequest = useRequests()
   const updateAccount = useCallback(
-    (input: AccountInput) =>
-      executeRequest<{ name: string; displayName: string; locale: Locale }>('/updateAccount', input),
+    (input: AccountInput, notifyError = true) =>
+      executeRequest<{
+        name: string
+        lastName: string | null
+        nickname: string | null
+        displayName: string
+        locale: Locale
+      }>('/updateAccount', input, notifyError),
     [executeRequest]
   )
   const deleteAccount = useCallback(() => executeRequest<null>('/deleteAccount', {}), [executeRequest])

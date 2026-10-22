@@ -35,6 +35,10 @@ export class Game extends BaseEntity {
   @Column({ cast: 'boolean' })
   isPublic!: boolean
 
+  /** The daily challenge a classic game is the attempt of (null: a normal game). See DailyChallenge. */
+  @Column({ cast: 'number' })
+  dailyChallengeId!: number | null
+
   /**
    * Increased on every write. Updates are conditional on it (optimistic
    * locking: several players may act at the same time) and clients poll with

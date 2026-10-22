@@ -6,8 +6,8 @@ import { GameContext } from '@/app/(protected)/(game)/models/GameContext'
 import { GameIdInput } from '@/app/(protected)/(game)/models/GameIdInput'
 import { GameListItem } from '@/app/(protected)/(game)/models/GameListItem'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
+import { GameModeEngine } from '@/app/(protected)/(game)/models/GameModeEngine'
 import { GameOptions } from '@/app/(protected)/(game)/models/GameOptions'
-import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
 import { GamePlayerView } from '@/app/(protected)/(game)/models/GamePlayerView'
@@ -25,6 +25,7 @@ import { cleanupGames, deleteGames, LOBBY_MAX_AGE_MS } from '@/app/(protected)/(
 import { findGameModeEngine, getGameModeEngine, getGameSettings } from '@/app/(protected)/(game)/services/gameModes'
 import { loadGame, updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
 import { findMap, findMapBySlug } from '@/app/(protected)/(game)/services/maps'
+import { getPlayerStats as getProgressStats } from '@/app/(protected)/(game)/services/progress'
 import { getPanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { generateGameCode, normalizeGameCode } from '@/app/(protected)/(game)/utils/gameCodes'
 import { ApiException } from '@/app/models/ApiException'
@@ -44,7 +45,7 @@ const PRESENCE_WRITE_INTERVAL_MS = 10_000
 const MAX_PUBLIC_GAMES = 30
 
 /** The context of a request: one fixed "now", and the Street View finder only created if a mode needs it. */
-function resolveContext(options: GameOptions = {}): GameContext {
+export function resolveContext(options: GameOptions = {}): GameContext {
   return {
     now: options.now?.() ?? new Date(),
     random: options.random ?? Math.random,
@@ -66,7 +67,7 @@ function toPlayerView(player: GamePlayer): GamePlayerView {
 }
 
 /** What `userId` sees of a game: the common part plus the view built by the mode engine. */
-function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameContext): GameView {
+export function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameContext): GameView {
   const engine = getGameModeEngine(game.mode)
 
   return {
@@ -78,6 +79,7 @@ function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameCont
     code: game.code,
     hostUserId: game.hostUserId,
     isPublic: !!game.isPublic,
+    dailyChallengeId: game.dailyChallengeId ?? null,
     version: game.version,
     players: players.map(toPlayerView),
     createdAt: game.createdAt.toISOString(),
@@ -179,6 +181,25 @@ export async function createGame(userId: number, input: CreateGameInput, options
   const settings = getGameSettings(engine, map, input?.settings)
   const data = await engine.create(mapId, settings, ctx)
 
+  return insertGame(userId, engine, mapId, data, ctx, { isPublic: input?.isPublic === true })
+}
+
+/**
+ * Stores a new game whose state the engine already created (`data`) with its
+ * creator as the first player — see createGame. Single player games start
+ * right away. `extra.dailyChallengeId` makes it the attempt of a daily
+ * challenge (see services/dailyChallenges.ts).
+ */
+export async function insertGame(
+  userId: number,
+  engine: GameModeEngine,
+  mapId: number,
+  data: unknown,
+  ctx: GameContext,
+  extra: { isPublic?: boolean; dailyChallengeId?: number | null } = {}
+): Promise<GameView> {
+  const multiplayer = engine.definition.maxPlayers > 1
+
   await cleanupGames(ctx)
 
   const game = new Game()
@@ -188,7 +209,8 @@ export async function createGame(userId: number, input: CreateGameInput, options
   game.status = multiplayer ? GameStatus.LOBBY : GameStatus.IN_PROGRESS
   game.code = multiplayer ? await generateUniqueCode(ctx) : null
   game.hostUserId = multiplayer ? userId : null
-  game.isPublic = multiplayer && input?.isPublic === true
+  game.isPublic = multiplayer && extra.isPublic === true
+  game.dailyChallengeId = extra.dailyChallengeId ?? null
   game.version = 1
   game.createdAt = ctx.now
   game.startedAt = multiplayer ? null : ctx.now
@@ -601,24 +623,10 @@ export async function getGames(userId: number, offset = 0, limit = 20): Promise<
   return { items, hasMore: rows.length > safeLimit }
 }
 
-/** Aggregated stats over the finished games of the user, in every mode (games screen). */
-export async function getPlayerStats(userId: number): Promise<PlayerStats> {
-  const rows = await GamePlayer.where('userId', userId).get()
-  const gameIds = rows.map((row) => row.gameId)
-  const finished =
-    gameIds.length > 0
-      ? await Game.whereIn('id', gameIds).where('status', GameStatus.FINISHED).select('id', 'mode').get()
-      : []
-  const finishedIds = new Set(finished.map((game) => game.id))
-  const detectiveIds = new Set(finished.filter((game) => game.mode === GameMode.DETECTIVE).map((game) => game.id))
-  const played = rows.filter((row) => finishedIds.has(row.gameId))
-  // Best and average score only make sense among the classic games: detective scores are not comparable.
-  const scores = played.filter((row) => !detectiveIds.has(row.gameId)).map((row) => row.score)
-
-  return {
-    gamesPlayed: played.length,
-    casesSolved: played.filter((row) => detectiveIds.has(row.gameId) && row.outcome === GameOutcome.WON).length,
-    bestScore: scores.length > 0 ? Math.max(...scores) : 0,
-    averageScore: scores.length > 0 ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : 0
-  }
+/**
+ * Aggregated stats over the finished games of the user, in every mode, and its
+ * streak (games screen). They come from its progress, which outlives the games.
+ */
+export async function getPlayerStats(userId: number, options: GameOptions = {}): Promise<PlayerStats> {
+  return getProgressStats(userId, resolveContext(options).now)
 }

@@ -14,19 +14,21 @@ export const es = {
     points: 'pts'
   },
   nav: {
+    stats: 'Estadísticas',
+    ranking: 'Ranking',
     play: 'Jugar',
     multiplayer: 'Multijugador',
-    myGames: 'Mis partidas',
     myProfile: 'Mi perfil',
     logout: 'Cerrar sesión'
   },
   metadata: {
+    stats: 'Estadísticas',
+    ranking: 'Ranking',
     mainMenu: 'Menú principal',
     multiplayer: 'Multijugador',
     invitation: 'Invitación',
     game: 'Partida',
     chooseWhere: 'Elegí dónde jugar',
-    myGames: 'Mis partidas',
     verifyEmail: 'Verificá tu email',
     register: 'Crear cuenta',
     forgotPassword: 'Recuperar contraseña',
@@ -59,6 +61,7 @@ export const es = {
     email: 'Email',
     password: 'Contraseña',
     playerName: 'Nombre de jugador',
+    lastName: 'Apellido',
     login: {
       title: 'Iniciar sesión',
       subtitle: '¿Dónde estás? Entrá y demostralo.',
@@ -128,6 +131,9 @@ export const es = {
   account: {
     profile: 'Mi perfil',
     playerNameTitle: 'Nombre de jugador',
+    lastNameTitle: 'Apellido',
+    nicknameTitle: 'Apodo',
+    nicknameHint: 'Si tenés apodo, se muestra en lugar de tu nombre y apellido',
     save: 'Guardar',
     saved: '¡Perfil actualizado!',
     languageLabel: 'Idioma de la aplicación',
@@ -445,21 +451,14 @@ export const es = {
     publicGame: 'Partida pública',
     privateGame: 'Partida privada'
   },
-  myGames: {
-    title: 'Mis partidas',
+  stats: {
+    title: 'Estadísticas',
     games: 'Partidas',
+    casesSolved: 'Casos resueltos',
     bestScore: 'Mejor puntaje',
     average: 'Promedio',
-    empty: 'Todavía no jugaste ninguna partida.',
-    letsPlay: '¡A jugar!',
-    loadMore: 'Cargar más',
-    position: '{position} de {total}',
-    stars: '{count} estrellas',
-    resume: 'Seguir ({done}/{total})',
-    waitingRoom: 'En sala de espera',
-    casesSolved: 'Casos resueltos',
-    caught: 'Atrapado',
-    escaped: 'Escapó'
+    currentStreak: 'Racha actual',
+    bestStreak: 'Mejor racha'
   },
   time: {
     seconds: '{count} s',
@@ -781,13 +780,61 @@ export const es = {
       reroll: 'Otros testigos'
     }
   },
+  daily: {
+    topTitle: 'Los mejores de hoy',
+    seeRanking: 'Ver ranking',
+    title: 'Desafío diario #{number}',
+    badge: 'Nuevo cada día',
+    subtitle: 'Las mismas calles para todos. Un solo intento por día: ¿cuánto sacás hoy?',
+    rules: '{rounds} rondas · {time} por ronda',
+    play: 'Jugar el desafío',
+    resume: 'Seguir jugando',
+    seeResult: 'Ver resultado',
+    yourScore: 'Tu puntaje de hoy',
+    rank: 'Puesto {position} de {total}',
+    top: 'Top {percent}%',
+    forfeited: 'Abandonaste el desafío de hoy. ¡Mañana hay otro!',
+    nextIn: 'Próximo desafío en {time}',
+    leaderboardTitle: 'Ranking del desafío #{number}',
+    leaderboardEmpty: 'Todavía nadie terminó este desafío.',
+    you: 'vos'
+  },
+  ranking: {
+    title: 'Ranking',
+    subtitle: 'Los mejores puntajes del desafío diario.',
+    today: 'Hoy',
+    previousDay: 'Día anterior',
+    nextDay: 'Día siguiente'
+  },
+  streak: {
+    tooltip: { one: 'Racha: {count} día seguido jugando', other: 'Racha: {count} días seguidos jugando' },
+    days: { one: '{count} día', other: '{count} días' },
+    safeToday: '¡Racha a salvo por hoy!',
+    playToday: 'Terminá una partida hoy para no perder tu racha',
+    freezes: { one: '{count} protector de racha', other: '{count} protectores de racha' },
+    freezesHint: 'Ganás un protector cada 7 días de racha: te salva si un día no jugás.'
+  },
+  share: {
+    button: 'Compartir',
+    copied: '¡Resultado copiado! Pegalo donde quieras.',
+    failed: 'No se pudo compartir el resultado.',
+    dailyTitle: 'GeoQuests diario #{number}',
+    gameTitle: 'GeoQuests · {map}',
+    streak: { one: '🔥 Racha: {count} día', other: '🔥 Racha: {count} días' }
+  },
   errors: {
+    dailyChallengeUnavailable: 'El desafío de hoy no está disponible. Probá de nuevo en un rato.',
+    dailyChallengeAlreadyPlayed: 'Ya usaste tu intento del desafío de hoy. ¡Volvé mañana!',
+    dailyChallengeNotFound: 'No se encontró el desafío',
     internal: 'Error interno',
     notAuthenticated: 'Usuario no autenticado',
     unauthorized: 'No autorizado',
     playerNameRequired: 'Elegí un nombre de jugador',
     playerNameTooLong: 'El nombre de jugador puede tener hasta 40 caracteres',
+    lastNameTooLong: 'El apellido puede tener hasta 40 caracteres',
+    nicknameTooLong: 'El apodo puede tener hasta 40 caracteres',
     invalidLocale: 'Idioma no válido',
+    invalidTimeZone: 'Zona horaria no válida',
     invalidPosition: 'Posición inválida',
     gameModeUnavailable: 'Modo de juego no disponible',
     notPlayingThisRound: 'No estás jugando esta ronda',

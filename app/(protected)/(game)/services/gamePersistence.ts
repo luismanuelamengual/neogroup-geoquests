@@ -6,6 +6,7 @@ import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { LoadedGame } from '@/app/(protected)/(game)/models/LoadedGame'
 import { getGameModeEngine } from '@/app/(protected)/(game)/services/gameModes'
+import { recordFinishedGame } from '@/app/(protected)/(game)/services/progress'
 import { ApiException } from '@/app/models/ApiException'
 
 /**
@@ -48,8 +49,9 @@ export async function loadGame(gameId: number): Promise<LoadedGame> {
 
 /**
  * Writes the game if nobody else did since it was read (same version). When
- * the game ends, the final results of the players are stored in the same
- * transaction. Returns false when another request wrote first.
+ * the game ends, the final results of the players (and their progress, see
+ * services/progress.ts) are stored in the same transaction. Returns false
+ * when another request wrote first.
  */
 async function saveGame(
   loaded: LoadedGame,
@@ -88,6 +90,10 @@ async function saveGame(
         .where('gameId', game.id)
         .where('userId', result.userId)
         .update({ score: result.score, position: result.position, outcome: result.outcome })
+    }
+
+    if (finish) {
+      await recordFinishedGame(game, players, results, now)
     }
 
     return true

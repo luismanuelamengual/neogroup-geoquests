@@ -13,6 +13,7 @@ import MultiplayerGameSummary from '@/app/(protected)/(game)/components/Multipla
 import MultiplayerLobby from '@/app/(protected)/(game)/components/MultiplayerLobby'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { useGameSync } from '@/app/(protected)/(game)/hooks/useGameSync'
+import { useRefreshProgress } from '@/app/(protected)/(game)/hooks/useRefreshProgress'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
@@ -81,6 +82,9 @@ export default function GameScreen({ gameId }: { gameId: number }) {
     !loadError && game?.id === gameId && !!screens?.realtime && game.status !== GameStatus.FINISHED,
     handleSyncError
   )
+
+  // A game that ended changes the stats and the streak of the top bar.
+  useRefreshProgress(game?.id === gameId && game.status === GameStatus.FINISHED)
 
   useEffect(() => {
     reset()

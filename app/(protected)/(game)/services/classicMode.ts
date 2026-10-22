@@ -123,6 +123,11 @@ function guess(data: ClassicGameData, action: GuessAction, ctx: GameContext): bo
   return true
 }
 
+/** Initial state of a classic game with its rounds already chosen (e.g. the ones of a daily challenge). */
+export function createClassicGameData(settings: ClassicGameSettings, rounds: GameRound[]): ClassicGameData {
+  return { v: 1, settings, currentRound: 1, roundStartedAt: null, rounds, guesses: rounds.map(() => null) }
+}
+
 /**
  * Classic mode: a single player guesses where a series of Street View
  * panoramas are, one round after the other, optionally with a time limit per
@@ -136,9 +141,7 @@ export const classicMode: GameModeEngine<ClassicGameData, ClassicGameSettings, C
       throw new ApiException('errors.mapNotFound', 404)
     }
 
-    const rounds = await planGameRounds(mapId, settings.rounds, ctx)
-
-    return { v: 1, settings, currentRound: 1, roundStartedAt: null, rounds, guesses: rounds.map(() => null) }
+    return createClassicGameData(settings, await planGameRounds(mapId, settings.rounds, ctx))
   },
 
   getMaxPlayers() {

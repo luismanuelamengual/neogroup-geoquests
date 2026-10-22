@@ -58,15 +58,32 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           dbUser.email = email
           dbUser.passwordHash = null
           dbUser.name = normalizeName(String(profile?.given_name ?? profile?.name ?? '')) || null
+          dbUser.lastName = normalizeName(String(profile?.family_name ?? '')) || null
           dbUser.emailVerified = true
           dbUser.active = true
           dbUser.locale = await detectLocale()
           await dbUser.save()
-        } else if (!dbUser.emailVerified) {
-          // Google already proved ownership of the address: an account registered
-          // by email and never verified becomes verified.
-          dbUser.emailVerified = true
-          await dbUser.save()
+        } else {
+          let changed = false
+
+          if (!dbUser.emailVerified) {
+            // Google already proved ownership of the address: an account registered
+            // by email and never verified becomes verified.
+            dbUser.emailVerified = true
+            changed = true
+          }
+
+          // Accounts without a last name yet take it from Google ('' = cleared by the player, kept).
+          const familyName = normalizeName(String(profile?.family_name ?? ''))
+
+          if (dbUser.lastName === null && familyName) {
+            dbUser.lastName = familyName
+            changed = true
+          }
+
+          if (changed) {
+            await dbUser.save()
+          }
         }
 
         // Banned accounts cannot sign in, even via Google.

@@ -17,6 +17,7 @@ export const POST = withApi(async (request) => {
     .toLowerCase()
   const password = String(input.password ?? '')
   const name = normalizeName(String(input.name ?? ''))
+  const lastName = normalizeName(String(input.lastName ?? ''))
 
   if (!isValidEmail(email)) {
     throw new ApiException('errors.invalidEmail')
@@ -34,6 +35,10 @@ export const POST = withApi(async (request) => {
     throw new ApiException('errors.playerNameTooLong')
   }
 
+  if (lastName.length > 40) {
+    throw new ApiException('errors.lastNameTooLong')
+  }
+
   const existing = await User.where('email', email).first()
 
   if (existing?.emailVerified) {
@@ -47,6 +52,7 @@ export const POST = withApi(async (request) => {
   user.email = email
   user.passwordHash = await bcrypt.hash(password, 10)
   user.name = name
+  user.lastName = lastName
   user.emailVerified = false
   user.active = true
   user.locale = await getLocale()

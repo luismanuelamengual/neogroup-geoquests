@@ -22,7 +22,7 @@ import { createTranslator } from '@/app/i18n/translate'
  * one button, plus the account deletion and a link to the privacy policy.
  */
 interface AccountFormProps {
-  account: { name: string; displayName: string; email: string }
+  account: { name: string; lastName: string; nickname: string; displayName: string; email: string }
 }
 
 export default function AccountForm({ account }: AccountFormProps) {
@@ -32,6 +32,8 @@ export default function AccountForm({ account }: AccountFormProps) {
   const { showSuccessMessage } = useNotifications()
   const [profile, setProfile] = useState(account)
   const [name, setName] = useState(account.name)
+  const [lastName, setLastName] = useState(account.lastName)
+  const [nickname, setNickname] = useState(account.nickname)
   const [selectedLocale, setSelectedLocale] = useState<Locale>(locale)
   const [saving, setSaving] = useState(false)
 
@@ -40,14 +42,28 @@ export default function AccountForm({ account }: AccountFormProps) {
     setSaving(true)
 
     try {
-      const updated = await updateAccount({ name, locale: selectedLocale })
+      const updated = await updateAccount({ name, lastName, nickname, locale: selectedLocale })
       const user = useUserStore.getState().user
 
-      setProfile({ ...profile, name: updated.name, displayName: updated.displayName })
+      setProfile({
+        ...profile,
+        name: updated.name,
+        lastName: updated.lastName ?? '',
+        nickname: updated.nickname ?? '',
+        displayName: updated.displayName
+      })
 
       // Keep the app bar badge in sync.
       if (user) {
-        useUserStore.setState({ user: { ...user, name: updated.name, displayName: updated.displayName } })
+        useUserStore.setState({
+          user: {
+            ...user,
+            name: updated.name,
+            lastName: updated.lastName,
+            nickname: updated.nickname,
+            displayName: updated.displayName
+          }
+        })
       }
 
       // The page still runs in the old language until the refresh arrives: confirm in the saved one.
@@ -77,6 +93,21 @@ export default function AccountForm({ account }: AccountFormProps) {
             onChange={(event) => setName(event.target.value)}
             required
             fullWidth
+            slotProps={{ htmlInput: { maxLength: 40 }, inputLabel: { shrink: true } }}
+          />
+          <TextField
+            label={t('account.lastNameTitle')}
+            value={lastName}
+            onChange={(event) => setLastName(event.target.value)}
+            fullWidth
+            slotProps={{ htmlInput: { maxLength: 40 }, inputLabel: { shrink: true } }}
+          />
+          <TextField
+            label={t('account.nicknameTitle')}
+            value={nickname}
+            onChange={(event) => setNickname(event.target.value)}
+            fullWidth
+            helperText={t('account.nicknameHint')}
             slotProps={{ htmlInput: { maxLength: 40 }, inputLabel: { shrink: true } }}
           />
           <TextField

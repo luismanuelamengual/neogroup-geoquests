@@ -386,7 +386,11 @@ describe('classic game flow', () => {
       gamesPlayed: 1,
       bestScore: totalScore,
       averageScore: totalScore,
-      casesSolved: 0
+      casesSolved: 0,
+      currentStreak: 1,
+      bestStreak: 1,
+      streakFreezes: 0,
+      playedToday: true
     })
     await expect(guess(game.id, 5, ATLANTIC)).rejects.toThrow('La partida ya terminó')
   })

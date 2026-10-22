@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { unstable_update } from '@/app/(auth)/services/auth'
 import { AccountInput } from '@/app/(protected)/(account)/models/AccountInput'
+import { isValidTimeZone } from '@/app/(protected)/(game)/utils/days'
 import { isLocale, LOCALE_COOKIE } from '@/app/i18n/config'
 import { ApiException } from '@/app/models/ApiException'
 import { User } from '@/app/models/User'
@@ -9,7 +10,7 @@ import { normalizeName } from '@/app/utils/users'
 
 const LOCALE_COOKIE_MAX_AGE = 365 * 24 * 60 * 60
 
-/** POST /api/updateAccount — updates the player name and/or the language of the signed-in user. */
+/** POST /api/updateAccount — updates the player name, the last name, the nickname, the language and/or the time zone of the signed-in user. */
 export const POST = withAuth(async (request, _context, userId) => {
   const input = (await request.json()) as AccountInput
   const user = await User.find(userId)
@@ -32,6 +33,26 @@ export const POST = withAuth(async (request, _context, userId) => {
     user.name = name
   }
 
+  if (input.lastName !== undefined) {
+    const lastName = normalizeName(String(input.lastName ?? ''))
+
+    if (lastName.length > 40) {
+      throw new ApiException('errors.lastNameTooLong')
+    }
+
+    user.lastName = lastName
+  }
+
+  if (input.nickname !== undefined) {
+    const nickname = normalizeName(String(input.nickname ?? ''))
+
+    if (nickname.length > 40) {
+      throw new ApiException('errors.nicknameTooLong')
+    }
+
+    user.nickname = nickname || null
+  }
+
   if (input.locale !== undefined) {
     if (!isLocale(input.locale)) {
       throw new ApiException('errors.invalidLocale')
@@ -46,9 +67,23 @@ export const POST = withAuth(async (request, _context, userId) => {
     })
   }
 
+  if (input.timeZone !== undefined) {
+    if (!isValidTimeZone(input.timeZone)) {
+      throw new ApiException('errors.invalidTimeZone')
+    }
+
+    user.timeZone = input.timeZone
+  }
+
   await user.save()
   // Refresh the session token so the new name and language are used everywhere.
   await unstable_update({})
 
-  return { name: user.name, displayName: user.displayName, locale: user.locale }
+  return {
+    name: user.name,
+    lastName: user.lastName,
+    nickname: user.nickname,
+    displayName: user.displayName,
+    locale: user.locale
+  }
 })

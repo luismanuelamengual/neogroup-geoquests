@@ -2,8 +2,12 @@
 import { DB } from '@neogroup/neorm'
 import baseTables from '@/database/migrations/001-create-base-tables'
 import seedMaps from '@/database/migrations/002-seed-maps'
+import progressAndDaily from '@/database/migrations/003-player-progress-and-daily-challenges'
 
 const TABLES = [
+  'daily_results',
+  'daily_challenges',
+  'player_progress',
   'game_players',
   'games',
   'place_locations',
@@ -23,6 +27,7 @@ export async function resetDatabase(): Promise<void> {
 
   await baseTables.up()
   await seedMaps.up()
+  await progressAndDaily.up()
 }
 
 /** Inserts a verified user and returns its id. */

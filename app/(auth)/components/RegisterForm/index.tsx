@@ -14,6 +14,7 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
   const t = useT()
   const { registerUser } = useAuth()
   const [name, setName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -36,7 +37,7 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
     setLoading(true)
 
     try {
-      await registerUser({ name, email, password })
+      await registerUser({ name, lastName, email, password })
       setRegistered(true)
     } catch (requestError) {
       setError((requestError as Error).message || t('auth.somethingWentWrong'))
@@ -75,7 +76,15 @@ export default function RegisterForm({ callbackUrl }: { callbackUrl: string | nu
           onChange={(event) => setName(event.target.value)}
           required
           fullWidth
-          autoComplete="nickname"
+          autoComplete="given-name"
+          slotProps={{ htmlInput: { maxLength: 40 }, inputLabel: { shrink: true } }}
+        />
+        <TextField
+          label={t('auth.lastName')}
+          value={lastName}
+          onChange={(event) => setLastName(event.target.value)}
+          fullWidth
+          autoComplete="family-name"
           slotProps={{ htmlInput: { maxLength: 40 }, inputLabel: { shrink: true } }}
         />
         <TextField

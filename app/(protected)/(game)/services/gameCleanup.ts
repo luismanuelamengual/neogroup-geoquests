@@ -1,15 +1,20 @@
 import { DB } from '@neogroup/neorm'
+import { DailyChallenge } from '@/app/(protected)/(game)/models/DailyChallenge'
 import { Game } from '@/app/(protected)/(game)/models/Game'
 import { GameContext } from '@/app/(protected)/(game)/models/GameContext'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { getGameModeEngines } from '@/app/(protected)/(game)/services/gameModes'
 import { updateGame } from '@/app/(protected)/(game)/services/gamePersistence'
+import { addDays, getDayKey } from '@/app/(protected)/(game)/utils/days'
 
 /** Multiplayer games still waiting for players after this long are deleted. */
 export const LOBBY_MAX_AGE_MS = 30 * 60 * 1000
 
 /** Games (of any status) older than this are deleted: only the last 7 days are kept. */
 export const GAME_RETENTION_MS = 7 * 24 * 60 * 60 * 1000
+
+/** Daily challenges (and their results) of more than this many days ago are deleted, like the games. */
+export const DAILY_CHALLENGE_RETENTION_DAYS = 7
 
 /** Deletes games and their players. */
 export async function deleteGames(gameIds: number[]): Promise<void> {
@@ -28,7 +33,9 @@ export async function deleteGames(gameIds: number[]): Promise<void> {
  *   - games in progress without activity (no write) for longer than their mode's
  *     `abandonAfterMs` → deleted or finished with the results they had, as the
  *     mode says (`abandonAction`);
- *   - any game created more than GAME_RETENTION_MS ago → deleted (retention).
+ *   - any game created more than GAME_RETENTION_MS ago → deleted (retention);
+ *   - daily challenges of more than DAILY_CHALLENGE_RETENTION_DAYS days ago (UTC) → deleted with
+ *     their results (their ranking).
  *
  * Returns how many games were cleaned up.
  */
@@ -67,5 +74,22 @@ export async function cleanupGames(ctx: GameContext): Promise<number> {
   await deleteGames(expired.map((game) => game.id))
   cleaned += expired.length
 
+  await deleteOldDailyChallenges(ctx.now)
+
   return cleaned
+}
+
+/** Deletes the daily challenges older than the retention period, with their results. */
+async function deleteOldDailyChallenges(now: Date): Promise<void> {
+  const oldest = addDays(getDayKey(now), -DAILY_CHALLENGE_RETENTION_DAYS)
+  const challengeIds = (await DailyChallenge.where('day', '<', oldest).select('id').get()).map(
+    (challenge) => challenge.id
+  )
+
+  if (challengeIds.length === 0) {
+    return
+  }
+
+  await DB.table('daily_results').whereIn('challengeId', challengeIds).delete()
+  await DB.table('daily_challenges').whereIn('id', challengeIds).delete()
 }

@@ -19,6 +19,14 @@ export class User extends BaseEntity {
   @Column()
   name!: string | null
 
+  /** Last name, shown next to the name. Null: never set (filled from Google on sign-in); '': cleared by the player. */
+  @Column()
+  lastName!: string | null
+
+  /** Nickname: when set, shown instead of the name and last name. */
+  @Column()
+  nickname!: string | null
+
   /** True when the user verified their email address. Always true for Google-authenticated users. */
   @Column({ cast: 'boolean' })
   emailVerified!: boolean
@@ -26,6 +34,10 @@ export class User extends BaseEntity {
   /** Language chosen by the player (app and emails). */
   @Column()
   locale!: Locale
+
+  /** IANA time zone of the player, sent by its browser: the "day" of its streak and of its daily challenge. Null: UTC. */
+  @Column()
+  timeZone!: string | null
 
   /** False disables the account's login. */
   @Column({ cast: 'boolean' })

@@ -156,11 +156,11 @@ components/ GameScreen (elige la pantalla según el modo y estado) · Clásico: 
             Multijugador: MultiplayerLobby, InviteButton, MultiplayerGamePlay, RoundCountdown, PlayersStatus,
             BattleRoyaleGamePlay, BattleRoyaleRoundResult, BattleRoyaleGameSummary,
             MultiplayerRoundResult, Scoreboard, MultiplayerGameSummary · Menú: GameModeCard, GameModeIcon, MapPicker, MapCard, JoinGameDialog,
-            ActiveGameBanner, MyGames, GameListRow · Comunes: StreetView (iframe de Google),
+            ActiveGameBanner, DailyChallengeCard, DailyRanking · Comunes: StreetView (iframe de Google),
             GuessMap / ResultMap (MapLibre, con un pin por jugador), GuessPanel, RoundHud, RoundTimer, RoundResult
 hooks/      useGames (llamadas a la API), useGameSync (polling de los modos en tiempo real), useNow, ...
-(api)/api/  createGame, getGame, sendGameAction, getGames · joinGame, leaveGame, kickPlayer, startGame, getActiveGame
-(pages)/    /play/[mode] (elegir dónde jugar un modo) · /game/[id] (sala de espera, jugar o ver el resumen) · /join/[code] (link de invitación) · /games (Mis partidas)
+(api)/api/  createGame, getGame, sendGameAction · joinGame, leaveGame, kickPlayer, startGame, getActiveGame
+(pages)/    /play/[mode] (elegir dónde jugar un modo) · /game/[id] (sala de espera, jugar o ver el resumen) · /join/[code] (link de invitación) · /ranking (ranking del desafío diario)
 ```
 
 ### Modos de juego y mapas
@@ -182,7 +182,7 @@ Un **mapa** es dónde se juega: una fila de `maps` y los lugares asociados en `m
 
 Un mismo lugar puede estar en varios mapas. Al crear una partida, sus settings son los del modo, salvo `scoreMaxDistanceKm` si el mapa lo define en `maps.settings` (`getGameSettings`, en `services/gameModes.ts`).
 
-**Menús: "Jugar" (un jugador) y "Multijugador".** La navegación tiene dos menús. "Jugar" (`/play`, `HomeMenu`) tiene los modos de un jugador, entre ellos la "Partida clásica personalizada" (`GameModeCard` del modo clásico). "Multijugador" (`/multiplayer`, `MultiplayerMenu`) tiene el botón "Unirme con código" (`JoinGameDialog`, común a todos los modos) y los modos multijugador (`getGameModes`: los modos con motor registrado). Arriba aparecen, sólo cuando corresponden, el banner para instalar la app y el acceso a la partida con amigos en curso. Las partidas anteriores están en "Mis partidas" (`/games`). Cada tarjeta de modo abre `/play/<slug>` o `/multiplayer/<slug>` según sea de uno o de varios jugadores (`/play/classic`, `/multiplayer/friends`, `/multiplayer/battle-royale`; ver `utils/modeRoutes.ts`) (`MapPicker`): arriba, las reglas que el modo deja elegir (`GameSettingsPicker`, según `definition.configurable`: rondas y tiempo por ronda; el servidor descarta los valores no permitidos), y abajo la grilla de mapas (`getMaps()`: habilitados y con al menos un lugar habilitado); cada tarjeta (`MapCard`) muestra la cantidad de lugares y un botón para jugar o crear la sala. El color de acento es amarillo en los modos de un jugador y celeste en los multijugador (`utils/modeColor.ts`).
+**Menús: "Jugar" (un jugador) y "Multijugador".** La navegación tiene dos menús. "Jugar" (`/play`, `HomeMenu`) tiene los modos de un jugador, entre ellos la "Partida clásica personalizada" (`GameModeCard` del modo clásico). "Multijugador" (`/multiplayer`, `MultiplayerMenu`) tiene el botón "Unirme con código" (`JoinGameDialog`, común a todos los modos) y los modos multijugador (`getGameModes`: los modos con motor registrado). Arriba aparecen, sólo cuando corresponden, el banner para instalar la app y el acceso a la partida con amigos en curso. Cada tarjeta de modo abre `/play/<slug>` o `/multiplayer/<slug>` según sea de uno o de varios jugadores (`/play/classic`, `/multiplayer/friends`, `/multiplayer/battle-royale`; ver `utils/modeRoutes.ts`) (`MapPicker`): arriba, las reglas que el modo deja elegir (`GameSettingsPicker`, según `definition.configurable`: rondas y tiempo por ronda; el servidor descarta los valores no permitidos), y abajo la grilla de mapas (`getMaps()`: habilitados y con al menos un lugar habilitado); cada tarjeta (`MapCard`) muestra la cantidad de lugares y un botón para jugar o crear la sala. El color de acento es amarillo en los modos de un jugador y celeste en los multijugador (`utils/modeColor.ts`).
 
 **Agregar un mapa:** una migración que inserte la fila en `maps` (con su `slug`; sumar también `maps.<slug>` en `es.ts` y `en.ts`), sus lugares en `places` (si no existen) y las filas de `map_places`. Ver `002-seed-maps`, que carga cada lugar una sola vez y lo asocia a los mapas que lo usan.
 
@@ -202,7 +202,7 @@ Como el estado vive en el servidor, **una partida se puede seguir desde cualquie
 
 **Agregar un modo:** un valor en `GameMode`, sus modelos (settings, data, view), un motor en `services/<modo>Mode.ts` registrado en `services/gameModes.ts`, su `slug`, `description` e `image` (menú), su ícono en `components/GameModeIcon`, sus pantallas registradas en `components/GameScreen` y sus `settings` fijos en la definición.
 
-**Limpieza** (`services/gameCleanup.ts`, se ejecuta al crear una partida y una vez por día con Vercel Cron): las salas de espera de más de 30 min se borran, y las partidas en curso sin actividad por más tiempo del que define su modo (Clásico: 24 h) se borran o se dan por terminadas, según el modo. Además, **sólo se retienen los últimos 7 días**: toda partida (de cualquier estado) creada hace más de 7 días se borra junto con sus `game_players`, por lo que "Mis partidas" y las estadísticas sólo reflejan la última semana.
+**Limpieza** (`services/gameCleanup.ts`, se ejecuta al crear una partida y una vez por día con Vercel Cron): las salas de espera de más de 30 min se borran, y las partidas en curso sin actividad por más tiempo del que define su modo (Clásico: 24 h) se borran o se dan por terminadas, según el modo. Además, **sólo se retienen los últimos 7 días**: toda partida (de cualquier estado) creada hace más de 7 días se borra junto con sus `game_players`. Los desafíos diarios de hace más de 7 días (UTC) también se borran, con sus resultados (su ranking). Las estadísticas y la racha no se pierden: viven en `player_progress` (ver "Progreso, racha y desafío diario").
 
 ### Modo Multijugador
 
@@ -273,9 +273,18 @@ puntos = 5000 · e^(−distancia / 15 km)      (5000 si la distancia es ≤ 25 m
 
 La ciudad no se revela hasta responder. El puntaje decae exponencialmente con la distancia: 5.000 dentro de los 25 m y 0 a partir de `scoreMaxDistanceKm` (por defecto 2.000 km; es la del modo; un mapa puede pisarla con `maps.settings.scoreMaxDistanceKm`). Con 2.000 km: a 3 km ≈ 4.930, a 50 km ≈ 3.970, a 300 km ≈ 1.260, a 1.000 km ≈ 50. Ningún mapa cargado la pisa; a un mapa de un país entero conviene darle una distancia mayor (p. ej. `{ "scoreMaxDistanceKm": 3500 }` en `maps.settings`). Constantes en `utils/score.ts`.
 
-### Mis partidas
+### Estadísticas del jugador
 
-La página `/games` (menú principal → "Mis partidas") lista todas las partidas del jugador, de la más nueva a la más vieja, de a 20 (`/api/getGames`): mapa, fecha, puntaje, estrellas, posición (multijugador) y estado. Las terminadas abren su resumen y las que están en curso se pueden seguir desde cualquier dispositivo. Las estadísticas se calculan por modo con `game_players`. El perfil (nombre y estadísticas) sigue disponible desde el menú del usuario.
+"Estadísticas" (`/stats`, en el menú del usuario debajo de "Mi perfil") muestra las estadísticas de todas las partidas (`StatsPage` con `PlayerStatsPanel`: partidas, casos resueltos, mejor puntaje, promedio, racha actual y mejor racha), que salen de `player_progress`. Por ahora no hay un historial de partidas en la app (el servicio `getGames` sigue en `services/games.ts`, sin pantalla ni endpoint).
+
+### Progreso, racha y desafío diario
+
+Para que den ganas de volver a jugar todos los días (migración `003-player-progress-and-daily-challenges`):
+
+- **Progreso permanente (`player_progress`, `services/progress.ts`)**: una fila por jugador con contadores que nunca se borran (partidas, puntos, mejor puntaje, casos resueltos y la racha). Se actualiza al terminar cada partida, en la misma transacción que la marca como terminada (`saveGame` en `services/gamePersistence.ts`), así que una partida nunca se cuenta dos veces. `getPlayerStats` lee de acá. La migración completa el progreso de las partidas que ya estaban terminadas.
+- **Racha (`utils/streak.ts`)**: días seguidos con al menos una partida terminada, según la zona horaria del jugador (`users.timeZone`, que el navegador manda solo con `TimeZoneSync` vía `/api/updateAccount`; sin ella, UTC). Cada 7 días de racha se gana un **protector** (hasta 2), que salva la racha si se saltea un solo día. Se muestra en la barra superior (`StreakBadge`, apagada mientras falta jugar hoy), en el resumen de la partida y en "Estadísticas". La barra se actualiza sola al terminar una partida (`useRefreshProgress` en `GameScreen`, con el store `stores/progress.ts`).
+- **Desafío diario (`services/dailyChallenges.ts`)**: cada día una partida clásica de 5 rondas de 3 minutos con **las mismas ubicaciones para todos** y un solo intento por jugador. El día es el del jugador (su `users.timeZone`, igual que la racha): el desafío cambia a su medianoche, como en Wordle, así que el desafío de un día se juega desde UTC+14 hasta UTC-12 y la cuenta regresiva apunta a la medianoche local. Los mapas van rotando por día (`DAILY_MAP_SLUGS`: ciudades famosas, ciudades del mundo, lugares icónicos) y el número del desafío cuenta los días desde `DAILY_FIRST_DAY`. El desafío del día se crea (se buscan sus panorámicas) la primera vez que alguien lo juega y queda en `daily_challenges`; cada intento es una fila de `daily_results`, que se crea al empezar (la clave primaria impide dos intentos) y guarda el puntaje al terminar. Como las partidas, sólo se guardan los desafíos de los últimos 7 días (`DAILY_CHALLENGE_RETENTION_DAYS`, en `gameCleanup.ts`). Abandonar la partida gasta el intento. La partida es un Clásico normal con `games.dailyChallengeId`. Endpoints: `getDailyChallenge` (estado para el menú: disponible, en curso, terminado o abandonado, con puntaje, puesto y cuenta regresiva), `playDailyChallenge` (crea o retoma la partida) y `getDailyLeaderboard` (por id o por día —sin nada, el de hoy—: top 10, el puesto del jugador y los días anterior y siguiente para recorrerlos; los empates comparten puesto). En el menú "Jugar" es la primera tarjeta (`DailyChallengeCard`, con el podio del día y el botón "Ver ranking"), el ranking tiene su propia sección en la navegación (`/ranking`, `DailyRanking`: el de hoy y, día por día, los anteriores) (`DailyLeaderboard`); el desafío sólo se juega desde el menú "Jugar".
+- **Compartir (`utils/share.ts`, `ShareResultButton`)**: el resumen del Clásico tiene un botón "Compartir" que arma un texto estilo Wordle (un cuadrado por ronda: 🟩 ≥ 4.000, 🟨 ≥ 2.000, 🟧 > 0, 🟥 0, más la racha y el link) y lo manda con la hoja de compartir del dispositivo o, si no hay, lo copia al portapapeles.
 
 ## Publicidad — `app/(protected)/(ads)`
 
@@ -283,7 +292,7 @@ La app muestra anuncios de Google AdSense a los jugadores.
 
 - **Interruptor:** `ADS_ENABLED=true` los activa para todos. Con cualquier otro valor no se carga el script de AdSense, no se muestra ningún anuncio, no se agrega la meta de verificación y `/ads.txt` responde 404. Se lee en runtime (en Vercel hay que redeployar después de cambiarla).
 - **Excepción por jugador:** `users.adsDisabled = true` le quita los anuncios a un jugador en particular. Se cambia a mano en la base: `UPDATE users SET "adsDisabled" = true WHERE email = '...'`.
-- **Dónde:** `<AdSlot />` (un bloque responsive de AdSense) en el menú de un jugador, el de multijugador, "Mis partidas" y el resumen final de cada modo. Nunca durante una partida. Sin `ADSENSE_CLIENT_ID`/`ADSENSE_SLOT_ID`, fuera de producción muestra un recuadro que marca dónde va.
+- **Dónde:** `<AdSlot />` (un bloque responsive de AdSense) en el menú de un jugador, el de multijugador, el ranking y el resumen final de cada modo. Nunca durante una partida. Sin `ADSENSE_CLIENT_ID`/`ADSENSE_SLOT_ID`, fuera de producción muestra un recuadro que marca dónde va.
 - **AdSense:** el layout raíz agrega la meta `google-adsense-account` (verificación del sitio) y `/ads.txt` se genera desde `ADSENSE_CLIENT_ID`. El service worker no cachea los dominios de anuncios.
 
 ## Diseño (look & feel de videojuego)

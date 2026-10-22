@@ -3,6 +3,7 @@
 import './index.scss'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBanner'
+import DailyChallengeCard from '@/app/(protected)/(game)/components/DailyChallengeCard'
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameModeView } from '@/app/(protected)/(game)/models/GameModeView'
@@ -20,7 +21,7 @@ interface HomeMenuProps {
  * the rules of the player's choice, the detective mode...). The multiplayer
  * games have their own menu (/multiplayer).
  * Above it, only when they apply, the install banner and the way back to a
- * multiplayer game in progress.
+ * multiplayer game in progress, and first of all today's challenge.
  */
 export default function HomeMenu({ playerName, modes }: HomeMenuProps) {
   const t = useT()
@@ -34,6 +35,7 @@ export default function HomeMenu({ playerName, modes }: HomeMenuProps) {
         <h1 className="title">{t('home.title')}</h1>
         <p className="subtitle">{t('home.subtitle')}</p>
       </section>
+      <DailyChallengeCard />
       {modes.length > 0 && (
         <section className="menu-section">
           <h2 className="section-title">{t('home.modesTitle')}</h2>

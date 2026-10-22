@@ -1,12 +1,15 @@
 'use client'
 
 import { useCallback } from 'react'
+import { DailyChallengeView } from '@/app/(protected)/(game)/models/DailyChallengeView'
+import { DailyLeaderboardInput } from '@/app/(protected)/(game)/models/DailyLeaderboardInput'
+import { DailyLeaderboardView } from '@/app/(protected)/(game)/models/DailyLeaderboardView'
 import { GameAction } from '@/app/(protected)/(game)/models/GameAction'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameSettingsInput } from '@/app/(protected)/(game)/models/GameSettingsInput'
-import { GamesPage } from '@/app/(protected)/(game)/models/GamesPage'
 import { GameSyncResponse } from '@/app/(protected)/(game)/models/GameSyncResponse'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
+import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { PublicGameItem } from '@/app/(protected)/(game)/models/PublicGameItem'
 import { useRequests } from '@/app/hooks/useRequests'
 
@@ -56,8 +59,21 @@ export function useGames() {
     (): Promise<GameView | null> => executeRequest<GameView | null>('/getActiveGame', {}, false),
     [executeRequest]
   )
-  const getGames = useCallback(
-    (offset = 0, limit = 20): Promise<GamesPage> => executeRequest<GamesPage>('/getGames', { offset, limit }),
+  const getDailyChallenge = useCallback(
+    (): Promise<DailyChallengeView> => executeRequest<DailyChallengeView>('/getDailyChallenge', {}, false),
+    [executeRequest]
+  )
+  const playDailyChallenge = useCallback(
+    (): Promise<GameView> => executeRequest<GameView>('/playDailyChallenge', {}),
+    [executeRequest]
+  )
+  const getDailyLeaderboard = useCallback(
+    (input: DailyLeaderboardInput = {}): Promise<DailyLeaderboardView> =>
+      executeRequest<DailyLeaderboardView>('/getDailyLeaderboard', input, false),
+    [executeRequest]
+  )
+  const getPlayerStats = useCallback(
+    (): Promise<PlayerStats> => executeRequest<PlayerStats>('/getPlayerStats', {}, false),
     [executeRequest]
   )
 
@@ -72,6 +88,9 @@ export function useGames() {
     kickPlayer,
     startGame,
     getActiveGame,
-    getGames
+    getDailyChallenge,
+    playDailyChallenge,
+    getDailyLeaderboard,
+    getPlayerStats
   }
 }

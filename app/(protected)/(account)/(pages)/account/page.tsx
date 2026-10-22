@@ -14,6 +14,14 @@ export default async function AccountPage() {
   const user = await User.find(userId)
 
   return (
-    <AccountForm account={{ name: user?.name ?? '', displayName: user?.displayName ?? '', email: user?.email ?? '' }} />
+    <AccountForm
+      account={{
+        name: user?.name ?? '',
+        lastName: user?.lastName ?? '',
+        nickname: user?.nickname ?? '',
+        displayName: user?.displayName ?? '',
+        email: user?.email ?? ''
+      }}
+    />
   )
 }

@@ -1,0 +1,73 @@
+.daily-leaderboard {
+  width: 100%;
+
+  .my-rank {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    text-align: center;
+
+    .position {
+      color: var(--color-lime);
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+    }
+
+    .top {
+      color: var(--color-gold);
+      font-weight: 800;
+    }
+  }
+
+  .empty {
+    margin: 0;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  .entries {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 2px solid var(--color-panel-border);
+    border-radius: 12px;
+    background: var(--color-night-light);
+    font-weight: 800;
+
+    &.me {
+      border-color: var(--color-lime);
+    }
+
+    .position {
+      min-width: 28px;
+      color: var(--color-gold);
+      font-family: var(--font-display);
+      text-align: center;
+    }
+
+    .name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .score {
+      color: var(--color-lime);
+    }
+  }
+}
