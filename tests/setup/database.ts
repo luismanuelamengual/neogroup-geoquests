@@ -4,8 +4,10 @@ import baseTables from '@/database/migrations/001-create-base-tables'
 import seedMaps from '@/database/migrations/002-seed-maps'
 import progressAndDaily from '@/database/migrations/003-player-progress-and-daily-challenges'
 import playerXp from '@/database/migrations/006-player-xp'
+import achievements from '@/database/migrations/007-achievements'
 
 const TABLES = [
+  'user_achievements',
   'daily_results',
   'daily_challenges',
   'player_progress',
@@ -30,6 +32,7 @@ export async function resetDatabase(): Promise<void> {
   await seedMaps.up()
   await progressAndDaily.up()
   await playerXp.up()
+  await achievements.up()
 }
 
 /** Inserts a verified user and returns its id. */

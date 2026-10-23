@@ -816,6 +816,35 @@ export const en: Messages = {
       legend: 'Legend'
     }
   },
+  achievements: {
+    title: 'Achievements',
+    count: '{unlocked} of {total} medals',
+    new: { one: 'New achievement!', other: 'New achievements!' },
+    xp: '+{xp} XP',
+    tiers: { bronze: 'Bronze', silver: 'Silver', gold: 'Gold' },
+    progress: '{value} / {target}',
+    items: {
+      firstTrip: { name: 'First trip', description: 'Finish your first game' },
+      eagleEye: { name: 'Eagle eye', description: 'A round less than 100 m away' },
+      bullseye: { name: 'Bullseye', description: 'A perfect round: 5,000 points' },
+      starGame: { name: 'Star game', description: 'Finish a classic game with {count} stars' },
+      earlyBird: { name: 'Early bird', description: 'Play your first daily challenge' },
+      friendsChampion: { name: 'Champion among friends', description: 'Win a game with friends' },
+      lastStanding: { name: 'Last one standing', description: 'Win a Battle Royale' },
+      firstCase: { name: 'First case', description: 'Solve your first case' },
+      inspector: { name: 'Inspector', description: 'Solve a case on medium difficulty' },
+      sherlock: { name: 'Sherlock', description: 'Solve a case on hard difficulty' },
+      cleanCase: { name: 'Clean case', description: 'Solve a case without traveling to a wrong destination' },
+      againstTheClock: {
+        name: 'Against the clock',
+        description: 'Catch the thief with {count} hours or more to spare'
+      },
+      frequentTraveler: { name: 'Frequent traveler', description: 'Finish {count} games' },
+      steady: { name: 'Steady', description: 'Reach a {count} day streak' },
+      careerDetective: { name: 'Career detective', description: 'Solve {count} cases' },
+      globetrotter: { name: 'Globetrotter', description: 'Play in all {count} maps' }
+    }
+  },
   streak: {
     tooltip: { one: 'Streak: {count} day in a row', other: 'Streak: {count} days in a row' },
     days: { one: '{count} day', other: '{count} days' },

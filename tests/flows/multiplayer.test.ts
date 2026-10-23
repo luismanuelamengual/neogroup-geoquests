@@ -361,13 +361,17 @@ describe('classic multiplayer flow', () => {
 
     // XP: finishing it (20), its score (1 every 100), the podium (50 / 30) and the first game of the day (30).
     const hostScore = finished.players.find((player) => player.userId === host)!.score
+    // Plus 50 per medal: Ana won, and was right on every location.
+    const anaView = await view(ana, game.id, ms)
 
-    expect((await view(ana, game.id, ms)).xp).toEqual({ earned: 20 + 250 + 50 + 30, total: 350 })
+    expect(anaView.achievements).toEqual(['firstTrip', 'eagleEye', 'bullseye', 'friendsChampion'])
+    expect(anaView.xp).toEqual({ earned: 20 + 250 + 50 + 30 + 200, total: 550 })
+    expect(finished.achievements).toEqual(['firstTrip'])
     expect(finished.xp).toEqual({
-      earned: 20 + Math.floor(hostScore / 100) + 30 + 30,
-      total: 20 + Math.floor(hostScore / 100) + 30 + 30
+      earned: 20 + Math.floor(hostScore / 100) + 30 + 30 + 50,
+      total: 20 + Math.floor(hostScore / 100) + 30 + 30 + 50
     })
-    expect(finished.players.find((player) => player.userId === ana)!.level).toBe(getLevel(350))
+    expect(finished.players.find((player) => player.userId === ana)!.level).toBe(getLevel(550))
     expect((await getGames(ana)).items[0]).toMatchObject({
       mode: GameMode.CLASSIC_MULTIPLAYER,
       status: GameStatus.FINISHED,

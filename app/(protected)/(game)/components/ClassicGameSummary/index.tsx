@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, useState } from 'react'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
+import NewAchievements from '@/app/(protected)/(game)/components/NewAchievements'
 import ResultMap, { ResultPair } from '@/app/(protected)/(game)/components/ResultMap'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import ShareResultButton from '@/app/(protected)/(game)/components/ShareResultButton'
@@ -110,6 +111,7 @@ export default function ClassicGameSummary() {
         </div>
         <ScoreBar value={animatedTotal} max={view.maxScore} />
         {game.xp && <XpProgress xp={game.xp} />}
+        <NewAchievements keys={game.achievements} />
         <div className="actions">
           <GameButton size="large" startIcon={<ReplayIcon />} loading={starting} onClick={handlePlayAgain}>
             {t('game.playAgain')}

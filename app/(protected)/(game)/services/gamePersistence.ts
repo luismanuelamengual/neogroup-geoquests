@@ -98,7 +98,7 @@ async function saveGame(
     }
 
     if (finish) {
-      xpResults = await recordFinishedGame(game, players, results, now)
+      xpResults = await recordFinishedGame(game, data, players, results, now)
     }
 
     return true
@@ -131,6 +131,7 @@ async function saveGame(
       if (player) {
         player.xpEarned = xp.xpEarned
         player.xpTotal = xp.xpTotal
+        player.achievements = xp.achievements
 
         if (player.progress) {
           player.progress.xp = xp.xpTotal

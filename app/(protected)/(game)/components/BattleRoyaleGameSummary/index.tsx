@@ -7,6 +7,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
+import NewAchievements from '@/app/(protected)/(game)/components/NewAchievements'
 import ResultMap, { ResultPair } from '@/app/(protected)/(game)/components/ResultMap'
 import Scoreboard from '@/app/(protected)/(game)/components/Scoreboard'
 import XpProgress from '@/app/(protected)/(game)/components/XpProgress'
@@ -116,6 +117,7 @@ export default function BattleRoyaleGameSummary() {
           className="final-standings"
         />
         {game.xp && <XpProgress xp={game.xp} />}
+        <NewAchievements keys={game.achievements} />
         <div className="actions">
           <GameButton
             size="large"

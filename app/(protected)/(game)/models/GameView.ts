@@ -29,5 +29,7 @@ export interface GameView<ModeView = unknown> {
   finishedAt: string | null
   /** XP the game gave this player: set once the game is over (null in the games finished before XP existed). */
   xp: GameXpView | null
+  /** Medals this player won in the game (keys, see utils/achievements.ts); empty while it is being played. */
+  achievements: string[]
   modeView: ModeView
 }

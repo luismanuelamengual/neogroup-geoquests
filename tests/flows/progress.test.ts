@@ -158,7 +158,9 @@ describe('player progress', () => {
     const first = await playGame('2026-03-01T12:00:00Z')
     const second = await playGame('2026-03-01T13:00:00Z', false)
     const third = await playGame('2026-03-02T12:00:00Z', false)
-    const xpOf = (game: GameView) => 20 + Math.floor((game.modeView as ClassicGameView).totalScore / 100)
+    // 20 for finishing it, 1 every 100 points and 50 per medal won.
+    const xpOf = (game: GameView) =>
+      20 + Math.floor((game.modeView as ClassicGameView).totalScore / 100) + 50 * game.achievements.length
     const total = xpOf(first) + 30 + xpOf(second) + xpOf(third) + 30
 
     expect(first.xp).toEqual({ earned: xpOf(first) + 30, total: xpOf(first) + 30 })

@@ -1,0 +1,65 @@
+.new-achievements {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 420px;
+
+  .title {
+    color: var(--color-gold);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+  }
+
+  .medals {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .medal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 2px solid var(--color-gold);
+    border-radius: 14px;
+    background: var(--color-night-light);
+    text-align: left;
+    animation: new-achievement-in 400ms cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+
+    .icon {
+      font-size: 1.6rem;
+    }
+
+    .name {
+      flex: 1;
+      min-width: 0;
+      font-weight: 800;
+    }
+
+    .xp {
+      flex-shrink: 0;
+      color: var(--color-gold);
+      font-family: var(--font-display);
+    }
+  }
+}
+
+@keyframes new-achievement-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

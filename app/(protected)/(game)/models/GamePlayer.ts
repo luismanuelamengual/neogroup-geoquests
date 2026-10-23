@@ -40,6 +40,10 @@ export class GamePlayer extends BaseEntity {
   @Column({ cast: 'number' })
   xpTotal!: number | null
 
+  /** Medals the player won in this game (keys, see utils/achievements.ts); null while the game is being played. */
+  @Column({ cast: 'json' })
+  achievements!: string[] | null
+
   @Column({ cast: 'date' })
   joinedAt!: Date
 

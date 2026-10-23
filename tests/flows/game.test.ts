@@ -385,8 +385,9 @@ describe('classic game flow', () => {
     expect(totalScore).toBe(rounds.reduce((total, round) => total + (round.score ?? 0), 0))
     // The final result is stored with the player (history and stats).
     expect(view.players[0]).toMatchObject({ score: totalScore, position: 1, outcome: null })
-    // Finishing it, plus a point of XP every 100 of score, plus the first game of the day.
-    const xp = 20 + Math.floor(totalScore / 100) + 30
+    // Finishing it, plus a point of XP every 100 of score, plus the first game of the day, plus 50 per medal won.
+    expect(view.achievements).toEqual(expect.arrayContaining(['firstTrip', 'eagleEye', 'bullseye']))
+    const xp = 20 + Math.floor(totalScore / 100) + 30 + 50 * view.achievements.length
 
     expect(await getPlayerStats(userId)).toEqual({
       gamesPlayed: 1,

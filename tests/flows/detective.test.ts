@@ -505,8 +505,15 @@ describe('detective game flow', () => {
 
     expect(view.status).toBe(GameStatus.FINISHED)
     expect(result.outcome).toBe('caught')
-    // XP: finishing it (20), a medium case solved (150) and the first game of the day (30).
-    expect(view.xp).toEqual({ earned: 200, total: 200 })
+    // XP: finishing it (20), a medium case solved (150), the first game of the day (30) and 50 per medal.
+    expect(view.achievements).toContain('firstTrip')
+    expect(view.achievements).toContain('firstCase')
+    expect(view.achievements).toContain('inspector')
+    expect(view.achievements).not.toContain('sherlock')
+    expect(view.xp).toEqual({
+      earned: 200 + 50 * view.achievements.length,
+      total: 200 + 50 * view.achievements.length
+    })
     expect(result.currentStage).toBeNull()
     expect(result.route).toHaveLength(6)
     expect(result.playedStages).toHaveLength(5)
@@ -539,8 +546,9 @@ describe('detective game flow', () => {
 
     expect(view.status).toBe(GameStatus.FINISHED)
     expect(result.outcome).toBe('wrongSuspect')
-    // Not solved: only finishing it and the first game of the day.
-    expect(view.xp).toEqual({ earned: 50, total: 50 })
+    // Not solved: only finishing it, the first game of the day and the first game medal.
+    expect(view.achievements).toEqual(['firstTrip'])
+    expect(view.xp).toEqual({ earned: 100, total: 100 })
     expect(result.lineup).toMatchObject({ thief: data.lineup!.thief, accused: other })
     expect(result.route).toHaveLength(6)
     expect(await GamePlayer.where('gameId', game.id).first()).toMatchObject({ outcome: GameOutcome.LOST })

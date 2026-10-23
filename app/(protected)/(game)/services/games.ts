@@ -89,6 +89,7 @@ export function toGameView({ game, players }: LoadedGame, userId: number, ctx: G
     startedAt: game.startedAt ? game.startedAt.toISOString() : null,
     finishedAt: game.finishedAt ? game.finishedAt.toISOString() : null,
     xp: me?.xpEarned != null && me.xpTotal != null ? { earned: me.xpEarned, total: me.xpTotal } : null,
+    achievements: me?.achievements ?? [],
     modeView: engine.toView(game.data, userId, { players, hostUserId: game.hostUserId }, ctx)
   }
 }

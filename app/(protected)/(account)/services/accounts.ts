@@ -37,6 +37,7 @@ export async function deleteAccount(userId: number, options: GameOptions = {}): 
   await DB.transaction(async () => {
     await DB.table('game_players').where('userId', userId).delete()
     await DB.table('player_progress').where('userId', userId).delete()
+    await DB.table('user_achievements').where('userId', userId).delete()
     await DB.table('daily_results').where('userId', userId).delete()
     await DB.table('games').where('hostUserId', userId).update({ hostUserId: null })
     await DB.table('email_verification_tokens').where('userId', userId).delete()

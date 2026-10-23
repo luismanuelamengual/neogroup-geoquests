@@ -822,6 +822,32 @@ export const es = {
       legend: 'Leyenda'
     }
   },
+  achievements: {
+    title: 'Logros',
+    count: '{unlocked} de {total} medallas',
+    new: { one: '¡Logro nuevo!', other: '¡Logros nuevos!' },
+    xp: '+{xp} XP',
+    tiers: { bronze: 'Bronce', silver: 'Plata', gold: 'Oro' },
+    progress: '{value} / {target}',
+    items: {
+      firstTrip: { name: 'Primer viaje', description: 'Terminá tu primera partida' },
+      eagleEye: { name: 'Ojo de águila', description: 'Una ronda a menos de 100 m' },
+      bullseye: { name: 'Diana', description: 'Una ronda perfecta: 5.000 puntos' },
+      starGame: { name: 'Partida estrella', description: 'Terminá una partida clásica con {count} estrellas' },
+      earlyBird: { name: 'Madrugador', description: 'Jugá tu primer desafío diario' },
+      friendsChampion: { name: 'Campeón entre amigos', description: 'Ganá una partida con amigos' },
+      lastStanding: { name: 'Último en pie', description: 'Ganá un Battle Royale' },
+      firstCase: { name: 'Primer caso', description: 'Resolvé tu primer caso' },
+      inspector: { name: 'Inspector', description: 'Resolvé un caso en dificultad media' },
+      sherlock: { name: 'Sherlock', description: 'Resolvé un caso en dificultad difícil' },
+      cleanCase: { name: 'Caso limpio', description: 'Resolvé un caso sin viajar a un destino equivocado' },
+      againstTheClock: { name: 'Contrarreloj', description: 'Atrapá al ladrón con {count} horas o más de sobra' },
+      frequentTraveler: { name: 'Viajero frecuente', description: 'Terminá {count} partidas' },
+      steady: { name: 'Constante', description: 'Llegá a una racha de {count} días' },
+      careerDetective: { name: 'Detective de carrera', description: 'Resolvé {count} casos' },
+      globetrotter: { name: 'Trotamundos', description: 'Jugá en los {count} mapas' }
+    }
+  },
   streak: {
     tooltip: { one: 'Racha: {count} día seguido jugando', other: 'Racha: {count} días seguidos jugando' },
     days: { one: '{count} día', other: '{count} días' },

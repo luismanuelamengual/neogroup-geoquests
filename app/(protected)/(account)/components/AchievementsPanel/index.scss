@@ -1,0 +1,125 @@
+.achievements-panel {
+  .count {
+    margin: 0 0 12px;
+    color: var(--color-text-secondary);
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .medals {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .medal {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border: 2px solid var(--color-panel-border);
+    border-radius: 14px;
+    background: var(--color-night-light);
+
+    .icon {
+      flex-shrink: 0;
+      font-size: 2rem;
+      line-height: 1;
+      filter: grayscale(1);
+      opacity: 0.4;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .name {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      color: var(--color-text-secondary);
+      font-weight: 800;
+    }
+
+    .tier {
+      padding: 0 8px;
+      border-radius: 999px;
+      color: #111;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+
+      &.bronze {
+        background: #d08a4e;
+      }
+
+      &.silver {
+        background: #c9d1dc;
+      }
+
+      &.gold {
+        background: var(--color-gold);
+      }
+    }
+
+    .description {
+      color: var(--color-text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .date {
+      color: var(--color-lime);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      color: var(--color-text-secondary);
+      font-size: 0.75rem;
+      font-weight: 700;
+
+      .bar {
+        flex: 1;
+        height: 12px;
+        border-width: 2px;
+      }
+    }
+
+    &.won {
+      border-color: var(--color-gold);
+
+      .icon {
+        filter: none;
+        opacity: 1;
+      }
+
+      .name {
+        color: var(--color-text);
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .achievements-panel .medals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .achievements-panel .medals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

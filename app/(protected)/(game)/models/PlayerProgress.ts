@@ -42,6 +42,10 @@ export class PlayerProgress extends BaseEntity {
   @Column({ cast: 'number' })
   xp!: number
 
+  /** Slugs of the maps the player finished a game in (the "globetrotter" achievement). */
+  @Column({ cast: 'json' })
+  mapsPlayed!: string[] | null
+
   /** Last day with a finished game (YYYY-MM-DD, in the player's time zone). */
   @Column()
   lastPlayedDay!: string | null

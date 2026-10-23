@@ -137,9 +137,10 @@ describe('daily challenge', () => {
   it('gives the XP of a classic game plus the bonus of the challenge', async () => {
     const game = await playToTheEnd(alice, 0)
 
-    // Finishing it (20), 25,000 points (250), the challenge (50) and the first game of the day (30).
+    // Finishing it (20), 25,000 points (250), the challenge (50), the first game of the day (30) and 6 medals (300).
     expect((game.modeView as ClassicGameView).totalScore).toBe(25000)
-    expect(game.xp).toEqual({ earned: 350, total: 350 })
+    expect(game.achievements).toEqual(['firstTrip', 'eagleEye', 'bullseye', 'starGame.1', 'starGame.2', 'earlyBird'])
+    expect(game.xp).toEqual({ earned: 650, total: 650 })
   })
 
   it('ranks the players of the day (equal scores share the place)', async () => {

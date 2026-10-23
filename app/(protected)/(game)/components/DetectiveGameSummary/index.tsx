@@ -10,6 +10,7 @@ import classNames from 'classnames'
 import { useMemo } from 'react'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import DetectiveMap, { DetectiveMapLeg, DetectiveMapMarker } from '@/app/(protected)/(game)/components/DetectiveMap'
+import NewAchievements from '@/app/(protected)/(game)/components/NewAchievements'
 import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
 import XpProgress from '@/app/(protected)/(game)/components/XpProgress'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
@@ -115,6 +116,7 @@ export default function DetectiveGameSummary() {
           </div>
         </dl>
         {game.xp && <XpProgress xp={game.xp} />}
+        <NewAchievements keys={game.achievements} />
         <div className="actions">
           <GameButton size="large" startIcon={<TravelExploreIcon />} href={NEW_CASE_PATH}>
             {t('detective.intro.newCase')}
