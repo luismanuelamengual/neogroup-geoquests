@@ -117,7 +117,7 @@ export default function MultiplayerLobby() {
         <ul className="players">
           {players.map((player) => (
             <li key={player.userId} className="player">
-              <PlayerAvatar name={player.name} color={colors.get(player.userId)} />
+              <PlayerAvatar name={player.name} color={colors.get(player.userId)} level={player.level} />
               <span className="name">
                 {player.name}
                 {player.userId === userId && <span className="you">{t('game.you')}</span>}

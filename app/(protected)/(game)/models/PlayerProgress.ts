@@ -38,6 +38,10 @@ export class PlayerProgress extends BaseEntity {
   @Column({ cast: 'number' })
   streakFreezes!: number
 
+  /** Total experience: the level is computed from it (see utils/xp.ts). */
+  @Column({ cast: 'number' })
+  xp!: number
+
   /** Last day with a finished game (YYYY-MM-DD, in the player's time zone). */
   @Column()
   lastPlayedDay!: string | null

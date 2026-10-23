@@ -28,6 +28,7 @@ import { findMap, findMapBySlug } from '@/app/(protected)/(game)/services/maps'
 import { getPlayerStats as getProgressStats } from '@/app/(protected)/(game)/services/progress'
 import { getPanoramaFinder } from '@/app/(protected)/(game)/services/streetView'
 import { generateGameCode, normalizeGameCode } from '@/app/(protected)/(game)/utils/gameCodes'
+import { getLevel } from '@/app/(protected)/(game)/utils/xp'
 import { ApiException } from '@/app/models/ApiException'
 import { getUserDisplayName } from '@/app/utils/users'
 
@@ -62,13 +63,15 @@ function toPlayerView(player: GamePlayer): GamePlayerView {
     status: player.status,
     score: player.score,
     position: player.position,
-    outcome: player.outcome
+    outcome: player.outcome,
+    level: getLevel(player.xpTotal ?? player.progress?.xp ?? 0)
   }
 }
 
 /** What `userId` sees of a game: the common part plus the view built by the mode engine. */
 export function toGameView({ game, players }: LoadedGame, userId: number, ctx: GameContext): GameView {
   const engine = getGameModeEngine(game.mode)
+  const me = players.find((player) => player.userId === userId)
 
   return {
     id: game.id,
@@ -85,6 +88,7 @@ export function toGameView({ game, players }: LoadedGame, userId: number, ctx: G
     createdAt: game.createdAt.toISOString(),
     startedAt: game.startedAt ? game.startedAt.toISOString() : null,
     finishedAt: game.finishedAt ? game.finishedAt.toISOString() : null,
+    xp: me?.xpEarned != null && me.xpTotal != null ? { earned: me.xpEarned, total: me.xpTotal } : null,
     modeView: engine.toView(game.data, userId, { players, hostUserId: game.hostUserId }, ctx)
   }
 }

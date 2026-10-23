@@ -11,6 +11,7 @@ import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ResultMap, { ResultPair } from '@/app/(protected)/(game)/components/ResultMap'
 import ScoreBar from '@/app/(protected)/(game)/components/ScoreBar'
 import ShareResultButton from '@/app/(protected)/(game)/components/ShareResultButton'
+import XpProgress from '@/app/(protected)/(game)/components/XpProgress'
 import { useCountUp } from '@/app/(protected)/(game)/hooks/useCountUp'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { ClassicGameView } from '@/app/(protected)/(game)/models/ClassicGameView'
@@ -95,7 +96,7 @@ export default function ClassicGameSummary() {
     <div className="classic-game-summary">
       {starting && <Loading message={t('picker.searchingPlaces')} />}
       <GamePanel className="hero" title={t('game.gameOver')} accent="magenta">
-        <div className="mode">{board ? t('daily.title', { number: board.number }) : getMapName(t, game.mapSlug)}</div>
+        <div className="mode">{board ? t('daily.title') : getMapName(t, game.mapSlug)}</div>
         <div className="stars">
           {[1, 2, 3].map((star) => (
             <StarIcon key={star} className={classNames('star', { earned: star <= stars })} />
@@ -108,6 +109,7 @@ export default function ClassicGameSummary() {
           </span>
         </div>
         <ScoreBar value={animatedTotal} max={view.maxScore} />
+        {game.xp && <XpProgress xp={game.xp} />}
         <div className="actions">
           <GameButton size="large" startIcon={<ReplayIcon />} loading={starting} onClick={handlePlayAgain}>
             {t('game.playAgain')}

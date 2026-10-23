@@ -10,4 +10,6 @@ export interface GamePlayerView {
   score: number
   position: number | null
   outcome: GameOutcome | null
+  /** Level of the player (see utils/xp.ts): the one it had right after the game, once it is over. */
+  level: number
 }

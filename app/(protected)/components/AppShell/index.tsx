@@ -1,12 +1,12 @@
 'use client'
 
 import './index.scss'
-import BarChartIcon from '@mui/icons-material/BarChart'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import GroupsIcon from '@mui/icons-material/Groups'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import ButtonBase from '@mui/material/ButtonBase'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -40,7 +40,7 @@ function isActive(pathname: string, href: string): boolean {
 
 /**
  * Shell of every authenticated page: a game-like top bar (logo, navigation,
- * streak and player badge) and a bottom tab bar on phones. The play screen renders on top
+ * streak and player badge with its level) and a bottom tab bar on phones. The play screen renders on top
  * of it in full screen.
  */
 export default function AppShell({
@@ -100,7 +100,7 @@ export default function AppShell({
         <div className="spacer" />
         <StreakBadge stats={stats} />
         <ButtonBase onClick={openMenu} className="player" focusRipple>
-          <PlayerAvatar name={user.displayName} />
+          <PlayerAvatar name={user.displayName} level={stats.level} />
           <span className="player-name">{user.displayName}</span>
         </ButtonBase>
         <Menu
@@ -113,6 +113,9 @@ export default function AppShell({
           <div className="app-shell-menu-header">
             <span className="name">{user.displayName}</span>
             <span className="email">{user.email}</span>
+            <span className="level">
+              {t('xp.level', { level: stats.level })} · {t(`xp.ranks.${stats.rank}` as MessageKey)}
+            </span>
           </div>
           <Divider />
           <MenuItem component={Link} href="/account" onClick={closeMenu}>
@@ -121,11 +124,11 @@ export default function AppShell({
             </ListItemIcon>
             {t('nav.myProfile')}
           </MenuItem>
-          <MenuItem component={Link} href="/stats" onClick={closeMenu}>
+          <MenuItem component={Link} href="/progress" onClick={closeMenu}>
             <ListItemIcon>
-              <BarChartIcon fontSize="small" />
+              <TrendingUpIcon fontSize="small" />
             </ListItemIcon>
-            {t('nav.stats')}
+            {t('nav.progress')}
           </MenuItem>
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>

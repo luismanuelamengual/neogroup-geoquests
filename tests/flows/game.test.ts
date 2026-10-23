@@ -35,6 +35,7 @@ import {
 import { getMapPlaces, getMaps } from '@/app/(protected)/(game)/services/maps'
 import { ROUND_TIME_GRACE_MS } from '@/app/(protected)/(game)/utils/guesses'
 import { getMapDescription, getMapName } from '@/app/(protected)/(game)/utils/mapText'
+import { getLevelProgress } from '@/app/(protected)/(game)/utils/xp'
 import { LOCALES } from '@/app/i18n/config'
 import { createTranslator } from '@/app/i18n/translate'
 import { createUser, resetDatabase } from '@/tests/setup/database'
@@ -306,7 +307,9 @@ describe('classic game flow', () => {
       hostUserId: null,
       version: 1
     })
-    expect(game.players).toEqual([{ userId, name: 'Player', status: 1, score: 0, position: null, outcome: null }])
+    expect(game.players).toEqual([
+      { userId, name: 'Player', status: 1, score: 0, position: null, outcome: null, level: 1 }
+    ])
     expect(classic(game)).toMatchObject({
       roundsCount: 5,
       currentRoundNumber: 1,
@@ -382,6 +385,9 @@ describe('classic game flow', () => {
     expect(totalScore).toBe(rounds.reduce((total, round) => total + (round.score ?? 0), 0))
     // The final result is stored with the player (history and stats).
     expect(view.players[0]).toMatchObject({ score: totalScore, position: 1, outcome: null })
+    // Finishing it, plus a point of XP every 100 of score, plus the first game of the day.
+    const xp = 20 + Math.floor(totalScore / 100) + 30
+
     expect(await getPlayerStats(userId)).toEqual({
       gamesPlayed: 1,
       bestScore: totalScore,
@@ -390,7 +396,9 @@ describe('classic game flow', () => {
       currentStreak: 1,
       bestStreak: 1,
       streakFreezes: 0,
-      playedToday: true
+      playedToday: true,
+      xp,
+      ...getLevelProgress(xp)
     })
     await expect(guess(game.id, 5, ATLANTIC)).rejects.toThrow('La partida ya terminó')
   })

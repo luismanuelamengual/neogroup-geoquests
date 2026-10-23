@@ -13,11 +13,7 @@ export default function DailyLeaderboard({ board }: { board: DailyLeaderboardVie
   const meInTop = board.top.some((entry) => entry.isMe)
 
   return (
-    <GamePanel
-      className="daily-leaderboard"
-      title={t('daily.leaderboardTitle', { number: board.number })}
-      accent="lime"
-    >
+    <GamePanel className="daily-leaderboard" title={t('daily.leaderboardTitle')} accent="lime">
       {board.me && (
         <div className="my-rank">
           <span className="position">{t('daily.rank', { position: board.me.position, total: board.me.total })}</span>

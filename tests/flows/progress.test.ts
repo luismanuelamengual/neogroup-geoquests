@@ -9,7 +9,9 @@ import { PlayerProgress } from '@/app/(protected)/(game)/models/PlayerProgress'
 import { cleanupGames, GAME_RETENTION_MS } from '@/app/(protected)/(game)/services/gameCleanup'
 import { createGame, getPlayerStats, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
+import { getLevelProgress, XP_FIRST_LEVEL } from '@/app/(protected)/(game)/utils/xp'
 import progressAndDaily from '@/database/migrations/003-player-progress-and-daily-challenges'
+import { backfillXp } from '@/database/migrations/006-player-xp'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
@@ -64,7 +66,12 @@ describe('player progress', () => {
       currentStreak: 0,
       bestStreak: 0,
       streakFreezes: 0,
-      playedToday: false
+      playedToday: false,
+      xp: 0,
+      level: 1,
+      rank: 'tourist',
+      levelXp: 0,
+      nextLevelXp: XP_FIRST_LEVEL
     })
   })
 
@@ -147,6 +154,42 @@ describe('player progress', () => {
     expect(await stats('2026-03-03T00:45:00Z')).toMatchObject({ currentStreak: 2 })
   })
 
+  it('gives XP for every finished game, with a bonus for the first one of the day', async () => {
+    const first = await playGame('2026-03-01T12:00:00Z')
+    const second = await playGame('2026-03-01T13:00:00Z', false)
+    const third = await playGame('2026-03-02T12:00:00Z', false)
+    const xpOf = (game: GameView) => 20 + Math.floor((game.modeView as ClassicGameView).totalScore / 100)
+    const total = xpOf(first) + 30 + xpOf(second) + xpOf(third) + 30
+
+    expect(first.xp).toEqual({ earned: xpOf(first) + 30, total: xpOf(first) + 30 })
+    // The same day: no bonus.
+    expect(second.xp).toEqual({ earned: xpOf(second), total: xpOf(first) + 30 + xpOf(second) })
+    // Another day: the bonus again.
+    expect(third.xp).toEqual({ earned: xpOf(third) + 30, total })
+    expect(third.players[0].level).toBe(getLevelProgress(total).level)
+    expect(await stats('2026-03-02T13:00:00Z')).toMatchObject({ xp: total, ...getLevelProgress(total) })
+    // A new game shows the level the player has now.
+    const next = await createGame(userId, { mapId, mode: GameMode.CLASSIC }, { finder: new FakePanoramaFinder() })
+
+    expect(next.players[0].level).toBe(getLevelProgress(total).level)
+    expect(next.xp).toBeNull()
+
+    // Asking for a finished game again does not give its XP again.
+    await sendGameAction(userId, { gameId: third.id, action: { type: 'startRound' } }).catch(() => null)
+    expect((await stats('2026-03-02T13:00:00Z')).xp).toBe(total)
+  })
+
+  it('gives the players that already played the XP of their counters', async () => {
+    await playGame('2026-03-01T12:00:00Z')
+    await DB.table('player_progress')
+      .where('userId', userId)
+      .update({ xp: 0, gamesPlayed: 10, totalScore: 123456, casesSolved: 2 })
+
+    await backfillXp()
+
+    expect((await stats('2026-03-01T13:00:00Z')).xp).toBe(20 * 10 + 1234 + 150 * 2)
+  })
+
   it('fills in the progress of the games finished before the migration', async () => {
     await playGame('2026-03-01T12:00:00Z')
     await playGame('2026-03-02T12:00:00Z')
@@ -156,6 +199,7 @@ describe('player progress', () => {
     await progressAndDaily.up()
 
     expect(await PlayerProgress.where('userId', userId).count()).toBe(1)
-    expect(await stats('2026-03-02T13:00:00Z')).toEqual(before)
+    // The XP is not part of that migration (see 006-player-xp).
+    expect(await stats('2026-03-02T13:00:00Z')).toEqual({ ...before, xp: 0, ...getLevelProgress(0) })
   })
 })

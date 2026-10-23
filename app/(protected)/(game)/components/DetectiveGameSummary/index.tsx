@@ -11,6 +11,7 @@ import { useMemo } from 'react'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import DetectiveMap, { DetectiveMapLeg, DetectiveMapMarker } from '@/app/(protected)/(game)/components/DetectiveMap'
 import WitnessAvatar from '@/app/(protected)/(game)/components/WitnessAvatar'
+import XpProgress from '@/app/(protected)/(game)/components/XpProgress'
 import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { formatDuration } from '@/app/(protected)/(game)/utils/detectiveClock'
@@ -113,6 +114,7 @@ export default function DetectiveGameSummary() {
             <dd>{mistakes}</dd>
           </div>
         </dl>
+        {game.xp && <XpProgress xp={game.xp} />}
         <div className="actions">
           <GameButton size="large" startIcon={<TravelExploreIcon />} href={NEW_CASE_PATH}>
             {t('detective.intro.newCase')}

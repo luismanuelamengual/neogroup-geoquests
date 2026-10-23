@@ -33,7 +33,12 @@ export default function PlayersStatus({ players, guessedUserIds, colors, classNa
               className={classNames('player', { guessed })}
               title={guessed ? t('game.guessedTitle', { name: player.name }) : player.name}
             >
-              <PlayerAvatar name={player.name} color={colors.get(player.userId)} className="avatar" />
+              <PlayerAvatar
+                name={player.name}
+                color={colors.get(player.userId)}
+                level={player.level}
+                className="avatar"
+              />
               {guessed && <CheckIcon className="check" />}
             </li>
           )

@@ -6,7 +6,7 @@ import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { LoadedGame } from '@/app/(protected)/(game)/models/LoadedGame'
 import { getGameModeEngine } from '@/app/(protected)/(game)/services/gameModes'
-import { recordFinishedGame } from '@/app/(protected)/(game)/services/progress'
+import { GameXpResult, recordFinishedGame } from '@/app/(protected)/(game)/services/progress'
 import { ApiException } from '@/app/models/ApiException'
 
 /**
@@ -42,7 +42,11 @@ export async function loadGame(gameId: number): Promise<LoadedGame> {
     throw new ApiException('errors.gameNotFound', 404)
   }
 
-  const players = await GamePlayer.where('gameId', game.id).orderBy('joinedAt').orderBy('userId').with('user').get()
+  const players = await GamePlayer.where('gameId', game.id)
+    .orderBy('joinedAt')
+    .orderBy('userId')
+    .with('user', 'progress')
+    .get()
 
   return { game, players }
 }
@@ -65,6 +69,7 @@ async function saveGame(
   const status = finish ? GameStatus.FINISHED : game.status
   const finishedAt = finish ? now : game.finishedAt
   const code = finish ? null : game.code
+  let xpResults: GameXpResult[] = []
 
   const write = async (): Promise<boolean> => {
     const updated = await DB.table('games')
@@ -93,7 +98,7 @@ async function saveGame(
     }
 
     if (finish) {
-      await recordFinishedGame(game, players, results, now)
+      xpResults = await recordFinishedGame(game, players, results, now)
     }
 
     return true
@@ -117,6 +122,19 @@ async function saveGame(
         player.score = result.score
         player.position = result.position
         player.outcome = result.outcome
+      }
+    }
+
+    for (const xp of xpResults) {
+      const player = players.find((candidate) => candidate.userId === xp.userId)
+
+      if (player) {
+        player.xpEarned = xp.xpEarned
+        player.xpTotal = xp.xpTotal
+
+        if (player.progress) {
+          player.progress.xp = xp.xpTotal
+        }
       }
     }
   }

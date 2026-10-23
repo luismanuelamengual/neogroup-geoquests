@@ -1,6 +1,7 @@
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GamePlayerView } from '@/app/(protected)/(game)/models/GamePlayerView'
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
+import { GameXpView } from '@/app/(protected)/(game)/models/GameXpView'
 
 /**
  * Client view of a game of any mode: the common part plus `modeView`, built
@@ -26,5 +27,7 @@ export interface GameView<ModeView = unknown> {
   createdAt: string
   startedAt: string | null
   finishedAt: string | null
+  /** XP the game gave this player: set once the game is over (null in the games finished before XP existed). */
+  xp: GameXpView | null
   modeView: ModeView
 }

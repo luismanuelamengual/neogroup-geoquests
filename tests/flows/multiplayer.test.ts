@@ -27,6 +27,7 @@ import {
 } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
 import { ROUND_TIME_GRACE_MS } from '@/app/(protected)/(game)/utils/guesses'
+import { getLevel } from '@/app/(protected)/(game)/utils/xp'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
@@ -357,6 +358,16 @@ describe('classic multiplayer flow', () => {
       position: 2,
       outcome: GameOutcome.LOST
     })
+
+    // XP: finishing it (20), its score (1 every 100), the podium (50 / 30) and the first game of the day (30).
+    const hostScore = finished.players.find((player) => player.userId === host)!.score
+
+    expect((await view(ana, game.id, ms)).xp).toEqual({ earned: 20 + 250 + 50 + 30, total: 350 })
+    expect(finished.xp).toEqual({
+      earned: 20 + Math.floor(hostScore / 100) + 30 + 30,
+      total: 20 + Math.floor(hostScore / 100) + 30 + 30
+    })
+    expect(finished.players.find((player) => player.userId === ana)!.level).toBe(getLevel(350))
     expect((await getGames(ana)).items[0]).toMatchObject({
       mode: GameMode.CLASSIC_MULTIPLAYER,
       status: GameStatus.FINISHED,

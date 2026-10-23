@@ -1,3 +1,5 @@
+import { XpRank } from '@/app/(protected)/(game)/utils/xp'
+
 /** Aggregated stats over the finished games of a player (games screen), kept forever (see PlayerProgress). */
 export interface PlayerStats {
   gamesPlayed: number
@@ -12,4 +14,12 @@ export interface PlayerStats {
   streakFreezes: number
   /** Whether a game was already finished today (the streak is safe until tomorrow). */
   playedToday: boolean
+  /** Total experience (see utils/xp.ts). */
+  xp: number
+  level: number
+  rank: XpRank
+  /** XP gathered inside the current level. */
+  levelXp: number
+  /** XP the current level takes (from its start to the next level). */
+  nextLevelXp: number
 }

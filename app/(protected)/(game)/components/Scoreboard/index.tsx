@@ -55,7 +55,7 @@ export default function Scoreboard({ entries, players, colors, highlightUserId, 
               })}
             >
               <span className="position">{formatPosition(entry.position, locale)}</span>
-              <PlayerAvatar name={name} color={colors.get(entry.userId)} className="avatar" />
+              <PlayerAvatar name={name} color={colors.get(entry.userId)} level={player?.level} className="avatar" />
               <span className="info">
                 <span className="name">
                   {name}

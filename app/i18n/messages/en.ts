@@ -11,7 +11,7 @@ export const en: Messages = {
     points: 'pts'
   },
   nav: {
-    stats: 'Stats',
+    progress: 'My progress',
     ranking: 'Ranking',
     play: 'Play',
     multiplayer: 'Multiplayer',
@@ -19,7 +19,7 @@ export const en: Messages = {
     logout: 'Sign out'
   },
   metadata: {
-    stats: 'Stats',
+    progress: 'My progress',
     ranking: 'Ranking',
     mainMenu: 'Main menu',
     multiplayer: 'Multiplayer',
@@ -777,7 +777,7 @@ export const en: Messages = {
   daily: {
     topTitle: "Today's best",
     seeRanking: 'See ranking',
-    title: 'Daily challenge #{number}',
+    title: 'Daily challenge',
     badge: 'New every day',
     subtitle: 'The same streets for everybody. One attempt per day: how much will you score today?',
     rules: '{rounds} rounds · {time} per round',
@@ -789,7 +789,7 @@ export const en: Messages = {
     top: 'Top {percent}%',
     forfeited: "You left today's challenge. There's another one tomorrow!",
     nextIn: 'Next challenge in {time}',
-    leaderboardTitle: 'Challenge #{number} ranking',
+    leaderboardTitle: 'Ranking',
     leaderboardEmpty: 'Nobody finished this challenge yet.',
     you: 'you'
   },
@@ -799,6 +799,22 @@ export const en: Messages = {
     today: 'Today',
     previousDay: 'Previous day',
     nextDay: 'Next day'
+  },
+  xp: {
+    title: 'Level',
+    level: 'Level {level}',
+    earned: '+{xp} XP',
+    total: '{xp} XP in total',
+    toNextLevel: '{xp} XP to level {level}',
+    levelUp: 'Level up! You reached level {level}',
+    ranks: {
+      tourist: 'Tourist',
+      backpacker: 'Backpacker',
+      explorer: 'Explorer',
+      cartographer: 'Cartographer',
+      navigator: 'Navigator',
+      legend: 'Legend'
+    }
   },
   streak: {
     tooltip: { one: 'Streak: {count} day in a row', other: 'Streak: {count} days in a row' },

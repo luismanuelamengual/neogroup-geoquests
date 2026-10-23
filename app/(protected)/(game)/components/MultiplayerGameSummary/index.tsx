@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ResultMap, { ResultPair } from '@/app/(protected)/(game)/components/ResultMap'
 import Scoreboard from '@/app/(protected)/(game)/components/Scoreboard'
+import XpProgress from '@/app/(protected)/(game)/components/XpProgress'
 import { useGames } from '@/app/(protected)/(game)/hooks/useGames'
 import { ClassicMultiplayerGameView } from '@/app/(protected)/(game)/models/ClassicMultiplayerGameView'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
@@ -109,6 +110,7 @@ export default function MultiplayerGameSummary() {
           highlightUserId={userId}
           className="final-standings"
         />
+        {game.xp && <XpProgress xp={game.xp} />}
         <div className="actions">
           <GameButton
             size="large"

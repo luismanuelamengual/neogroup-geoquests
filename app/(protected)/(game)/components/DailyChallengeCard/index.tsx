@@ -32,7 +32,8 @@ function formatCountdown(milliseconds: number): string {
 /**
  * Today's challenge, on top of the "Jugar" menu: play it (once a day), get back
  * to it, or see how it went and how long until the next one — with the podium
- * of the day and the way to the whole ranking (/ranking).
+ * of the day and the way to the whole ranking (/ranking). While it loads, a
+ * placeholder of the card.
  */
 export default function DailyChallengeCard() {
   const { t, locale } = useI18n()
@@ -41,7 +42,7 @@ export default function DailyChallengeCard() {
   const [reload, setReload] = useState(0)
   const [starting, setStarting] = useState(false)
   const loadChallenge = useCallback(() => getDailyChallenge(), [getDailyChallenge])
-  const { data: daily } = useLoadingData(loadChallenge, [loadChallenge, reload], null)
+  const { data: daily, error } = useLoadingData(loadChallenge, [loadChallenge, reload], null)
   const loadBoard = useCallback(() => getDailyLeaderboard(), [getDailyLeaderboard])
   const { data: board } = useLoadingData(loadBoard, [loadBoard, reload], null)
   const now = useNow(1000)
@@ -56,8 +57,28 @@ export default function DailyChallengeCard() {
     }
   }, [daily, msToNext])
 
+  const header = (
+    <div className="header">
+      <CalendarTodayIcon className="icon" />
+      <h2 className="title">{t('daily.title')}</h2>
+      <span className="badge">{t('daily.badge')}</span>
+    </div>
+  )
+
   if (!daily) {
-    return null
+    // Not available (e.g. offline): the menu goes on without it.
+    if (error) {
+      return null
+    }
+
+    return (
+      <section className="daily-challenge-card loading" aria-busy="true" aria-label={t('common.loading')}>
+        {header}
+        <span className="placeholder line" />
+        <span className="placeholder line short" />
+        <span className="placeholder button" />
+      </section>
+    )
   }
 
   const handlePlay = async () => {
@@ -78,11 +99,7 @@ export default function DailyChallengeCard() {
   return (
     <section className="daily-challenge-card">
       {starting && <Loading message={t('picker.searchingPlaces')} />}
-      <div className="header">
-        <CalendarTodayIcon className="icon" />
-        <h2 className="title">{t('daily.title', { number: daily.number })}</h2>
-        <span className="badge">{t('daily.badge')}</span>
-      </div>
+      {header}
       <p className="subtitle">{t('daily.subtitle')}</p>
       <p className="rules">
         {getMapName(t, daily.mapSlug)} ·{' '}

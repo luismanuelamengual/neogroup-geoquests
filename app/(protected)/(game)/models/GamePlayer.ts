@@ -1,6 +1,7 @@
 import { BaseEntity, BelongsTo, Column, Entity } from '@neogroup/neorm'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { GamePlayerStatus } from '@/app/(protected)/(game)/models/GamePlayerStatus'
+import { PlayerProgress } from '@/app/(protected)/(game)/models/PlayerProgress'
 import { User } from '@/app/models/User'
 
 /**
@@ -31,6 +32,14 @@ export class GamePlayer extends BaseEntity {
   @Column({ cast: 'number' })
   outcome!: GameOutcome | null
 
+  /** XP the game gave the player; null while the game is being played. */
+  @Column({ cast: 'number' })
+  xpEarned!: number | null
+
+  /** Total XP of the player right after this game (the summary animates the bar from xpTotal − xpEarned). */
+  @Column({ cast: 'number' })
+  xpTotal!: number | null
+
   @Column({ cast: 'date' })
   joinedAt!: Date
 
@@ -40,4 +49,8 @@ export class GamePlayer extends BaseEntity {
 
   @BelongsTo(() => User, 'userId')
   user?: User
+
+  /** Progress of the player (its level); null until it finishes its first game. */
+  @BelongsTo(() => PlayerProgress, 'userId', 'userId')
+  progress?: PlayerProgress | null
 }

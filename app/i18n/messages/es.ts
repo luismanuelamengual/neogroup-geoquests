@@ -14,7 +14,7 @@ export const es = {
     points: 'pts'
   },
   nav: {
-    stats: 'Estadísticas',
+    progress: 'Mi progreso',
     ranking: 'Ranking',
     play: 'Jugar',
     multiplayer: 'Multijugador',
@@ -22,7 +22,7 @@ export const es = {
     logout: 'Cerrar sesión'
   },
   metadata: {
-    stats: 'Estadísticas',
+    progress: 'Mi progreso',
     ranking: 'Ranking',
     mainMenu: 'Menú principal',
     multiplayer: 'Multijugador',
@@ -783,7 +783,7 @@ export const es = {
   daily: {
     topTitle: 'Los mejores de hoy',
     seeRanking: 'Ver ranking',
-    title: 'Desafío diario #{number}',
+    title: 'Desafío diario',
     badge: 'Nuevo cada día',
     subtitle: 'Las mismas calles para todos. Un solo intento por día: ¿cuánto sacás hoy?',
     rules: '{rounds} rondas · {time} por ronda',
@@ -795,7 +795,7 @@ export const es = {
     top: 'Top {percent}%',
     forfeited: 'Abandonaste el desafío de hoy. ¡Mañana hay otro!',
     nextIn: 'Próximo desafío en {time}',
-    leaderboardTitle: 'Ranking del desafío #{number}',
+    leaderboardTitle: 'Ranking',
     leaderboardEmpty: 'Todavía nadie terminó este desafío.',
     you: 'vos'
   },
@@ -805,6 +805,22 @@ export const es = {
     today: 'Hoy',
     previousDay: 'Día anterior',
     nextDay: 'Día siguiente'
+  },
+  xp: {
+    title: 'Nivel',
+    level: 'Nivel {level}',
+    earned: '+{xp} XP',
+    total: '{xp} XP en total',
+    toNextLevel: 'Faltan {xp} XP para el nivel {level}',
+    levelUp: '¡Subiste a nivel {level}!',
+    ranks: {
+      tourist: 'Turista',
+      backpacker: 'Mochilero',
+      explorer: 'Explorador',
+      cartographer: 'Cartógrafo',
+      navigator: 'Navegante',
+      legend: 'Leyenda'
+    }
   },
   streak: {
     tooltip: { one: 'Racha: {count} día seguido jugando', other: 'Racha: {count} días seguidos jugando' },
