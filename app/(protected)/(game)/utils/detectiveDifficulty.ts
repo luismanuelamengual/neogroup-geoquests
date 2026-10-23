@@ -34,7 +34,7 @@ const ALL_TRAITS: SuspectTrait[] = [
 
 export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDifficultySettings> = {
   easy: {
-    hops: 4,
+    hops: 5,
     minHopKm: 500,
     options: 4,
     decoyDistanceBands: [
@@ -45,13 +45,13 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     witnesses: 3,
     witnessMinutes: 60,
     witnessBudgetMinutes: 45,
-    mistakesMargin: 1.5,
+    mistakesMargin: 1.4,
     maxMistakes: 2,
-    suspects: 3,
+    suspects: 4,
     suspectTraits: ['gender', 'hairColor', 'hairStyle', 'eyeColor', 'glasses', 'headwear'],
     decoyContradictions: [0.6, 1],
     centralCalls: 1,
-    centralCallMinutes: 180,
+    centralCallMinutes: 120,
     centralCallEliminates: 2,
     eventChance: 0.7,
     doubleEventChance: 0.2
@@ -68,20 +68,20 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     witnesses: 3,
     witnessMinutes: 120,
     witnessBudgetMinutes: 70,
-    mistakesMargin: 1.3,
+    mistakesMargin: 1.25,
     maxMistakes: 1,
     suspects: 4,
     suspectTraits: ALL_TRAITS,
     decoyContradictions: [0, 0.5],
     centralCalls: 1,
-    centralCallMinutes: 180,
+    centralCallMinutes: 120,
     centralCallEliminates: 2,
     eventChance: 0.75,
     doubleEventChance: 0.25
   },
   hard: {
     hops: 6,
-    minHopKm: 700,
+    minHopKm: 600,
     options: 6,
     decoyDistanceBands: [
       [0, 0.4],
@@ -97,7 +97,7 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     suspectTraits: ALL_TRAITS,
     decoyContradictions: [0, 0.3],
     centralCalls: 1,
-    centralCallMinutes: 180,
+    centralCallMinutes: 120,
     centralCallEliminates: 2,
     eventChance: 0.8,
     doubleEventChance: 0.3

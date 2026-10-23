@@ -185,6 +185,21 @@ describe('lineup', () => {
     expect([...positions].sort()).toEqual([0, 1, 2, 3])
   })
 
+  it('settles for fewer clues when the traits allow no more, and still tells the thief from every decoy', () => {
+    const traits: SuspectTrait[] = ['gender', 'hairColor', 'hairStyle', 'eyeColor', 'glasses', 'headwear']
+
+    for (let seed = 1; seed <= 50; seed++) {
+      const lineup = planLineup(4, 8, seeded(seed), { traits, decoyContradictions: [0.6, 1] })
+
+      expect(lineup.seeds).toHaveLength(4)
+      expect(lineup.clues.length).toBeGreaterThanOrEqual(5)
+      expect(lineup.clues.length).toBeLessThanOrEqual(traits.length)
+      lineup.seeds.forEach((suspect, index) => {
+        expect(countContradictions(generateSuspect(suspect), lineup.clues) === 0).toBe(index === lineup.thief)
+      })
+    }
+  })
+
   it('is written in every language for every trait it can tell', () => {
     const traits: SuspectTrait[] = []
 

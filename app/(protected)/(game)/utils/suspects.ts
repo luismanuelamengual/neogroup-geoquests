@@ -188,16 +188,19 @@ export function planLineup(
   let thiefSeed = randomSeed(random)
   let clues: SuspectClue[] = []
 
+  // When no thief has `clueCount` traits to tell (more clues than the traits allow), the one with the most.
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    const { positive, negative } = getSuspectClueCandidates(generateSuspect(thiefSeed), rules.traits)
+    const seed = randomSeed(random)
+    const { positive, negative } = getSuspectClueCandidates(generateSuspect(seed), rules.traits)
 
-    if (positive.length + negative.length >= clueCount) {
+    if (attempt === 0 || positive.length + negative.length > clues.length) {
+      thiefSeed = seed
       clues = [...shuffle(positive, random), ...shuffle(negative, random)].slice(0, clueCount)
-
-      break
     }
 
-    thiefSeed = randomSeed(random)
+    if (clues.length >= clueCount) {
+      break
+    }
   }
 
   const seeds = [thiefSeed]

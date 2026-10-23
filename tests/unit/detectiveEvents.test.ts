@@ -168,15 +168,15 @@ describe('random events', () => {
     expect(getStageWitnessMinutes(MEDIUM, stageWith([{ type: 'slowWitnesses' }]))).toBe(180)
     expect(getStageWitnessMinutes({ witnessMinutes: 30 }, stageWith([{ type: 'quickWitnesses' }]))).toBe(30)
 
-    expect(getStageCallRules(MEDIUM, stageWith([]))).toEqual({ available: true, minutes: 180, eliminates: 2 })
+    expect(getStageCallRules(MEDIUM, stageWith([]))).toEqual({ available: true, minutes: 120, eliminates: 2 })
     expect(getStageCallRules(MEDIUM, stageWith([{ type: 'hotline' }]))).toEqual({
       available: true,
-      minutes: 90,
+      minutes: 60,
       eliminates: 3
     })
     expect(getStageCallRules(MEDIUM, stageWith([{ type: 'badSignal' }]))).toEqual({
       available: true,
-      minutes: 270,
+      minutes: 180,
       eliminates: 1
     })
     expect(getStageCallRules(MEDIUM, stageWith([{ type: 'linesDown' }])).available).toBe(false)
