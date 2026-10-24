@@ -41,6 +41,7 @@ import {
   getAllowedMistakes,
   getCallsLeft,
   getExpectedSuspects,
+  getRuledOutPlaceIds,
   getStageCallRules,
   getStageEvents,
   getStageFlightMinutes,
@@ -260,12 +261,17 @@ function accuse(data: DetectiveGameData, action: AccuseAction): boolean {
 }
 
 function toEventViews(stage: DetectiveStage): DetectiveEventView[] {
-  return getStageEvents(stage).map((event) => ({
-    type: event.type,
-    good: isGoodEvent(event.type),
-    ...(event.minutes != null ? { minutes: event.minutes } : {}),
-    ...(event.placeId != null ? { placeId: event.placeId } : {})
-  }))
+  return getStageEvents(stage).map((event) => {
+    const placeIds = event.type === 'ruledOut' ? getRuledOutPlaceIds(event) : []
+
+    return {
+      type: event.type,
+      good: isGoodEvent(event.type),
+      ...(event.minutes != null ? { minutes: event.minutes } : {}),
+      ...(event.witnesses != null ? { witnesses: event.witnesses } : {}),
+      ...(placeIds.length > 0 ? { placeIds } : {})
+    }
+  })
 }
 
 function toCurrentStageView(data: DetectiveGameData): DetectiveCurrentStageView | null {

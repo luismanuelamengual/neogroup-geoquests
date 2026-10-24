@@ -8,7 +8,7 @@ export type DetectiveEventType =
   // ---- good ----
   /** One more witness at this stage. */
   | 'extraWitness'
-  /** The witnesses of this stage tell two clues each (while there are clues left). */
+  /** Some witnesses of this stage (one, two or all of them) tell two clues each (while there are clues left). */
   | 'talkative'
   /** One more trait of the thief at this stage (told by another witness). */
   | 'sharpEye'
@@ -16,13 +16,13 @@ export type DetectiveEventType =
   | 'suspectCleared'
   /** More time for the whole case. */
   | 'extraTime'
-  /** A wrong destination of this stage is ruled out as soon as the detective gets there. */
+  /** One or two wrong destinations of this stage are ruled out as soon as the detective gets there. */
   | 'ruledOut'
   /** The witnesses of this stage cost less time. */
   | 'quickWitnesses'
   /** One more call to the central office for the rest of the case. */
   | 'extraCall'
-  /** A call to the central office from this stage costs less time and rules out one more destination. */
+  /** A call to the central office from this stage costs less time and may rule out more destinations. */
   | 'hotline'
   /** One more wrong destination allowed for the rest of the case. */
   | 'secondChance'
@@ -41,25 +41,40 @@ export type DetectiveEventType =
   | 'lostTime'
   /** One more destination to choose from at this stage. */
   | 'moreRumors'
-  /** The witnesses of this stage cost more time. */
+  /** The witnesses of this stage cost more time (how much more, it depends). */
   | 'slowWitnesses'
   /** The central office can not be called from this stage. */
   | 'linesDown'
-  /** A call to the central office from this stage costs more time and rules out one destination less. */
+  /** A call to the central office from this stage costs more time and may rule out fewer destinations. */
   | 'badSignal'
   /** One wrong destination less allowed for the rest of the case (never less than none). */
   | 'pressure'
   /** The trip out of this stage is longer. */
   | 'delayedFlight'
 
-/** An event of a stage (stored in `games.data`). */
+/**
+ * An event of a stage (stored in `games.data`), with its variant. The cases
+ * created before the variants existed have none: see utils/detectiveEvents.ts
+ * for what each event does then.
+ */
 export interface DetectiveEvent {
   type: DetectiveEventType
   /**
    * `extraTime` / `lostTime`: minutes the time of the case changes (planned
    * with the case; `lostTime` may take less, it is updated when it happens).
+   * `directFlight` / `delayedFlight`: minutes the trip out of the stage changes.
    */
   minutes?: number
-  /** `ruledOut`: the wrong destination ruled out. */
+  /** `talkative`: how many witnesses tell two clues (none: all of them). */
+  witnesses?: number
+  /** `ruledOut`: how many wrong destinations it rules out (set when the case is planned). */
+  count?: number
+  /** `ruledOut`: the wrong destinations ruled out. */
+  placeIds?: number[]
+  /** `ruledOut`, in the cases created before the variants: the wrong destination ruled out. */
   placeId?: number
+  /** `slowWitnesses` / `hotline` / `badSignal`: what the cost of a witness or a call is multiplied by. */
+  factor?: number
+  /** `hotline` / `badSignal`: how many more (or, negative, fewer) destinations a call rules out. */
+  eliminatesChange?: number
 }

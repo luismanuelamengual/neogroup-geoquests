@@ -22,10 +22,15 @@ export interface DetectiveWitnessView {
 export interface DetectiveEventView {
   type: DetectiveEventType
   good: boolean
-  /** `extraTime` / `lostTime`: the minutes the time of the case changed. */
+  /**
+   * `extraTime` / `lostTime`: the minutes the time of the case changed.
+   * `directFlight` / `delayedFlight`: the minutes the trip out of the stage changes (none: FLIGHT_EVENT_MINUTES).
+   */
   minutes?: number
-  /** `ruledOut`: the wrong destination ruled out (it is one of the options of the stage). */
-  placeId?: number
+  /** `talkative`: how many witnesses tell two clues (none: all of them). */
+  witnesses?: number
+  /** `ruledOut`: the wrong destinations ruled out (they are options of the stage). */
+  placeIds?: number[]
 }
 
 /** A call to the central office from the current stage. */

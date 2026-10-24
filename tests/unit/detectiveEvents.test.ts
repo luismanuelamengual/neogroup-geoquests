@@ -5,17 +5,25 @@ import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
 import { getClueKindRoles, ROLE_CLUE_KIND, WITNESS_ROLES } from '@/app/(protected)/(game)/models/WitnessRole'
 import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
 import {
+  BAD_SIGNAL_ELIMINATED_VARIANTS,
+  BAD_SIGNAL_FACTOR_VARIANTS,
   DETECTIVE_EVENT_TYPES,
   DETECTIVE_EVENTS,
+  FLIGHT_EVENT_VARIANTS,
   getAllowedMistakes,
   getCallsLeft,
   getStageCallRules,
+  getStageFlightMinutes,
   getStagePlan,
   getStageWitnessMinutes,
+  HOTLINE_ELIMINATED_VARIANTS,
+  HOTLINE_FACTOR_VARIANTS,
   MAX_SUSPECTS,
   MIN_SUSPECTS,
   planCaseEvents,
-  revealStage
+  revealStage,
+  RULED_OUT_VARIANTS,
+  SLOW_WITNESSES_VARIANTS
 } from '@/app/(protected)/(game)/utils/detectiveEvents'
 import { CLUES_PER_LANDMARK, getClueKind, planWitnessClues } from '@/app/(protected)/(game)/utils/landmarkClues'
 import { seededRandom } from '@/app/(protected)/(game)/utils/seededRandom'
@@ -58,6 +66,17 @@ describe('witnesses by job', () => {
       })
     }
   })
+
+  it('gives more clues to as many talkative witnesses as asked, only', () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      for (const talkative of [0, 1, 2]) {
+        const witnesses = planWitnessClues(3, 2, seededRandom(seed), talkative)
+
+        expect(witnesses.filter((witness) => witness.clueIndices.length === 2)).toHaveLength(talkative)
+        expect(witnesses.filter((witness) => witness.clueIndices.length === 1)).toHaveLength(3 - talkative)
+      }
+    }
+  })
 })
 
 describe('random events', () => {
@@ -83,6 +102,32 @@ describe('random events', () => {
       for (const event of events) {
         if (event.type === 'extraTime' || event.type === 'lostTime') {
           expect([120, 180, 240]).toContain(event.minutes)
+        }
+
+        if (event.type === 'directFlight' || event.type === 'delayedFlight') {
+          expect(FLIGHT_EVENT_VARIANTS).toContain(event.minutes)
+        }
+
+        if (event.type === 'talkative') {
+          expect([undefined, 1, 2]).toContain(event.witnesses)
+        }
+
+        if (event.type === 'ruledOut') {
+          expect(RULED_OUT_VARIANTS).toContain(event.count)
+        }
+
+        if (event.type === 'slowWitnesses') {
+          expect(SLOW_WITNESSES_VARIANTS).toContain(event.factor)
+        }
+
+        if (event.type === 'hotline') {
+          expect(HOTLINE_FACTOR_VARIANTS).toContain(event.factor)
+          expect(HOTLINE_ELIMINATED_VARIANTS).toContain(event.eliminatesChange)
+        }
+
+        if (event.type === 'badSignal') {
+          expect(BAD_SIGNAL_FACTOR_VARIANTS).toContain(event.factor)
+          expect(BAD_SIGNAL_ELIMINATED_VARIANTS).toContain(-event.eliminatesChange!)
         }
       }
     }
@@ -110,6 +155,40 @@ describe('random events', () => {
 
       expect(pressure === -1 || (firstSecondChance !== -1 && firstSecondChance < pressure)).toBe(true)
     }
+  })
+
+  it('plans every variant of talkative and ruledOut, and never rules out every wrong destination', () => {
+    for (let seed = 1; seed <= 300; seed++) {
+      const events = planCaseEvents(
+        { ...MEDIUM, witnesses: 2, options: 3, eventChance: 1, doubleEventChance: 1 },
+        6,
+        seededRandom(seed)
+      ).stages.flat()
+
+      for (const event of events) {
+        if (event.type === 'ruledOut') {
+          expect(event.count).toBe(1)
+        }
+      }
+    }
+
+    const variants = new Set<string>()
+
+    for (let seed = 1; seed <= 300; seed++) {
+      planCaseEvents({ ...MEDIUM, eventChance: 1, doubleEventChance: 1 }, 6, seededRandom(seed))
+        .stages.flat()
+        .forEach((event) => {
+          if (event.type === 'talkative') {
+            variants.add(`talkative-${event.witnesses ?? 'all'}`)
+          }
+
+          if (event.type === 'ruledOut') {
+            variants.add(`ruledOut-${event.count}`)
+          }
+        })
+    }
+
+    expect([...variants].sort()).toEqual(['ruledOut-1', 'ruledOut-2', 'talkative-1', 'talkative-2', 'talkative-all'])
   })
 
   it('happens all of them, sooner or later', () => {
@@ -145,7 +224,13 @@ describe('random events', () => {
   })
 
   it('plans the witnesses and destinations of a stage with its events', () => {
-    expect(getStagePlan(MEDIUM, [])).toEqual({ witnesses: 3, cluesPerWitness: 1, suspectClues: 1, decoys: 4 })
+    expect(getStagePlan(MEDIUM, [])).toEqual({
+      witnesses: 3,
+      cluesPerWitness: 1,
+      talkativeWitnesses: 0,
+      suspectClues: 1,
+      decoys: 4
+    })
     expect(
       getStagePlan(MEDIUM, [
         { type: 'extraWitness' },
@@ -153,13 +238,22 @@ describe('random events', () => {
         { type: 'sharpEye' },
         { type: 'moreRumors' }
       ])
-    ).toEqual({ witnesses: 4, cluesPerWitness: 2, suspectClues: 2, decoys: 5 })
+    ).toEqual({ witnesses: 4, cluesPerWitness: 2, talkativeWitnesses: 4, suspectClues: 2, decoys: 5 })
     expect(getStagePlan(MEDIUM, [{ type: 'missingWitness' }, { type: 'noSighting' }])).toEqual({
       witnesses: 2,
       cluesPerWitness: 1,
+      talkativeWitnesses: 0,
       suspectClues: 0,
       decoys: 4
     })
+    expect(getStagePlan(MEDIUM, [{ type: 'talkative', witnesses: 1 }]).talkativeWitnesses).toBe(1)
+    expect(
+      getStagePlan(MEDIUM, [{ type: 'talkative', witnesses: 2 }, { type: 'missingWitness' }]).talkativeWitnesses
+    ).toBe(2)
+    expect(
+      getStagePlan({ ...MEDIUM, witnesses: 2 }, [{ type: 'talkative', witnesses: 2 }, { type: 'missingWitness' }])
+        .talkativeWitnesses
+    ).toBe(1)
   })
 
   it('changes what a witness and a call cost at a stage', () => {
@@ -167,6 +261,8 @@ describe('random events', () => {
     expect(getStageWitnessMinutes(MEDIUM, stageWith([{ type: 'quickWitnesses' }]))).toBe(60)
     expect(getStageWitnessMinutes(MEDIUM, stageWith([{ type: 'slowWitnesses' }]))).toBe(180)
     expect(getStageWitnessMinutes({ witnessMinutes: 30 }, stageWith([{ type: 'quickWitnesses' }]))).toBe(30)
+    expect(getStageWitnessMinutes(MEDIUM, stageWith([{ type: 'slowWitnesses', factor: 1.25 }]))).toBe(150)
+    expect(getStageWitnessMinutes(MEDIUM, stageWith([{ type: 'slowWitnesses', factor: 2 }]))).toBe(240)
 
     expect(getStageCallRules(MEDIUM, stageWith([]))).toEqual({ available: true, minutes: 120, eliminates: 2 })
     expect(getStageCallRules(MEDIUM, stageWith([{ type: 'hotline' }]))).toEqual({
@@ -180,6 +276,53 @@ describe('random events', () => {
       eliminates: 1
     })
     expect(getStageCallRules(MEDIUM, stageWith([{ type: 'linesDown' }])).available).toBe(false)
+
+    // The variants.
+    expect(getStageCallRules(MEDIUM, stageWith([{ type: 'hotline', factor: 0.25, eliminatesChange: 2 }]))).toEqual({
+      available: true,
+      minutes: 30,
+      eliminates: 4
+    })
+    expect(getStageCallRules(MEDIUM, stageWith([{ type: 'hotline', factor: 0.75, eliminatesChange: 0 }]))).toEqual({
+      available: true,
+      minutes: 90,
+      eliminates: 2
+    })
+    expect(getStageCallRules(MEDIUM, stageWith([{ type: 'badSignal', factor: 2, eliminatesChange: 0 }]))).toEqual({
+      available: true,
+      minutes: 240,
+      eliminates: 2
+    })
+    expect(
+      getStageCallRules(
+        { ...MEDIUM, centralCallEliminates: 1 },
+        stageWith([{ type: 'badSignal', factor: 1.25, eliminatesChange: -1 }])
+      )
+    ).toEqual({ available: true, minutes: 150, eliminates: 1 })
+  })
+
+  it('changes the trip out of a stage as its flight events say', () => {
+    expect(getStageFlightMinutes(stageWith([]))).toBe(0)
+    expect(getStageFlightMinutes(stageWith([{ type: 'delayedFlight' }]))).toBe(90)
+    expect(getStageFlightMinutes(stageWith([{ type: 'directFlight' }]))).toBe(-90)
+    expect(getStageFlightMinutes(stageWith([{ type: 'delayedFlight', minutes: 30 }]))).toBe(30)
+    expect(getStageFlightMinutes(stageWith([{ type: 'directFlight', minutes: 120 }]))).toBe(-120)
+  })
+
+  it('rules out the destinations of a ruledOut event, old ones and new ones', () => {
+    const data = {
+      timeLimitMinutes: 1000,
+      elapsedMinutes: 0,
+      stages: [
+        stageWith([{ type: 'ruledOut', placeId: 7 }]),
+        stageWith([{ type: 'ruledOut', count: 2, placeIds: [3, 4] }])
+      ]
+    } as unknown as DetectiveGameData
+
+    revealStage(data, 1)
+    revealStage(data, 2)
+    expect(data.stages[0].eliminated).toEqual([7])
+    expect(data.stages[1].eliminated).toEqual([3, 4])
   })
 
   it('counts the events of the stages reached only', () => {
@@ -222,6 +365,10 @@ describe('random events', () => {
 
           expect(t(key as never), `${locale} ${key}`).not.toBe(key)
         }
+      }
+
+      for (const key of ['detective.events.talkative.textSome', 'detective.events.ruledOut.textMany']) {
+        expect(t(key as never, { count: 2 }), `${locale} ${key}`).not.toBe(key)
       }
     }
   })

@@ -613,7 +613,11 @@ export const en: Messages = {
       },
       talkative: {
         title: 'Chatty witnesses',
-        text: 'Everyone feels like talking today: each witness will give you two clues about the destination.'
+        text: 'Everyone feels like talking today: each witness will give you two clues about the destination.',
+        textSome: {
+          one: 'One of the witnesses feels like talking: they will give you two clues about the destination.',
+          other: '{count} of the witnesses feel like talking: each one will give you two clues about the destination.'
+        }
       },
       sharpEye: {
         title: 'Sharp memory',
@@ -628,8 +632,10 @@ export const en: Messages = {
         text: 'The getaway got complicated for the thief: you have {time} more to catch them.'
       },
       ruledOut: {
-        title: 'A destination ruled out',
-        text: 'An informant assures you the thief did not go to {place}: you already crossed it off the list.'
+        title: 'Destinations ruled out',
+        text: 'An informant assures you the thief did not go to {place}: you already crossed it off the list.',
+        textMany:
+          'An informant assures you the thief did not go to any of these places: {places}. You already crossed them off the list.'
       },
       quickWitnesses: {
         title: 'Witnesses in a hurry',
@@ -641,7 +647,11 @@ export const en: Messages = {
       },
       hotline: {
         title: 'Direct line',
-        text: 'The central office is on alert: calling from here costs you {time} and rules out {count} destinations.'
+        text: {
+          one: 'The central office is on alert: calling from here costs you {time} and rules out {count} destination.',
+          other:
+            'The central office is on alert: calling from here costs you {time} and rules out {count} destinations.'
+        }
       },
       secondChance: {
         title: 'Extra margin',
@@ -685,7 +695,11 @@ export const en: Messages = {
       },
       badSignal: {
         title: 'Bad signal',
-        text: 'There is hardly any signal: calling the central office from here costs you {time} and rules out only {count}.'
+        text: {
+          one: 'There is hardly any signal: calling the central office from here costs you {time} and rules out {count} destination.',
+          other:
+            'There is hardly any signal: calling the central office from here costs you {time} and rules out {count} destinations.'
+        }
       },
       pressure: {
         title: 'Pressure from above',

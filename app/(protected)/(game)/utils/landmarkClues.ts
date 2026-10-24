@@ -71,13 +71,15 @@ export interface PlannedWitnessClues {
  * CLUES_PER_LANDMARK: every one needs a clue of its own), each with a first
  * clue of its kind — one of them always of geography, so the stage can always
  * be solved — and, when `cluesPerWitness` is more than one, more clues (of its
- * kind while there are, then of any other) until the clues run out. No clue
- * is given twice. The witnesses come in random order.
+ * kind while there are, then of any other) for `talkative` of them (all, by
+ * default; which ones, at random) until the clues run out. No clue is given
+ * twice. The witnesses come in random order.
  */
 export function planWitnessClues(
   count: number,
   cluesPerWitness: number = 1,
-  random: RandomFn = Math.random
+  random: RandomFn = Math.random,
+  talkative: number = count
 ): PlannedWitnessClues[] {
   const pools = Object.fromEntries(CLUE_KINDS.map((kind) => [kind, shuffle(CLUES_BY_KIND[kind], random)])) as Record<
     ClueKind,
@@ -98,8 +100,11 @@ export function planWitnessClues(
     witnesses.push({ kind, clueIndices: [pools[kind].pop()!] })
   }
 
+  const talkers =
+    talkative >= witnesses.length ? witnesses : shuffle(witnesses, random).slice(0, Math.max(0, talkative))
+
   for (let round = 1; round < cluesPerWitness; round++) {
-    for (const witness of witnesses) {
+    for (const witness of talkers) {
       const kind =
         pools[witness.kind].length > 0
           ? witness.kind

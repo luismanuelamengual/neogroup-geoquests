@@ -619,7 +619,11 @@ export const es = {
       },
       talkative: {
         title: 'Testigos charlatanes',
-        text: 'Hoy todos tienen ganas de hablar: cada testigo te va a dar dos pistas del destino.'
+        text: 'Hoy todos tienen ganas de hablar: cada testigo te va a dar dos pistas del destino.',
+        textSome: {
+          one: 'Uno de los testigos tiene ganas de hablar: te va a dar dos pistas del destino.',
+          other: '{count} de los testigos tienen ganas de hablar: cada uno te va a dar dos pistas del destino.'
+        }
       },
       sharpEye: {
         title: 'Buena memoria',
@@ -634,8 +638,10 @@ export const es = {
         text: 'Al ladrón se le complicó la fuga: tenés {time} más para atraparlo.'
       },
       ruledOut: {
-        title: 'Un destino descartado',
-        text: 'Un informante te asegura que el ladrón no fue a {place}: ya lo tachaste de la lista.'
+        title: 'Destinos descartados',
+        text: 'Un informante te asegura que el ladrón no fue a {place}: ya lo tachaste de la lista.',
+        textMany:
+          'Un informante te asegura que el ladrón no fue a ninguno de estos lugares: {places}. Ya los tachaste de la lista.'
       },
       quickWitnesses: {
         title: 'Testigos apurados',
@@ -647,7 +653,10 @@ export const es = {
       },
       hotline: {
         title: 'Línea directa',
-        text: 'La central está muy atenta: si llamás desde acá, te cuesta {time} y descarta {count} destinos.'
+        text: {
+          one: 'La central está muy atenta: si llamás desde acá, te cuesta {time} y descarta {count} destino.',
+          other: 'La central está muy atenta: si llamás desde acá, te cuesta {time} y descarta {count} destinos.'
+        }
       },
       secondChance: {
         title: 'Margen extra',
@@ -691,7 +700,10 @@ export const es = {
       },
       badSignal: {
         title: 'Mala señal',
-        text: 'Casi no hay señal: si llamás a la central desde acá, te cuesta {time} y descarta solo {count}.'
+        text: {
+          one: 'Casi no hay señal: si llamás a la central desde acá, te cuesta {time} y descarta {count} destino.',
+          other: 'Casi no hay señal: si llamás a la central desde acá, te cuesta {time} y descarta {count} destinos.'
+        }
       },
       pressure: {
         title: 'Presión de arriba',

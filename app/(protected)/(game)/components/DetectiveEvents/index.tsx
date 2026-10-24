@@ -67,21 +67,31 @@ function getEventText(
   stage: DetectiveCurrentStageView,
   usualWitnessMinutes: number
 ): string {
-  const place = stage.options.find((option) => option.placeId === event.placeId)?.placeName ?? ''
+  const places = (event.placeIds ?? []).map(
+    (placeId) => stage.options.find((option) => option.placeId === placeId)?.placeName ?? ''
+  )
+  // Some variants of an event say it in other words.
+  const key =
+    event.type === 'talkative' && event.witnesses != null
+      ? 'detective.events.talkative.textSome'
+      : event.type === 'ruledOut' && places.length > 1
+        ? 'detective.events.ruledOut.textMany'
+        : (`detective.events.${event.type}.text` as MessageKey)
 
-  return t(`detective.events.${event.type}.text` as MessageKey, {
+  return t(key, {
     time: formatDuration(
       event.type === 'extraTime' || event.type === 'lostTime'
         ? (event.minutes ?? 0)
         : event.type === 'directFlight' || event.type === 'delayedFlight'
-          ? FLIGHT_EVENT_MINUTES
+          ? (event.minutes ?? FLIGHT_EVENT_MINUTES)
           : event.type === 'quickWitnesses' || event.type === 'slowWitnesses'
             ? stage.witnessMinutes
             : stage.call.minutes
     ),
     usual: formatDuration(usualWitnessMinutes),
-    count: stage.call.eliminates,
-    place
+    count: event.type === 'talkative' ? (event.witnesses ?? 0) : stage.call.eliminates,
+    place: places[0] ?? '',
+    places: places.join(', ')
   })
 }
 

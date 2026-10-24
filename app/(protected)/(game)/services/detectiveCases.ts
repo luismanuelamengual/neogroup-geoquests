@@ -174,7 +174,7 @@ export function planStageWitnesses(
     ClueKind,
     WitnessRole[]
   >
-  const planned = planWitnessClues(plan.witnesses, plan.cluesPerWitness, random)
+  const planned = planWitnessClues(plan.witnesses, plan.cluesPerWitness, random, plan.talkativeWitnesses)
   const tellers = shuffle(
     planned.map((_, index) => index),
     random
@@ -288,10 +288,15 @@ export async function planDetectiveCase(
     const witnesses = planStageWitnesses(plan, suspectClues.splice(0, plan.suspectClues), random)
     const ruledOut = stageEvents.find((event) => event.type === 'ruledOut')
 
-    // The wrong destination ruled out (at least one more stays); without decoys enough, the event does not happen.
+    // The wrong destinations ruled out (at least one more stays): fewer without decoys enough, none without two.
     if (ruledOut) {
-      if (decoys.length >= 2) {
-        ruledOut.placeId = pickRandom(decoys, random)!.placeId
+      const count = Math.min(ruledOut.count ?? 1, decoys.length - 1)
+
+      if (count >= 1) {
+        ruledOut.count = count
+        ruledOut.placeIds = shuffle(decoys, random)
+          .slice(0, count)
+          .map((decoy) => decoy.placeId)
       } else {
         stageEvents.splice(stageEvents.indexOf(ruledOut), 1)
       }

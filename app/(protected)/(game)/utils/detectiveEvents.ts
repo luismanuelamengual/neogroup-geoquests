@@ -67,16 +67,34 @@ export const MAX_OPTIONS = 7
 export const EVENT_TIME_HOURS = [2, 3, 4]
 /** `lostTime` never leaves less than this many minutes: an event never ends a case by itself. */
 export const MIN_TIME_LEFT_AFTER_EVENT = 60
-/** What a witness costs at a stage with `quickWitnesses` / `slowWitnesses` (times its usual cost). */
+/** What a witness costs at a stage with `quickWitnesses` (times its usual cost). */
 export const QUICK_WITNESSES_FACTOR = 0.5
+
+/*
+ * The variants of some events: when a case is planned, each one of them gets
+ * a value of each of its lists, at random. The singular constants after each
+ * list are what the event does in the cases created before the variants.
+ */
+
+/** `talkative`: how many witnesses of the stage tell two clues (null: all of them). */
+export const TALKATIVE_VARIANTS: (number | null)[] = [1, 2, null]
+/** `ruledOut`: how many wrong destinations it rules out (always leaving at least one). */
+export const RULED_OUT_VARIANTS = [1, 2]
+/** `slowWitnesses`: what a witness costs (times its usual cost). */
+export const SLOW_WITNESSES_VARIANTS = [1.25, 1.5, 2]
 export const SLOW_WITNESSES_FACTOR = 1.5
-/** What a call costs from a stage with `hotline` / `badSignal` (times its usual cost)… */
+/** `hotline`: what a call costs (times its usual cost) and how many more wrong destinations it rules out. */
+export const HOTLINE_FACTOR_VARIANTS = [0.25, 0.5, 0.75]
+export const HOTLINE_ELIMINATED_VARIANTS = [0, 1, 2]
 export const HOTLINE_CALL_FACTOR = 0.5
-export const BAD_SIGNAL_CALL_FACTOR = 1.5
-/** …and how many more (or fewer) wrong destinations it rules out (always at least one). */
 export const HOTLINE_EXTRA_ELIMINATED = 1
+/** `badSignal`: what a call costs (times its usual cost) and how many fewer wrong destinations it rules out (always at least one). */
+export const BAD_SIGNAL_FACTOR_VARIANTS = [1.25, 1.5, 2]
+export const BAD_SIGNAL_ELIMINATED_VARIANTS = [0, 1]
+export const BAD_SIGNAL_CALL_FACTOR = 1.5
 export const BAD_SIGNAL_FEWER_ELIMINATED = 1
-/** Minutes `directFlight` takes from (and `delayedFlight` adds to) the trip out of a stage. */
+/** `directFlight` / `delayedFlight`: minutes it takes from (or adds to) the trip out of a stage. */
+export const FLIGHT_EVENT_VARIANTS = [30, 60, 90, 120]
 export const FLIGHT_EVENT_MINUTES = 90
 /** Every cost changed by an event is rounded to this many minutes (and is never less). */
 const COST_ROUNDING_MINUTES = 30
@@ -212,12 +230,8 @@ export function planCaseEvents(rules: EventRules, hops: number, random: RandomFn
       const definition = DETECTIVE_EVENTS[type]
 
       groups.add(definition.group)
+      events.push(planEvent(type, state, random))
       definition.apply?.(state)
-      events.push(
-        type === 'extraTime' || type === 'lostTime'
-          ? { type, minutes: pickRandom(EVENT_TIME_HOURS, random)! * 60 }
-          : { type }
-      )
     }
 
     return events
@@ -226,20 +240,89 @@ export function planCaseEvents(rules: EventRules, hops: number, random: RandomFn
   return { stages, suspects: state.suspects }
 }
 
+/** An event with its variant (see the *_VARIANTS lists), for the stage being planned. */
+function planEvent(type: DetectiveEventType, state: PlanState, random: RandomFn): DetectiveEvent {
+  switch (type) {
+    case 'extraTime':
+    case 'lostTime':
+      return { type, minutes: pickRandom(EVENT_TIME_HOURS, random)! * 60 }
+
+    case 'directFlight':
+    case 'delayedFlight':
+      return { type, minutes: pickRandom(FLIGHT_EVENT_VARIANTS, random)! }
+
+    case 'talkative': {
+      // As many witnesses as there are (or more) is all of them.
+      const witnesses = pickRandom(
+        TALKATIVE_VARIANTS.filter((count) => count == null || count < state.witnesses),
+        random
+      )
+
+      return witnesses == null ? { type } : { type, witnesses }
+    }
+
+    case 'ruledOut':
+      // At least one wrong destination stays: there is always a choice.
+      return {
+        type,
+        count: pickRandom(
+          RULED_OUT_VARIANTS.filter((count) => count <= state.options - 2),
+          random
+        )!
+      }
+
+    case 'slowWitnesses':
+      return { type, factor: pickRandom(SLOW_WITNESSES_VARIANTS, random)! }
+
+    case 'hotline':
+      return {
+        type,
+        factor: pickRandom(HOTLINE_FACTOR_VARIANTS, random)!,
+        eliminatesChange: pickRandom(HOTLINE_ELIMINATED_VARIANTS, random)!
+      }
+
+    case 'badSignal':
+      return {
+        type,
+        factor: pickRandom(BAD_SIGNAL_FACTOR_VARIANTS, random)!,
+        eliminatesChange: 0 - pickRandom(BAD_SIGNAL_ELIMINATED_VARIANTS, random)!
+      }
+
+    default:
+      return { type }
+  }
+}
+
 /** The events of a stage (none in the cases created before they existed). */
 export function getStageEvents(stage: DetectiveStage): DetectiveEvent[] {
   return stage.events ?? []
 }
 
-/** Whether a stage has an event. */
-export function hasEvent(stage: DetectiveStage, type: DetectiveEventType): boolean {
-  return getStageEvents(stage).some((event) => event.type === type)
+/** The event of a type of a stage, if it has one. */
+export function getStageEvent(stage: DetectiveStage, type: DetectiveEventType): DetectiveEvent | undefined {
+  return getStageEvents(stage).find((event) => event.type === type)
 }
 
-/** How the witnesses of a stage are planned: how many, how many clues each, how many traits of the thief. */
+/** Whether a stage has an event. */
+export function hasEvent(stage: DetectiveStage, type: DetectiveEventType): boolean {
+  return getStageEvent(stage, type) !== undefined
+}
+
+/** The wrong destinations a `ruledOut` event ruled out. */
+export function getRuledOutPlaceIds(event: DetectiveEvent): number[] {
+  return event.placeIds ?? (event.placeId != null ? [event.placeId] : [])
+}
+
+/**
+ * How the witnesses of a stage are planned: how many, how many clues the
+ * talkative ones tell (and how many of them there are), how many traits of
+ * the thief.
+ */
 export interface StageWitnessPlan {
   witnesses: number
   cluesPerWitness: number
+  /** Witnesses that tell `cluesPerWitness` clues (the others, one). */
+  talkativeWitnesses: number
   suspectClues: number
   /** Wrong destinations offered. */
   decoys: number
@@ -251,6 +334,7 @@ export function getStagePlan(
   events: DetectiveEvent[]
 ): StageWitnessPlan {
   const has = (type: DetectiveEventType) => events.some((event) => event.type === type)
+  const talkative = events.find((event) => event.type === 'talkative')
   const witnesses = Math.min(
     MAX_WITNESSES,
     Math.max(MIN_WITNESSES, rules.witnesses + (has('extraWitness') ? 1 : 0) - (has('missingWitness') ? 1 : 0))
@@ -258,7 +342,8 @@ export function getStagePlan(
 
   return {
     witnesses,
-    cluesPerWitness: has('talkative') ? 2 : 1,
+    cluesPerWitness: talkative ? 2 : 1,
+    talkativeWitnesses: talkative ? Math.min(witnesses, talkative.witnesses ?? witnesses) : 0,
     suspectClues: Math.min(witnesses, has('sharpEye') ? 2 : has('noSighting') ? 0 : 1),
     decoys: Math.min(MAX_OPTIONS, rules.options + (has('moreRumors') ? 1 : 0)) - 1
   }
@@ -274,12 +359,14 @@ export function getStageWitnessMinutes(
   rules: Pick<DetectiveDifficultySettings, 'witnessMinutes'>,
   stage: DetectiveStage
 ): number {
+  const slow = getStageEvent(stage, 'slowWitnesses')
+
   if (hasEvent(stage, 'quickWitnesses')) {
     return scaleCost(rules.witnessMinutes, QUICK_WITNESSES_FACTOR)
   }
 
-  if (hasEvent(stage, 'slowWitnesses')) {
-    return scaleCost(rules.witnessMinutes, SLOW_WITNESSES_FACTOR)
+  if (slow) {
+    return scaleCost(rules.witnessMinutes, slow.factor ?? SLOW_WITNESSES_FACTOR)
   }
 
   return rules.witnessMinutes
@@ -298,20 +385,22 @@ export function getStageCallRules(
 ): StageCallRules {
   const minutes = rules.centralCallMinutes ?? 0
   const eliminates = rules.centralCallEliminates ?? 0
+  const hotline = getStageEvent(stage, 'hotline')
+  const badSignal = getStageEvent(stage, 'badSignal')
 
-  if (hasEvent(stage, 'hotline')) {
+  if (hotline) {
     return {
       available: true,
-      minutes: scaleCost(minutes, HOTLINE_CALL_FACTOR),
-      eliminates: eliminates + HOTLINE_EXTRA_ELIMINATED
+      minutes: scaleCost(minutes, hotline.factor ?? HOTLINE_CALL_FACTOR),
+      eliminates: Math.max(1, eliminates + (hotline.eliminatesChange ?? HOTLINE_EXTRA_ELIMINATED))
     }
   }
 
-  if (hasEvent(stage, 'badSignal')) {
+  if (badSignal) {
     return {
       available: true,
-      minutes: scaleCost(minutes, BAD_SIGNAL_CALL_FACTOR),
-      eliminates: Math.max(1, eliminates - BAD_SIGNAL_FEWER_ELIMINATED)
+      minutes: scaleCost(minutes, badSignal.factor ?? BAD_SIGNAL_CALL_FACTOR),
+      eliminates: Math.max(1, eliminates + (badSignal.eliminatesChange ?? -BAD_SIGNAL_FEWER_ELIMINATED))
     }
   }
 
@@ -320,9 +409,11 @@ export function getStageCallRules(
 
 /** Minutes the events of a stage add to (or take from) the trip out of it. */
 export function getStageFlightMinutes(stage: DetectiveStage): number {
+  const delayed = getStageEvent(stage, 'delayedFlight')
+  const direct = getStageEvent(stage, 'directFlight')
+
   return (
-    (hasEvent(stage, 'delayedFlight') ? FLIGHT_EVENT_MINUTES : 0) -
-    (hasEvent(stage, 'directFlight') ? FLIGHT_EVENT_MINUTES : 0)
+    (delayed ? (delayed.minutes ?? FLIGHT_EVENT_MINUTES) : 0) - (direct ? (direct.minutes ?? FLIGHT_EVENT_MINUTES) : 0)
   )
 }
 
@@ -370,7 +461,7 @@ export function getExpectedSuspects(data: DetectiveGameData): number {
  * What happens as soon as the detective gets to a stage (1-based): its time
  * events change the time of the case (`lostTime` takes at most what leaves
  * MIN_TIME_LEFT_AFTER_EVENT, and keeps what it really took) and `ruledOut`
- * rules out its destination.
+ * rules out its destinations.
  */
 export function revealStage(data: DetectiveGameData, stageNumber: number): void {
   const stage = data.stages[stageNumber - 1]
@@ -391,8 +482,8 @@ export function revealStage(data: DetectiveGameData, stageNumber: number): void 
 
       event.minutes = Math.min(event.minutes ?? 0, room)
       data.timeLimitMinutes -= event.minutes
-    } else if (event.type === 'ruledOut' && event.placeId != null) {
-      stage.eliminated = [...new Set([...(stage.eliminated ?? []), event.placeId])]
+    } else if (event.type === 'ruledOut') {
+      stage.eliminated = [...new Set([...(stage.eliminated ?? []), ...getRuledOutPlaceIds(event)])]
     }
   }
 }

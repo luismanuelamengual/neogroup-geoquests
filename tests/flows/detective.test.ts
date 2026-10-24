@@ -700,7 +700,9 @@ describe('detective game flow', () => {
           // Every clue once, at least one of geography, and the first clue of each witness of the kind of its job.
           expect(new Set(clueIndices).size).toBe(clueIndices.length)
           expect(clueIndices.some((index) => getClueKind(index) === 'geography')).toBe(true)
-          expect(clueIndices).toHaveLength(Math.min(5, plan.witnesses * plan.cluesPerWitness))
+          expect(clueIndices).toHaveLength(
+            Math.min(5, plan.witnesses + plan.talkativeWitnesses * (plan.cluesPerWitness - 1))
+          )
           stage.witnesses.forEach((witness) => {
             expect(getClueKind(witness.clueIndex)).toBe(ROLE_CLUE_KIND[witness.role])
           })
@@ -711,10 +713,16 @@ describe('detective game flow', () => {
           }
 
           if (has('ruledOut')) {
-            const ruledOut = stageEvents.find((event) => event.type === 'ruledOut')!.placeId
+            const ruledOut = stageEvents.find((event) => event.type === 'ruledOut')!
 
-            expect(stage.options.map((option) => option.placeId)).toContain(ruledOut)
-            expect(ruledOut).not.toBe(stage.destination.placeId)
+            expect(ruledOut.placeIds).toHaveLength(ruledOut.count!)
+            // At least one wrong destination stays.
+            expect(ruledOut.count!).toBeLessThanOrEqual(stage.options.length - 2)
+
+            for (const placeId of ruledOut.placeIds!) {
+              expect(stage.options.map((option) => option.placeId)).toContain(placeId)
+              expect(placeId).not.toBe(stage.destination.placeId)
+            }
           }
         }
 
@@ -780,14 +788,15 @@ describe('detective game flow', () => {
   })
 
   it('charges the witnesses of a stage what its events say', async () => {
-    for (const [type, minutes] of [
-      ['quickWitnesses', WITNESS_MINUTES / 2],
-      ['slowWitnesses', WITNESS_MINUTES * 1.5]
+    for (const [event, minutes] of [
+      [{ type: 'quickWitnesses' }, WITNESS_MINUTES / 2],
+      [{ type: 'slowWitnesses' }, WITNESS_MINUTES * 1.5],
+      [{ type: 'slowWitnesses', factor: 2 }, WITNESS_MINUTES * 2]
     ] as const) {
       const game = await create()
       const data = await stored(game.id)
 
-      data.stages[0].events = [{ type }]
+      data.stages[0].events = [{ ...event }]
       await save(game.id, data)
 
       const asked = detective(await act(game.id, { type: 'askWitness', stageNumber: 1, witness: 0 }))
@@ -876,6 +885,23 @@ describe('detective game flow', () => {
     expect(called.elapsedMinutes).toBe(centralCallMinutes * 1.5)
     expect(called.currentStage!.eliminated).toHaveLength(centralCallEliminates - 1)
 
+    // Their variants: what they cost and how many destinations they rule out.
+    game = await create()
+    data = await stored(game.id)
+    data.stages[0].events = [{ type: 'hotline', factor: 0.25, eliminatesChange: 0 }]
+    await save(game.id, data)
+    called = detective(await act(game.id, { type: 'callCentral', stageNumber: 1 }))
+    expect(called.elapsedMinutes).toBe(centralCallMinutes / 4)
+    expect(called.currentStage!.eliminated).toHaveLength(centralCallEliminates)
+
+    game = await create()
+    data = await stored(game.id)
+    data.stages[0].events = [{ type: 'badSignal', factor: 2, eliminatesChange: 0 }]
+    await save(game.id, data)
+    called = detective(await act(game.id, { type: 'callCentral', stageNumber: 1 }))
+    expect(called.elapsedMinutes).toBe(centralCallMinutes * 2)
+    expect(called.currentStage!.eliminated).toHaveLength(centralCallEliminates)
+
     // An extra call, from the stage where it is given on.
     game = await create()
     data = await stored(game.id)
@@ -909,8 +935,42 @@ describe('detective game flow', () => {
     const second = detective(await travelRight(game.id))
 
     expect(second.currentStage!.eliminated).toEqual([decoy.placeId])
-    expect(second.currentStage!.events).toEqual([{ type: 'ruledOut', good: true, placeId: decoy.placeId }])
+    expect(second.currentStage!.events).toEqual([{ type: 'ruledOut', good: true, placeIds: [decoy.placeId] }])
     await expect(act(game.id, { type: 'travel', stageNumber: 2, placeId: decoy.placeId })).rejects.toThrow()
+  })
+
+  it('rules out two destinations with an informant that knows more', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+    const decoys = data.stages[1].options
+      .filter((option) => option.placeId !== data.stages[1].destination.placeId)
+      .slice(0, 2)
+      .map((option) => option.placeId)
+
+    data.stages[1].events = [{ type: 'ruledOut', count: 2, placeIds: decoys }]
+    await save(game.id, data)
+
+    const second = detective(await travelRight(game.id))
+
+    expect(second.currentStage!.eliminated).toEqual(decoys)
+    expect(second.currentStage!.events).toEqual([{ type: 'ruledOut', good: true, placeIds: decoys }])
+  })
+
+  it('changes the trips as much as the variant of the flight event says', async () => {
+    const game = await create()
+    const data = await stored(game.id)
+
+    data.timeLimitMinutes = 100000
+    data.stages[0].events = [{ type: 'delayedFlight', minutes: 30 }]
+    data.stages[1].events = [{ type: 'directFlight', minutes: 120 }]
+    await save(game.id, data)
+
+    const firstOption = data.stages[0].options.find((option) => option.placeId === data.stages[0].destination.placeId)!
+    const second = detective(await travelRight(game.id))
+
+    expect(second.elapsedMinutes).toBe(getTravelMinutes(data.origin, firstOption) + 30)
+    expect(second.currentStage!.flightMinutes).toBe(-120)
+    expect(second.currentStage!.events).toEqual([{ type: 'directFlight', good: true, minutes: 120 }])
   })
 
   it('changes the mistakes allowed and the trips with the events', async () => {
