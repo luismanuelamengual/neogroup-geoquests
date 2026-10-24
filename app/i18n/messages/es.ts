@@ -846,7 +846,13 @@ export const es = {
       firstTrip: { name: 'Primer viaje', description: 'Terminá tu primera partida' },
       eagleEye: { name: 'Ojo de águila', description: 'Una ronda a menos de 100 m' },
       bullseye: { name: 'Diana', description: 'Una ronda perfecta: 5.000 puntos' },
-      starGame: { name: 'Partida estrella', description: 'Terminá una partida clásica con {count} estrellas' },
+      starGame: {
+        name: 'Partida estrella',
+        description: {
+          one: 'Terminá una partida clásica con {count} estrella',
+          other: 'Terminá una partida clásica con {count} estrellas'
+        }
+      },
       earlyBird: { name: 'Madrugador', description: 'Jugá tu primer desafío diario' },
       friendsChampion: { name: 'Campeón entre amigos', description: 'Ganá una partida con amigos' },
       lastStanding: { name: 'Último en pie', description: 'Ganá un Battle Royale' },

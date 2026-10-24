@@ -842,7 +842,10 @@ export const en: Messages = {
       firstTrip: { name: 'First trip', description: 'Finish your first game' },
       eagleEye: { name: 'Eagle eye', description: 'A round less than 100 m away' },
       bullseye: { name: 'Bullseye', description: 'A perfect round: 5,000 points' },
-      starGame: { name: 'Star game', description: 'Finish a classic game with {count} stars' },
+      starGame: {
+        name: 'Star game',
+        description: { one: 'Finish a classic game with {count} star', other: 'Finish a classic game with {count} stars' }
+      },
       earlyBird: { name: 'Early bird', description: 'Play your first daily challenge' },
       friendsChampion: { name: 'Champion among friends', description: 'Win a game with friends' },
       lastStanding: { name: 'Last one standing', description: 'Win a Battle Royale' },

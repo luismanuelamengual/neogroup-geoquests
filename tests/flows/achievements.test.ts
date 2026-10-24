@@ -54,13 +54,13 @@ describe('achievements', () => {
     const first = await playGame('2026-03-01T12:00:00Z')
     const second = await playGame('2026-03-01T13:00:00Z')
 
-    expect(first.achievements).toEqual(['firstTrip', 'eagleEye', 'bullseye', 'starGame.1', 'starGame.2'])
+    expect(first.achievements).toEqual(['firstTrip', 'eagleEye', 'bullseye', 'starGame.1', 'starGame.2', 'starGame.3'])
     expect(second.achievements).toEqual([])
-    expect(await UserAchievement.where('userId', userId).count()).toBe(5)
+    expect(await UserAchievement.where('userId', userId).count()).toBe(6)
     expect((await UserAchievement.where('userId', userId).where('key', 'eagleEye').first())!.gameId).toBe(first.id)
     // Asking for the game again does not give them again.
     await sendGameAction(userId, { gameId: first.id, action: { type: 'startRound' } }).catch(() => null)
-    expect(await UserAchievement.where('userId', userId).count()).toBe(5)
+    expect(await UserAchievement.where('userId', userId).count()).toBe(6)
   })
 
   it('shows every medal, won or not, with how far the player is from the ones gathered over time', async () => {
@@ -69,7 +69,7 @@ describe('achievements', () => {
     const medals = await getAchievements(userId)
     const medal = (key: string) => medals.find((candidate) => candidate.key === key)!
 
-    expect(medals).toHaveLength(23)
+    expect(medals).toHaveLength(24)
     expect(medal('firstTrip').unlockedAt).toBe('2026-03-01T12:00:00.000Z')
     expect(medal('eagleEye')).toMatchObject({ icon: '🦅', tier: null, target: null, value: null, unlockedAt: null })
     expect(medal('againstTheClock.2')).toMatchObject({ tier: 2, tierName: 'gold', target: 8, value: null })

@@ -132,15 +132,15 @@ export function getRoundVerdict(
 export function getGameStars(totalScore: number, maxScore: number): number {
   const ratio = totalScore / maxScore
 
-  if (ratio >= 0.8) {
+  if (ratio >= 0.9) {
     return 3
   }
 
-  if (ratio >= 0.5) {
+  if (ratio >= 0.6) {
     return 2
   }
 
-  if (ratio >= 0.2) {
+  if (ratio >= 0.3) {
     return 1
   }
 

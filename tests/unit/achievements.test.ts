@@ -21,7 +21,7 @@ const CLASSIC: AchievementGame = {
   outcome: null,
   playersCount: 1,
   guesses: [guess(50000, 3000), guess(80000, 2500)],
-  score: 4000,
+  score: 2000,
   maxScore: 10000,
   detective: null
 }
@@ -30,13 +30,14 @@ const medals = (game: AchievementGame | null, progress: Partial<AchievementProgr
   getEarnedMedals(game, { ...NO_PROGRESS, ...progress })
 
 describe('achievements', () => {
-  it('has 22 medals: 13 of a single play and 9 of the ones gathered over time', () => {
+  it('has 24 medals: 15 of a single play and 9 of the ones gathered over time', () => {
     expect(getMedalKeys()).toEqual([
       'firstTrip',
       'eagleEye',
       'bullseye',
       'starGame.1',
       'starGame.2',
+      'starGame.3',
       'earlyBird',
       'friendsChampion',
       'lastStanding',
@@ -67,11 +68,12 @@ describe('achievements', () => {
     expect(medals({ ...CLASSIC, guesses: [guess(20, 5000)] })).toEqual(['eagleEye', 'bullseye'])
     // A timed out round has no distance.
     expect(medals({ ...CLASSIC, guesses: [{ ...guess(0, 0), distanceMeters: null }, null] })).toEqual([])
-    // 2 stars: silver; 3 stars: silver and gold.
-    expect(medals({ ...CLASSIC, score: 5000 })).toEqual(['starGame.1'])
-    expect(medals({ ...CLASSIC, score: 8000 })).toEqual(['starGame.1', 'starGame.2'])
+    // 1 star: bronze; 2 stars: bronze and silver; 3 stars: all of them.
+    expect(medals({ ...CLASSIC, score: 3000 })).toEqual(['starGame.1'])
+    expect(medals({ ...CLASSIC, score: 6000 })).toEqual(['starGame.1', 'starGame.2'])
+    expect(medals({ ...CLASSIC, score: 9000 })).toEqual(['starGame.1', 'starGame.2', 'starGame.3'])
     // Only classic games have stars.
-    expect(medals({ ...CLASSIC, mode: GameMode.CLASSIC_MULTIPLAYER, playersCount: 2, score: 8000 })).toEqual([])
+    expect(medals({ ...CLASSIC, mode: GameMode.CLASSIC_MULTIPLAYER, playersCount: 2, score: 9000 })).toEqual([])
     expect(medals({ ...CLASSIC, isDailyChallenge: true })).toEqual(['earlyBird'])
   })
 

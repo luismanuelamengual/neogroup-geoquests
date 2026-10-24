@@ -47,9 +47,10 @@ describe('formatDistance', () => {
 describe('getGameStars', () => {
   it('maps the score ratio to 0-3 stars', () => {
     expect(getGameStars(0, 25000)).toBe(0)
-    expect(getGameStars(6000, 25000)).toBe(1)
-    expect(getGameStars(13000, 25000)).toBe(2)
-    expect(getGameStars(21000, 25000)).toBe(3)
+    expect(getGameStars(7000, 25000)).toBe(0)
+    expect(getGameStars(8000, 25000)).toBe(1)
+    expect(getGameStars(16000, 25000)).toBe(2)
+    expect(getGameStars(23000, 25000)).toBe(3)
   })
 })
 

@@ -116,6 +116,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: '⭐',
     kind: 'game',
     tiers: [
+      { name: 'bronze', target: 1, earned: (game) => stars(game) >= 1 },
       { name: 'silver', target: 2, earned: (game) => stars(game) >= 2 },
       { name: 'gold', target: 3, earned: (game) => stars(game) >= 3 }
     ]
