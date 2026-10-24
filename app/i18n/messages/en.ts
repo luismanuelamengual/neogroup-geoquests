@@ -14,11 +14,13 @@ export const en: Messages = {
     progress: 'My progress',
     play: 'Play',
     multiplayer: 'Multiplayer',
+    achievements: 'Achievements',
     myProfile: 'My profile',
     logout: 'Sign out'
   },
   metadata: {
     progress: 'My progress',
+    achievements: 'Achievements',
     ranking: 'Ranking',
     mainMenu: 'Main menu',
     multiplayer: 'Multiplayer',
@@ -815,8 +817,9 @@ export const en: Messages = {
     }
   },
   achievements: {
-    title: 'Achievements',
+    title: 'Medals',
     count: '{unlocked} of {total} medals',
+    completed: '{percent}% complete',
     new: { one: 'New achievement!', other: 'New achievements!' },
     xp: '+{xp} XP',
     tiers: { bronze: 'Bronze', silver: 'Silver', gold: 'Gold' },

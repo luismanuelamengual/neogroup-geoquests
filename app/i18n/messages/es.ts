@@ -17,11 +17,13 @@ export const es = {
     progress: 'Mi progreso',
     play: 'Jugar',
     multiplayer: 'Multijugador',
+    achievements: 'Logros',
     myProfile: 'Mi perfil',
     logout: 'Cerrar sesión'
   },
   metadata: {
     progress: 'Mi progreso',
+    achievements: 'Logros',
     ranking: 'Ranking',
     mainMenu: 'Menú principal',
     multiplayer: 'Multijugador',
@@ -821,8 +823,9 @@ export const es = {
     }
   },
   achievements: {
-    title: 'Logros',
+    title: 'Medallas',
     count: '{unlocked} de {total} medallas',
+    completed: '{percent}% completado',
     new: { one: '¡Logro nuevo!', other: '¡Logros nuevos!' },
     xp: '+{xp} XP',
     tiers: { bronze: 'Bronce', silver: 'Plata', gold: 'Oro' },

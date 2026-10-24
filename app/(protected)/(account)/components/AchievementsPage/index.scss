@@ -1,0 +1,15 @@
+.achievements-page {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 44px 16px 40px;
+}
+
+@media (max-width: 600px) {
+  .achievements-page {
+    padding-top: 36px;
+  }
+}

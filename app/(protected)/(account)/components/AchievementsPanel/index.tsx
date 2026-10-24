@@ -8,14 +8,21 @@ import GamePanel from '@/app/components/GamePanel'
 import { useI18n } from '@/app/i18n/I18nProvider'
 import type { MessageKey } from '@/app/i18n/messages'
 
-/** Medals of the player ("Mi progreso"): the ones it won and, grayed out, the ones still to win with how far it is. */
+/** Medals of the player ("Logros", /achievements): the ones it won and, grayed out, the ones still to win with how far it is. */
 export default function AchievementsPanel({ medals }: { medals: MedalView[] }) {
   const { t, locale } = useI18n()
   const unlocked = medals.filter((medal) => medal.unlockedAt !== null).length
+  const percent = medals.length > 0 ? Math.round((unlocked / medals.length) * 100) : 0
 
   return (
-    <GamePanel className="achievements-panel" title={t('achievements.title')} accent="magenta">
-      <p className="count">{t('achievements.count', { unlocked, total: medals.length })}</p>
+    <GamePanel className="achievements-panel" accent="magenta">
+      <div className="summary">
+        <div className="totals">
+          <span className="count">{t('achievements.count', { unlocked, total: medals.length })}</span>
+          <span className="percent">{t('achievements.completed', { percent })}</span>
+        </div>
+        <ScoreBar value={unlocked} max={medals.length} className="bar" />
+      </div>
       <ul className="medals">
         {medals.map((medal) => {
           const won = medal.unlockedAt !== null
