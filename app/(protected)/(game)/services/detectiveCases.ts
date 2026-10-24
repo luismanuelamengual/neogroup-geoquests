@@ -202,7 +202,8 @@ export function planStageWitnesses(
  * with different clues of the destination, of the kind its job knows about,
  * and usually one of them also with a trait of the thief, see
  * utils/suspects.ts), the suspects of the last stop and, from all that, the
- * time available (the events do not count: they are as often good as bad).
+ * time available (the events do not count: they are about as often good as
+ * bad, see rebalanceStageEvents).
  */
 export async function planDetectiveCase(
   places: Place[],

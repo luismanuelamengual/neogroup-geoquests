@@ -126,15 +126,16 @@ const {
 const EVENT_CHANCES = Object.fromEntries(
   Object.entries(DETECTIVE_DIFFICULTIES).map(([difficulty, rules]) => [
     difficulty,
-    { eventChance: rules.eventChance, doubleEventChance: rules.doubleEventChance }
+    { eventChance: rules.eventChance, doubleEventChance: rules.doubleEventChance, eventBalance: rules.eventBalance }
   ])
 )
 
-/** Sets the chances of the random events of every difficulty (0: cases without events). */
-function setEventChances(eventChance: number, doubleEventChance: number): void {
+/** Sets the chances of the random events of every difficulty (0: cases without events) and how much they even out the case. */
+function setEventChances(eventChance: number, doubleEventChance: number, eventBalance = 0): void {
   for (const rules of Object.values(DETECTIVE_DIFFICULTIES)) {
     rules.eventChance = eventChance
     rules.doubleEventChance = doubleEventChance
+    rules.eventBalance = eventBalance
   }
 }
 
@@ -144,7 +145,7 @@ describe('detective game flow', () => {
   beforeEach(async () => {
     await resetDatabase()
     userId = await createUser()
-    // Without random events, unless a test asks for them: every case is played by the book.
+    // Without random events (nor evening them out), unless a test asks for them: every case is played by the book.
     setEventChances(0, 0)
   })
 

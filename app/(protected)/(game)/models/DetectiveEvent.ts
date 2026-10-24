@@ -1,7 +1,8 @@
 /**
  * Random events of the detective mode: when the detective gets to a stage,
  * something may happen there that helps (good) or gets in the way (bad).
- * There are as many good events as bad ones in a case (see
+ * There are as many good events as bad ones in a case, though some of them
+ * may change kind when they happen, to even out the case (see
  * utils/detectiveEvents.ts, where each one is described and tuned).
  */
 export type DetectiveEventType =

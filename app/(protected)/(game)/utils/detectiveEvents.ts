@@ -2,6 +2,7 @@ import { DetectiveDifficultySettings } from '@/app/(protected)/(game)/models/Det
 import { DetectiveEvent, DetectiveEventType } from '@/app/(protected)/(game)/models/DetectiveEvent'
 import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
+import { countMistakes, getTravelMinutes } from '@/app/(protected)/(game)/utils/detective'
 import { RandomFn } from '@/app/(protected)/(game)/utils/geo'
 import { CLUES_PER_LANDMARK } from '@/app/(protected)/(game)/utils/landmarkClues'
 import { pickRandom, shuffle } from '@/app/(protected)/(game)/utils/random'
@@ -15,7 +16,11 @@ import { chance } from '@/app/(protected)/(game)/utils/seededRandom'
  * the detective gets to their stage. Some change how the stage is planned
  * (witnesses, clues, destinations, suspects: see services/detectiveCases.ts),
  * others how it is played (time, costs, calls, mistakes: see
- * services/detectiveMode.ts). Everything about them is tuned here.
+ * services/detectiveMode.ts). Those last ones (`flexible`) may still be
+ * swapped for one of the other kind when the stage is reached, to even out the
+ * case: more bad ones for a detective with time to spare, more good ones for
+ * one running out of it (see rebalanceStageEvents). Everything about them is
+ * tuned here.
  */
 
 /** What an event changes: two events of the same stage never change the same thing. */
@@ -49,6 +54,11 @@ interface PlanState {
 interface EventDefinition {
   good: boolean
   group: EventGroup
+  /**
+   * Whether it only changes how the stage is played (not how it was planned):
+   * it can be swapped for another one when the stage is reached (see rebalanceStageEvents).
+   */
+  flexible?: boolean
   /** Whether it can happen (default: always). */
   eligible?: (state: PlanState) => boolean
   /** How it changes the state of the plan. */
@@ -96,6 +106,14 @@ export const BAD_SIGNAL_FEWER_ELIMINATED = 1
 /** `directFlight` / `delayedFlight`: minutes it takes from (or adds to) the trip out of a stage. */
 export const FLIGHT_EVENT_VARIANTS = [30, 60, 90, 120]
 export const FLIGHT_EVENT_MINUTES = 90
+/**
+ * When the detective gets to a stage, each flexible event of it may be swapped
+ * for one of the other kind (see rebalanceStageEvents): its good ones for bad
+ * ones when the detective is ahead of time, its bad ones for good ones when it
+ * is behind. The chance is how far ahead or behind it is (see getCasePace)
+ * times `eventBalance` (of the difficulty), never more than this.
+ */
+export const MAX_REBALANCE_CHANCE = 0.6
 /** Every cost changed by an event is rounded to this many minutes (and is never less). */
 const COST_ROUNDING_MINUTES = 30
 
@@ -115,16 +133,16 @@ export const DETECTIVE_EVENTS: Record<DetectiveEventType, EventDefinition> = {
     eligible: (state) => state.suspects > MIN_SUSPECTS,
     apply: (state) => void state.suspects--
   },
-  extraTime: { good: true, group: 'time' },
+  extraTime: { good: true, group: 'time', flexible: true },
   // At least one wrong destination stays: there is always a choice.
-  ruledOut: { good: true, group: 'options', eligible: (state) => state.options >= 3 },
-  quickWitnesses: { good: true, group: 'witnessCost' },
-  extraCall: { good: true, group: 'calls', apply: (state) => void state.calls++ },
-  hotline: { good: true, group: 'calls', eligible: (state) => state.calls > 0 },
-  secondChance: { good: true, group: 'mistakes', apply: (state) => void state.mistakes++ },
-  directFlight: { good: true, group: 'flight' },
+  ruledOut: { good: true, group: 'options', flexible: true, eligible: (state) => state.options >= 3 },
+  quickWitnesses: { good: true, group: 'witnessCost', flexible: true },
+  extraCall: { good: true, group: 'calls', flexible: true, apply: (state) => void state.calls++ },
+  hotline: { good: true, group: 'calls', flexible: true, eligible: (state) => state.calls > 0 },
+  secondChance: { good: true, group: 'mistakes', flexible: true, apply: (state) => void state.mistakes++ },
+  directFlight: { good: true, group: 'flight', flexible: true },
   // With a single witness, knowing what it knows about changes nothing.
-  witnessFiles: { good: true, group: 'clueKinds', eligible: (state) => state.witnesses >= 2 },
+  witnessFiles: { good: true, group: 'clueKinds', flexible: true, eligible: (state) => state.witnesses >= 2 },
   // ---- bad ----
   missingWitness: {
     good: false,
@@ -139,23 +157,24 @@ export const DETECTIVE_EVENTS: Record<DetectiveEventType, EventDefinition> = {
     eligible: (state) => state.suspects < MAX_SUSPECTS,
     apply: (state) => void state.suspects++
   },
-  lostTime: { good: false, group: 'time' },
+  lostTime: { good: false, group: 'time', flexible: true },
   moreRumors: {
     good: false,
     group: 'options',
     eligible: (state) => state.options < MAX_OPTIONS,
     apply: (state) => void state.options++
   },
-  slowWitnesses: { good: false, group: 'witnessCost' },
-  linesDown: { good: false, group: 'calls', eligible: (state) => state.calls > 0 },
-  badSignal: { good: false, group: 'calls', eligible: (state) => state.calls > 0 },
+  slowWitnesses: { good: false, group: 'witnessCost', flexible: true },
+  linesDown: { good: false, group: 'calls', flexible: true, eligible: (state) => state.calls > 0 },
+  badSignal: { good: false, group: 'calls', flexible: true, eligible: (state) => state.calls > 0 },
   pressure: {
     good: false,
     group: 'mistakes',
+    flexible: true,
     eligible: (state) => state.mistakes > 0,
     apply: (state) => void state.mistakes--
   },
-  delayedFlight: { good: false, group: 'flight' }
+  delayedFlight: { good: false, group: 'flight', flexible: true }
 }
 
 export const DETECTIVE_EVENT_TYPES = Object.keys(DETECTIVE_EVENTS) as DetectiveEventType[]
@@ -486,4 +505,128 @@ export function revealStage(data: DetectiveGameData, stageNumber: number): void 
       stage.eliminated = [...new Set([...(stage.eliminated ?? []), ...getRuledOutPlaceIds(event)])]
     }
   }
+}
+
+/**
+ * How the detective is doing with the time when it gets to its current stage,
+ * from -1 (out of time) to 1 (with all the time to spare): the margin of the
+ * case (its time beyond the trips of the right route and the witnesses it
+ * allows for, see computeTimeLimitMinutes) it has left, compared with what it
+ * would have left spending it evenly along the route. 0 is right on pace.
+ */
+export function getCasePace(data: DetectiveGameData): number {
+  const stops = [data.origin, ...data.stages.map((stage) => stage.destination)]
+  const witnessMinutes = data.settings.witnesses * data.settings.witnessBudgetMinutes
+  const stageMinutes = data.stages.map((_, index) => getTravelMinutes(stops[index], stops[index + 1]) + witnessMinutes)
+  const total = stageMinutes.reduce((sum, minutes) => sum + minutes, 0)
+  const remaining = stageMinutes.slice(data.currentStage - 1).reduce((sum, minutes) => sum + minutes, 0)
+  const margin = data.timeLimitMinutes - total
+
+  if (margin <= 0 || total <= 0) {
+    return 0
+  }
+
+  const marginLeft = data.timeLimitMinutes - data.elapsedMinutes - remaining
+  const expectedMarginLeft = (margin * remaining) / total
+
+  return Math.min(1, Math.max(-1, (marginLeft - expectedMarginLeft) / margin))
+}
+
+/** How the case stands for an event of a stage being reached: its other events and those of the stages before. */
+function getRevealState(data: DetectiveGameData, stage: DetectiveStage): PlanState {
+  return {
+    witnesses: stage.witnesses.length,
+    options: stage.options.length - (stage.eliminated?.length ?? 0),
+    suspects: getExpectedSuspects(data),
+    mistakes: getAllowedMistakes(data) - countMistakes(data),
+    calls: getCallsLeft(data)
+  }
+}
+
+/**
+ * Evens out a case as the detective gets to a stage (1-based), before its
+ * events happen (see revealStage): with time to spare (see getCasePace), each
+ * good flexible event of the stage may become a bad one; running out of it,
+ * each bad one may become a good one (see MAX_REBALANCE_CHANCE). The new
+ * event is any of the other kind that changes something else than the other
+ * events of the stage and that would do something, with a variant of its own;
+ * when there is none, the event stays.
+ */
+export function rebalanceStageEvents(
+  data: DetectiveGameData,
+  stageNumber: number,
+  random: RandomFn = Math.random
+): void {
+  const stage = data.stages[stageNumber - 1]
+
+  if (!stage?.events?.length) {
+    return
+  }
+
+  const pace = getCasePace(data)
+  const swapChance = Math.min(MAX_REBALANCE_CHANCE, Math.abs(pace) * (data.settings.eventBalance ?? 0))
+  // Ahead of time, the good events may turn bad; behind, the bad ones good.
+  const swapGood = pace > 0
+
+  if (swapChance <= 0) {
+    return
+  }
+
+  stage.events.forEach((event, index) => {
+    const definition = DETECTIVE_EVENTS[event.type]
+
+    if (!definition.flexible || definition.good !== swapGood || !chance(swapChance, random)) {
+      return
+    }
+
+    const events = stage.events!
+    const others = events.filter((_, other) => other !== index)
+    const groups = new Set(others.map((other) => DETECTIVE_EVENTS[other.type].group))
+
+    // The case as it would be without this event.
+    stage.events = others
+
+    const state = getRevealState(data, stage)
+    const type = pickRandom(
+      DETECTIVE_EVENT_TYPES.filter((candidate) => {
+        const candidateDefinition = DETECTIVE_EVENTS[candidate]
+
+        return (
+          candidateDefinition.flexible &&
+          candidateDefinition.good !== swapGood &&
+          !groups.has(candidateDefinition.group) &&
+          (candidateDefinition.eligible?.(state) ?? true)
+        )
+      }),
+      random
+    )
+
+    stage.events = events
+
+    if (type) {
+      events[index] = planRevealedEvent(type, stage, state, random)
+    }
+  })
+}
+
+/** An event planned when its stage is reached: `ruledOut` picks its wrong destinations right there. */
+function planRevealedEvent(
+  type: DetectiveEventType,
+  stage: DetectiveStage,
+  state: PlanState,
+  random: RandomFn
+): DetectiveEvent {
+  const event = planEvent(type, state, random)
+
+  if (event.type === 'ruledOut') {
+    const decoys = stage.options.filter(
+      (option) => option.placeId !== stage.destination.placeId && !stage.eliminated?.includes(option.placeId)
+    )
+
+    event.placeIds = shuffle(decoys, random)
+      .slice(0, event.count)
+      .map((decoy) => decoy.placeId)
+  }
+
+  return event
 }

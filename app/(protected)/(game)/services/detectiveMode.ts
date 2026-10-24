@@ -47,6 +47,7 @@ import {
   getStageFlightMinutes,
   getStageWitnessMinutes,
   isGoodEvent,
+  rebalanceStageEvents,
   revealStage
 } from '@/app/(protected)/(game)/utils/detectiveEvents'
 import { getLandmarkClue } from '@/app/(protected)/(game)/utils/landmarkClues'
@@ -202,7 +203,7 @@ function callCentral(data: DetectiveGameData, action: CallCentralAction, ctx: Ga
  * case goes on to the next stage — or, at the last stop, to the suspects (see
  * accuse) — or ends: escaped when the time runs out.
  */
-function travel(data: DetectiveGameData, action: TravelAction): boolean {
+function travel(data: DetectiveGameData, action: TravelAction, ctx: GameContext): boolean {
   const stage = getCurrentStage(data, action.stageNumber)
   const chosen = stage.options.find((option) => option.placeId === Number(action.placeId))
 
@@ -231,7 +232,8 @@ function travel(data: DetectiveGameData, action: TravelAction): boolean {
   }
 
   data.currentStage++
-  // Getting to the next stage: its events happen.
+  // Getting to the next stage: its events happen (evened out first with how the detective is doing with the time).
+  rebalanceStageEvents(data, data.currentStage, ctx.random)
   revealStage(data, data.currentStage)
 
   // Cases created before the suspects existed end as soon as the detective gets to the last stop.
@@ -416,7 +418,7 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
       case 'askWitness':
         return askWitness(data, action)
       case 'travel':
-        return travel(data, action)
+        return travel(data, action, ctx)
       case 'accuse':
         return accuse(data, action)
       case 'callCentral':

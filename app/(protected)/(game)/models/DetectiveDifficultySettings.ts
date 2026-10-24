@@ -68,4 +68,11 @@ export interface DetectiveDifficultySettings {
   eventChance: number
   /** Chance (0 to 1) that, when something happens at a stage, a second thing happens too. */
   doubleEventChance: number
+  /**
+   * How much the events even out the case (0: not at all): the chance that an
+   * event changes kind when it happens, per point of how far ahead or behind
+   * of time the detective is (see rebalanceStageEvents). Missing in the cases
+   * created before it existed: their events never change.
+   */
+  eventBalance: number
 }

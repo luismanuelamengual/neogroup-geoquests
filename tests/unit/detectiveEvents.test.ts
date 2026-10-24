@@ -3,6 +3,7 @@ import { DetectiveEvent } from '@/app/(protected)/(game)/models/DetectiveEvent'
 import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import { DetectiveStage } from '@/app/(protected)/(game)/models/DetectiveStage'
 import { getClueKindRoles, ROLE_CLUE_KIND, WITNESS_ROLES } from '@/app/(protected)/(game)/models/WitnessRole'
+import { getTravelMinutes } from '@/app/(protected)/(game)/utils/detective'
 import { DETECTIVE_DIFFICULTIES } from '@/app/(protected)/(game)/utils/detectiveDifficulty'
 import {
   BAD_SIGNAL_ELIMINATED_VARIANTS,
@@ -12,6 +13,7 @@ import {
   FLIGHT_EVENT_VARIANTS,
   getAllowedMistakes,
   getCallsLeft,
+  getCasePace,
   getStageCallRules,
   getStageFlightMinutes,
   getStagePlan,
@@ -20,7 +22,9 @@ import {
   HOTLINE_FACTOR_VARIANTS,
   MAX_SUSPECTS,
   MIN_SUSPECTS,
+  MAX_REBALANCE_CHANCE,
   planCaseEvents,
+  rebalanceStageEvents,
   revealStage,
   RULED_OUT_VARIANTS,
   SLOW_WITNESSES_VARIANTS
@@ -370,6 +374,177 @@ describe('random events', () => {
       for (const key of ['detective.events.talkative.textSome', 'detective.events.ruledOut.textMany']) {
         expect(t(key as never, { count: 2 }), `${locale} ${key}`).not.toBe(key)
       }
+    }
+  })
+})
+
+describe('evening out the events', () => {
+  const STAGES = 4
+  const place = (placeId: number, longitude: number) => ({
+    placeId,
+    placeName: `Place ${placeId}`,
+    countryCode: 'XX',
+    latitude: 0,
+    longitude,
+    panoId: `pano${placeId}`
+  })
+  const origin = place(0, 0)
+  const destinations = Array.from({ length: STAGES }, (_, index) => place(index + 1, (index + 1) * 10))
+  const stops = [origin, ...destinations]
+  // The minutes of each stage on the right route, as the pace counts them.
+  const stageMinutes = destinations.map(
+    (destination, index) => getTravelMinutes(stops[index], destination) + MEDIUM.witnesses * MEDIUM.witnessBudgetMinutes
+  )
+  const total = stageMinutes.reduce((sum, minutes) => sum + minutes, 0)
+  const MARGIN = 600
+
+  /** A case at `currentStage` with `elapsedMinutes` spent, the events of the stage reached being `events`. */
+  function caseAt(currentStage: number, elapsedMinutes: number, events: DetectiveEvent[] = []): DetectiveGameData {
+    return {
+      settings: { ...MEDIUM, difficulty: 'medium' },
+      origin,
+      currentStage,
+      elapsedMinutes,
+      timeLimitMinutes: total + MARGIN,
+      stages: destinations.map((destination, index) => ({
+        destination,
+        options: [destination, place(100 + index * 10, 0), place(101 + index * 10, 0), place(102 + index * 10, 0)],
+        witnesses: [{}, {}, {}],
+        askedWitnesses: [],
+        events: index === currentStage - 1 ? events.map((event) => ({ ...event })) : [],
+        eliminated: [],
+        calls: 0,
+        travel: index < currentStage - 1 ? { correct: true } : null
+      }))
+    } as unknown as DetectiveGameData
+  }
+
+  /** Minutes spent on reaching `stage` having used `marginUsed` minutes of the margin so far. */
+  function spentReaching(stage: number, marginUsed: number): number {
+    return stageMinutes.slice(0, stage - 1).reduce((sum, minutes) => sum + minutes, 0) + marginUsed
+  }
+
+  const onPaceMargin = (stage: number) =>
+    (MARGIN * stageMinutes.slice(0, stage - 1).reduce((sum, minutes) => sum + minutes, 0)) / total
+
+  it('measures how the detective is doing with the time', () => {
+    expect(getCasePace(caseAt(1, 0))).toBe(0)
+    expect(getCasePace(caseAt(3, spentReaching(3, onPaceMargin(3))))).toBeCloseTo(0)
+    // Not a minute of the margin spent halfway: ahead.
+    expect(getCasePace(caseAt(3, spentReaching(3, 0)))).toBeGreaterThan(0.3)
+    // The whole margin spent halfway: behind.
+    expect(getCasePace(caseAt(3, spentReaching(3, MARGIN)))).toBeLessThan(-0.3)
+    expect(getCasePace(caseAt(3, total + MARGIN * 3))).toBe(-1)
+    expect(getCasePace({ ...caseAt(3, 0), timeLimitMinutes: total })).toBe(0)
+  })
+
+  it('changes nothing for a detective on pace', () => {
+    const events: DetectiveEvent[] = [
+      { type: 'extraTime', minutes: 120 },
+      { type: 'slowWitnesses', factor: 2 }
+    ]
+
+    for (let seed = 1; seed <= 100; seed++) {
+      const data = caseAt(1, 0, events)
+
+      rebalanceStageEvents(data, 1, seededRandom(seed))
+      expect(data.stages[0].events).toEqual(events)
+    }
+  })
+
+  it('changes nothing in the cases created before the events were evened out', () => {
+    const events: DetectiveEvent[] = [{ type: 'extraTime', minutes: 120 }, { type: 'quickWitnesses' }]
+
+    for (let seed = 1; seed <= 100; seed++) {
+      const data = caseAt(3, spentReaching(3, 0), events)
+
+      delete (data.settings as Partial<typeof data.settings>).eventBalance
+      rebalanceStageEvents(data, 3, seededRandom(seed))
+      expect(data.stages[2].events).toEqual(events)
+    }
+  })
+
+  it('turns good events bad for a detective ahead of time, and bad ones good for one behind', () => {
+    const cases = [
+      { elapsed: spentReaching(3, 0), from: true },
+      { elapsed: spentReaching(3, MARGIN), from: false }
+    ]
+
+    for (const { elapsed, from } of cases) {
+      let swapped = 0
+      let swappable = 0
+
+      for (let seed = 1; seed <= 400; seed++) {
+        const flexible = DETECTIVE_EVENT_TYPES.filter(
+          (type) => DETECTIVE_EVENTS[type].flexible && DETECTIVE_EVENTS[type].good === from
+        )
+        const structural = DETECTIVE_EVENT_TYPES.filter(
+          (type) => !DETECTIVE_EVENTS[type].flexible && DETECTIVE_EVENTS[type].good === from
+        )
+        const first = flexible[seed % flexible.length]
+        const second = structural[seed % structural.length]
+        const data = caseAt(3, elapsed, [{ type: first }, { type: second }])
+
+        rebalanceStageEvents(data, 3, seededRandom(seed))
+
+        const [event, untouched] = data.stages[2].events!
+
+        // Only the flexible ones change, and only to the other kind.
+        expect(untouched.type).toBe(second)
+        expect(DETECTIVE_EVENTS[event.type].flexible).toBe(true)
+        expect(DETECTIVE_EVENTS[event.type].group).not.toBe(DETECTIVE_EVENTS[second].group)
+        swappable++
+
+        if (event.type !== first) {
+          expect(DETECTIVE_EVENTS[event.type].good).toBe(!from)
+          swapped++
+        }
+      }
+
+      expect(swapped / swappable).toBeGreaterThan(0.2)
+      expect(swapped / swappable).toBeLessThanOrEqual(MAX_REBALANCE_CHANCE + 0.05)
+    }
+  })
+
+  it('never brings an event that would do nothing, and rules out wrong destinations of the stage', () => {
+    const types = new Set<string>()
+
+    for (let seed = 1; seed <= 400; seed++) {
+      // Behind, without calls nor mistakes left: no hotline, but a ruledOut may come.
+      const data = caseAt(3, spentReaching(3, MARGIN), [{ type: 'lostTime', minutes: 120 }])
+
+      data.settings.centralCalls = 0
+      data.stages[0].travel = { correct: false } as never
+      rebalanceStageEvents(data, 3, seededRandom(seed))
+
+      const [event] = data.stages[2].events!
+
+      types.add(event.type)
+      expect(event.type).not.toBe('hotline')
+
+      if (event.type === 'ruledOut') {
+        const stage = data.stages[2]
+        const wrong = stage.options.filter((option) => option.placeId !== stage.destination.placeId)
+
+        expect(event.placeIds).toHaveLength(event.count!)
+        expect(event.count!).toBeLessThan(wrong.length)
+        expect(event.placeIds!.every((id) => wrong.some((option) => option.placeId === id))).toBe(true)
+      }
+    }
+
+    expect(types.has('ruledOut')).toBe(true)
+    expect(types.has('extraCall')).toBe(true)
+  })
+
+  it('never brings pressure without mistakes left', () => {
+    for (let seed = 1; seed <= 300; seed++) {
+      const data = caseAt(3, spentReaching(3, 0), [{ type: 'secondChance' }])
+
+      data.stages[0].travel = { correct: false } as never
+      data.stages[1].travel = { correct: false } as never
+      rebalanceStageEvents(data, 3, seededRandom(seed))
+      // Two mistakes made of the two allowed (the second chance does not count: it is the one being swapped).
+      expect(data.stages[2].events![0].type).not.toBe('pressure')
     }
   })
 })

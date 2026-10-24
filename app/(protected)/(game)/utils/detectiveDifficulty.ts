@@ -16,7 +16,8 @@ import { SuspectTrait } from '@/app/(protected)/(game)/models/SuspectClue'
  *     `centralCallEliminates`) should cost more than a witness: it is a sure
  *     thing, a witness is not.
  *   - The random events (`eventChance`, `doubleEventChance`) are as often
- *     good as bad: they change the case, not how hard it is on average.
+ *     good as bad: they change the case, not how hard it is on average
+ *     (though `eventBalance` evens it out a bit, see rebalanceStageEvents).
  *   - The tests of the mode read the medium difficulty.
  */
 
@@ -54,7 +55,8 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     centralCallMinutes: 120,
     centralCallEliminates: 2,
     eventChance: 0.7,
-    doubleEventChance: 0.2
+    doubleEventChance: 0.2,
+    eventBalance: 1
   },
   medium: {
     hops: 5,
@@ -77,7 +79,8 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     centralCallMinutes: 120,
     centralCallEliminates: 2,
     eventChance: 0.75,
-    doubleEventChance: 0.25
+    doubleEventChance: 0.25,
+    eventBalance: 1
   },
   hard: {
     hops: 6,
@@ -100,7 +103,8 @@ export const DETECTIVE_DIFFICULTIES: Record<DetectiveDifficulty, DetectiveDiffic
     centralCallMinutes: 120,
     centralCallEliminates: 2,
     eventChance: 0.8,
-    doubleEventChance: 0.3
+    doubleEventChance: 0.3,
+    eventBalance: 1
   }
 }
 
