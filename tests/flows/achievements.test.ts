@@ -72,7 +72,7 @@ describe('achievements', () => {
     expect(medals).toHaveLength(23)
     expect(medal('firstTrip').unlockedAt).toBe('2026-03-01T12:00:00.000Z')
     expect(medal('eagleEye')).toMatchObject({ icon: '🦅', tier: null, target: null, value: null, unlockedAt: null })
-    expect(medal('againstTheClock.2')).toMatchObject({ tier: 2, tierName: 'gold', target: 6, value: null })
+    expect(medal('againstTheClock.2')).toMatchObject({ tier: 2, tierName: 'gold', target: 8, value: null })
     expect(medal('frequentTraveler.2')).toMatchObject({ tierName: 'silver' })
     expect(medal('frequentTraveler.1')).toMatchObject({ tier: 1, target: 10, value: 1, unlockedAt: null })
     expect(medal('frequentTraveler.3')).toMatchObject({ tier: 3, target: 500, value: 1 })

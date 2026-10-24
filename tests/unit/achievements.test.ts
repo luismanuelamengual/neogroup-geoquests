@@ -99,12 +99,12 @@ describe('achievements', () => {
     expect(medals({ ...solved, detective: { ...solved.detective!, difficulty: 'medium' } })).toEqual(['inspector'])
     expect(medals({ ...solved, detective: { ...solved.detective!, difficulty: 'hard' } })).toEqual(['sherlock'])
     expect(medals({ ...solved, detective: { ...solved.detective!, mistakes: 0 } })).toEqual(['cleanCase'])
-    // 3 hours to spare: silver; 6 hours: silver and gold.
-    expect(medals({ ...solved, detective: { ...solved.detective!, elapsedMinutes: 821 } })).toEqual([])
-    expect(medals({ ...solved, detective: { ...solved.detective!, elapsedMinutes: 820 } })).toEqual([
+    // 5 hours to spare: silver; 8 hours: silver and gold.
+    expect(medals({ ...solved, detective: { ...solved.detective!, elapsedMinutes: 701 } })).toEqual([])
+    expect(medals({ ...solved, detective: { ...solved.detective!, elapsedMinutes: 700 } })).toEqual([
       'againstTheClock.1'
     ])
-    expect(medals({ ...solved, detective: { ...solved.detective!, elapsedMinutes: 640 } })).toEqual([
+    expect(medals({ ...solved, detective: { ...solved.detective!, elapsedMinutes: 520 } })).toEqual([
       'againstTheClock.1',
       'againstTheClock.2'
     ])

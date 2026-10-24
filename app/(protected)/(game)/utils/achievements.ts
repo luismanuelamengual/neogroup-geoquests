@@ -152,8 +152,8 @@ export const ACHIEVEMENTS: Achievement[] = [
     icon: '⏱️',
     kind: 'game',
     tiers: [
-      { name: 'silver', target: 3, earned: (game) => minutesToSpare(game) >= 3 * 60 },
-      { name: 'gold', target: 6, earned: (game) => minutesToSpare(game) >= 6 * 60 }
+      { name: 'silver', target: 5, earned: (game) => minutesToSpare(game) >= 5 * 60 },
+      { name: 'gold', target: 8, earned: (game) => minutesToSpare(game) >= 8 * 60 }
     ]
   },
   {
