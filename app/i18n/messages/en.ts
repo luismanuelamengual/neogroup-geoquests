@@ -12,7 +12,6 @@ export const en: Messages = {
   },
   nav: {
     progress: 'My progress',
-    ranking: 'Ranking',
     play: 'Play',
     multiplayer: 'Multiplayer',
     myProfile: 'My profile',

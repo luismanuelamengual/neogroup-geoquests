@@ -1,7 +1,6 @@
 'use client'
 
 import './index.scss'
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import GroupsIcon from '@mui/icons-material/Groups'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonIcon from '@mui/icons-material/Person'
@@ -29,8 +28,7 @@ import type { MessageKey } from '@/app/i18n/messages'
 
 const NAV_ITEMS: { href: string; labelKey: MessageKey; icon: ReactNode }[] = [
   { href: '/play', labelKey: 'nav.play', icon: <SportsEsportsIcon /> },
-  { href: '/multiplayer', labelKey: 'nav.multiplayer', icon: <GroupsIcon /> },
-  { href: '/ranking', labelKey: 'nav.ranking', icon: <EmojiEventsIcon /> }
+  { href: '/multiplayer', labelKey: 'nav.multiplayer', icon: <GroupsIcon /> }
 ]
 
 /** Whether a nav item is the current section: its page or any page under it (e.g. /multiplayer/battle-royale). */

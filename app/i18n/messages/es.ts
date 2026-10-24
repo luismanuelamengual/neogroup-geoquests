@@ -15,7 +15,6 @@ export const es = {
   },
   nav: {
     progress: 'Mi progreso',
-    ranking: 'Ranking',
     play: 'Jugar',
     multiplayer: 'Multijugador',
     myProfile: 'Mi perfil',
