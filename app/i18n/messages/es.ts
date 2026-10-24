@@ -792,7 +792,6 @@ export const es = {
     seeResult: 'Ver resultado',
     yourScore: 'Tu puntaje de hoy',
     rank: 'Puesto {position} de {total}',
-    top: 'Top {percent}%',
     forfeited: 'Abandonaste el desafío de hoy. ¡Mañana hay otro!',
     nextIn: 'Próximo desafío en {time}',
     leaderboardTitle: 'Ranking',

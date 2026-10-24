@@ -113,10 +113,7 @@ export default function DailyChallengeCard() {
             <span className="max"> / {formatScore(daily.maxScore, locale)}</span>
           </span>
           {daily.rank && (
-            <span className="rank">
-              {t('daily.rank', { position: daily.rank.position, total: daily.rank.total })} ·{' '}
-              {t('daily.top', { percent: daily.rank.topPercent })}
-            </span>
+            <span className="rank">{t('daily.rank', { position: daily.rank.position, total: daily.rank.total })}</span>
           )}
         </div>
       )}

@@ -17,7 +17,6 @@ export default function DailyLeaderboard({ board }: { board: DailyLeaderboardVie
       {board.me && (
         <div className="my-rank">
           <span className="position">{t('daily.rank', { position: board.me.position, total: board.me.total })}</span>
-          <span className="top">{t('daily.top', { percent: board.me.topPercent })}</span>
         </div>
       )}
       {board.top.length === 0 ? (

@@ -128,7 +128,7 @@ async function getRank(challengeId: number, score: number): Promise<DailyRankVie
   ])
   const position = better + 1
 
-  return { position, total, topPercent: Math.min(100, Math.max(1, Math.ceil((position / total) * 100))) }
+  return { position, total }
 }
 
 /** The player's attempt and the game it is played in (null once deleted). */

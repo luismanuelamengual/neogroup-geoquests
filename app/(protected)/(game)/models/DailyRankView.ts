@@ -4,6 +4,4 @@ export interface DailyRankView {
   position: number
   /** Players who finished the challenge. */
   total: number
-  /** "Top N %": the share of the players at or above this place (1..100). */
-  topPercent: number
 }

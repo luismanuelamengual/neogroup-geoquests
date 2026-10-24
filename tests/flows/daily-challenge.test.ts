@@ -120,7 +120,7 @@ describe('daily challenge', () => {
       status: 'finished',
       gameId: started.id,
       score,
-      rank: { position: 1, total: 1, topPercent: 100 }
+      rank: { position: 1, total: 1 }
     })
     await expect(playDailyChallenge(alice, at(NOON))).rejects.toThrow('Ya usaste tu intento')
   })
@@ -155,8 +155,8 @@ describe('daily challenge', () => {
     expect(board).toMatchObject({ number: getDailyNumber(DAY), day: DAY, mapSlug: getDailyMapSlug(DAY) })
     expect(board.top.map((entry) => entry.position)).toEqual([1, 1, 3])
     expect(board.top[2]).toMatchObject({ isMe: true })
-    expect(board.me).toMatchObject({ position: 3, total: 3, topPercent: 100 })
-    expect((await getDailyChallenge(alice, at(NOON))).rank).toEqual({ position: 1, total: 3, topPercent: 34 })
+    expect(board.me).toMatchObject({ position: 3, total: 3 })
+    expect((await getDailyChallenge(alice, at(NOON))).rank).toEqual({ position: 1, total: 3 })
   })
 
   it('changes every day and keeps the ranking after the games are deleted', async () => {

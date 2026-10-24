@@ -786,7 +786,6 @@ export const en: Messages = {
     seeResult: 'See result',
     yourScore: 'Your score today',
     rank: 'Rank {position} of {total}',
-    top: 'Top {percent}%',
     forfeited: "You left today's challenge. There's another one tomorrow!",
     nextIn: 'Next challenge in {time}',
     leaderboardTitle: 'Ranking',
