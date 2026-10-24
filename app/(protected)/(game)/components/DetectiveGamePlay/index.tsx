@@ -3,7 +3,7 @@
 import './index.scss'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
 import { useRouter } from 'next/navigation'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import BackgroundMusic from '@/app/(protected)/(game)/components/BackgroundMusic'
 import DetectiveBriefing from '@/app/(protected)/(game)/components/DetectiveBriefing'
 import DetectiveEvents from '@/app/(protected)/(game)/components/DetectiveEvents'
@@ -18,6 +18,7 @@ import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGame
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import GameButton from '@/app/components/GameButton'
+import { useFocusDetector } from '@/app/hooks/useFocusDetector'
 import { useT } from '@/app/i18n/I18nProvider'
 
 /**
@@ -29,6 +30,11 @@ import { useT } from '@/app/i18n/I18nProvider'
  * game store), and then the next stage. After the last trip, in time, the
  * suspects (the detective points at the thief) and who the thief was (phase
  * "result" again); then the summary, once the case is closed.
+ *
+ * Anti-cheat: if the window loses the focus while the case is open (e.g. to
+ * search a clue on Google or ask an AI), the thief escapes: the case ends
+ * (lostFocus action) and, back in the app, the summary is shown. The briefing
+ * of a new case does not count: the case has not started yet.
  */
 export default function DetectiveGamePlay() {
   const t = useT()
@@ -40,12 +46,36 @@ export default function DetectiveGamePlay() {
   const setGame = useGameStore((state) => state.setGame)
   const showResult = useGameStore((state) => state.showResult)
   const closeResult = useGameStore((state) => state.closeResult)
+  const focused = useFocusDetector()
+  /** Whether the lostFocus action was already sent (it is sent only once). */
+  const lostFocusSentRef = useRef(false)
   const view = game.modeView as DetectiveGameView
   const [accepted, setAccepted] = useState(false)
   const [traveling, setTraveling] = useState(false)
   const stage = view.currentStage
   const fresh =
     view.currentStageNumber === 1 && view.elapsedMinutes === 0 && !!stage?.witnesses.every((witness) => !witness.asked)
+  const investigating = view.outcome === null && !(fresh && !accepted)
+
+  // Losing the focus while investigating: the thief escapes.
+  useEffect(() => {
+    if (!investigating || focused || lostFocusSentRef.current) {
+      return
+    }
+
+    lostFocusSentRef.current = true
+
+    sendGameAction(game.id, { type: 'lostFocus' }, false)
+      .then((updated) => {
+        setGame(updated)
+        // Straight to the summary, even from the result of a trip.
+        closeResult()
+      })
+      .catch(() => {
+        // Tried again the next time the focus is lost.
+        lostFocusSentRef.current = false
+      })
+  }, [investigating, focused, game.id, sendGameAction, setGame, closeResult])
   // Exiting cancels the case: it can not be resumed.
   const handleExit = useCallback(async () => {
     try {

@@ -36,10 +36,10 @@ export default function DetectiveGameSummary() {
   const game = useGameStore((state) => state.game)!
   const view = game.modeView as DetectiveGameView
   const caught = view.outcome === 'caught'
-  // Title and story of the outcome: caught, escaped (time), lost trail (mistakes) or wrong suspect.
+  // Title and story of the outcome: caught, escaped (time), lost trail (mistakes), wrong suspect or lost focus (anti-cheat).
   const ending = caught
     ? 'caught'
-    : view.outcome === 'lostTrail' || view.outcome === 'wrongSuspect'
+    : view.outcome === 'lostTrail' || view.outcome === 'wrongSuspect' || view.outcome === 'lostFocus'
       ? view.outcome
       : 'escaped'
   const thief = view.lineup && view.lineup.thief !== null ? view.lineup.suspects[view.lineup.thief] : null

@@ -262,6 +262,13 @@ function accuse(data: DetectiveGameData, action: AccuseAction): boolean {
   return true
 }
 
+/** Anti-cheat: the window lost the focus while the case was open, so the thief escapes (see LostFocusAction). */
+function lostFocus(data: DetectiveGameData): boolean {
+  data.outcome = 'lostFocus'
+
+  return true
+}
+
 function toEventViews(stage: DetectiveStage): DetectiveEventView[] {
   return getStageEvents(stage).map((event) => {
     const placeIds = event.type === 'ruledOut' ? getRuledOutPlaceIds(event) : []
@@ -423,6 +430,8 @@ export const detectiveMode: GameModeEngine<DetectiveGameData, DetectiveGameSetti
         return accuse(data, action)
       case 'callCentral':
         return callCentral(data, action, ctx)
+      case 'lostFocus':
+        return lostFocus(data)
       default:
         throw new ApiException('errors.invalidAction')
     }

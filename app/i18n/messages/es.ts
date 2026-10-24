@@ -573,6 +573,9 @@ export const es = {
       wrongSuspect: 'Era otra persona',
       wrongSuspectText:
         'Llegaste a tiempo, pero acusaste a la persona equivocada: el ladrón se escapó con {loot}. ¡Suerte en el próximo caso!',
+      lostFocus: 'Te distrajiste',
+      lostFocusText:
+        'Dejaste la investigación por un momento y el ladrón lo aprovechó para escaparse con {loot}. Un buen detective no se distrae: ¡suerte en el próximo caso!',
       thiefWas: 'El ladrón era',
       timeUsed: 'Tiempo usado',
       witnesses: 'Testigos',

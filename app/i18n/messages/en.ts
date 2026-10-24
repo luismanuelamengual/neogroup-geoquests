@@ -567,6 +567,9 @@ export const en: Messages = {
       wrongSuspect: 'It was somebody else',
       wrongSuspectText:
         'You made it in time, but you accused the wrong person: the thief got away with {loot}. Good luck on the next case!',
+      lostFocus: 'You got distracted',
+      lostFocusText:
+        'You left the investigation for a moment and the thief took the chance to get away with {loot}. A good detective never gets distracted: good luck on the next case!',
       thiefWas: 'The thief was',
       timeUsed: 'Time used',
       witnesses: 'Witnesses',

@@ -7,9 +7,10 @@ import { DetectiveStop } from '@/app/(protected)/(game)/models/DetectiveStop'
  * How a detective case ended: caught (the right suspect was accused at the last
  * stop), escaped (the time ran out), lost trail (too many wrong destinations,
  * see `maxMistakes` in utils/detectiveDifficulty.ts) or wrong suspect (the detective got
- * to the last stop in time but accused someone else).
+ * to the last stop in time but accused someone else) or lost focus (anti-cheat:
+ * the window lost the focus while the case was open, see LostFocusAction).
  */
-export type DetectiveOutcome = 'caught' | 'escaped' | 'lostTrail' | 'wrongSuspect'
+export type DetectiveOutcome = 'caught' | 'escaped' | 'lostTrail' | 'wrongSuspect' | 'lostFocus'
 
 /** State of a detective (single player) game, stored in `games.data`. */
 export interface DetectiveGameData {
