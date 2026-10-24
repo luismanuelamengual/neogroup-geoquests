@@ -148,6 +148,31 @@ describe('landmark clues', () => {
     }
   })
 
+  it('has no clue that repeats a word of the place name (it would give away its kind: "a cathedral...")', () => {
+    // Without accents and in lower case: "Catedral de Notre-Dame" -> ["catedral", "notre", "dame"].
+    const normalize = (text: string) =>
+      text
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+    // Words too generic to give the place away.
+    const generic = new Set(['gran', 'real', 'santa', 'santo'])
+
+    for (const [name, clues] of Object.entries(LANDMARK_CLUES)) {
+      const words = (normalize(name).match(/[a-z0-9]+/g) ?? []).filter((word) => word.length >= 4 && !generic.has(word))
+
+      // Place names are in Spanish, so only the Spanish clues can repeat them.
+      for (const clue of clues.es) {
+        for (const word of words) {
+          // The word or its plural, as a whole word.
+          expect(normalize(clue), `${name}: "${word}"`).not.toMatch(
+            new RegExp(`(^|[^a-z0-9])${word}(e?s)?([^a-z0-9]|$)`)
+          )
+        }
+      }
+    }
+  })
+
   it('gives a clue in every language', () => {
     const [name] = Object.keys(LANDMARK_CLUES)
 

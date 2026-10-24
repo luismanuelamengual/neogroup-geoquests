@@ -8,14 +8,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que desde su destino se ve una torre de comunicaciones de 634 metros, la más alta del mundo.',
       'Quería comprar galletitas de arroz y probar su suerte sacando un papelito con la fortuna.',
       'Pagó con yenes y preguntó por un paseo en carrito tirado por una persona.',
-      'Quería pasar bajo un farol rojo gigante en la entrada del templo budista más antiguo de la ciudad.'
+      'Quería pasar bajo un farol rojo gigante en la entrada del santuario budista más antiguo de la ciudad.'
     ],
     en: [
       'They were going to a megacity of an East Asian archipelago, to an old quarter by a river.',
       'They said from their destination you can see a 634-meter broadcasting tower, the tallest in the world.',
       'They wanted to buy rice crackers and try their luck drawing a fortune slip.',
       'They paid in yen and asked about a ride in a man-pulled cart.',
-      'They wanted to pass under a giant red lantern at the gate of the oldest Buddhist temple in the city.'
+      'They wanted to pass under a giant red lantern at the gate of the oldest Buddhist sanctuary in the city.'
     ]
   },
   'Torre de Tokio': {
@@ -24,14 +24,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una bahía enorme, en la llanura más grande de una isla alargada.',
       'Pagó con yenes y quería comer sushi en un mostrador giratorio.',
       'Preguntó cómo se saluda con una reverencia y por qué nadie deja propina.',
-      'Quería subir a una torre roja y blanca de 333 metros, inspirada en la de París, construida en 1958.'
+      'Quería subir a una estructura de acero roja y blanca de 333 metros, inspirada en la de París, construida en 1958.'
     ],
     en: [
       'They were going to the capital of a volcanic archipelago in the North Pacific, the most populous metropolis on the planet.',
       'They said their destination is on a huge bay, on the largest plain of a long island.',
       'They paid in yen and wanted to eat sushi at a conveyor-belt counter.',
       'They asked how to greet with a bow and why nobody leaves a tip.',
-      'They wanted to climb a red and white 333-metre tower, inspired by the one in Paris, built in 1958.'
+      'They wanted to climb a red and white 333-metre steel structure, inspired by the one in Paris, built in 1958.'
     ]
   },
   'Tokyo Skytree': {
@@ -85,33 +85,33 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
   'Monte Fuji (Lago Kawaguchi)': {
     es: [
       'Iba a un archipiélago del extremo oriente de Asia, en una zona con muchos terremotos.',
-      'Dijo que quería ver un lago al pie de un volcán nevado de forma casi perfecta.',
+      'Dijo que quería ver un espejo de agua al pie de un volcán nevado de forma casi perfecta.',
       'Practicaba cómo saludar con una reverencia y preguntó si se deja propina (le dijeron que no).',
       'Quería dormir en un hotel tradicional con piso de tatami y bañarse en aguas termales.',
-      'Quería fotografiar la montaña más alta de su destino, un símbolo nacional de 3776 metros.'
+      'Quería fotografiar la cumbre más alta de su destino, un símbolo nacional de 3776 metros.'
     ],
     en: [
       'They were going to an archipelago in the far east of Asia, in an area with many earthquakes.',
-      'They said they wanted to see a lake at the foot of an almost perfectly shaped snowy volcano.',
+      'They said they wanted to see a stretch of water at the foot of an almost perfectly shaped snowy volcano.',
       'They were practicing how to greet with a bow and asked whether you tip there (they were told no).',
       'They wanted to sleep in a traditional inn with tatami floors and bathe in hot springs.',
-      'They wanted to photograph the highest mountain of their destination, a 3,776-meter national symbol.'
+      'They wanted to photograph the highest summit of their destination, a 3,776-meter national symbol.'
     ]
   },
   'Lago Ashi (Hakone)': {
     es: [
-      'Iba a un lago de cráter en las montañas de una gran isla volcánica del Pacífico norte.',
+      'Iba a un cráter inundado en las montañas de una gran isla volcánica del Pacífico norte.',
       'Dijo que su destino está a los pies de la montaña sagrada más famosa de su país, a una hora de la capital.',
       'Pagó con yenes y quería bañarse desnudo en unas aguas termales al aire libre.',
       'Quería probar huevos negros cocidos en fumarolas de azufre, que según dicen alargan la vida.',
-      'Quería navegar en un barco pirata por el lago y fotografiar un portal rojo que sale del agua.'
+      'Quería navegar en un barco pirata y fotografiar un portal rojo que sale del agua.'
     ],
     en: [
-      'They were going to a crater lake in the mountains of a large volcanic island in the North Pacific.',
+      'They were going to a flooded crater in the mountains of a large volcanic island in the North Pacific.',
       "They said their destination is at the foot of their country's most famous sacred mountain, an hour from the capital.",
       'They paid in yen and wanted to bathe naked in an open-air hot spring.',
       'They wanted to try black eggs boiled in sulphur vents, which supposedly lengthen your life.',
-      'They wanted to sail across the lake on a pirate ship and photograph a red gate rising from the water.'
+      'They wanted to sail on a pirate ship and photograph a red gate rising from the water.'
     ]
   },
   'Gran Buda de Kamakura': {
@@ -152,14 +152,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una ciudad de montaña del interior, lejos de cualquier costa.',
       'Pagó con yenes y quería comer fideos de alforfón fríos y visitar una granja de wasabi.',
       'Me contó que en esa región se esquió en unos Juegos Olímpicos de Invierno de 1998.',
-      'Quería ver un castillo negro del siglo XVI, apodado el castillo del cuervo, que conserva su torre original.'
+      'Quería ver una fortaleza negra del siglo XVI, apodada "el cuervo", que conserva su torre original.'
     ],
     en: [
       'They were going to a valley surrounded by the Alps of a large volcanic island in the North Pacific.',
       'They said their destination is in an inland mountain city, far from any coast.',
       'They paid in yen and wanted to eat cold buckwheat noodles and visit a wasabi farm.',
       'They told me the region hosted skiing at the 1998 Winter Olympics.',
-      'They wanted to see a black 16th-century castle, nicknamed the crow castle, which keeps its original keep.'
+      'They wanted to see a black 16th-century fortress, nicknamed "the crow", which keeps its original keep.'
     ]
   },
   'Shirakawa-go': {
@@ -232,14 +232,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una zona de montañas y un río con un puente de madera famoso.',
       'Quería probar tofu en caldo y pasear en un trencito panorámico.',
       'Pagó con yenes y preguntó por un parque con monos en la montaña.',
-      'Quería caminar por un sendero entre tallos de bambú altísimos que suenan con el viento.'
+      'Quería caminar por un sendero entre tallos verdes altísimos que suenan con el viento.'
     ],
     en: [
       'They were going to the outskirts of an old imperial capital of an Asian archipelago.',
       'They said their destination is an area of mountains and a river with a famous wooden bridge.',
       'They wanted to try simmered tofu and ride a scenic little train.',
       'They paid in yen and asked about a mountain park with monkeys.',
-      'They wanted to walk a path among towering bamboo stalks that rustle in the wind.'
+      'They wanted to walk a path among towering green stalks that rustle in the wind.'
     ]
   },
   'Gion (Kioto)': {
@@ -264,14 +264,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en la segunda área metropolitana de su país, en la desembocadura de un río.',
       'Pagó con yenes y quería probar bolitas de masa rellenas de pulpo.',
       'Me contó que esa ciudad de comerciantes se considera la cocina de la nación.',
-      'Quería ver un castillo blanco con adornos dorados y fosos enormes, mandado a construir por Toyotomi Hideyoshi.'
+      'Quería ver una fortaleza blanca con adornos dorados y fosos enormes, mandada a construir por Toyotomi Hideyoshi.'
     ],
     en: [
       'They were going to a large port city in the west of a volcanic island in the North Pacific.',
       "They said their destination is in their country's second metropolitan area, at the mouth of a river.",
       'They paid in yen and wanted to try dough balls filled with octopus.',
       "They told me that merchant city is considered the nation's kitchen.",
-      'They wanted to see a white castle with gold trim and huge moats, commissioned by Toyotomi Hideyoshi.'
+      'They wanted to see a white fortress with gold trim and huge moats, commissioned by Toyotomi Hideyoshi.'
     ]
   },
   Dōtonbori: {
@@ -296,14 +296,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que llegaría en un tren bala que supera los 300 km/h.',
       'Quería comer sushi en una cinta giratoria y aprender a saludar con una reverencia.',
       'Pagó con yenes y preguntó cuándo florecen los cerezos alrededor del foso.',
-      'Quería ver un castillo blanco del siglo XVII, apodado "la Garza Blanca", que nunca fue destruido.'
+      'Quería ver una fortaleza blanca del siglo XVII, apodada "la Garza Blanca", que nunca fue destruida.'
     ],
     en: [
       'They were going to the west of the main island of an East Asian archipelago.',
       'They said they would arrive on a bullet train that goes over 300 km/h.',
       'They wanted to eat conveyor-belt sushi and learn to greet with a bow.',
       'They paid in yen and asked when the cherry trees bloom around the moat.',
-      'They wanted to see a white 17th-century castle nicknamed "the White Heron" that was never destroyed.'
+      'They wanted to see a white 17th-century fortress nicknamed "the White Heron" that was never destroyed.'
     ]
   },
   'Templo Todai-ji (Nara)': {
@@ -344,14 +344,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en el oeste de la isla principal, frente a una isla con un portal flotante.',
       'Pagó con yenes y quería probar la versión local de la tortilla de repollo, con fideos adentro.',
       'Quería dejar una grulla de papel plegada en el monumento a los niños.',
-      'Quería ver el esqueleto de un edificio con cúpula de hierro que quedó en pie tras la explosión del 6 de agosto de 1945.'
+      'Quería ver el esqueleto de hierro de un edificio que quedó en pie tras la explosión del 6 de agosto de 1945.'
     ],
     en: [
       'They were going to a city on a river delta, on an inland sea between three islands of a Pacific archipelago.',
       'They said their destination is in the west of the main island, near an island with a floating gate.',
       'They paid in yen and wanted to try the local cabbage pancake, with noodles inside.',
       "They wanted to leave a folded paper crane at the children's monument.",
-      'They wanted to see the skeleton of a building with an iron dome that stayed standing after the explosion of 6 August 1945.'
+      'They wanted to see the iron skeleton of a building that stayed standing after the explosion of 6 August 1945.'
     ]
   },
   'Palacio Gyeongbokgung': {
@@ -360,14 +360,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una megaciudad rodeada de montañas, a unos 50 kilómetros de una frontera muy vigilada.',
       'Quería comer kimchi y una barbacoa que se cocina en la mesa.',
       'Pagó con wones y preguntó dónde alquilar un hanbok, el traje tradicional.',
-      'Quería ver el palacio principal de la dinastía Joseon y su ceremonia de cambio de guardia.'
+      'Quería ver la residencia real principal de la dinastía Joseon y su ceremonia de cambio de guardia.'
     ],
     en: [
       'They were going to an East Asian capital on a peninsula, on the Han River.',
       'They said their destination is a megacity ringed by mountains, about 50 kilometers from a heavily guarded border.',
       'They wanted to eat kimchi and a barbecue cooked at the table.',
       'They paid in won and asked where to rent a hanbok, the traditional costume.',
-      'They wanted to see the main palace of the Joseon dynasty and its changing of the guard.'
+      'They wanted to see the main royal residence of the Joseon dynasty and its changing of the guard.'
     ]
   },
   'Torre N de Seúl': {
@@ -376,14 +376,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una montaña boscosa en pleno centro, sobre un río muy ancho.',
       'Pagó con wones y quería probar kimchi y carne asada en la mesa.',
       'Me mostró un alfabeto inventado por un rey en el siglo XV, de letras con círculos y rayas.',
-      'Quería subir a una torre de comunicaciones y dejar un candado del amor en la baranda del mirador.'
+      'Quería subir a una antena-mirador en lo alto de una montaña y dejar un candado del amor en la baranda.'
     ],
     en: [
       'They were going to the capital of a peninsula in northeast Asia, split in two since 1953.',
       'They said their destination is on a wooded mountain right in the centre, above a very wide river.',
       'They paid in won and wanted to try kimchi and barbecue grilled at the table.',
       'They showed me an alphabet invented by a king in the 15th century, with letters made of circles and lines.',
-      'They wanted to go up a communications tower and leave a love padlock on the viewpoint railing.'
+      'They wanted to go up an observation spire on top of a mountain and leave a love padlock on the railing.'
     ]
   },
   'Aldea Hanok de Bukchon': {
@@ -424,14 +424,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está frente a un estrecho que separa la península de un archipiélago vecino.',
       'Pagó con wones y quería una sopa de cerdo con arroz y un mercado de pescado enorme.',
       'Me contó que ahí se hace uno de los festivales de cine más importantes de Asia.',
-      'Quería ir a la playa urbana más famosa de su país, con rascacielos detrás y un festival de esculturas de arena.'
+      'Quería ir al arenal urbano más famoso de su país, con rascacielos detrás y un festival de esculturas de arena.'
     ],
     en: [
       'They were going to the big port city in the southeast of a peninsula in northeast Asia.',
       'They said their destination faces a strait that separates the peninsula from a neighbouring archipelago.',
       'They paid in won and wanted pork soup with rice and a huge fish market.',
       "They told me one of Asia's most important film festivals is held there.",
-      "They wanted to go to their country's most famous city beach, with skyscrapers behind and a sand sculpture festival."
+      "They wanted to go to their country's most famous city stretch of sand, with skyscrapers behind and a sand sculpture festival."
     ]
   },
   'Templo Bulguksa': {
@@ -440,14 +440,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad llena de túmulos funerarios con forma de colinas verdes.',
       'Quería probar unos pastelitos rellenos de porotos rojos con forma de pan redondo.',
       'Pagó con wones y preguntó por una gruta con un Buda de granito que mira al mar.',
-      'Quería ver un templo budista del siglo VIII con escaleras de piedra y dos pagodas famosas.'
+      'Quería ver un santuario budista del siglo VIII con escaleras de piedra y dos pagodas famosas.'
     ],
     en: [
       'They were going to the southeast of an East Asian peninsula, to the old capital of an ancient kingdom.',
       'They said their destination is a city full of burial mounds shaped like green hills.',
       'They wanted to try round buns filled with red beans.',
       'They paid in won and asked about a grotto with a granite Buddha facing the sea.',
-      'They wanted to see an 8th-century Buddhist temple with stone stairways and two famous pagodas.'
+      'They wanted to see an 8th-century Buddhist sanctuary with stone stairways and two famous pagodas.'
     ]
   },
   'Seongsan Ilchulbong (Jeju)': {
@@ -488,14 +488,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en la capital, en el barrio más antiguo, cerca de un río.',
       'Pagó con nuevos dólares y quería un té con leche y perlas de tapioca en un mercado nocturno.',
       'Me contó que la gente tira dos medialunas de madera al piso para preguntarle algo a los dioses.',
-      'Quería ver un templo de 1738 dedicado a la diosa de la misericordia, con dragones en el techo.'
+      'Quería ver un santuario de 1738 dedicado a la diosa de la misericordia, con dragones en el techo.'
     ],
     en: [
       'They were going to a mountainous island off the southeast coast of China, crossed by the Tropic of Cancer.',
       'They said their destination is in the capital, in the oldest district, near a river.',
       'They paid in new dollars and wanted milk tea with tapioca pearls at a night market.',
       'They told me people drop two wooden crescents on the floor to ask the gods a question.',
-      'They wanted to see a 1738 temple dedicated to the goddess of mercy, with dragons on the roof.'
+      'They wanted to see a 1738 shrine dedicated to the goddess of mercy, with dragons on the roof.'
     ]
   },
   Jiufen: {
@@ -517,17 +517,17 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
   'Lago del Sol y la Luna': {
     es: [
       'Iba al centro montañoso de una isla subtropical frente a la costa sureste de China.',
-      'Dijo que su destino es el lago más grande de la isla, a unos 750 metros de altura.',
+      'Dijo que su destino es el mayor espejo de agua de la isla, a unos 750 metros de altura.',
       'Pagó con nuevos dólares y quería probar un té negro que se cultiva a orillas del agua.',
       'Me contó que ahí vive un pueblo originario muy pequeño, los thao.',
-      'Quería recorrer en bicicleta un lago con una mitad redonda como un sol y otra alargada como una luna.'
+      'Quería recorrer en bicicleta unas aguas con una mitad redonda y otra alargada y curva como un gajo.'
     ],
     en: [
       'They were going to the mountainous centre of a subtropical island off the southeast coast of China.',
-      'They said their destination is the largest lake on the island, about 750 metres above sea level.',
+      'They said their destination is the largest body of water on the island, about 750 metres above sea level.',
       'They paid in new dollars and wanted to try a black tea grown on the shores.',
       'They told me a very small indigenous people, the Thao, lives there.',
-      'They wanted to cycle around a lake with one round half like a sun and another long half like a moon.'
+      'They wanted to cycle around waters with one round half and another long half like a crescent.'
     ]
   },
   'Garganta de Taroko': {
@@ -536,14 +536,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino hay montañas de más de 3000 metros muy cerca del mar.',
       'Comentó que en la zona viven pueblos indígenas de origen austronesio y quería probar arroz cocido en caña de bambú.',
       'Pagó con dólares locales y preguntó por los senderos cerrados por desprendimientos de rocas.',
-      'Quería recorrer una garganta de paredes de mármol excavada por un río turquesa.'
+      'Quería recorrer un desfiladero de paredes de mármol excavado por un río turquesa.'
     ],
     en: [
       'They were going to the east coast of a mountainous island in the western Pacific.',
       'They said there are mountains over 3,000 meters very close to the sea there.',
       'They mentioned Indigenous Austronesian peoples live in the area and wanted rice cooked in bamboo tubes.',
       'They paid in local dollars and asked about the trails closed by rockfalls.',
-      'They wanted to explore a gorge of marble walls carved by a turquoise river.'
+      'They wanted to explore a ravine of marble walls carved by a turquoise river.'
     ]
   },
   'Victoria Peak': {
@@ -568,28 +568,28 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una zona tranquila de monasterios, a una hora de una ciudad de rascacielos.',
       'Quería comer comida vegetariana en un monasterio y ver delfines rosados en la costa.',
       'Pagó con dólares locales y preguntó por un teleférico con cabinas de piso de vidrio.',
-      'Quería subir los 268 escalones hasta un Buda de bronce sentado de 34 metros.'
+      'Quería subir los 268 escalones hasta una figura sentada de bronce de 34 metros.'
     ],
     en: [
       'They were going to a mountainous island in southern China, near an airport built on the sea.',
       'They said their destination is a quiet area of monasteries, an hour from a city of skyscrapers.',
       'They wanted to eat vegetarian food at a monastery and see pink dolphins off the coast.',
       'They paid in local dollars and asked about a cable car with glass-floored cabins.',
-      'They wanted to climb the 268 steps to a 34-meter seated bronze Buddha.'
+      'They wanted to climb the 268 steps to a 34-meter seated bronze figure.'
     ]
   },
   'Avenida de las Estrellas (Hong Kong)': {
     es: [
       'Iba a una península en la costa sur de China, frente a una isla llena de rascacielos.',
       'Dijo que su destino es un paseo junto al agua, en la punta de Kowloon, mirando la bahía Victoria.',
-      'Pagó con dólares locales y quería comer dim sum y tomar el ferry de las estrellas.',
+      'Pagó con dólares locales y quería comer dim sum y tomar un ferry verde y blanco de más de un siglo.',
       'Me contó que esa ciudad fue colonia británica hasta 1997 y que allí se habla cantonés.',
       'Quería ver la estatua de Bruce Lee y el espectáculo de luces y láseres de los rascacielos a las 8 de la noche.'
     ],
     en: [
       'They were going to a peninsula on the south coast of China, facing an island full of skyscrapers.',
       'They said their destination is a waterfront promenade at the tip of Kowloon, looking over Victoria Harbour.',
-      'They paid in local dollars and wanted to eat dim sum and ride the star ferry.',
+      'They paid in local dollars and wanted to eat dim sum and ride a century-old green and white ferry.',
       'They told me that city was a British colony until 1997 and that Cantonese is spoken there.',
       'They wanted to see the Bruce Lee statue and the skyscraper light and laser show at 8 p.m.'
     ]
@@ -616,14 +616,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino hay una temporada de lluvias muy marcada y mucha humedad.',
       'Quería comer fideos de arroz salteados con maní en un puesto callejero y probar un mango con arroz glutinoso.',
       'Pagó con bahts y practicaba cómo saludar juntando las manos.',
-      'Quería visitar un complejo de palacios dorados que guarda un famoso Buda de esmeralda.'
+      'Quería visitar un complejo real dorado que guarda un famoso Buda de esmeralda.'
     ],
     en: [
       'They were going to Southeast Asia, to a big tropical city crossed by a river full of boats.',
       'They said there is a very marked rainy season there and a lot of humidity.',
       'They wanted to eat stir-fried rice noodles with peanuts at a street stall and try mango with sticky rice.',
       'They paid with baht and were practicing how to greet by joining their hands.',
-      'They wanted to visit a complex of golden palaces that keeps a famous Emerald Buddha.'
+      'They wanted to visit a golden royal complex that keeps a famous Emerald Buddha.'
     ]
   },
   'Wat Arun': {
@@ -647,15 +647,15 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Iba al norte montañoso del sudeste asiático, cerca de un triángulo donde se juntan tres países.',
       'Dijo que su destino es una ciudad más tranquila que la gran capital del sur, con plantaciones de té.',
       'Quería probar una sopa de fideos al curry con leche de coco típica del norte.',
-      'Pagó con bahts y preguntó por un templo azul y una casa negra de un artista.',
-      'Quería ver un templo de un blanco deslumbrante, cubierto de espejitos, al que se entra por un puente sobre manos que salen del suelo.'
+      'Pagó con bahts y preguntó por un santuario azul y una casa negra de un artista.',
+      'Quería ver un santuario deslumbrante cubierto de espejitos, al que se entra por un puente sobre manos que salen del suelo.'
     ],
     en: [
       'They were going to the mountainous north of Southeast Asia, near a triangle where three countries meet.',
       'They said their destination is a city calmer than the big southern capital, with tea plantations.',
       'They wanted to try a northern curry noodle soup with coconut milk.',
-      "They paid in baht and asked about a blue temple and an artist's black house.",
-      'They wanted to see a white temple covered in little mirrors, entered by a bridge over hands reaching out of the ground.'
+      "They paid in baht and asked about a blue shrine and an artist's black house.",
+      'They wanted to see a dazzling shrine covered in little mirrors, entered by a bridge over hands reaching out of the ground.'
     ]
   },
   'Wat Phra That Doi Suthep': {
@@ -728,14 +728,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un antiguo puerto comercial que se inunda a veces en temporada de lluvias.',
       'Quería tomar una sopa de fideos de arroz y mandarse a hacer ropa a medida en un día.',
       'Pagó con dongs y preguntó por las noches en que se encienden faroles de seda de colores.',
-      'Quería cruzar un pequeño puente cubierto del siglo XVI construido por comerciantes de otro país asiático.'
+      'Quería cruzar una pequeña pasarela techada del siglo XVI construida por comerciantes de otro país asiático.'
     ],
     en: [
       'They were going to the central coast of a long, narrow country in Southeast Asia.',
       'They said their destination is an old trading port that sometimes floods in the rainy season.',
       'They wanted a bowl of rice noodle soup and to have clothes tailored in a day.',
       'They paid in dong and asked about the nights when colorful silk lanterns are lit.',
-      'They wanted to cross a small 16th-century covered bridge built by merchants from another Asian country.'
+      'They wanted to cross a small 16th-century roofed walkway built by merchants from another Asian country.'
     ]
   },
   'Catedral de Notre-Dame (Ho Chi Minh)': {
@@ -744,14 +744,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino hay millones de motos y calor húmedo todo el año.',
       'Quería tomar un café con leche condensada y comer un sándwich en pan francés con cilantro.',
       'Pagó con dongs y preguntó por los túneles subterráneos de la guerra.',
-      'Quería ver una catedral neorrománica de ladrillos rojos traídos desde Europa en el siglo XIX.'
+      'Quería ver un templo neorrománico de ladrillos rojos traídos desde Europa en el siglo XIX.'
     ],
     en: [
       'They were going to the south of a long, narrow Southeast Asian country, to a big city near a delta.',
       'They said there are millions of motorbikes there and humid heat all year.',
       'They wanted coffee with condensed milk and a sandwich in a French baguette with cilantro.',
       'They paid in dong and asked about the underground tunnels of the war.',
-      'They wanted to see a neo-Romanesque cathedral of red bricks brought from Europe in the 19th century.'
+      'They wanted to see a neo-Romanesque church of red bricks brought from Europe in the 19th century.'
     ]
   },
   'Intramuros (Manila)': {
@@ -792,14 +792,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino llueve casi todas las tardes y hay monos por todos lados.',
       'Quería desayunar un pan plano con curry y tomar un té con leche "estirado".',
       'Pagó con ringgits y preguntó por un festival hindú en el que miles de peregrinos suben en procesión.',
-      'Quería subir 272 escalones de colores junto a una estatua dorada de 43 metros hasta un templo en una cueva.'
+      'Quería subir 272 escalones de colores junto a una estatua dorada de 43 metros hasta un santuario dentro de una colina de piedra caliza.'
     ],
     en: [
       'They were going to Southeast Asia, to limestone hills on the outskirts of a tropical capital.',
       'They said it rains almost every afternoon there and there are monkeys everywhere.',
       'They wanted flatbread with curry for breakfast and a "pulled" milk tea.',
       'They paid in ringgit and asked about a Hindu festival where thousands of pilgrims climb in procession.',
-      'They wanted to climb 272 colorful steps beside a 43-meter golden statue up to a temple in a cave.'
+      'They wanted to climb 272 colorful steps beside a 43-meter golden statue up to a shrine inside a limestone hill.'
     ]
   },
   'Stadthuys (Malaca)': {
@@ -824,14 +824,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad colonial donde conviven templos chinos, mezquitas y templos hindúes.',
       'Quería probar los puestos callejeros, considerados de los mejores de Asia.',
       'Pagó con ringgits y preguntó por un funicular que sube a una colina.',
-      'Quería buscar murales callejeros de chicos en bicicleta pintados en las paredes del casco histórico.'
+      'Quería buscar murales callejeros de chicos en bicicleta pintados en las paredes del barrio histórico.'
     ],
     en: [
       'They were going to an island on the Strait of Malacca, on the west coast of Southeast Asia.',
       'They said their destination is a colonial city where Chinese temples, mosques and Hindu temples stand side by side.',
       'They wanted to try the street food stalls, considered some of the best in Asia.',
       'They paid in ringgit and asked about a funicular up a hill.',
-      'They wanted to look for street murals of kids on bicycles painted on the walls of the old town.'
+      'They wanted to look for street murals of kids on bicycles painted on the walls of the historic quarter.'
     ]
   },
   'Marina Bay Sands': {
@@ -932,18 +932,18 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
   },
   'Volcán Bromo': {
     es: [
-      'Iba al este de una isla grande del sudeste asiático llena de volcanes.',
-      'Dijo que su destino es una caldera con un mar de arena gris y varios volcanes adentro.',
+      'Iba al este de una isla grande del sudeste asiático llena de conos de fuego.',
+      'Dijo que su destino es una caldera con un mar de arena gris y varios conos adentro.',
       'Comentó que un pueblo local tira ofrendas al cráter en una ceremonia anual.',
       'Pagó con rupias y preguntó por los jeeps que salen de madrugada.',
-      'Quería ver el amanecer sobre un volcán activo humeante rodeado de niebla.'
+      'Quería ver el amanecer sobre un cráter activo humeante rodeado de niebla.'
     ],
     en: [
-      'They were going to the east of a big Southeast Asian island full of volcanoes.',
-      'They said their destination is a caldera with a sea of gray sand and several volcanoes inside.',
+      'They were going to the east of a big Southeast Asian island full of fiery peaks.',
+      'They said their destination is a caldera with a sea of gray sand and several cones inside.',
       'They mentioned a local people throws offerings into the crater in an annual ceremony.',
       'They paid in rupiah and asked about the jeeps that leave before dawn.',
-      'They wanted to see the sunrise over a smoking active volcano surrounded by mist.'
+      'They wanted to see the sunrise over a smoking active crater surrounded by mist.'
     ]
   },
   'Tanah Lot (Bali)': {
@@ -984,14 +984,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está cerca de un pueblo de artistas en el centro de la isla, entre selvas.',
       'Quería probar un café hecho con granos digeridos por un animalito y un cerdo asado.',
       'Pagó con rupias y preguntó por un bosque sagrado lleno de monos.',
-      'Quería hamacarse en un columpio gigante sobre terrazas de arroz escalonadas.'
+      'Quería hamacarse en un columpio gigante sobre laderas verdes cultivadas en escalones.'
     ],
     en: [
       'They were going to a tropical island nicknamed "the island of the gods", in Southeast Asia.',
       "They said their destination is near an artists' town in the middle of the island, among jungles.",
       'They wanted to try a coffee made from beans digested by a small animal and a roast suckling pig.',
       'They paid in rupiah and asked about a sacred forest full of monkeys.',
-      'They wanted to swing on a giant swing over stepped rice terraces.'
+      'They wanted to swing on a giant swing over green hillsides farmed in steps.'
     ]
   },
   'Taj Mahal': {
@@ -1048,14 +1048,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad que fue capital de muchas dinastías y tiene una parte vieja y otra nueva.',
       'Quería comer frituras callejeras con chutney y viajar en metro.',
       'Pagó con rupias y preguntó por una columna de hierro de 1600 años que no se oxida.',
-      'Quería ver un minarete de ladrillo rojo de 73 metros del siglo XII.'
+      'Quería ver una torre de ladrillo rojo de 73 metros del siglo XII, cubierta de inscripciones.'
     ],
     en: [
       'They were going to the huge capital of a South Asian country, with foggy winters and 45-degree summers.',
       'They said their destination was the capital of many dynasties and has an old part and a new part.',
       'They wanted to eat street fritters with chutney and ride the metro.',
       'They paid in rupees and asked about a 1,600-year-old iron pillar that does not rust.',
-      'They wanted to see a 73-meter red brick minaret from the 12th century.'
+      'They wanted to see a 73-meter red brick tower from the 12th century, covered in inscriptions.'
     ]
   },
   'Tumba de Humayun': {
@@ -1079,15 +1079,15 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Iba a la capital de un país del sur de Asia, en una llanura que en verano supera los 45 grados.',
       'Dijo que su destino está en el sur de la ciudad, rodeado de nueve estanques y jardines.',
       'Pagó con rupias y quería probar un té especiado con leche en un vasito de barro.',
-      'Me contó que ese templo está abierto a gente de todas las religiones y que adentro sólo se reza en silencio.',
-      'Quería ver un templo bahaí de 1986 con forma de flor, hecho con 27 pétalos de mármol blanco.'
+      'Me contó que ese lugar de culto está abierto a gente de todas las religiones y que adentro sólo se reza en silencio.',
+      'Quería ver una casa de oración bahaí de 1986 con forma de flor, hecha con 27 pétalos de mármol blanco.'
     ],
     en: [
       'They were going to the capital of a South Asian country, on a plain that tops 45 degrees in summer.',
       'They said their destination is in the south of the city, surrounded by nine pools and gardens.',
       'They paid in rupees and wanted to try spiced milk tea in a little clay cup.',
-      'They told me the temple is open to people of all religions and that inside you only pray in silence.',
-      "They wanted to see a 1986 Bahá'í temple shaped like a flower, made of 27 white marble petals."
+      'They told me the place of worship is open to people of all religions and that inside you only pray in silence.',
+      "They wanted to see a 1986 Bahá'í house of worship shaped like a flower, made of 27 white marble petals."
     ]
   },
   'Fuerte Amber (Jaipur)': {
@@ -1128,14 +1128,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es apodado "la ciudad dorada" por el color de su piedra arenisca.',
       'Quería dormir en un campamento en las dunas y hacer un paseo en camello.',
       'Pagó con rupias y preguntó por las mansiones de comerciantes con fachadas talladas como encaje.',
-      'Quería ver un fuerte de arenisca amarilla donde todavía vive gente.'
+      'Quería ver una ciudadela de arenisca amarilla donde todavía vive gente.'
     ],
     en: [
       'They were going to the west of South Asia, to a city in the middle of a great desert, near a border.',
       'They said their destination is nicknamed "the golden city" for the color of its sandstone.',
       'They wanted to sleep in a dune camp and go on a camel ride.',
       "They paid in rupees and asked about the merchants' mansions with lace-like carved facades.",
-      'They wanted to see a yellow sandstone fort where people still live.'
+      'They wanted to see a yellow sandstone citadel where people still live.'
     ]
   },
   'Puerta de la India (Bombay)': {
@@ -1160,14 +1160,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una antigua capital real, a unas tres horas de Bangalore.',
       'Pagó con rupias y quería probar un dulce de harina de garbanzo con mucha manteca clarificada.',
       'Quería comprar seda y aceite de sándalo, la especialidad de esa ciudad.',
-      'Quería ver un palacio indosarracénico de la dinastía Wodeyar que se ilumina con casi 100.000 bombitas.'
+      'Quería ver una residencia real indosarracénica de la dinastía Wodeyar que se ilumina con casi 100.000 bombitas.'
     ],
     en: [
       'They were going to a plateau in the south of a large triangular peninsula in South Asia.',
       'They said their destination is in a former royal capital, about three hours from Bangalore.',
       'They paid in rupees and wanted to try a chickpea-flour sweet made with lots of ghee.',
       "They wanted to buy silk and sandalwood oil, that city's speciality.",
-      'They wanted to see an Indo-Saracenic palace of the Wodeyar dynasty lit by almost 100,000 bulbs.'
+      'They wanted to see an Indo-Saracenic royal residence of the Wodeyar dynasty lit by almost 100,000 bulbs.'
     ]
   },
   Charminar: {
@@ -1208,14 +1208,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una llanura muy fértil regada por cinco ríos.',
       'Quería comer en una cocina comunitaria que sirve comida gratis a decenas de miles de personas por día.',
       'Pagó con rupias y preguntó por una ceremonia fronteriza con soldados que marchan levantando las piernas.',
-      'Quería ver un templo cubierto de oro en medio de un estanque sagrado, el más importante de la religión sij.'
+      'Quería ver un santuario cubierto de oro en medio de un estanque sagrado, el más importante de la religión sij.'
     ],
     en: [
       'They were going to the north of South Asia, to a city very close to a border with a neighboring country.',
       'They said their destination lies on a very fertile plain watered by five rivers.',
       'They wanted to eat at a community kitchen that serves free food to tens of thousands of people a day.',
       'They paid in rupees and asked about a border ceremony with soldiers marching with high kicks.',
-      'They wanted to see a gold-covered temple in the middle of a sacred pool, the most important of the Sikh religion.'
+      'They wanted to see a gold-covered shrine in the middle of a sacred pool, the most important of the Sikh religion.'
     ]
   },
   'Ghats de Benarés': {
@@ -1236,18 +1236,18 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
   },
   'Templo de la Costa (Mahabalipuram)': {
     es: [
-      'Iba a la costa sureste de una gran península triangular del sur de Asia, sobre el golfo de Bengala.',
+      'Iba al sureste de una gran península triangular del sur de Asia, a orillas del golfo de Bengala.',
       'Dijo que su destino está en un pueblo de escultores en piedra, a una hora al sur de Chennai.',
       'Pagó con rupias y quería probar una crepe finita de arroz y lentejas con chutney de coco.',
       'Me contó que allí se habla tamil, una de las lenguas vivas más antiguas del mundo.',
-      'Quería ver un templo de granito del siglo VIII, construido por los Pallava a orillas del mar.'
+      'Quería ver un santuario de granito del siglo VIII, construido por los Pallava a orillas del mar.'
     ],
     en: [
-      'They were going to the southeast coast of a large triangular peninsula in South Asia, on the Bay of Bengal.',
+      'They were going to the southeast of a large triangular peninsula in South Asia, on the shores of the Bay of Bengal.',
       'They said their destination is in a village of stone carvers, an hour south of Chennai.',
       'They paid in rupees and wanted to try a thin rice and lentil crepe with coconut chutney.',
       'They told me Tamil is spoken there, one of the oldest living languages in the world.',
-      'They wanted to see an 8th-century granite temple built by the Pallavas on the seashore.'
+      'They wanted to see an 8th-century granite shrine built by the Pallavas on the seashore.'
     ]
   },
   Hampi: {
@@ -1288,14 +1288,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una ciudad de las colinas centrales, junto a un lago artificial.',
       'Pagó con rupias y quería tomar té negro cultivado en esas montañas.',
       'Quería ver un desfile nocturno con decenas de elefantes decorados con luces.',
-      'Quería ver el templo que guarda una reliquia sagrada: un diente de Buda.'
+      'Quería ver el santuario que guarda la reliquia más sagrada del budismo de su país, traída de la India hace siglos.'
     ],
     en: [
       'They were going to a teardrop-shaped tropical island south of a large peninsula in South Asia.',
       'They said their destination is in a city in the central hills, next to an artificial lake.',
       'They paid in rupees and wanted to drink black tea grown in those mountains.',
       'They wanted to see a night parade with dozens of elephants decorated with lights.',
-      'They wanted to see the temple that keeps a sacred relic: a tooth of the Buddha.'
+      'They wanted to see the shrine that keeps the most sacred Buddhist relic of the country, brought from India centuries ago.'
     ]
   },
   'Puente de los Nueve Arcos (Ella)': {
@@ -1304,14 +1304,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un pueblo entre plantaciones de té y cascadas.',
       'Quería viajar en un tren azul famoso, sentado en la puerta, y probar un curry de jaca.',
       'Pagó con rupias y preguntó por una roca para ver el amanecer cerca del pueblo.',
-      'Quería ver pasar un tren por un puente ferroviario colonial de nueve arcos en medio de la selva.'
+      'Quería ver pasar un tren por un viaducto colonial de piedra en medio de la selva y las plantaciones de té.'
     ],
     en: [
       'They were going to the mountains in the middle of a teardrop-shaped island south of the Indian subcontinent.',
       'They said their destination is a village among tea plantations and waterfalls.',
       'They wanted to ride a famous blue train sitting in the doorway and try a jackfruit curry.',
       'They paid in rupees and asked about a rock to watch the sunrise near the village.',
-      'They wanted to watch a train cross a nine-arched colonial railway bridge in the middle of the jungle.'
+      'They wanted to watch a train cross a stone colonial viaduct in the middle of the jungle and tea plantations.'
     ]
   },
   'Fuerte de Galle': {
@@ -1320,14 +1320,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad amurallada junto al mar, con un faro blanco.',
       'Quería ver a los pescadores sobre zancos en el mar y comer un curry de pescado.',
       'Pagó con rupias y preguntó por las playas donde desovan tortugas marinas.',
-      'Quería pasear por un fuerte construido por los portugueses y ampliado por los holandeses.'
+      'Quería pasear por una ciudadela amurallada construida por los portugueses y ampliada por los holandeses.'
     ],
     en: [
       'They were going to the south coast of a tropical Indian Ocean island, south of the Indian subcontinent.',
       'They said their destination is a walled seaside town with a white lighthouse.',
       'They wanted to see the stilt fishermen in the sea and eat a fish curry.',
       'They paid in rupees and asked about the beaches where sea turtles nest.',
-      'They wanted to stroll around a fort built by the Portuguese and expanded by the Dutch.'
+      'They wanted to stroll around a walled citadel built by the Portuguese and expanded by the Dutch.'
     ]
   },
   'Estatua de Gengis Kan': {
@@ -1336,14 +1336,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino los inviernos llegan a 30 grados bajo cero y hay más caballos que personas.',
       'Quería dormir en una tienda circular de fieltro y probar leche de yegua fermentada.',
       'Pagó con tugriks y preguntó por un festival de lucha, arquería y carreras de caballos.',
-      'Quería subir a una estatua ecuestre de acero de 40 metros del conquistador que fundó un imperio en el siglo XIII.'
+      'Quería subir a una figura ecuestre de acero de 40 metros del conquistador que fundó un imperio en el siglo XIII.'
     ],
     en: [
       'They were going to the steppe of Central Asia, about 1,400 meters high, between two giant countries.',
       'They said winters there reach 30 below zero and there are more horses than people.',
       "They wanted to sleep in a round felt tent and try fermented mare's milk.",
       'They paid in tugriks and asked about a festival of wrestling, archery and horse racing.',
-      'They wanted to climb a 40-meter steel equestrian statue of the conqueror who founded an empire in the 13th century.'
+      'They wanted to climb a 40-meter steel equestrian figure of the conqueror who founded an empire in the 13th century.'
     ]
   },
   'Plaza Sükhbaatar': {
@@ -1352,14 +1352,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino la mitad de la población del país vive en una sola ciudad, rodeada de barrios de tiendas circulares.',
       'Quería comer empanadas de cordero hervidas y probar té salado con leche.',
       'Pagó con tugriks y preguntó por un monasterio budista con una estatua dorada gigante.',
-      'Quería ver la plaza principal de la capital, frente al palacio de gobierno con la estatua sentada de un conquistador.'
+      'Quería ver el gran espacio abierto central de la capital, frente al palacio de gobierno con la figura sentada de un conquistador.'
     ],
     en: [
       'They were going to the coldest capital in the world, on the steppes of Central Asia.',
       "They said half the country's population lives in a single city there, ringed by districts of round tents.",
       'They wanted to eat steamed mutton dumplings and try salty milk tea.',
       'They paid in tugriks and asked about a Buddhist monastery with a giant golden statue.',
-      "They wanted to see the capital's main square, facing the government palace with the seated statue of a conqueror."
+      "They wanted to see the capital's great central open space, facing the government palace with the seated figure of a conqueror."
     ]
   },
   'Ópera de Sídney': {
@@ -1380,50 +1380,50 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
   },
   'Puente de la Bahía de Sídney': {
     es: [
-      'Iba a la costa este de un país-continente, a su ciudad más grande, sobre una bahía natural.',
+      'Iba a la costa este de un país-continente, a su ciudad más grande, sobre un puerto natural.',
       'Dijo que desde su destino se ve un teatro de ópera con techos como velas.',
       'Quería ir a ver los fuegos artificiales de Año Nuevo, de los primeros del mundo en encenderse.',
       'Pagó con dólares que no eran estadounidenses y preguntó por el ferry a una playa de surf.',
-      'Quería escalar con arnés un puente de arco de acero de 1932 apodado "la percha".'
+      'Quería escalar con arnés un arco de acero de 1932 sobre el agua, apodado "la percha".'
     ],
     en: [
       'They were going to the east coast of a country-continent, to its biggest city, on a natural harbor.',
       'They said from their destination you can see an opera house with roofs like sails.',
       'They wanted to see the New Year fireworks, among the first in the world to go off.',
       'They paid in dollars that were not American and asked about the ferry to a surf beach.',
-      'They wanted to climb, in a harness, a 1932 steel arch bridge nicknamed "the coathanger".'
+      'They wanted to climb, in a harness, a 1932 steel arch over the water nicknamed "the coathanger".'
     ]
   },
   'Bondi Beach': {
     es: [
       'Iba a la costa este de un país-continente del hemisferio sur, a su ciudad más grande.',
-      'Dijo que en su destino la Navidad se festeja en pleno verano, en la playa.',
+      'Dijo que en su destino la Navidad se festeja en pleno verano, en la arena.',
       'Quería tomar clases de surf y probar una tostada con una pasta negra y salada de levadura.',
       'Pagó con dólares que no eran estadounidenses y preguntó por los guardavidas de traje rojo y amarillo.',
-      'Quería nadar en una piscina de agua de mar construida sobre las rocas junto a una famosa playa de surf.'
+      'Quería nadar en una piscina de agua de mar construida sobre las rocas junto a un famoso arenal de surf.'
     ],
     en: [
       'They were going to the east coast of a country-continent in the southern hemisphere, to its biggest city.',
-      'They said Christmas is celebrated in midsummer there, on the beach.',
+      'They said Christmas is celebrated in midsummer there, on the sand.',
       'They wanted surf lessons and toast with a black, salty yeast spread.',
       'They paid in dollars that were not American and asked about the lifeguards in red and yellow.',
-      'They wanted to swim in a seawater pool built on the rocks next to a famous surf beach.'
+      'They wanted to swim in a seawater pool built on the rocks next to a famous stretch of surf sand.'
     ]
   },
   'Tres Hermanas (Montañas Azules)': {
     es: [
       'Iba a una cordillera a dos horas de la ciudad más grande de un país-continente.',
-      'Dijo que su destino se ve azulado por el aceite que desprenden los eucaliptos.',
+      'Dijo que su destino se ve de un tono celeste por el aceite que desprenden los eucaliptos.',
       'Quería ver canguros y escuchar a un pájaro que suena como una carcajada.',
       'Pagó con dólares que no eran estadounidenses y preguntó por el tren más empinado del mundo.',
-      'Quería ver tres agujas de arenisca que, según una leyenda aborigen, eran hermanas convertidas en piedra.'
+      'Quería ver unas agujas de arenisca que, según una leyenda aborigen, eran jóvenes convertidas en piedra.'
     ],
     en: [
-      'They were going to a mountain range two hours from the biggest city of a country-continent.',
-      'They said their destination looks blue from the oil given off by the eucalyptus trees.',
+      'They were going to a range of ridges two hours from the biggest city of a country-continent.',
+      'They said their destination takes on a hazy tint from the oil given off by the eucalyptus trees.',
       'They wanted to see kangaroos and hear a bird that sounds like laughter.',
       'They paid in dollars that were not American and asked about the steepest railway in the world.',
-      'They wanted to see three sandstone spires that, in an Aboriginal legend, were sisters turned to stone.'
+      'They wanted to see sandstone spires that, in an Aboriginal legend, were young women turned to stone.'
     ]
   },
   'Federation Square': {
@@ -1432,14 +1432,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en pleno centro, frente a una estación de tren amarilla con relojes y junto a un río.',
       'Pagó con dólares y quería un café flat white en un callejón lleno de grafitis.',
       'Me contó que la ciudad está loca por un fútbol propio con pelota ovalada y que tiene la red de tranvías más grande del mundo.',
-      'Quería ver una plaza cultural de 2002 con edificios de fachadas angulosas y fragmentadas.'
+      'Quería ver un espacio cultural de 2002 con edificios de fachadas angulosas y fragmentadas.'
     ],
     en: [
       'They were going to the second city of an island continent in the southern hemisphere, on the southeast coast.',
       'They said their destination is right in the centre, opposite a yellow train station with clocks, next to a river.',
       'They paid in dollars and wanted a flat white coffee in a graffiti-filled laneway.',
       'They told me the city is crazy about its own oval-ball football and has the largest tram network in the world.',
-      'They wanted to see a 2002 cultural square with buildings of angular, fragmented facades.'
+      'They wanted to see a 2002 cultural space with buildings of angular, fragmented facades.'
     ]
   },
   'Doce Apóstoles (Great Ocean Road)': {
@@ -1452,7 +1452,7 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
     ],
     en: [
       'They were going to the south coast of a country-continent, facing a rough strait that separates it from a big island.',
-      'They said their destination lies on a coastal road built by soldiers who came back from World War I.',
+      'They said their destination lies on a coastal route built by soldiers who came back from World War I.',
       'They wanted to see koalas sleeping in the eucalyptus trees.',
       'They paid in dollars that were not American and asked about helicopter flights.',
       'They wanted to see limestone stacks rising out of the sea, eaten away by the waves.'
@@ -1468,7 +1468,7 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
     ],
     en: [
       'They were going to a subtropical city on the east coast of an island continent in the southern hemisphere.',
-      'They said their destination is on the bank of a river that winds through the city centre.',
+      'They said their destination is on the shore of a river that winds through the city centre.',
       'They paid in dollars and wanted to try a meat pie and a mango smoothie.',
       'They told me that city will host the 2032 Olympic Games.',
       'They wanted to swim at an artificial sand beach right in the centre, on the site of Expo 88.'
@@ -1534,24 +1534,24 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'They were going to the west of an island continent in the southern hemisphere, to a dry wheatbelt region.',
       'They said their destination is about four hours from Perth, near a small town called Hyden.',
       'They paid in dollars and asked if there really are more sheep than people around there.',
-      'They told me about Aboriginal rock paintings in a nearby cave.',
-      'They wanted to see a 15-metre-high granite wall curved like a wave about to break.'
+      'They told me about ancient Aboriginal paintings in a nearby cave.',
+      'They wanted to see a 15-metre-high granite wall curved like a breaker about to crash.'
     ]
   },
   'Cable Beach (Broome)': {
     es: [
       'Iba a la costa noroeste de una isla-continente del hemisferio sur, frente al océano Índico.',
-      'Dijo que su destino es una playa de 22 kilómetros de arena blanca, en la puerta de entrada a la región de Kimberley.',
+      'Dijo que su destino es una franja de 22 kilómetros de arena blanca, en la puerta de entrada a la región de Kimberley.',
       'Pagó con dólares y quería comprar perlas, la industria que hizo famoso a ese pueblo.',
       'Me contó que allí la luna llena sobre el barro de la marea baja parece una escalera.',
-      'Quería pasear en camello al atardecer por una playa que debe su nombre a un cable de telégrafo submarino.'
+      'Quería pasear en camello al atardecer por una costa que debe su nombre a una línea de telégrafo submarina.'
     ],
     en: [
       'They were going to the northwest coast of an island continent in the southern hemisphere, facing the Indian Ocean.',
-      'They said their destination is a 22-kilometre white sand beach at the gateway to the Kimberley region.',
+      'They said their destination is a 22-kilometre strip of white sand at the gateway to the Kimberley region.',
       'They paid in dollars and wanted to buy pearls, the industry that made that town famous.',
       'They told me the full moon over the low-tide mudflats there looks like a staircase.',
-      'They wanted a sunset camel ride on a beach named after an underwater telegraph cable.'
+      'They wanted a sunset camel ride on a shore named after an underwater telegraph line.'
     ]
   },
   'Bahía Wineglass (Tasmania)': {
@@ -1560,14 +1560,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una península de la costa este, con montañas de granito rosado.',
       'Pagó con dólares y quería probar ostras frescas de la zona y vinos de clima frío.',
       'Me preguntó si iba a ver un diablo, un marsupial negro que grita de noche y sólo vive en esa isla.',
-      'Quería subir a un mirador para ver una bahía de arena blanca con forma de copa de vino perfecta.'
+      'Quería subir a un mirador para ver una entrada de mar de arena blanca con forma de copa de vino perfecta.'
     ],
     en: [
       'They were going to a mountainous island south of a southern-hemisphere continent, separated by a strait.',
       'They said their destination is on a peninsula on the east coast, with pink granite mountains.',
       'They paid in dollars and wanted to try local fresh oysters and cool-climate wines.',
       'They asked me if they would see a devil, a black marsupial that screams at night and lives only on that island.',
-      'They wanted to climb to a lookout to see a white-sand bay shaped like a perfect wine glass.'
+      'They wanted to climb to a lookout to see a white-sand inlet shaped like a perfect wine glass.'
     ]
   },
   'Sky Tower (Auckland)': {
@@ -1576,14 +1576,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está construido sobre un campo de unos 50 volcanes dormidos.',
       'Quería ver un partido de rugby y comer un helado de vainilla con trocitos de caramelo.',
       'Pagó con dólares que no eran ni estadounidenses ni australianos y preguntó por los veleros de la bahía.',
-      'Quería tirarse con un arnés desde una torre de 328 metros, la más alta del hemisferio sur.'
+      'Quería tirarse con un arnés desde una estructura de 328 metros, la más alta del hemisferio sur.'
     ],
     en: [
       'They were going to the biggest city of a South Pacific country, on an isthmus between two harbors.',
       'They said their destination is built on a field of about 50 dormant volcanoes.',
       'They wanted to watch a rugby match and eat vanilla ice cream with toffee chunks.',
       'They paid in dollars that were neither American nor Australian and asked about the sailboats in the bay.',
-      'They wanted to jump on a harness from a 328-meter tower, the tallest in the southern hemisphere.'
+      'They wanted to jump on a harness from a 328-meter structure, the tallest in the southern hemisphere.'
     ]
   },
   Hobbiton: {
@@ -1636,33 +1636,33 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
   },
   'Lago Tekapo': {
     es: [
-      'Iba a la isla sur de un país del Pacífico Sur, a un lago en medio de una llanura de altura.',
+      'Iba a la isla sur de un país del Pacífico Sur, a unas aguas glaciares en medio de una llanura de altura.',
       'Dijo que su destino es una reserva de cielo oscuro, de las mejores del mundo para ver estrellas.',
       'Quería ver campos de flores lupinos de colores y probar salmón de los canales de montaña.',
       'Pagó con dólares que no eran ni estadounidenses ni australianos y preguntó por un observatorio.',
-      'Quería ver una pequeña iglesia de piedra frente a un lago turquesa con montañas nevadas detrás.'
+      'Quería ver una pequeña iglesia de piedra frente a un agua turquesa con montañas nevadas detrás.'
     ],
     en: [
-      'They were going to the south island of a South Pacific country, to a lake on a high plain.',
+      'They were going to the south island of a South Pacific country, to glacial waters on a high plain.',
       'They said their destination is a dark sky reserve, one of the best in the world for stargazing.',
       'They wanted to see fields of colorful lupins and try salmon from mountain canals.',
       'They paid in dollars that were neither American nor Australian and asked about an observatory.',
-      'They wanted to see a little stone church facing a turquoise lake with snowy mountains behind.'
+      'They wanted to see a little stone church facing turquoise water with snowy mountains behind.'
     ]
   },
   'Valle Hooker (Monte Cook)': {
     es: [
       'Iba a la isla sur de un país insular del Pacífico sur, en el corazón de los Alpes del Sur.',
-      'Dijo que su destino es un valle glaciar al pie de la montaña más alta del país, de 3724 metros.',
+      'Dijo que su destino es una hondonada de origen glaciar al pie de la cumbre más alta del país, de 3724 metros.',
       'Pagó con dólares y quería probar un helado de vainilla con trocitos de caramelo de panal.',
-      'Me contó que el primer hombre en subir el Everest entrenó en esas montañas.',
+      'Me contó que el primer hombre en subir el Everest entrenó en esas cumbres.',
       'Quería cruzar tres puentes colgantes hasta un lago gris con témpanos frente a la cumbre de Aoraki.'
     ],
     en: [
       'They were going to the South Island of an island nation in the South Pacific, in the heart of the Southern Alps.',
-      "They said their destination is a glacial valley at the foot of the country's highest mountain, 3,724 metres.",
+      "They said their destination is a glacier-carved hollow at the foot of the country's highest summit, 3,724 metres.",
       'They paid in dollars and wanted to try vanilla ice cream with chunks of honeycomb toffee.',
-      'They told me the first man to climb Everest trained in those mountains.',
+      'They told me the first man to climb Everest trained on those peaks.',
       'They wanted to cross three swing bridges to a grey lake with icebergs facing the summit of Aoraki.'
     ]
   },
@@ -1672,14 +1672,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un río de hielo que baja de los Alpes del Sur casi hasta el nivel del mar.',
       'Pagó con dólares y quería probar unas tortillas de pescaditos blancos.',
       'Me contó que el pueblo maorí llama a ese lugar las lágrimas de la chica de la avalancha.',
-      'Quería aterrizar en helicóptero sobre un glaciar que atraviesa una selva templada y lleva el nombre de un emperador austríaco.'
+      'Quería aterrizar en helicóptero sobre una lengua de hielo que atraviesa una selva templada y lleva el nombre de un emperador austríaco.'
     ],
     en: [
       'They were going to the wild, rainy west coast of an island in the South Pacific.',
       'They said their destination is a river of ice that descends from the Southern Alps almost to sea level.',
       'They paid in dollars and wanted to try whitebait fritters.',
       'They told me the Māori call that place the tears of the avalanche girl.',
-      'They wanted to land by helicopter on a glacier that cuts through temperate rainforest and is named after an Austrian emperor.'
+      'They wanted to land by helicopter on a tongue of ice that cuts through temperate rainforest and is named after an Austrian emperor.'
     ]
   },
   'Rocas Moeraki': {
@@ -1688,14 +1688,14 @@ export const ASIA_PACIFIC_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una playa larga cerca de un pueblito de pescadores, con focas y pingüinos de ojos amarillos.',
       'Quería comer pescado frito con papas en el puerto.',
       'Pagó con dólares que no eran ni estadounidenses ni australianos y preguntó por la marea baja.',
-      'Quería ver unas rocas esféricas gigantes, como bolitas, desparramadas en la arena.'
+      'Quería ver unas piedras esféricas gigantes, como bolitas, desparramadas en la arena.'
     ],
     en: [
       'They were going to the east coast of the south island of a South Pacific country.',
       'They said their destination is a long beach near a fishing village, with seals and yellow-eyed penguins.',
       'They wanted to eat fish and chips at the harbor.',
       'They paid in dollars that were neither American nor Australian and asked about low tide.',
-      'They wanted to see giant spherical boulders, like marbles, scattered on the sand.'
+      'They wanted to see giant spherical stones, like marbles, scattered on the sand.'
     ]
   }
 }

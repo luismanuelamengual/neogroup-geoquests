@@ -5,17 +5,17 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
   'Muro de los Lamentos': {
     es: [
       'Iba a Oriente Medio, a una ciudad sobre colinas de piedra, sagrada para tres religiones.',
-      'Dijo que su destino es una ciudad vieja amurallada dividida en cuatro barrios.',
+      'Dijo que su destino es una ciudad vieja fortificada dividida en cuatro barrios.',
       'Quería comer un pan con sésamo en forma de anillo y probar dátiles en un mercado.',
       'Pagó con shekels y preguntó por una iglesia construida donde, según la tradición, fue sepultado Jesús.',
-      'Quería dejar un papelito con un deseo entre las piedras del muro de un antiguo templo.'
+      'Quería dejar un papelito con un deseo entre las piedras de lo que queda de un antiguo templo.'
     ],
     en: [
       'They were going to the Middle East, to a city on stone hills, sacred to three religions.',
-      'They said their destination is a walled old city divided into four quarters.',
+      'They said their destination is a fortified old city divided into four quarters.',
       'They wanted to eat a ring-shaped sesame bread and try dates in a market.',
       'They paid in shekels and asked about a church built where, by tradition, Jesus was buried.',
-      'They wanted to leave a note with a wish between the stones of the wall of an ancient temple.'
+      'They wanted to leave a note with a wish between the stones of what remains of an ancient temple.'
     ]
   },
   Masada: {
@@ -40,14 +40,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene un puerto, un barrio alemán antiguo y un metro que sube por la montaña.',
       'Quería comer hummus con garbanzos calientes y un falafel.',
       'Pagó con shekels y preguntó por una ciudad cruzada antigua a media hora al norte.',
-      'Quería ver 19 terrazas de jardines en la ladera del monte Carmelo, alrededor de un santuario de cúpula dorada.'
+      'Quería ver 19 terrazas floridas en la ladera del monte Carmelo, alrededor de un santuario de cúpula dorada.'
     ],
     en: [
       'They were going to the Mediterranean coast of the Middle East, to a port city on the slope of a mountain.',
       'They said their destination has a port, an old German colony and a subway that climbs the mountain.',
       'They wanted to eat hummus with warm chickpeas and a falafel.',
       'They paid in shekels and asked about an old Crusader city half an hour to the north.',
-      'They wanted to see 19 terraced gardens on the slope of Mount Carmel, around a golden-domed shrine.'
+      'They wanted to see 19 flowered terraces on the slope of Mount Carmel, around a golden-domed shrine.'
     ]
   },
   Petra: {
@@ -88,14 +88,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está a menos de una hora del mar más salado del mundo.',
       'Quería comer un postre de queso caliente con almíbar y tomar café con cardamomo.',
       'Pagó con dinares y preguntó por una ciudadela en la colina con columnas de un templo de Hércules.',
-      'Quería sentarse en las gradas de un teatro romano para unos 6000 espectadores en pleno centro.'
+      'Quería sentarse en las gradas de un escenario de la época imperial para unos 6000 espectadores en pleno centro.'
     ],
     en: [
       'They were going to a Middle Eastern capital built on seven hills, with sand-colored houses.',
       'They said their destination is less than an hour from the saltiest sea in the world.',
       'They wanted a hot cheese dessert with syrup and cardamom coffee.',
       'They paid in dinars and asked about a hilltop citadel with columns from a temple of Hercules.',
-      'They wanted to sit on the stands of a Roman theater for about 6,000 spectators right downtown.'
+      'They wanted to sit on the stands of an imperial-era venue for about 6,000 spectators right downtown.'
     ]
   },
   'Burj Khalifa': {
@@ -132,14 +132,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
   },
   'Burj Al Arab': {
     es: [
-      'Iba a la costa de la península arábiga, a una ciudad que hace 60 años era un pueblo de pescadores de perlas.',
+      'Iba a la costa del golfo Pérsico, a una ciudad que hace 60 años era un pueblo de pescadores de perlas.',
       'Dijo que en su destino hay islas artificiales con forma de palmera.',
       'Quería esquiar dentro de un centro comercial en pleno desierto y pasear por un zoco de especias.',
       'Pagó con dírhams y preguntó por el edificio más alto del mundo.',
       'Quería ver un hotel de lujo con forma de vela, construido sobre una isla artificial frente a la playa.'
     ],
     en: [
-      'They were going to the coast of the Arabian Peninsula, to a city that 60 years ago was a pearl-fishing village.',
+      'They were going to the Persian Gulf coast, to a city that 60 years ago was a pearl-fishing village.',
       'They said there are palm-shaped artificial islands there.',
       'They wanted to ski inside a shopping mall in the middle of the desert and stroll through a spice souk.',
       'They paid in dirhams and asked about the tallest building in the world.',
@@ -152,14 +152,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en el mar, frente a la costa, conectado a tierra por un monorriel.',
       'Pagó con dírhams y quería comer dátiles y café con cardamomo.',
       'Me contó que allí el fin de semana es sábado y domingo y que en verano hace más de 45 grados.',
-      'Quería ver una isla artificial con forma de palmera y el hotel rosado que está en su media luna.'
+      'Quería ver una isla artificial con forma de árbol de hojas largas vista desde el aire y el hotel rosado que está en su media luna.'
     ],
     en: [
       'They were going to a desert city on the Persian Gulf, full of skyscrapers.',
       'They said their destination is out at sea, off the coast, connected to land by a monorail.',
       'They paid in dirhams and wanted to eat dates and drink coffee with cardamom.',
       'They told me the weekend there is Saturday and Sunday and that summer tops 45 degrees.',
-      'They wanted to see an artificial island shaped like a palm tree and the pink hotel on its crescent.'
+      'They wanted to see an artificial island shaped like a long-leaved tree from the air, and the pink hotel on its crescent.'
     ]
   },
   'Gran Mezquita Sheikh Zayed': {
@@ -168,14 +168,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad moderna del desierto, con veranos de más de 45 grados.',
       'Comentó que para entrar a ciertos lugares las mujeres deben cubrirse con una túnica larga y quería probar dátiles.',
       'Pagó con dírhams y preguntó por un museo de arte con una cúpula que filtra la luz como hojas de palmera.',
-      'Quería ver una mezquita de mármol blanco con 82 cúpulas y una de las alfombras tejidas a mano más grandes del mundo.'
+      'Quería ver un templo de mármol blanco con 82 cúpulas y una de las alfombras tejidas a mano más grandes del mundo.'
     ],
     en: [
       'They were going to the Arabian Peninsula, to a capital built on an island in the gulf.',
       'They said their destination is a modern desert city with summers over 45 degrees.',
       'They mentioned women must wear a long robe to enter some places and wanted to try dates.',
       'They paid in dirhams and asked about an art museum with a dome that filters light like palm leaves.',
-      'They wanted to see a white marble mosque with 82 domes and one of the largest hand-woven carpets in the world.'
+      'They wanted to see a white marble place of worship with 82 domes and one of the largest hand-woven carpets in the world.'
     ]
   },
   'Louvre Abu Dabi': {
@@ -196,18 +196,18 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
   },
   'Montaña de la Mesa (teleférico)': {
     es: [
-      'Viajaba al extremo sur de África, a una ciudad entre montañas y dos océanos.',
+      'Viajaba al extremo sur de África, a una ciudad entre cumbres y dos océanos.',
       'Dijo que en su destino hay pingüinos en la playa y viñedos a pocos kilómetros.',
       'Pagó con rands y preguntó cuántos idiomas oficiales tiene el país (le dijeron que once o más).',
       'Quería probar un bobotie y ver una de las zonas de safari más famosas del mundo después.',
-      'Quería subir en teleférico a una montaña de cima completamente plana que a veces se cubre de nubes.'
+      'Quería subir en una cabina giratoria a una cima completamente plana que a veces se cubre de nubes como un mantel.'
     ],
     en: [
-      'They were traveling to the southern tip of Africa, to a city between mountains and two oceans.',
+      'They were traveling to the southern tip of Africa, to a city between peaks and two oceans.',
       'They said there are penguins on the beach and vineyards a few kilometers away.',
       'They paid with rands and asked how many official languages the country has (they were told eleven or more).',
       'They wanted to try bobotie and later visit one of the most famous safari areas in the world.',
-      'They wanted to take a cable car up a mountain with a completely flat top, often covered by clouds.'
+      'They wanted to ride a rotating cabin up to a completely flat summit often covered by clouds like a tablecloth.'
     ]
   },
   'Cabo de Buena Esperanza': {
@@ -216,14 +216,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una reserva natural con babuinos, avestruces y vientos muy fuertes.',
       'Quería hacer un asado al estilo local y probar carne seca especiada.',
       'Pagó con rands y preguntó por un faro desde donde se ve el océano hasta el horizonte.',
-      'Quería pararse en el cabo que doblaron los navegantes portugueses en 1488 en su ruta hacia la India.'
+      'Quería pararse en la punta rocosa que doblaron los navegantes portugueses en 1488 en su ruta hacia la India.'
     ],
     en: [
       'They were going to a rocky point at the southwestern tip of the African continent.',
       'They said their destination is a nature reserve with baboons, ostriches and very strong winds.',
       'They wanted a local-style barbecue and some spiced dried meat.',
       'They paid in rand and asked about a lighthouse looking out over the ocean to the horizon.',
-      'They wanted to stand on the cape that Portuguese navigators rounded in 1488 on their way to India.'
+      'They wanted to stand on the rocky headland that Portuguese navigators rounded in 1488 on their way to India.'
     ]
   },
   'V&A Waterfront': {
@@ -261,17 +261,17 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
   'Playa Boulders (pingüinos)': {
     es: [
       'Iba a una península del extremo suroeste de África, a un pueblo costero de la bahía Falsa.',
-      'Dijo que su destino tiene grandes rocas de granito que protegen calas del viento.',
+      'Dijo que su destino tiene grandes bloques de granito que protegen calas del viento.',
       'Quería hacer un asado local con salchichas en espiral y probar vinos de la región.',
       'Pagó con rands y preguntó por una base naval cercana.',
-      'Quería ver una colonia de pingüinos africanos caminando por la playa.'
+      'Quería ver una colonia de aves marinas que no vuelan, en esmoquin, caminando por la arena.'
     ],
     en: [
       'They were going to a peninsula at the southwestern tip of Africa, to a coastal town on False Bay.',
-      'They said their destination has big granite boulders that shelter coves from the wind.',
+      'They said their destination has big granite blocks that shelter coves from the wind.',
       "They wanted a local barbecue with coiled sausages and to try the region's wines.",
       'They paid in rand and asked about a nearby naval base.',
-      'They wanted to see a colony of African penguins walking on the beach.'
+      'They wanted to see a colony of tuxedoed flightless seabirds walking on the sand.'
     ]
   },
   'Parque Nacional Kruger (Skukuza)': {
@@ -280,30 +280,30 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una de las reservas de fauna más grandes de África, del tamaño de un país chico.',
       'Quería salir de safari al amanecer y comer carne seca para el viaje.',
       'Pagó con rands y preguntó si podría ver a los "cinco grandes": león, leopardo, elefante, búfalo y rinoceronte.',
-      'Quería dormir en un campamento dentro del parque, a orillas de un río con hipopótamos.'
+      'Quería dormir en un campamento dentro de la reserva, a orillas de un río con hipopótamos.'
     ],
     en: [
       'They were going to the savanna in the northeast of a southern African country, on the border with Mozambique.',
       'They said their destination is one of the largest wildlife reserves in Africa, the size of a small country.',
       'They wanted to go on a sunrise safari and eat dried meat on the road.',
       'They paid in rand and asked whether they would see the "big five": lion, leopard, elephant, buffalo and rhino.',
-      'They wanted to sleep at a camp inside the park, on a river with hippos.'
+      'They wanted to sleep at a camp inside the reserve, on a river with hippos.'
     ]
   },
   'Blyde River Canyon (God’s Window)': {
     es: [
       'Iba al noreste del país más austral de África, en el borde de una gran escarpa.',
-      'Dijo que su destino es un cañón verde y subtropical, cerca de un famoso parque de animales salvajes.',
+      'Dijo que su destino es una garganta verde y subtropical, cerca de una famosa reserva de animales salvajes.',
       'Pagó con rands y quería probar carne seca condimentada y un asado al fuego.',
       'Me contó que esa zona tuvo una fiebre del oro en el siglo XIX.',
-      'Quería ver tres colinas redondas como chozas y un mirador llamado la Ventana de Dios.'
+      'Quería ver tres colinas redondas como chozas y un mirador con nombre divino.'
     ],
     en: [
       "They were going to the northeast of Africa's southernmost country, on the rim of a great escarpment.",
-      'They said their destination is a green subtropical canyon, near a famous wildlife park.',
+      'They said their destination is a green subtropical gorge, near a famous wildlife reserve.',
       'They paid in rand and wanted to try spiced dried meat and a barbecue over the fire.',
       'They told me that area had a gold rush in the 19th century.',
-      "They wanted to see three hills as round as huts and a viewpoint called God's Window."
+      'They wanted to see three hills as round as huts and a viewpoint with a heavenly name.'
     ]
   },
   'Río Storms (Tsitsikamma)': {
@@ -312,14 +312,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un parque nacional donde el bosque nativo llega hasta el mar embravecido.',
       'Pagó con rands y quería probar un guiso cocido a fuego lento en una olla de hierro de tres patas.',
       'Me contó que cerca de allí está uno de los saltos en bungee más altos del mundo, desde un puente.',
-      'Quería cruzar un puente colgante sobre la desembocadura de un río que se llama como las tormentas.'
+      'Quería cruzar un puente colgante sobre la desembocadura de un río con nombre de mal tiempo.'
     ],
     en: [
       "They were going to the south coast of Africa's southernmost country, on a coastal route of forests and lagoons.",
       'They said their destination is a national park where native forest reaches all the way to a rough sea.',
       'They paid in rand and wanted to try a stew slow-cooked in a three-legged iron pot.',
       'They told me one of the highest bungee jumps in the world, from a bridge, is nearby.',
-      'They wanted to cross a suspension bridge over the mouth of a river named after storms.'
+      'They wanted to cross a suspension bridge over the mouth of a river named after foul weather.'
     ]
   },
   'Union Buildings (Pretoria)': {
@@ -328,14 +328,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en la capital administrativa, en una colina sobre la ciudad.',
       'Pagó con rands y quería probar una salchicha en espiral a la parrilla con polenta.',
       'Me contó que en octubre la ciudad se tiñe de violeta por miles de jacarandás.',
-      'Quería ver la sede del gobierno, un edificio semicircular de 1913, y una estatua de Mandela de 9 metros.'
+      'Quería ver la sede del gobierno, un complejo semicircular de arenisca de 1913, y una estatua de Mandela de 9 metros.'
     ],
     en: [
       "They were going to a high plateau in the interior of Africa's southernmost country.",
       'They said their destination is in the administrative capital, on a hill above the city.',
       'They paid in rand and wanted to try a grilled spiral sausage with maize porridge.',
       'They told me in October the city turns purple with thousands of jacaranda trees.',
-      'They wanted to see the seat of government, a semicircular 1913 building, and a 9-metre statue of Mandela.'
+      'They wanted to see the seat of government, a semicircular 1913 sandstone complex, and a 9-metre statue of Mandela.'
     ]
   },
   'Calle Vilakazi (Soweto)': {
@@ -344,14 +344,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una meseta alta, en una ciudad nacida por una fiebre del oro.',
       'Quería comer un pan relleno de curry y ver bailar con botas de goma.',
       'Pagó con rands y preguntó por un museo sobre un levantamiento estudiantil de 1976.',
-      'Quería caminar por la única calle del mundo donde vivieron dos ganadores del Premio Nobel de la Paz.'
+      'Quería caminar por la única cuadra del mundo donde vivieron dos ganadores del Premio Nobel de la Paz.'
     ],
     en: [
       'They were going to the northeast of a southern African country, to a huge township on the edge of its biggest city.',
       'They said their destination is on a high plateau, in a city born from a gold rush.',
       'They wanted to eat a bread loaf filled with curry and watch gumboot dancing.',
       'They paid in rand and asked about a museum about a 1976 student uprising.',
-      'They wanted to walk the only street in the world where two Nobel Peace Prize winners lived.'
+      'They wanted to walk the only block in the world where two Nobel Peace Prize winners lived.'
     ]
   },
   'Monumento del Renacimiento Africano': {
@@ -372,14 +372,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
   },
   'Isla de Gorée': {
     es: [
-      'Iba a una islita frente a una capital ubicada en el punto más occidental de África continental.',
+      'Iba a un pedacito de tierra rodeado de mar frente a una capital ubicada en el punto más occidental de África continental.',
       'Dijo que en su destino no hay autos y las calles son de arena, entre casas coloniales de colores.',
       'Quería probar pollo con salsa de limón y cebolla y ver lucha tradicional.',
       'Pagó con francos y preguntó por el ferry que sale del puerto de la capital.',
       'Quería visitar una Casa de los Esclavos con una "puerta del no retorno" abierta al océano.'
     ],
     en: [
-      'They were going to a little island off a capital located at the westernmost point of mainland Africa.',
+      'They were going to a speck of land surrounded by sea off a capital located at the westernmost point of mainland Africa.',
       'They said there are no cars there and the streets are sand, among colorful colonial houses.',
       'They wanted to try chicken in lemon and onion sauce and watch traditional wrestling.',
       "They paid in francs and asked about the ferry from the capital's port.",
@@ -392,26 +392,26 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una laguna separada del océano por unas dunas, con mucho calor seco.',
       'Quería comer arroz con pescado, el plato nacional, y escuchar tambores.',
       'Pagó con francos y preguntó por el rally que terminaba allí hace años.',
-      'Quería ver un lago de color rosado por un alga, donde la sal se saca a mano.'
+      'Quería ver unas aguas teñidas por un alga, donde la sal se saca a mano.'
     ],
     en: [
       'They were going to the Atlantic coast at the western tip of Africa, near the capital of the country.',
       'They said their destination is a lagoon separated from the ocean by dunes, in dry heat.',
       'They wanted to eat rice with fish, the national dish, and listen to drums.',
       'They paid in francs and asked about the rally that used to finish there years ago.',
-      'They wanted to see a lake turned pink by an alga, where salt is harvested by hand.'
+      'They wanted to see waters tinted by an alga, where salt is harvested by hand.'
     ]
   },
   'Castillo de Cape Coast': {
     es: [
-      'Iba a la costa del golfo de Guinea, en África occidental.',
+      'Iba al litoral del golfo de Guinea, en África occidental.',
       'Dijo que su destino es un pueblo de pescadores con canoas de madera pintadas de colores.',
       'Quería comer arroz jollof y comprar una tela kente tejida a mano.',
       'Pagó con cedis y preguntó por un parque con puentes colgantes sobre la copa de los árboles.',
       'Quería visitar un fuerte blanco junto al mar usado en el comercio de esclavos, que un presidente estadounidense visitó en 2009.'
     ],
     en: [
-      'They were going to the coast of the Gulf of Guinea, in West Africa.',
+      'They were going to the shores of the Gulf of Guinea, in West Africa.',
       'They said their destination is a fishing town with brightly painted wooden canoes.',
       'They wanted to eat jollof rice and buy hand-woven kente cloth.',
       'They paid in cedis and asked about a park with canopy walkways over the treetops.',
@@ -424,14 +424,14 @@ export const AFRICA_MIDDLE_EAST_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un pueblo tranquilo en una región seca y calurosa.',
       'Quería comer cuscús con cordero y una pasta picante de ají rojo.',
       'Pagó con dinares y preguntó por los mosaicos romanos de un museo cercano.',
-      'Quería ver un anfiteatro romano para 35.000 espectadores, uno de los mejor conservados del mundo.'
+      'Quería ver un coliseo de la época imperial para 35.000 espectadores, uno de los mejor conservados del mundo.'
     ],
     en: [
       'They were going to North Africa, to a plain of olive groves about 60 kilometers from the Mediterranean.',
       'They said their destination is a quiet town in a dry, hot region.',
       'They wanted to eat couscous with lamb and a spicy red chili paste.',
       'They paid in dinars and asked about the Roman mosaics of a nearby museum.',
-      'They wanted to see a Roman amphitheater for 35,000 spectators, one of the best preserved in the world.'
+      'They wanted to see an imperial-era colosseum for 35,000 spectators, one of the best preserved in the world.'
     ]
   },
   'Sidi Bou Said': {

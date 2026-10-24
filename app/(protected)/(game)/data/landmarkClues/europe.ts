@@ -8,14 +8,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que el lugar quedaba a unas pocas horas en tren del Canal de la Mancha.',
       'Practicaba cómo pedir "un café y un croissant" en el idioma de Molière.',
       'Pagó con euros y preguntó dónde comprar una baguette recién horneada.',
-      'Quería subir a una torre de hierro de más de 300 metros, construida para una exposición universal de 1889.'
+      'Quería subir a una estructura de hierro de más de 300 metros, construida para una exposición universal de 1889.'
     ],
     en: [
       'They said they were heading to a great Western European capital, crossed by a river winding under stone bridges.',
       'They mentioned the place is a few hours by train from the English Channel.',
       'They were practicing how to order "a coffee and a croissant" in the language of Molière.',
       'They paid in euros and asked where to buy a freshly baked baguette.',
-      'They wanted to climb an iron tower over 300 meters tall, built for an 1889 world fair.'
+      'They wanted to climb an iron structure over 300 meters tall, built for an 1889 world fair.'
     ]
   },
   'Museo del Louvre': {
@@ -24,14 +24,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que su destino está en el norte de un país que tiene costas sobre el Atlántico y sobre el Mediterráneo.',
       'Quería probar macarons de colores y practicaba cómo decir "s\'il vous plaît".',
       'Pagó con euros y preguntó cuánto tiempo hace falta para ver una colección de más de 30.000 obras.',
-      'Quería ver a la Mona Lisa y entrar a un museo por una pirámide de vidrio construida en 1989.'
+      'Quería ver a la Mona Lisa y entrar a un antiguo palacio real por una pirámide de vidrio construida en 1989.'
     ],
     en: [
       'They were going to a Western European capital crossed by a river, famous for its boulevards and sidewalk cafés.',
       'They mentioned their destination is in the north of a country with coasts on both the Atlantic and the Mediterranean.',
       'They wanted to try colorful macarons and were practicing how to say "s\'il vous plaît".',
       'They paid in euros and asked how long it takes to see a collection of more than 30,000 works.',
-      'They wanted to see the Mona Lisa and walk into a museum through a glass pyramid built in 1989.'
+      'They wanted to see the Mona Lisa and walk into a former royal palace through a glass pyramid built in 1989.'
     ]
   },
   'Arco del Triunfo': {
@@ -40,14 +40,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una de las ciudades más visitadas del mundo, en el norte de Europa occidental.',
       'Quería ver la llegada de una famosa carrera de ciclismo que termina cada julio en una gran avenida.',
       'Pagó con euros y preguntó dónde comprar un pain au chocolat recién horneado.',
-      'Quería subir a un arco monumental mandado a construir por Napoleón, en medio de una rotonda de doce avenidas.'
+      'Quería subir a un monumento mandado a construir por Napoleón para honrar a sus ejércitos, en medio de una rotonda de doce avenidas.'
     ],
     en: [
       'They were going to a European capital split by a river into a left bank and a right bank.',
       'They said their destination is one of the most visited cities in the world, in the north of Western Europe.',
       'They wanted to see the finish of a famous cycling race that ends every July on a grand avenue.',
       'They paid in euros and asked where to buy a freshly baked pain au chocolat.',
-      'They wanted to climb a monumental arch ordered by Napoleon, in the middle of a roundabout of twelve avenues.'
+      'They wanted to climb a monument ordered by Napoleon to honor his armies, in the middle of a roundabout of twelve avenues.'
     ]
   },
   'Catedral de Notre-Dame': {
@@ -56,14 +56,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que frente a su destino está el kilómetro cero de todas las rutas de su país.',
       'Quería leer una novela de Victor Hugo sobre un campanero jorobado.',
       'Pagó con euros y preguntó por los puestos de libros usados a orillas del río.',
-      'Quería ver una catedral gótica con gárgolas cuya aguja se derrumbó en un incendio en 2019.'
+      'Quería ver un templo gótico con gárgolas cuya aguja se derrumbó en un incendio en 2019.'
     ],
     en: [
       'They were going to an island in the middle of the river of a great Western European capital.',
       'They said kilometer zero of every road in the country is in front of their destination.',
       'They wanted to read a Victor Hugo novel about a hunchbacked bell-ringer.',
       'They paid in euros and asked about the secondhand book stalls along the river.',
-      'They wanted to see a Gothic cathedral with gargoyles whose spire collapsed in a fire in 2019.'
+      'They wanted to see a Gothic place of worship with gargoyles whose spire collapsed in a fire in 2019.'
     ]
   },
   'Basílica del Sacré-Cœur': {
@@ -72,14 +72,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un barrio de artistas, escalinatas y calles empedradas.',
       'Quería que un pintor callejero le hiciera un retrato en una plaza llena de caballetes.',
       'Pagó con euros y preguntó por un cabaret famoso con un molino rojo en la puerta.',
-      'Quería subir a una basílica blanca de cúpulas de piedra que se blanquea sola con la lluvia.'
+      'Quería subir a un templo blanco de cúpulas de piedra que se blanquea solo con la lluvia.'
     ],
     en: [
       'They were going to the highest hill of a Western European capital, about 130 meters up.',
       'They said their destination is a neighborhood of artists, stairways and cobbled streets.',
       'They wanted a street painter to do their portrait in a square full of easels.',
       'They paid in euros and asked about a famous cabaret with a red windmill at the door.',
-      'They wanted to climb to a white basilica with stone domes that whitens itself in the rain.'
+      'They wanted to climb to a white church with stone domes that whitens itself in the rain.'
     ]
   },
   'Ópera Garnier': {
@@ -88,14 +88,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está cerca de unas grandes tiendas con cúpulas de vitral.',
       'Quería ver un ballet clásico y comprar un perfume en una avenida elegante.',
       'Pagó con euros y preguntó por un lago subterráneo que, dicen, inspiró una novela de un fantasma.',
-      'Quería ver un teatro de ópera de 1875 con una escalinata de mármol y un techo pintado por Chagall.'
+      'Quería ver una sala de espectáculos de 1875 con una escalinata de mármol y un techo pintado por Chagall.'
     ],
     en: [
       'They were going to a Western European capital of wide boulevards laid out in the 19th century.',
       'They said their destination is near some big department stores with stained-glass domes.',
       'They wanted to see a classical ballet and buy perfume on an elegant avenue.',
       'They paid in euros and asked about an underground lake said to have inspired a novel about a phantom.',
-      'They wanted to see an 1875 opera house with a marble staircase and a ceiling painted by Chagall.'
+      'They wanted to see an 1875 performance hall with a marble staircase and a ceiling painted by Chagall.'
     ]
   },
   'Moulin Rouge': {
@@ -120,14 +120,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que tomaría un tren suburbano desde la capital: menos de una hora de viaje hacia el suroeste.',
       'Practicaba frases en el idioma de Molière y quería probar quesos de una tabla con más de diez variedades.',
       'Pagó con euros y quería ver un espectáculo de fuentes con música barroca.',
-      'Quería recorrer la Galería de los Espejos del palacio del Rey Sol, donde se firmó un tratado de paz en 1919.'
+      'Quería recorrer la Galería de los Espejos de la residencia del Rey Sol, donde se firmó un tratado de paz en 1919.'
     ],
     en: [
       'They were going to the outskirts of a big Western European capital, to a town surrounded by forests.',
       "They mentioned they would take a suburban train from the capital: less than an hour's ride to the southwest.",
       'They were practicing phrases in the language of Molière and wanted to try a board of more than ten cheeses.',
       'They paid in euros and wanted to see a fountain show with baroque music.',
-      "They wanted to walk through the Hall of Mirrors of the Sun King's palace, where a peace treaty was signed in 1919."
+      "They wanted to walk through the Hall of Mirrors of the Sun King's residence, where a peace treaty was signed in 1919."
     ]
   },
   'Mont-Saint-Michel': {
@@ -148,14 +148,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Castillo de Chambord': {
     es: [
-      'Iba al valle de un gran río de Europa occidental lleno de castillos renacentistas.',
+      'Iba al valle de un gran río de Europa occidental, lleno de residencias reales renacentistas.',
       'Dijo que su destino está en medio del parque amurallado más grande de Europa, con ciervos y jabalíes.',
       'Quería probar un queso de cabra de la zona y un vino blanco del valle.',
       'Pagó con euros y preguntó por un rey que lo mandó a construir como pabellón de caza.',
       'Quería subir una escalera doble en espiral que se atribuye a Leonardo da Vinci.'
     ],
     en: [
-      'They were going to the valley of a great Western European river full of Renaissance castles.',
+      'They were going to the valley of a great Western European river, full of Renaissance royal residences.',
       'They said their destination is in the middle of the largest walled park in Europe, with deer and boar.',
       'They wanted to try a local goat cheese and a white wine from the valley.',
       'They paid in euros and asked about a king who had it built as a hunting lodge.',
@@ -164,31 +164,31 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Castillo de Chenonceau': {
     es: [
-      'Iba al valle de un gran río de Europa occidental, a una región de castillos y viñedos.',
+      'Iba al valle de un gran río de Europa occidental, a una región de residencias señoriales y viñedos.',
       'Dijo que su destino está sobre un afluente tranquilo, rodeado de jardines geométricos.',
       'Quería probar una tarta de manzanas caramelizadas que se cocina al revés.',
-      'Pagó con euros y preguntó por las mujeres que vivieron allí, que le dieron el apodo de castillo de las damas.',
-      'Quería recorrer un castillo construido como un puente de arcos sobre un río.'
+      'Pagó con euros y preguntó por las mujeres que vivieron allí, que le dieron el apodo de "el de las damas".',
+      'Quería recorrer una residencia renacentista construida como un puente de arcos sobre un río.'
     ],
     en: [
-      'They were going to the valley of a great Western European river, to a region of castles and vineyards.',
+      'They were going to the valley of a great Western European river, to a region of stately residences and vineyards.',
       'They said their destination sits on a quiet tributary, surrounded by formal gardens.',
       'They wanted to try an upside-down caramelized apple tart.',
-      "They paid in euros and asked about the women who lived there, who earned it the nickname of the ladies' castle.",
-      'They wanted to walk through a castle built like an arched bridge across a river.'
+      'They paid in euros and asked about the women who lived there, who earned it the nickname of "the ladies\' one".',
+      'They wanted to walk through a Renaissance residence built like an arched bridge across a river.'
     ]
   },
   'Acantilados de Étretat': {
     es: [
       'Iba a la costa del Canal de la Mancha, en el norte de Europa occidental.',
-      'Dijo que su destino es un pueblito de playa de piedras entre acantilados blancos de tiza.',
+      'Dijo que su destino es un pueblito de playa de piedras entre paredes blancas de tiza que caen al mar.',
       'Quería probar mejillones con papas fritas y una sidra de la región.',
       'Pagó con euros y preguntó por los pintores impresionistas que pintaron ese paisaje.',
       'Quería ver un arco de roca blanca con forma de trompa de elefante que se mete en el mar.'
     ],
     en: [
       'They were going to the coast of the English Channel, in the north of Western Europe.',
-      'They said their destination is a little pebble-beach town between white chalk cliffs.',
+      'They said their destination is a little pebble-beach town between white chalk walls dropping into the sea.',
       'They wanted to eat mussels with fries and drink a local cider.',
       'They paid in euros and asked about the Impressionist painters who painted that landscape.',
       "They wanted to see an arch of white rock shaped like an elephant's trunk dipping into the sea."
@@ -197,17 +197,17 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   'Ciudad medieval de Carcasona': {
     es: [
       'Iba al sur de Europa occidental, entre el Mediterráneo y una cordillera que hace de frontera.',
-      'Dijo que su destino está en una región de viñedos y castillos de una antigua herejía medieval.',
+      'Dijo que su destino está en una región de viñedos y fortalezas de una antigua herejía, la de los cátaros.',
       'Quería probar un guiso de porotos blancos con pato y salchicha cocinado en cazuela de barro.',
       'Pagó con euros y preguntó por un canal del siglo XVII que une el Atlántico con el Mediterráneo.',
-      'Quería recorrer una ciudad medieval con doble muralla y 52 torres.'
+      'Quería recorrer un recinto amurallado con doble muralla y 52 torres, restaurado en el siglo XIX.'
     ],
     en: [
       'They were going to the south of Western Europe, between the Mediterranean and a mountain range that is a border.',
-      'They said their destination is in a region of vineyards and castles of an old medieval heresy.',
+      'They said their destination is in a region of vineyards and fortresses of an old heresy, that of the Cathars.',
       'They wanted to try a stew of white beans with duck and sausage cooked in a clay pot.',
       'They paid in euros and asked about a 17th-century canal linking the Atlantic and the Mediterranean.',
-      'They wanted to explore a medieval city with a double ring of walls and 52 towers.'
+      'They wanted to explore a walled stronghold with a double ring of walls and 52 towers, restored in the 19th century.'
     ]
   },
   'Puente del Gard': {
@@ -248,14 +248,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está junto a una bahía famosa por sus ostras y un bosque de pinos.',
       'Quería comer ostras frescas con un vino blanco y unos pastelitos acanalados de vainilla.',
       'Pagó con euros y preguntó por los parapentes que despegan de la cima.',
-      'Quería subir a la duna de arena más alta de Europa, de unos 100 metros.'
+      'Quería subir al montículo de arena más alto de Europa, de unos 100 metros.'
     ],
     en: [
       'They were going to the Atlantic coast of southwestern Western Europe, near a great wine city.',
       'They said their destination is next to a bay famous for its oysters and a pine forest.',
       'They wanted fresh oysters with white wine and small fluted vanilla cakes.',
       'They paid in euros and asked about the paragliders that take off from the top.',
-      'They wanted to climb the highest sand dune in Europe, about 100 meters tall.'
+      'They wanted to climb the tallest mound of sand in Europe, about 100 meters high.'
     ]
   },
   'Paseo de los Ingleses (Niza)': {
@@ -264,30 +264,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad de playas de piedras, palmeras y fachadas color ocre.',
       'Quería probar una crepe crocante de harina de garbanzos que se vende en la calle.',
       'Pagó con euros y preguntó por un carnaval con una batalla de flores.',
-      'Quería caminar por un paseo marítimo de 7 kilómetros con sillas azules frente a una bahía.'
+      'Quería caminar 7 kilómetros junto al mar, con sillas azules frente a una bahía.'
     ],
     en: [
       'They were going to the Mediterranean coast of Western Europe, to the Riviera, near a border.',
       'They said their destination is a city of pebble beaches, palm trees and ochre facades.',
       'They wanted to try a crispy chickpea-flour pancake sold on the street.',
       'They paid in euros and asked about a carnival with a battle of flowers.',
-      'They wanted to walk a 7-kilometer seafront promenade with blue chairs facing a bay.'
+      'They wanted to stroll 7 kilometers along the sea, with blue chairs facing a bay.'
     ]
   },
   'Puerto Viejo de Marsella': {
     es: [
       'Iba a la costa mediterránea de Europa occidental, a la ciudad más antigua de su país.',
-      'Dijo que su destino es una gran ciudad portuaria fundada por navegantes griegos hace 2600 años.',
+      'Dijo que su destino es una gran ciudad marítima fundada por navegantes griegos hace 2600 años.',
       'Quería probar una sopa de pescado con pan tostado y una salsa de ajo.',
       'Pagó con euros y preguntó por una isla con un castillo-prisión de una novela de aventuras.',
-      'Quería ver el mercado de pescado en el muelle de un puerto viejo vigilado por una basílica en la colina.'
+      'Quería ver el mercado de pescado en un muelle antiguo lleno de barcos, vigilado por una basílica en la colina.'
     ],
     en: [
       'They were going to the Mediterranean coast of Western Europe, to the oldest city in the country.',
-      'They said their destination is a big port city founded by Greek sailors 2,600 years ago.',
+      'They said their destination is a big seafaring city founded by Greek sailors 2,600 years ago.',
       'They wanted to try a fish soup with toasted bread and a garlic sauce.',
       'They paid in euros and asked about an island with a castle-prison from an adventure novel.',
-      'They wanted to see the fish market on the quay of an old harbor watched over by a hilltop basilica.'
+      'They wanted to see the fish market on an ancient quay full of boats, watched over by a hilltop basilica.'
     ]
   },
   'Catedral de Reims': {
@@ -296,14 +296,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la capital de un vino espumoso famoso en todo el mundo.',
       'Quería brindar con burbujas en una bodega excavada en la tiza y comer unos bizcochitos rosados.',
       'Pagó con euros y preguntó por un ángel de piedra que sonríe en la fachada.',
-      'Quería ver la catedral gótica donde durante siglos se coronaba a los reyes del país.'
+      'Quería ver el templo gótico donde durante siglos se coronaba a los reyes del país.'
     ],
     en: [
       'They were going to northeastern Western Europe, to a region of hills covered in vineyards.',
       'They said their destination is the capital of a sparkling wine famous all over the world.',
       'They wanted to toast with bubbles in a cellar dug into the chalk and eat little pink biscuits.',
       'They paid in euros and asked about a smiling stone angel on the facade.',
-      "They wanted to see the Gothic cathedral where the country's kings were crowned for centuries."
+      "They wanted to see the Gothic church where the country's kings were crowned for centuries."
     ]
   },
   'Plaza Stanislas (Nancy)': {
@@ -312,42 +312,42 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue cuna de un estilo de vidrio y muebles con formas de plantas.',
       'Quería probar una tarta de huevo y panceta y unos caramelos de bergamota.',
       'Pagó con euros y preguntó por un duque que antes había sido rey de Polonia.',
-      'Quería ver una plaza del siglo XVIII con rejas de hierro doradas y fuentes en las esquinas.'
+      'Quería ver un gran espacio abierto del siglo XVIII con rejas de hierro doradas y fuentes en las esquinas.'
     ],
     en: [
       'They were going to northeastern Western Europe, to a region near the borders of three other countries.',
       'They said their destination was the birthplace of a style of glass and furniture with plant-like shapes.',
       'They wanted to try an egg and bacon tart and some bergamot candies.',
       'They paid in euros and asked about a duke who had been king of Poland.',
-      'They wanted to see an 18th-century square with gilded wrought-iron gates and fountains in the corners.'
+      'They wanted to see a large 18th-century open space with gilded wrought-iron gates and fountains in the corners.'
     ]
   },
   'Campos de lavanda de Valensole': {
     es: [
       'Iba a una meseta del sureste de Europa occidental, entre los Alpes y el Mediterráneo.',
       'Dijo que en su destino hay sol casi todo el año, olivares y pueblos de piedra.',
-      'Quería comprar jabones y miel de lavanda y jugar a la petanca en la plaza.',
+      'Quería comprar jabones y miel perfumados con flores violetas y jugar a la petanca.',
       'Pagó con euros y preguntó cuál es la mejor época para la cosecha.',
-      'Quería sacarse fotos entre campos violetas que florecen entre junio y julio.'
+      'Quería sacarse fotos entre hileras violetas y perfumadas que florecen entre junio y julio.'
     ],
     en: [
       'They were going to a plateau in southeastern Western Europe, between the Alps and the Mediterranean.',
       'They said there is sun almost all year there, with olive groves and stone villages.',
-      'They wanted to buy lavender soap and honey and play pétanque in the square.',
+      'They wanted to buy soap and honey scented with purple flowers and play pétanque.',
       'They paid in euros and asked when the best harvest time is.',
-      'They wanted to take photos among purple fields that bloom between June and July.'
+      'They wanted to take photos among fragrant purple rows that bloom between June and July.'
     ]
   },
   'Chamonix y el Mont Blanc': {
     es: [
-      'Iba a un valle alpino al pie de la montaña más alta de Europa occidental.',
+      'Iba a un valle alpino al pie de la cumbre más alta de Europa occidental.',
       'Dijo que su destino está muy cerca de las fronteras con otros dos países alpinos.',
       'Quería comer papas gratinadas con queso derretido y panceta después de esquiar.',
       'Pagó con euros y preguntó por un teleférico que sube a más de 3800 metros.',
       'Quería ver el pueblo donde se hicieron los primeros Juegos Olímpicos de Invierno, en 1924.'
     ],
     en: [
-      'They were going to an Alpine valley at the foot of the highest mountain in Western Europe.',
+      'They were going to an Alpine valley at the foot of the highest summit in Western Europe.',
       'They said their destination is very close to the borders with two other Alpine countries.',
       'They wanted to eat potatoes baked with melted cheese and bacon after skiing.',
       'They paid in euros and asked about a cable car that goes up to more than 3,800 meters.',
@@ -360,14 +360,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene un festival de teatro enorme cada julio.',
       'Quería cantar una canción infantil sobre bailar en un puente y probar un vino tinto de la zona.',
       'Pagó con euros y preguntó por un puente cortado que solo llega hasta la mitad del río.',
-      'Quería ver el enorme palacio gótico donde vivieron los papas en el siglo XIV.'
+      'Quería ver el enorme edificio gótico donde vivieron los pontífices en el siglo XIV.'
     ],
     en: [
       'They were going to the south of Western Europe, to a walled city on a great river.',
       'They said their destination has a huge theater festival every July.',
       "They wanted to sing a children's song about dancing on a bridge and try a local red wine.",
       'They paid in euros and asked about a broken bridge that only reaches halfway across the river.',
-      'They wanted to see the huge Gothic palace where the popes lived in the 14th century.'
+      'They wanted to see the huge Gothic building where the pontiffs lived in the 14th century.'
     ]
   },
   'Pequeña Venecia de Colmar': {
@@ -392,14 +392,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es sede del Parlamento Europeo.',
       'Quería comer chucrut con salchichas y ver un mercado de Navidad.',
       'Pagó con euros y preguntó por un barrio de canales y casas de madera con nombre de país en miniatura.',
-      'Quería ver una catedral gótica de piedra rosada con un reloj astronómico y una sola torre.'
+      'Quería ver un templo gótico de piedra rosada con un reloj astronómico y una sola aguja.'
     ],
     en: [
       'They were going to northeastern Western Europe, to a city on the Rhine, on the border with another country.',
       'They said their destination is a seat of the European Parliament.',
       'They wanted to eat sauerkraut with sausages and visit a Christmas market.',
       'They paid in euros and asked about a quarter of canals and timber houses named after a miniature country.',
-      'They wanted to see a pink sandstone Gothic cathedral with an astronomical clock and a single spire.'
+      'They wanted to see a pink sandstone Gothic church with an astronomical clock and a single spire.'
     ]
   },
   'Coliseo de Roma': {
@@ -440,14 +440,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en el centro de una península mediterránea, a orillas del río Tíber.',
       'Quería probar unas croquetas de arroz rellenas de queso que se estira.',
       'Pagó con euros y preguntó por un país diminuto que está dentro de la ciudad.',
-      'Quería tirar una moneda de espaldas en una fuente barroca para asegurarse volver.'
+      'Quería tirar una moneda de espaldas en un estanque barroco con Neptuno para asegurarse volver.'
     ],
     en: [
       'They were going to a European capital that, legend says, was founded by twins raised by a she-wolf.',
       'They said their destination is in the middle of a Mediterranean peninsula, on the Tiber river.',
       'They wanted to try rice croquettes filled with stretchy cheese.',
       'They paid in euros and asked about a tiny country located inside the city.',
-      'They wanted to toss a coin over their shoulder into a baroque fountain to make sure they come back.'
+      'They wanted to toss a coin over their shoulder into a baroque basin with Neptune to make sure they come back.'
     ]
   },
   'Panteón de Agripa': {
@@ -469,16 +469,16 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   'Plaza Navona': {
     es: [
       'Iba a una capital europea a orillas del Tíber, llena de iglesias y fuentes barrocas.',
-      'Dijo que su destino es una plaza alargada construida sobre un antiguo estadio romano.',
+      'Dijo que su destino es un espacio alargado y peatonal construido sobre un antiguo estadio romano.',
       'Quería que le hicieran una caricatura y comer una pizza al corte.',
-      'Pagó con euros y preguntó por un mercado navideño que se arma en la plaza.',
+      'Pagó con euros y preguntó por un mercado navideño que se arma allí entre tres fuentes.',
       'Quería ver una fuente de Bernini con cuatro estatuas que representan los grandes ríos del mundo.'
     ],
     en: [
       'They were going to a European capital on the Tiber, full of baroque churches and fountains.',
-      'They said their destination is an elongated square built over an ancient Roman stadium.',
+      'They said their destination is an elongated pedestrian space built over an ancient Roman stadium.',
       'They wanted to get a caricature drawn and eat pizza by the slice.',
-      'They paid in euros and asked about a Christmas market set up in the square.',
+      'They paid in euros and asked about a Christmas market set up there among three fountains.',
       'They wanted to see a Bernini fountain with four statues representing the great rivers of the world.'
     ]
   },
@@ -488,14 +488,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene menos de mil habitantes y está rodeado de murallas.',
       'Quería ver a unos guardias con uniformes a rayas amarillas, azules y rojas.',
       'Pagó con euros y preguntó por una capilla con un techo pintado por Miguel Ángel.',
-      'Quería ver una plaza elíptica rodeada por una columnata de Bernini con 284 columnas.'
+      'Quería ver un gran espacio elíptico rodeado por una columnata de Bernini con 284 columnas.'
     ],
     en: [
       'They were going to the smallest country in the world, inside a European capital.',
       'They said their destination has fewer than a thousand inhabitants and is surrounded by walls.',
       'They wanted to see guards in uniforms striped yellow, blue and red.',
       'They paid in euros and asked about a chapel with a ceiling painted by Michelangelo.',
-      'They wanted to see an elliptical square surrounded by a Bernini colonnade of 284 columns.'
+      'They wanted to see a large elliptical space surrounded by a Bernini colonnade of 284 columns.'
     ]
   },
   'Torre de Pisa': {
@@ -511,7 +511,7 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'They said their destination is on a river, an hour by train from a famous Renaissance city.',
       'They wanted a local red wine and a plate of pici, thick hand-rolled noodles.',
       'They paid in euros and asked where to buy artisan gelato.',
-      'They wanted the classic photo "holding up" a marble bell tower that started to lean in the 12th century.'
+      'They wanted the classic photo "holding up" a marble belfry that started to lean in the 12th century.'
     ]
   },
   'Duomo de Florencia': {
@@ -568,14 +568,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene un gran canal en forma de S que la atraviesa entera.',
       'Quería comprar vidrio soplado de una isla cercana y probar sardinas en escabeche agridulce.',
       'Pagó con euros y preguntó por un mercado de pescado junto al agua.',
-      'Quería cruzar el puente de piedra más antiguo sobre el gran canal, con tiendas encima.'
+      'Quería cruzar el paso de piedra más antiguo sobre el gran canal, con tiendas encima.'
     ],
     en: [
       'They were going to a city on a lagoon of the Adriatic Sea, with no cars or roads for them.',
       'They said their destination has a big S-shaped canal running right through it.',
       'They wanted to buy blown glass from a nearby island and try sweet-and-sour marinated sardines.',
       'They paid in euros and asked about a fish market by the water.',
-      'They wanted to cross the oldest stone bridge over the grand canal, with shops on top.'
+      'They wanted to cross the oldest stone crossing over the grand canal, with shops on top.'
     ]
   },
   'Duomo de Milán': {
@@ -616,14 +616,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene casi 40 kilómetros de soportales para caminar bajo techo.',
       'Quería comer fideos con salsa de carne, que en otros países llevan el nombre de la ciudad, y mortadela.',
       'Pagó con euros y preguntó por la universidad más antigua del mundo occidental.',
-      'Quería ver dos torres medievales inclinadas, una mucho más alta que la otra.'
+      'Quería ver dos construcciones medievales altas e inclinadas, una mucho más alta que la otra.'
     ],
     en: [
       'They were going to the north of a Mediterranean peninsula, to a red-roofed university city.',
       'They said their destination has almost 40 kilometers of porticoes to walk under cover.',
       'They wanted pasta with meat sauce, named after the city abroad, and some mortadella.',
       'They paid in euros and asked about the oldest university in the Western world.',
-      'They wanted to see two leaning medieval towers, one much taller than the other.'
+      'They wanted to see two tall, leaning medieval structures, one much taller than the other.'
     ]
   },
   'Plaza del Campo (Siena)': {
@@ -632,14 +632,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino estuvo en guerra durante siglos con una ciudad vecina más famosa.',
       'Quería probar un dulce de frutas secas, miel y especias muy denso.',
       'Pagó con euros y preguntó por una carrera de caballos a pelo que se corre dos veces por año.',
-      'Quería ver una plaza en forma de concha que baja hacia un palacio con una torre altísima.'
+      'Quería ver un espacio abierto en forma de concha que baja hacia un palacio con un campanile altísimo.'
     ],
     en: [
       'They were going to a medieval brick city on hills, in the center of a Mediterranean peninsula.',
       'They said their destination was at war for centuries with a more famous neighboring city.',
       'They wanted to try a very dense sweet of dried fruit, honey and spices.',
       'They paid in euros and asked about a bareback horse race run twice a year.',
-      'They wanted to see a shell-shaped square sloping down to a palace with a very tall tower.'
+      'They wanted to see a shell-shaped open space sloping down to a palace with a very tall campanile.'
     ]
   },
   'Arena de Verona': {
@@ -676,15 +676,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Costa Amalfitana (Positano)': {
     es: [
-      'Iba a una costa de acantilados sobre el mar Tirreno, con pueblos colgados de la montaña.',
-      'Dijo que para llegar hay que tomar una ruta costera llena de curvas o un ferry desde una isla famosa por su gruta azul.',
+      'Iba a un litoral de acantilados sobre el mar Tirreno, con pueblos colgados de la montaña.',
+      'Dijo que para llegar hay que tomar una ruta junto al mar llena de curvas o un ferry desde una isla famosa por su gruta azul.',
       'Quería comprar cerámicas pintadas a mano y unas sandalias hechas a medida.',
       'Pagó con euros y preguntó por los limones gigantes que se cultivan en terrazas.',
       'Quería sacarse fotos en un pueblo vertical de casitas color pastel que bajan hasta una playa de piedras.'
     ],
     en: [
-      'They were going to a coast of cliffs over the Tyrrhenian Sea, with villages clinging to the mountains.',
-      'They said you get there by a winding coastal road or by ferry from an island famous for its blue grotto.',
+      'They were going to a shoreline of cliffs over the Tyrrhenian Sea, with villages clinging to the mountains.',
+      'They said you get there by a winding seaside road or by ferry from an island famous for its blue grotto.',
       'They wanted to buy hand-painted ceramics and made-to-measure sandals.',
       'They paid in euros and asked about the giant lemons grown on terraces.',
       'They wanted photos of a vertical village of pastel houses tumbling down to a pebble beach.'
@@ -692,16 +692,16 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Isla de Capri': {
     es: [
-      'Iba a una isla de rocas en el golfo de una gran ciudad del sur de una península mediterránea.',
+      'Iba a un peñón rodeado de mar en el golfo de una gran ciudad del sur de una península mediterránea.',
       'Dijo que su destino tiene villas de lujo, limoneros y calles angostas sin autos.',
-      'Quería comer una ensalada de tomate, mozzarella y albahaca que lleva el nombre de la isla.',
+      'Quería comer una ensalada de tomate, mozzarella y albahaca que lleva el nombre de su destino.',
       'Pagó con euros y preguntó por un funicular que sube desde el puerto.',
       'Quería entrar en un bote de remos a una gruta marina iluminada de azul intenso.'
     ],
     en: [
-      'They were going to a rocky island in the gulf of a big city in the south of a Mediterranean peninsula.',
+      'They were going to a rocky outcrop surrounded by sea in the gulf of a big city in the south of a Mediterranean peninsula.',
       'They said their destination has luxury villas, lemon trees and narrow car-free streets.',
-      'They wanted to eat a tomato, mozzarella and basil salad named after the island.',
+      'They wanted to eat a tomato, mozzarella and basil salad named after their destination.',
       'They paid in euros and asked about a funicular up from the harbor.',
       'They wanted to row into a sea cave lit up an intense blue.'
     ]
@@ -741,47 +741,47 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   'Lago di Braies': {
     es: [
       'Iba a unas montañas del noreste de una península mediterránea, en un valle de los Alpes.',
-      'Dijo que su destino es un lago alpino de agua verde esmeralda rodeado de bosques de pinos.',
+      'Dijo que su destino es un espejo de agua alpino verde esmeralda rodeado de bosques de pinos.',
       'Quería tomar una cerveza y comer canederli después de una caminata.',
-      'Pagó con euros y preguntó por una serie de televisión que se filmó en el lago.',
+      'Pagó con euros y preguntó por una serie de televisión que se filmó allí, entre botes de madera.',
       'Quería alquilar un bote de madera en un muelle con cobertizo, al pie de una pared de roca.'
     ],
     en: [
       'They were going to mountains in the northeast of a Mediterranean peninsula, in an Alpine valley.',
-      'They said their destination is an Alpine lake of emerald-green water surrounded by pine forests.',
+      'They said their destination is an Alpine stretch of emerald-green water surrounded by pine forests.',
       'They wanted a beer and canederli dumplings after a hike.',
-      'They paid in euros and asked about a TV series filmed at the lake.',
+      'They paid in euros and asked about a TV series filmed there, among wooden rowing boats.',
       'They wanted to rent a wooden rowboat from a boathouse jetty at the foot of a rock wall.'
     ]
   },
   'Lago de Como (Bellagio)': {
     es: [
-      'Iba a un lago con forma de Y invertida al pie de los Alpes.',
+      'Iba a unas aguas con forma de Y invertida al pie de los Alpes.',
       'Dijo que su destino está a una hora de una gran ciudad de la moda, rodeado de villas antiguas.',
       'Quería comprar pañuelos de seda, una tradición de la zona.',
       'Pagó con euros y preguntó por la villa de un famoso actor de Hollywood.',
-      'Quería ver un pueblo en la punta donde se dividen los brazos del lago.'
+      'Quería ver un pueblo en la punta donde se separan los dos brazos de agua.'
     ],
     en: [
-      'They were going to an upside-down Y-shaped lake at the foot of the Alps.',
+      'They were going to some upside-down Y-shaped waters at the foot of the Alps.',
       'They said their destination is an hour from a big fashion city, surrounded by old villas.',
       'They wanted to buy silk scarves, a local tradition.',
       'They paid in euros and asked about the villa of a famous Hollywood actor.',
-      'They wanted to see a village on the point where the arms of the lake split.'
+      'They wanted to see a village on the point where the two arms of water split.'
     ]
   },
   'Sirmione (Lago de Garda)': {
     es: [
-      'Iba al norte de una península mediterránea, al lago más grande de su país.',
-      'Dijo que su destino es un pueblo en la punta de una península angosta que entra en el lago.',
-      'Quería probar un aceite de oliva del lago y un vino rosado de la zona.',
+      'Iba al norte de una península mediterránea, a orillas de las aguas dulces más extensas de su país.',
+      'Dijo que su destino es un pueblo en la punta de una península angosta que se mete en aguas tranquilas.',
+      'Quería probar un aceite de oliva de la zona y un vino rosado local.',
       'Pagó con euros y preguntó por unas termas de agua sulfurosa.',
       'Quería ver un castillo medieval rodeado de agua y las ruinas de una villa romana en la punta.'
     ],
     en: [
-      'They were going to the north of a Mediterranean peninsula, to the largest lake in the country.',
-      'They said their destination is a village at the tip of a narrow peninsula reaching into the lake.',
-      'They wanted to try olive oil from the lake and a local rosé.',
+      'They were going to the north of a Mediterranean peninsula, to the shores of the largest body of fresh water in the country.',
+      'They said their destination is a village at the tip of a narrow peninsula reaching into calm waters.',
+      'They wanted to try local olive oil and a local rosé.',
       'They paid in euros and asked about some sulfur spas.',
       'They wanted to see a medieval castle surrounded by water and the ruins of a Roman villa on the tip.'
     ]
@@ -824,14 +824,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una colina de olivos y almendros con vista al mar.',
       'Quería probar un dulce de ricota en forma de tubo y una granita de almendra.',
       'Pagó con euros y preguntó por los almendros en flor de febrero.',
-      'Quería ver templos dóricos de hace 2500 años construidos por colonos griegos.'
+      'Quería ver santuarios dóricos de hace 2500 años construidos por colonos griegos.'
     ],
     en: [
       'They were going to the largest island in the Mediterranean, to its south coast facing Africa.',
       'They said their destination is a hill of olive and almond trees overlooking the sea.',
       'They wanted to try a tube-shaped ricotta pastry and an almond granita.',
       'They paid in euros and asked about the almond blossom in February.',
-      'They wanted to see 2,500-year-old Doric temples built by Greek colonists.'
+      'They wanted to see 2,500-year-old Doric sanctuaries built by Greek colonists.'
     ]
   },
   'Teatro Griego de Taormina': {
@@ -840,27 +840,27 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un pueblo colgado de una colina, con vista a un volcán humeante.',
       'Quería probar un pescado espada a la parrilla y unos cannoli.',
       'Pagó con euros y preguntó por un islote unido a la playa por una lengua de arena.',
-      'Quería ver un teatro antiguo con vista al mar y al volcán nevado de fondo.'
+      'Quería ver unas gradas antiguas en semicírculo con vista al mar y al volcán nevado de fondo.'
     ],
     en: [
       'They were going to the east coast of the largest island in the Mediterranean.',
       'They said their destination is a hilltop town overlooking a smoking volcano.',
       'They wanted grilled swordfish and some cannoli.',
       'They paid in euros and asked about an islet joined to the beach by a strip of sand.',
-      'They wanted to see an ancient theater looking out over the sea with the snowy volcano behind.'
+      'They wanted to see ancient semicircular stands looking out over the sea with the snowy volcano behind.'
     ]
   },
   'Monte Etna': {
     es: [
       'Iba a la isla más grande del Mediterráneo.',
-      'Dijo que su destino es una montaña que domina una costa de limoneros y naranjos.',
+      'Dijo que su destino es una cumbre que domina una costa de limoneros y naranjos.',
       'Quería comer cannoli rellenos de ricota y bolitas de arroz fritas.',
       'Pagó con euros y preguntó si el volcán estaba en erupción esa semana.',
       'Quería subir al volcán activo más alto de Europa, de más de 3300 metros.'
     ],
     en: [
       'They were going to the largest island in the Mediterranean.',
-      'They said their destination is a mountain towering over a coast of lemon and orange trees.',
+      'They said their destination is a summit towering over a coast of lemon and orange trees.',
       'They wanted to eat ricotta-filled cannoli and fried rice balls.',
       'They paid in euros and asked whether the volcano was erupting that week.',
       'They wanted to climb the highest active volcano in Europe, more than 3,300 meters high.'
@@ -869,17 +869,17 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   'Monte Titano': {
     es: [
       'Iba a uno de los países más pequeños del mundo, rodeado por completo por otro país mediterráneo.',
-      'Dijo que su destino está en una montaña con vista al mar Adriático.',
+      'Dijo que su destino está en una cima con vista al mar Adriático.',
       'Comentó que su destino es la república más antigua del mundo, fundada según la tradición en el año 301.',
       'Pagó con euros, aunque el país no es de la Unión Europea, y quería comprar estampillas para coleccionistas.',
-      'Quería ver tres torres en la cima de un monte de 739 metros.'
+      'Quería ver tres torres en lo alto de una cumbre de 739 metros.'
     ],
     en: [
       'They were going to one of the smallest countries in the world, completely surrounded by another Mediterranean country.',
-      'They said their destination is on a mountain overlooking the Adriatic Sea.',
+      'They said their destination is on a summit overlooking the Adriatic Sea.',
       'They mentioned their destination is the oldest republic in the world, founded by tradition in the year 301.',
       "They paid in euros, though the country is not in the European Union, and wanted collectors' stamps.",
-      'They wanted to see three towers on top of a 739-meter mountain.'
+      'They wanted to see three towers on top of a 739-meter summit.'
     ]
   },
   'Casino de Montecarlo': {
@@ -888,14 +888,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es el país con más millonarios por habitante y un puerto lleno de yates.',
       'Quería ver una carrera de Fórmula 1 que se corre por las calles.',
       'Pagó con euros y preguntó por un príncipe que se casó con una actriz de Hollywood.',
-      'Quería entrar a un casino de la Belle Époque diseñado por el arquitecto de la Ópera de París.'
+      'Quería entrar a una sala de juego de la Belle Époque diseñada por el arquitecto de la Ópera de París.'
     ],
     en: [
       'They were going to the Riviera, to the second smallest country in the world, between mountains and the Mediterranean.',
       'They said their destination has the most millionaires per person and a harbor full of yachts.',
       'They wanted to see a Formula 1 race run through the streets.',
       'They paid in euros and asked about a prince who married a Hollywood actress.',
-      'They wanted to enter a Belle Époque casino designed by the architect of the Paris Opera.'
+      'They wanted to enter a Belle Époque gaming hall designed by the architect of the Paris Opera.'
     ]
   },
   'Sagrada Familia': {
@@ -920,14 +920,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en una avenida elegante de un barrio trazado en cuadrícula con esquinas recortadas.',
       'Quería probar una crema quemada típica de la región y pasear por un mercado cubierto.',
       'Pagó con euros y preguntó por una basílica inacabada del mismo arquitecto.',
-      'Quería ver una casa de Gaudí con balcones como máscaras y un techo como el lomo de un dragón.'
+      'Quería ver un edificio de Gaudí con balcones como máscaras y un techo como el lomo de un dragón.'
     ],
     en: [
       'They were going to a big Mediterranean city in the northeast of the Iberian Peninsula.',
       'They said their destination is on an elegant avenue in a grid district with cut-off corners.',
       "They wanted to try the region's burnt cream and stroll through a covered market.",
       'They paid in euros and asked about an unfinished basilica by the same architect.',
-      "They wanted to see a Gaudí house with mask-like balconies and a roof like a dragon's back."
+      "They wanted to see a Gaudí building with mask-like balconies and a roof like a dragon's back."
     ]
   },
   'Parque Güell': {
@@ -936,14 +936,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que desde su destino, en una colina, se ve toda la ciudad y el mar.',
       'Quería ver castells, torres humanas de varios pisos, y comer pan con tomate.',
       'Pagó con euros y preguntó por un estadio de fútbol enorme.',
-      'Quería ver un parque de Gaudí con bancos ondulados de mosaicos y una lagartija de colores.'
+      'Quería ver unos jardines de Gaudí con bancos ondulados de mosaicos y una lagartija de colores.'
     ],
     en: [
       'They were going to a big Mediterranean city in the northeast of the Iberian Peninsula.',
       'They said that from their destination, on a hill, you can see the whole city and the sea.',
       'They wanted to see castells, human towers several stories high, and eat bread with tomato.',
       'They paid in euros and asked about a huge football stadium.',
-      'They wanted to see a Gaudí park with wavy mosaic benches and a colorful lizard.'
+      'They wanted to see Gaudí gardens with wavy mosaic benches and a colorful lizard.'
     ]
   },
   'La Alhambra': {
@@ -984,14 +984,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino el verano pasa con facilidad los 40 grados.',
       'Quería ver un espectáculo de flamenco y comer una tapa de espinacas con garbanzos.',
       'Pagó con euros y preguntó por la tumba de Cristóbal Colón.',
-      'Quería subir por rampas a una torre que fue minarete y hoy es campanario de la catedral gótica más grande del mundo.'
+      'Quería subir por rampas a una torre que fue minarete y hoy es campanario del templo gótico más grande del mundo.'
     ],
     en: [
       'They were going to the south of the Iberian Peninsula, to a city on a navigable river with orange trees on its streets.',
       'They said summer there easily goes above 40 degrees.',
       'They wanted to see a flamenco show and eat a tapa of spinach with chickpeas.',
       'They paid in euros and asked about the tomb of Christopher Columbus.',
-      'They wanted to walk up ramps inside a tower that was a minaret and is now the bell tower of the largest Gothic cathedral in the world.'
+      'They wanted to walk up ramps inside a tower that was a minaret and is now the bell tower of the largest Gothic church in the world.'
     ]
   },
   'Plaza de España (Sevilla)': {
@@ -1000,14 +1000,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que de su destino salían, hace siglos, los barcos hacia América.',
       'Quería tomar gazpacho y ver los vestidos de volados de una famosa feria de abril.',
       'Pagó con euros y preguntó por las procesiones de Semana Santa.',
-      'Quería ver una plaza semicircular de 1929 con un canal, puentes de cerámica y bancos de azulejos dedicados a cada provincia.'
+      'Quería ver un gran espacio semicircular de 1929 con un canal, puentes de cerámica y bancos de azulejos dedicados a cada provincia.'
     ],
     en: [
       'They were going to the south of the Iberian Peninsula, to one of the hottest cities in Europe, on a navigable river.',
       'They said that centuries ago the ships to the Americas sailed from their destination.',
       'They wanted to have gazpacho and see the ruffled dresses of a famous April fair.',
       'They paid in euros and asked about the Holy Week processions.',
-      'They wanted to see a semicircular square from 1929 with a canal, ceramic bridges and tiled benches for every province.'
+      'They wanted to see a large semicircular space from 1929 with a canal, ceramic bridges and tiled benches for every province.'
     ]
   },
   'Torre del Oro': {
@@ -1016,14 +1016,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene un río con paseos en barco y un puente de hierro hacia un barrio de ceramistas.',
       'Quería comer pescaíto frito en cucurucho y tomar una manzanilla.',
       'Pagó con euros y preguntó por una feria de abril con casetas.',
-      'Quería ver una torre almohade de doce lados junto al río, que hoy es un museo naval.'
+      'Quería ver una atalaya almohade de doce lados junto al río, que hoy es un museo naval.'
     ],
     en: [
       'They were going to the south of the Iberian Peninsula, to a city from which ships sailed to the Americas.',
       "They said their destination has a river with boat trips and an iron bridge to a potters' quarter.",
       'They wanted fried fish in a paper cone and a glass of manzanilla.',
       'They paid in euros and asked about an April fair with marquees.',
-      'They wanted to see a twelve-sided Almohad tower by the river that is now a naval museum.'
+      'They wanted to see a twelve-sided Almohad watchtower by the river that is now a naval museum.'
     ]
   },
   'Palacio Real de Madrid': {
@@ -1032,14 +1032,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la capital más alta de la Unión Europea, a unos 650 metros.',
       'Quería comer un sándwich de calamares fritos y churros con chocolate.',
       'Pagó con euros y preguntó por un museo con cuadros de Velázquez y Goya.',
-      'Quería ver el palacio real más grande de Europa occidental, con más de 3000 salas.'
+      'Quería ver la residencia real más grande de Europa occidental, con más de 3000 salas.'
     ],
     en: [
       'They were going to the capital of the Iberian Peninsula, in the middle of a plateau.',
       'They said their destination is the highest capital in the European Union, about 650 meters up.',
       'They wanted a fried squid sandwich and churros with chocolate.',
       'They paid in euros and asked about a museum with paintings by Velázquez and Goya.',
-      'They wanted to see the largest royal palace in Western Europe, with more than 3,000 rooms.'
+      'They wanted to see the largest royal residence in Western Europe, with more than 3,000 rooms.'
     ]
   },
   'Puerta de Alcalá': {
@@ -1048,14 +1048,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está junto a un gran parque con un estanque y botes de remo.',
       'Quería comer un cocido con garbanzos y tomar un vermut a la hora del almuerzo.',
       'Pagó con euros y preguntó por una canción pop de los 80 dedicada al monumento.',
-      'Quería ver una puerta neoclásica de cinco arcos mandada a construir por el rey Carlos III.'
+      'Quería ver un monumento neoclásico de cinco arcos mandado a construir por el rey Carlos III.'
     ],
     en: [
       'They were going to the center of the Iberian Peninsula, to a capital of terraces and nightlife.',
       'They said their destination is next to a big park with a pond and rowboats.',
       'They wanted to eat a chickpea stew and have a vermouth before lunch.',
       'They paid in euros and asked about an 80s pop song dedicated to the monument.',
-      'They wanted to see a neoclassical five-arched gate ordered by King Charles III.'
+      'They wanted to see a neoclassical five-arched monument ordered by King Charles III.'
     ]
   },
   'Monasterio de El Escorial': {
@@ -1064,14 +1064,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un pueblo de montaña a una hora de la capital, con veranos frescos.',
       'Quería comer cordero asado y pasear por un bosque de robles.',
       'Pagó con euros y preguntó por un panteón donde están enterrados casi todos los reyes del país.',
-      'Quería ver un enorme monasterio-palacio de granito del siglo XVI mandado construir por Felipe II.'
+      'Quería ver un enorme complejo religioso y real de granito del siglo XVI mandado construir por Felipe II.'
     ],
     en: [
       'They were going to the mountains northwest of a capital on the Iberian Peninsula.',
       'They said their destination is a mountain town an hour from the capital, with cool summers.',
       'They wanted to eat roast lamb and walk through an oak forest.',
       "They paid in euros and asked about a pantheon where almost all the country's kings are buried.",
-      'They wanted to see a huge 16th-century granite monastery-palace ordered by Philip II.'
+      'They wanted to see a huge 16th-century granite religious and royal complex ordered by Philip II.'
     ]
   },
   'Museo Guggenheim de Bilbao': {
@@ -1079,15 +1079,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba al norte de la península ibérica, a una ciudad industrial junto a una ría, cerca del mar Cantábrico.',
       'Comentó que en su destino llueve seguido y las montañas que la rodean son muy verdes.',
       'Quería ir de bar en bar comiendo pintxos y aprender palabras de una lengua sin parientes conocidos en Europa.',
-      'Pagó con euros y quería ver un perro gigante cubierto de flores frente a un museo.',
-      'Quería ver un museo de curvas de titanio diseñado por Frank Gehry e inaugurado en 1997.'
+      'Pagó con euros y quería ver un perro gigante cubierto de flores frente a un edificio de titanio.',
+      'Quería ver un edificio de curvas de titanio lleno de arte contemporáneo, diseñado por Frank Gehry e inaugurado en 1997.'
     ],
     en: [
       'They were going to the north of the Iberian Peninsula, to an industrial city on an estuary near the Bay of Biscay.',
       'They mentioned it rains a lot there and the surrounding mountains are very green.',
       'They wanted to go bar-hopping for pintxos and learn words of a language with no known relatives in Europe.',
-      'They paid in euros and wanted to see a giant dog covered in flowers in front of a museum.',
-      'They wanted to see a museum of titanium curves designed by Frank Gehry and opened in 1997.'
+      'They paid in euros and wanted to see a giant dog covered in flowers in front of a titanium building.',
+      'They wanted to see a building of titanium curves full of contemporary art, designed by Frank Gehry and opened in 1997.'
     ]
   },
   'Catedral de Santiago de Compostela': {
@@ -1096,14 +1096,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la meta de un camino de peregrinación que se hace a pie desde toda Europa.',
       'Quería comer pulpo con pimentón y una tarta de almendras con una cruz de azúcar.',
       'Pagó con euros y preguntó por la credencial sellada que reciben los caminantes.',
-      'Quería ver un incensario gigante que se balancea de punta a punta de la catedral.'
+      'Quería ver un incensario gigante que se balancea de punta a punta de un templo románico, meta de un camino de peregrinos.'
     ],
     en: [
       'They were going to the northwest of the Iberian Peninsula, to a green, rainy region.',
       'They said their destination is the end of a pilgrimage route walked from all over Europe.',
       'They wanted to eat octopus with paprika and an almond cake with a sugar cross.',
       'They paid in euros and asked about the stamped credential walkers receive.',
-      'They wanted to see a giant censer swinging from one end of the cathedral to the other.'
+      "They wanted to see a giant censer swinging from one end of a Romanesque church to the other, the goal of a pilgrims' route."
     ]
   },
   'Acueducto de Segovia': {
@@ -1112,14 +1112,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad amurallada en lo alto, entre dos ríos, frente a una sierra.',
       'Quería probar un cochinillo asado tan tierno que se corta con el borde de un plato.',
       'Pagó con euros y preguntó por un castillo que, dicen, inspiró a los castillos de los cuentos.',
-      'Quería ver un acueducto romano de más de 160 arcos hecho con bloques de granito sin ninguna argamasa.'
+      'Quería ver una obra romana para llevar agua, de más de 160 arcos, hecha con bloques de granito sin ninguna argamasa.'
     ],
     en: [
       'They were going to the central plateau of the Iberian Peninsula, an hour from the capital.',
       'They said their destination is a walled hilltop city between two rivers, facing a mountain range.',
       'They wanted to try roast suckling pig so tender it is cut with the edge of a plate.',
       'They paid in euros and asked about a castle said to have inspired fairy-tale castles.',
-      'They wanted to see a Roman aqueduct of more than 160 arches made of granite blocks without any mortar.'
+      'They wanted to see a Roman water-carrying structure of more than 160 arches, made of granite blocks without any mortar.'
     ]
   },
   'Alcázar de Segovia': {
@@ -1144,14 +1144,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la capital de provincia más alta de su país, con inviernos muy fríos.',
       'Quería comer un chuletón de ternera y unas yemas de dulce.',
       'Pagó con euros y preguntó por una santa mística del siglo XVI que nació ahí.',
-      'Quería caminar por una muralla medieval completa de 2,5 kilómetros con 87 torres.'
+      'Quería caminar por un cerco defensivo medieval completo de 2,5 kilómetros con 87 torres.'
     ],
     en: [
       'They were going to the central plateau of the Iberian Peninsula, to a city more than 1,100 meters high.',
       'They said their destination is the highest provincial capital in the country, with very cold winters.',
       'They wanted to eat a huge veal chop and some sweet egg-yolk treats.',
       'They paid in euros and asked about a 16th-century mystic saint born there.',
-      'They wanted to walk along a complete 2.5-kilometer medieval wall with 87 towers.'
+      'They wanted to walk along a complete 2.5-kilometer medieval defensive ring with 87 towers.'
     ]
   },
   'Catedral de Toledo': {
@@ -1160,14 +1160,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue llamado la ciudad de las tres culturas.',
       'Quería comprar mazapán y una espada de acero forjado.',
       'Pagó con euros y preguntó por un pintor de origen griego que vivió allí.',
-      'Quería ver una catedral gótica con un altar de luz que entra por un agujero en la bóveda.'
+      'Quería ver un templo gótico con un altar iluminado por la luz que entra por un agujero en la bóveda.'
     ],
     en: [
       'They were going to the center of the Iberian Peninsula, to a hilltop city wrapped by a river.',
       'They said their destination was called the city of the three cultures.',
       'They wanted to buy marzipan and a forged steel sword.',
       'They paid in euros and asked about a Greek-born painter who lived there.',
-      'They wanted to see a Gothic cathedral with an altar lit through an opening in the vault.'
+      'They wanted to see a Gothic church with an altar lit through an opening in the vault.'
     ]
   },
   'Casas Colgadas de Cuenca': {
@@ -1175,15 +1175,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba al este de la meseta de la península ibérica, a una ciudad sobre una hoz entre dos ríos.',
       'Dijo que su destino está rodeado de rocas con formas extrañas, como una ciudad encantada.',
       'Quería probar un paté de ajo y bacalao y unos dulces de miel.',
-      'Pagó con euros y preguntó por un museo de arte abstracto dentro de una casa medieval.',
-      'Quería ver casas medievales con balcones de madera colgadas sobre un precipicio.'
+      'Pagó con euros y preguntó por un museo de arte abstracto dentro de un edificio medieval al borde del abismo.',
+      'Quería ver viviendas medievales con balcones de madera suspendidos sobre un precipicio.'
     ],
     en: [
       'They were going to the east of the Iberian plateau, to a city on a gorge between two rivers.',
       'They said their destination is surrounded by strangely shaped rocks, like an enchanted city.',
       'They wanted to try a garlic and cod pâté and some honey sweets.',
-      'They paid in euros and asked about an abstract art museum inside a medieval house.',
-      'They wanted to see medieval houses with wooden balconies hanging over a cliff.'
+      'They paid in euros and asked about an abstract art museum inside a medieval building on the edge of a gorge.',
+      'They wanted to see medieval dwellings with wooden balconies suspended over a cliff.'
     ]
   },
   'Plaza Mayor de Salamanca': {
@@ -1192,14 +1192,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene una de las universidades más antiguas de Europa, de 1218.',
       'Quería comer jamón ibérico y salir de tapas con estudiantes.',
       'Pagó con euros y preguntó por una ranita escondida en una fachada que trae suerte encontrarla.',
-      'Quería ver una plaza barroca cerrada de piedra arenisca, considerada de las más lindas de su país.'
+      'Quería ver un gran espacio barroco cerrado, de piedra arenisca dorada, considerado de los más lindos de su país.'
     ],
     en: [
       'They were going to the west of the Iberian plateau, to a golden-stone university city.',
       'They said their destination has one of the oldest universities in Europe, from 1218.',
       'They wanted to eat Iberian ham and go for tapas with students.',
       'They paid in euros and asked about a tiny frog hidden on a facade that brings luck if you find it.',
-      'They wanted to see an enclosed baroque sandstone square, considered one of the finest in the country.'
+      'They wanted to see a large enclosed baroque space of golden sandstone, considered one of the finest in the country.'
     ]
   },
   'Catedral de Burgos': {
@@ -1208,30 +1208,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad fría a orillas del río Arlanzón.',
       'Quería probar una morcilla de arroz y un queso fresco de la zona.',
       'Pagó con euros y preguntó por la tumba de un caballero medieval llamado el Cid.',
-      'Quería ver una catedral gótica de agujas caladas como encaje, empezada en 1221.'
+      'Quería ver un templo gótico de agujas caladas como encaje, empezado en 1221.'
     ],
     en: [
       'They were going to the north of the Iberian plateau, to a city on the pilgrimage route to Santiago.',
       'They said their destination is a cold city on the river Arlanzón.',
       'They wanted to try a rice blood sausage and a local fresh cheese.',
       'They paid in euros and asked about the tomb of a medieval knight called El Cid.',
-      'They wanted to see a Gothic cathedral with lace-like openwork spires, begun in 1221.'
+      'They wanted to see a Gothic church with lace-like openwork spires, begun in 1221.'
     ]
   },
   'Teatro Romano de Mérida': {
     es: [
       'Iba al oeste de la península ibérica, a una región de dehesas y cerdos ibéricos.',
-      'Dijo que su destino fue la capital de una provincia romana y tiene un puente romano larguísimo.',
+      'Dijo que su destino fue la capital de una provincia del Imperio y tiene un puente antiguo larguísimo.',
       'Quería comer unas migas con panceta y una torta de queso de oveja cremosa.',
-      'Pagó con euros y preguntó por un festival de teatro clásico cada verano.',
-      'Quería ver un teatro romano del siglo I a. C. con un frente de columnas de mármol.'
+      'Pagó con euros y preguntó por un festival de tragedias y comedias clásicas cada verano.',
+      'Quería ver unas gradas semicirculares del siglo I a. C. frente a un escenario de columnas de mármol.'
     ],
     en: [
       'They were going to the west of the Iberian Peninsula, to a region of oak pastures and Iberian pigs.',
-      'They said their destination was the capital of a Roman province and has a very long Roman bridge.',
+      'They said their destination was the capital of an imperial province and has a very long ancient bridge.',
       "They wanted to eat fried breadcrumbs with bacon and a creamy sheep's cheese.",
-      'They paid in euros and asked about a classical theater festival every summer.',
-      'They wanted to see a 1st-century BC Roman theater with a stage front of marble columns.'
+      'They paid in euros and asked about a festival of classical tragedies and comedies every summer.',
+      'They wanted to see 1st-century BC semicircular stands facing a stage of marble columns.'
     ]
   },
   'Ciudad de las Artes y las Ciencias': {
@@ -1336,14 +1336,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad elegante con una de las mayores concentraciones de estrellas Michelin del mundo.',
       'Quería ir de bar en bar comiendo pintxos y probar una tarta de queso tostada.',
       'Pagó con euros y preguntó por un festival internacional de cine en septiembre.',
-      'Quería pasear por una playa urbana con forma de concha, con una isla en la entrada de la bahía.'
+      'Quería pasear por un arenal urbano en forma de caparazón, con una isla en la entrada de la bahía.'
     ],
     en: [
       'They were going to the north of the Iberian Peninsula, to the Bay of Biscay coast near a border.',
       'They said their destination is an elegant city with one of the highest concentrations of Michelin stars in the world.',
       'They wanted to go bar-hopping for pintxos and try a burnt cheesecake.',
       'They paid in euros and asked about an international film festival in September.',
-      'They wanted to stroll along a shell-shaped city beach with an island at the mouth of the bay.'
+      'They wanted to stroll along a scallop-shaped city stretch of sand with an island at the mouth of the bay.'
     ]
   },
   'Puente Nuevo de Ronda': {
@@ -1352,30 +1352,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está partido en dos por un tajo profundo.',
       'Quería ver una de las plazas de toros más antiguas y tomar un vino de la sierra.',
       'Pagó con euros y preguntó por los bandoleros que vivían en esas montañas.',
-      'Quería cruzar un puente de piedra del siglo XVIII sobre un tajo de casi 100 metros.'
+      'Quería cruzar una obra de piedra del siglo XVIII tendida sobre un tajo de casi 100 metros.'
     ],
     en: [
       'They were going to the mountains of the southern Iberian Peninsula, to a white town on a cliff.',
       'They said their destination is split in two by a deep gorge.',
       'They wanted to see one of the oldest bullrings and drink a mountain wine.',
       'They paid in euros and asked about the bandits who lived in those mountains.',
-      'They wanted to cross an 18th-century stone bridge over a gorge almost 100 meters deep.'
+      'They wanted to cross an 18th-century stone span stretched over a gorge almost 100 meters deep.'
     ]
   },
   'Playa de las Catedrales': {
     es: [
       'Iba al noroeste de la península ibérica, a la costa del mar Cantábrico.',
-      'Dijo que su destino es una playa a la que hay que reservar para entrar en verano.',
+      'Dijo que su destino es un arenal al que hay que reservar para entrar en verano.',
       'Quería probar unas vieiras gratinadas y un queso con forma de teta.',
       'Pagó con euros y preguntó a qué hora era la marea baja.',
-      'Quería caminar con marea baja entre arcos de roca gigantes que parecen naves de una catedral.'
+      'Quería caminar con marea baja entre arcos de roca gigantes que parecen naves de un templo gótico.'
     ],
     en: [
       'They were going to the northwest of the Iberian Peninsula, to the Bay of Biscay coast.',
-      'They said their destination is a beach you must book in advance to visit in summer.',
+      'They said their destination is a stretch of sand you must book in advance to visit in summer.',
       'They wanted to try baked scallops and a cheese shaped like a breast.',
       'They paid in euros and asked what time low tide was.',
-      'They wanted to walk at low tide among giant rock arches that look like cathedral naves.'
+      'They wanted to walk at low tide among giant rock arches that look like the naves of a Gothic church.'
     ]
   },
   'Santuario de Covadonga': {
@@ -1400,14 +1400,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está dentro del primer parque nacional de su país, creado en 1918.',
       'Quería probar un queso azul madurado en cuevas y un arroz con leche cremoso.',
       'Pagó con euros y preguntó por la ruta cerrada al tráfico en verano, que solo se sube en ómnibus.',
-      'Quería ver dos lagos glaciares entre montañas, con vacas pastando en las orillas.'
+      'Quería ver dos espejos de agua de origen glaciar entre montañas, con vacas pastando en las orillas.'
     ],
     en: [
       'They were going to a range of limestone peaks in the north of the Iberian Peninsula, near the sea.',
       "They said their destination is inside the country's first national park, created in 1918.",
       'They wanted to try a cave-aged blue cheese and a creamy rice pudding.',
       'They paid in euros and asked about the road closed to traffic in summer, which you can only go up by bus.',
-      'They wanted to see two glacial lakes among mountains, with cows grazing on their shores.'
+      'They wanted to see two glacial pools of water among mountains, with cows grazing on their shores.'
     ]
   },
   'Torre de Belém': {
@@ -1416,14 +1416,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una capital de siete colinas recorrida por tranvías amarillos.',
       'Quería comer pasteles de crema horneados con canela y escuchar fado.',
       'Pagó con euros y preguntó por los navegantes que salieron de ahí a la era de los descubrimientos.',
-      'Quería ver una torre defensiva del siglo XVI en la orilla del río, decorada con cuerdas y esferas armilares de piedra.'
+      'Quería ver un baluarte defensivo del siglo XVI en la orilla del río, decorado con cuerdas y esferas armilares de piedra.'
     ],
     en: [
       'They were going to the Atlantic coast at the southwestern tip of Europe, to the mouth of a great river.',
       'They said their destination is a capital of seven hills crossed by yellow trams.',
       'They wanted to eat baked custard tarts with cinnamon and listen to fado.',
       'They paid in euros and asked about the navigators who sailed from there in the Age of Discovery.',
-      'They wanted to see a 16th-century defensive tower on the riverbank, decorated with stone ropes and armillary spheres.'
+      'They wanted to see a 16th-century defensive bastion on the riverbank, decorated with stone ropes and armillary spheres.'
     ]
   },
   'Monasterio de los Jerónimos': {
@@ -1432,30 +1432,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un barrio ribereño desde donde partían las carabelas a la India.',
       'Quería comer pasteles de crema horneados de una pastelería que usa una receta secreta de los monjes.',
       'Pagó con euros y preguntó por la tumba del navegante Vasco da Gama.',
-      'Quería ver un monasterio de estilo manuelino con columnas talladas con cuerdas, algas y conchas.'
+      'Quería ver un claustro de estilo manuelino con columnas talladas con cuerdas, algas y conchas.'
     ],
     en: [
       'They were going to the southwestern tip of Europe, to a capital on the mouth of a great river.',
       'They said their destination is a riverside district from which caravels sailed to India.',
       "They wanted to eat baked custard tarts from a bakery using the monks' secret recipe.",
       'They paid in euros and asked about the tomb of the navigator Vasco da Gama.',
-      'They wanted to see a Manueline monastery with columns carved with ropes, seaweed and shells.'
+      'They wanted to see a Manueline cloister with columns carved with ropes, seaweed and shells.'
     ]
   },
   'Palacio da Pena (Sintra)': {
     es: [
       'Iba a una sierra boscosa y con neblina cerca del océano, a unos 30 kilómetros de una capital.',
-      'Dijo que en su destino hay palacios y quintas escondidos entre bosques húmedos.',
+      'Dijo que en su destino hay residencias reales y quintas escondidas entre bosques húmedos.',
       'Quería probar unos dulces de hojaldre rellenos de crema de almendras típicos del pueblo.',
       'Pagó con euros y preguntó por los azulejos pintados a mano de la región.',
-      'Quería visitar un palacio romántico pintado de rojo y amarillo en la cima de una colina.'
+      'Quería visitar una residencia romántica pintada de rojo y amarillo en la cima de una colina.'
     ],
     en: [
       'They were going to misty wooded hills near the ocean, about 30 kilometers from a capital.',
-      'They said there are palaces and estates hidden among damp forests there.',
+      'They said there are royal residences and estates hidden among damp forests there.',
       "They wanted to try the town's puff pastries filled with almond cream.",
       "They paid in euros and asked about the region's hand-painted tiles.",
-      'They wanted to visit a romantic palace painted red and yellow on top of a hill.'
+      'They wanted to visit a romantic residence painted red and yellow on top of a hill.'
     ]
   },
   'Cabo da Roca': {
@@ -1480,14 +1480,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un barrio bajo de calles rectas, reconstruido tras un terremoto en 1755.',
       'Quería escuchar fado en una taberna y probar ginjinha, un licor de guindas.',
       'Pagó con euros y preguntó por un tranvía amarillo que sube por calles empinadas.',
-      'Quería subir en un ascensor de hierro neogótico de 1902 que une la parte baja con la alta.'
+      'Quería subir en una estructura de hierro neogótica de 1902 que une la parte baja con la alta.'
     ],
     en: [
       'They were going to a southwestern European capital built on seven hills by a wide river.',
       'They said their destination is a low district of straight streets, rebuilt after an earthquake in 1755.',
       'They wanted to hear fado in a tavern and try ginjinha, a sour cherry liqueur.',
       'They paid in euros and asked about a yellow tram that climbs steep streets.',
-      'They wanted to ride an 1902 neo-Gothic iron elevator linking the lower and upper town.'
+      'They wanted to ride up a 1902 neo-Gothic iron structure linking the lower and upper town.'
     ]
   },
   'Ribeira de Oporto': {
@@ -1512,26 +1512,26 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue capital de su país en la Edad Media.',
       'Comentó que ahí los estudiantes usan capas negras y que existe un tipo de fado que cantan solo hombres.',
       'Pagó con euros y preguntó por una biblioteca barroca donde unos murciélagos protegen los libros de los insectos.',
-      'Quería visitar una de las universidades más antiguas de Europa, fundada en 1290.'
+      'Quería visitar una de las casas de estudios más antiguas de Europa, fundada en 1290, con una biblioteca barroca.'
     ],
     en: [
       'They were going to the middle of the Iberian Atlantic coast, to a hilltop city by a river.',
       'They said their destination was the capital of the country in the Middle Ages.',
       'They mentioned students there wear black capes and there is a kind of fado sung only by men.',
       'They paid in euros and asked about a baroque library where bats protect the books from insects.',
-      'They wanted to visit one of the oldest universities in Europe, founded in 1290.'
+      'They wanted to visit one of the oldest seats of learning in Europe, founded in 1290, with a baroque library.'
     ]
   },
   'Valle del Duero (Pinhão)': {
     es: [
-      'Iba al norte de la península ibérica, a un valle de un río que corre hacia el Atlántico.',
+      'Iba al norte de la península ibérica, a las laderas de un río que corre hacia el Atlántico.',
       'Dijo que su destino es la región vinícola demarcada más antigua del mundo, de 1756.',
       'Quería probar vino fortificado en una quinta y ver la vendimia a mano.',
       'Pagó con euros y preguntó por un tren histórico que bordea el río.',
       'Quería ver laderas cubiertas de viñedos en terrazas y una estación de tren decorada con azulejos.'
     ],
     en: [
-      'They were going to the north of the Iberian Peninsula, to the valley of a river running to the Atlantic.',
+      'They were going to the north of the Iberian Peninsula, to the slopes of a river running to the Atlantic.',
       'They said their destination is the oldest demarcated wine region in the world, from 1756.',
       'They wanted to taste fortified wine at a wine estate and watch the grapes being picked by hand.',
       'They paid in euros and asked about a historic train that runs along the river.',
@@ -1544,14 +1544,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene acantilados de piedra amarilla llenos de grutas y arcos.',
       'Quería comer un guiso de mariscos cocinado en una olla de cobre que se cierra como una almeja.',
       'Pagó con euros y preguntó por los kayaks y paseos en barco por la costa.',
-      'Quería entrar a una cueva marina con una playa adentro y un agujero en el techo por donde entra la luz.'
+      'Quería entrar en barco a una gruta marina con una playa adentro y un agujero en el techo por donde entra la luz.'
     ],
     en: [
       'They were going to the south coast of the Iberian Peninsula, facing the Atlantic, to a region of golden beaches.',
       'They said their destination has yellow stone cliffs full of grottoes and arches.',
       'They wanted to eat a seafood stew cooked in a copper pot that closes like a clam.',
       'They paid in euros and asked about kayaks and boat trips along the coast.',
-      'They wanted to enter a sea cave with a beach inside and a hole in the roof that lets the light in.'
+      'They wanted to go by boat into a sea grotto with a beach inside and a hole in the roof that lets the light in.'
     ]
   },
   'Cabo Girão (Madeira)': {
@@ -1592,14 +1592,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está cerca de un santuario de peregrinación mariana muy famoso.',
       'Quería probar unos dulces de huevo y azúcar de los conventos.',
       'Pagó con euros y preguntó por unas capillas imperfectas que quedaron sin techo.',
-      'Quería ver un monasterio gótico construido para agradecer una victoria en una batalla de 1385.'
+      'Quería ver un conjunto gótico de monjes dominicos construido para agradecer una victoria de 1385.'
     ],
     en: [
       'They were going to the middle of the Iberian Atlantic coast, to a town among hills.',
       'They said their destination is near a very famous Marian pilgrimage shrine.',
       'They wanted to try egg and sugar convent sweets.',
       'They paid in euros and asked about some unfinished chapels left without a roof.',
-      'They wanted to see a Gothic monastery built to give thanks for victory in a battle in 1385.'
+      'They wanted to see a Gothic Dominican complex built to give thanks for a victory in 1385.'
     ]
   },
   'Convento de Cristo (Tomar)': {
@@ -1624,14 +1624,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino estuvo partido en dos durante casi treinta años.',
       'Practicaba cómo decir "danke schön" y preguntó dónde comer una salchicha con curry.',
       'Pagó con euros y dijo que quería ir a una de las ciudades con más vida nocturna del continente.',
-      'Quería sacarse una foto bajo una puerta neoclásica coronada por una cuadriga, símbolo de la reunificación.'
+      'Quería sacarse una foto bajo un monumento neoclásico de columnas coronado por una cuadriga, símbolo de la reunificación.'
     ],
     en: [
       'They were going to a Central European capital, on a large plain crossed by rivers and canals.',
       'They said their destination was split in two for almost thirty years.',
       'They were practicing how to say "danke schön" and asked where to eat a currywurst.',
       'They paid in euros and said they wanted to go to one of the cities with the liveliest nightlife on the continent.',
-      'They wanted a photo under a neoclassical gate topped by a quadriga, a symbol of reunification.'
+      'They wanted a photo under a neoclassical colonnaded monument topped by a quadriga, a symbol of reunification.'
     ]
   },
   Reichstag: {
@@ -1668,18 +1668,18 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Isla de los Museos': {
     es: [
-      'Iba a una capital de Europa central, a una isla en medio del río Spree.',
+      'Iba a una capital de Europa central, a un pedazo de tierra en medio del río Spree.',
       'Dijo que su destino está en el centro histórico de una ciudad reconstruida tras la guerra.',
       'Quería tomar una cerveza en un jardín cervecero junto al río.',
       'Pagó con euros y preguntó por una catedral protestante de cúpula verde que está al lado.',
-      'Quería ver el altar de Pérgamo y el busto de Nefertiti en un conjunto de cinco museos.'
+      'Quería ver el altar de Pérgamo y el busto de Nefertiti en un conjunto de cinco edificios de colecciones.'
     ],
     en: [
-      'They were going to a Central European capital, to an island in the middle of the Spree river.',
+      'They were going to a Central European capital, to a strip of land in the middle of the Spree river.',
       'They said their destination is in the historic center of a city rebuilt after the war.',
       'They wanted a beer in a beer garden by the river.',
       'They paid in euros and asked about a green-domed Protestant cathedral next door.',
-      'They wanted to see the Pergamon Altar and the bust of Nefertiti in a complex of five museums.'
+      'They wanted to see the Pergamon Altar and the bust of Nefertiti in a complex of five collection buildings.'
     ]
   },
   'Castillo de Neuschwanstein': {
@@ -1688,14 +1688,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está muy cerca de la frontera con un país alpino famoso por la música clásica.',
       'Quería tomar cerveza en jarra de un litro y comer un pretzel gigante.',
       'Pagó con euros y preguntó dónde comprar un pantalón de cuero tradicional con tiradores.',
-      'Quería ver el castillo de cuento de un rey excéntrico del siglo XIX, que inspiró a castillos de películas animadas.'
+      'Quería ver la fortaleza de cuento de un rey excéntrico del siglo XIX, que inspiró a las películas animadas.'
     ],
     en: [
       'They were going to the south of Central Europe, at the foot of the Alps, among lakes and forests.',
       'They said their destination is very close to the border with an Alpine country famous for classical music.',
       'They wanted to drink beer from a one-liter stein and eat a giant pretzel.',
       'They paid in euros and asked where to buy traditional leather shorts with suspenders.',
-      'They wanted to see the fairy-tale castle of an eccentric 19th-century king, which inspired castles in animated films.'
+      'They wanted to see the fairy-tale stronghold of an eccentric 19th-century king, which inspired animated films.'
     ]
   },
   'Catedral de Colonia': {
@@ -1704,14 +1704,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que su destino está en el oeste de su país, cerca de las fronteras con tres países vecinos.',
       'Quería probar una cerveza que se sirve en vasitos de apenas 0,2 litros.',
       'Pagó con euros y preguntó por un carnaval muy famoso que se festeja en febrero.',
-      'Quería ver una catedral gótica de dos torres de 157 metros que tardó más de 600 años en terminarse.'
+      'Quería ver un templo gótico de dos torres de 157 metros que tardó más de 600 años en terminarse.'
     ],
     en: [
       'They were going to a big city on a river that rises in the Alps and flows into the North Sea.',
       'They mentioned their destination is in the west of the country, near the borders with three neighbors.',
       'They wanted to try a beer served in tiny 0.2-liter glasses.',
       'They paid in euros and asked about a very famous carnival celebrated in February.',
-      'They wanted to see a Gothic cathedral with two 157-meter towers that took more than 600 years to finish.'
+      'They wanted to see a Gothic church with two 157-meter towers that took more than 600 years to finish.'
     ]
   },
   'Marienplatz (Múnich)': {
@@ -1736,14 +1736,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad romántica de techos rojos, rodeada de colinas boscosas.',
       'Comentó que ahí está la universidad más antigua de su país y quería probar una salchicha con chucrut.',
       'Pagó con euros y preguntó por un camino de los filósofos con vista al río.',
-      'Quería ver un castillo en ruinas de piedra roja que guarda un barril de vino gigante.'
+      'Quería ver una fortaleza en ruinas de piedra roja que guarda un barril de vino gigante.'
     ],
     en: [
       'They were going to a city in southwestern Central Europe, in the Neckar river valley.',
       'They said their destination is a romantic red-roofed city surrounded by wooded hills.',
       "They mentioned the country's oldest university is there and wanted a sausage with sauerkraut.",
       "They paid in euros and asked about a philosophers' path overlooking the river.",
-      'They wanted to see a ruined red sandstone castle that holds a giant wine barrel.'
+      'They wanted to see a ruined red sandstone stronghold that holds a giant wine barrel.'
     ]
   },
   'Roca de Lorelei': {
@@ -1752,14 +1752,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un tramo angosto y peligroso del río, donde naufragaban los barcos.',
       'Quería tomar un vino blanco riesling y hacer un crucero por el río.',
       'Pagó con euros y preguntó por un poema de Heine convertido en canción.',
-      'Quería ver una roca de 132 metros sobre el río donde, según la leyenda, una sirena atraía a los marineros.'
+      'Quería ver un peñasco de 132 metros sobre el río donde, según la leyenda, una sirena atraía a los marineros.'
     ],
     en: [
       'They were going to the valley of a great Central European river, among vineyards and hilltop castles.',
       'They said their destination is a narrow and dangerous stretch of the river where ships used to wreck.',
       'They wanted to drink a white riesling and take a river cruise.',
       'They paid in euros and asked about a poem by Heine turned into a song.',
-      'They wanted to see a 132-meter rock over the river where, legend says, a siren lured sailors.'
+      'They wanted to see a 132-meter crag over the river where, legend says, a siren lured sailors.'
     ]
   },
   'Frauenkirche (Dresde)': {
@@ -1784,14 +1784,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está sobre una colina en la ciudad natal de Johann Sebastian Bach.',
       'Quería comer una salchicha asada con mostaza y unas papas en bola.',
       'Pagó con euros y preguntó por una mancha de tinta en la pared que, según la leyenda, tiró un reformador.',
-      'Quería ver el castillo donde Martín Lutero tradujo el Nuevo Testamento.'
+      'Quería ver la fortaleza donde Martín Lutero tradujo el Nuevo Testamento.'
     ],
     en: [
       'They were going to the middle of Central Europe, to a wooded hill country famous for grilled sausages.',
       'They said their destination stands on a hill above the birthplace of Johann Sebastian Bach.',
       'They wanted a grilled sausage with mustard and potato dumplings.',
       'They paid in euros and asked about an ink stain on the wall that, legend says, a reformer threw.',
-      'They wanted to see the castle where Martin Luther translated the New Testament.'
+      'They wanted to see the stronghold where Martin Luther translated the New Testament.'
     ]
   },
   'Elbphilharmonie (Hamburgo)': {
@@ -1864,14 +1864,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en la cima de una montaña aislada, a menudo rodeada de niebla.',
       'Quería probar unos fideos de huevo hechos a mano y unos ravioles grandes rellenos de carne.',
       'Pagó con euros y preguntó por la familia que dio reyes de Prusia y emperadores.',
-      'Quería ver un castillo neogótico de cuento en la cima de un cerro, cuna de una dinastía imperial.'
+      'Quería ver una fortaleza neogótica de cuento en la cima de un cerro, cuna de una dinastía imperial.'
     ],
     en: [
       'They were going to the southwest of Central Europe, to the hills at the foot of the Swabian Alb.',
       'They said their destination is on top of an isolated mountain, often surrounded by fog.',
       'They wanted to try hand-made egg noodles and big meat-filled dumplings.',
       'They paid in euros and asked about the family that gave Prussia its kings and emperors.',
-      'They wanted to see a fairy-tale neo-Gothic castle on a hilltop, cradle of an imperial dynasty.'
+      'They wanted to see a fairy-tale neo-Gothic stronghold on a hilltop, cradle of an imperial dynasty.'
     ]
   },
   'Holstentor (Lübeck)': {
@@ -1912,14 +1912,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino estaba a orillas de un río que desemboca en el Mar del Norte.',
       'Preguntó si ahí se maneja por la izquierda y si aceptaban libras esterlinas.',
       'Quería tomar el té de las cinco y subirse a un colectivo rojo de dos pisos.',
-      'Quería escuchar las campanadas de una torre con reloj junto al edificio del parlamento.'
+      'Quería escuchar las campanadas de una torre con reloj junto al edificio donde se reúnen los legisladores.'
     ],
     en: [
       'They were going to a large island in northwestern Europe, famous for its rainy weather.',
       'They said their destination stands on the banks of a river that flows into the North Sea.',
       'They asked whether people drive on the left there and whether they take pounds sterling.',
       'They wanted to have afternoon tea and ride a red double-decker bus.',
-      'They wanted to hear the chimes of a clock tower next to the parliament building.'
+      'They wanted to hear the chimes of a clock tower next to the building where the lawmakers meet.'
     ]
   },
   'Puente de la Torre': {
@@ -1928,14 +1928,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino se maneja por la izquierda y llueve un poco casi todos los días.',
       'Quería viajar en el metro más antiguo del mundo y ver el cambio de guardia.',
       'Pagó con libras y preguntó dónde tomar el té con scones.',
-      'Quería cruzar un puente basculante victoriano de 1894, con dos torres y una pasarela de vidrio en lo alto.'
+      'Quería cruzar una estructura victoriana de 1894 que se levanta para dejar pasar barcos, con una pasarela de vidrio en lo alto.'
     ],
     en: [
       'They were going to a huge capital in northwestern Europe, on the banks of a tidal river.',
       'They said people drive on the left there and it drizzles almost every day.',
       'They wanted to ride the oldest underground railway in the world and watch the changing of the guard.',
       'They paid in pounds and asked where to have tea with scones.',
-      'They wanted to cross a Victorian bascule bridge from 1894, with two towers and a glass walkway at the top.'
+      'They wanted to cross an 1894 Victorian structure that lifts to let ships through, with a glass walkway at the top.'
     ]
   },
   'Torre de Londres': {
@@ -1992,27 +1992,27 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue reconstruido después de un gran incendio en 1666.',
       'Quería cruzar un puente peatonal moderno sobre el río hacia un museo de arte moderno.',
       'Pagó con libras y preguntó por una galería donde un susurro se escucha del otro lado de la cúpula.',
-      'Quería ver una catedral barroca de Christopher Wren con una de las cúpulas más grandes del mundo.'
+      'Quería ver un templo barroco de Christopher Wren con una de las cúpulas más grandes del mundo.'
     ],
     en: [
       "They were going to a huge capital in northwestern Europe, to the city's old financial center.",
       'They said their destination was rebuilt after a great fire in 1666.',
       'They wanted to cross a modern footbridge over the river to a modern art museum.',
       'They paid in pounds and asked about a gallery where a whisper can be heard across the dome.',
-      'They wanted to see a baroque cathedral by Christopher Wren with one of the largest domes in the world.'
+      'They wanted to see a baroque church by Christopher Wren with one of the largest domes in the world.'
     ]
   },
   'Trafalgar Square': {
     es: [
       'Iba al centro de una enorme capital del noroeste de Europa.',
-      'Dijo que su destino es una plaza desde donde se miden las distancias a la capital.',
+      'Dijo que su destino es un espacio abierto con fuentes y leones de bronce, desde donde se miden las distancias a la capital.',
       'Quería entrar gratis a una galería nacional de pintura y ver un musical en un teatro cercano.',
       'Pagó con libras y preguntó por cuatro leones de bronce gigantes.',
       'Quería ver una columna de 52 metros con la estatua de un almirante que venció en una batalla naval de 1805.'
     ],
     en: [
       'They were going to the center of a huge capital in northwestern Europe.',
-      'They said their destination is a square from which distances to the capital are measured.',
+      'They said their destination is an open space with fountains and bronze lions, from which distances to the capital are measured.',
       'They wanted free entry to a national painting gallery and to see a musical at a nearby theater.',
       'They paid in pounds and asked about four giant bronze lions.',
       'They wanted to see a 52-meter column with the statue of an admiral who won a naval battle in 1805.'
@@ -2056,14 +2056,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está frente a un colegio privado famoso donde estudiaron muchos primeros ministros.',
       'Quería ver unos caballos de guardia y tomar el té en un salón de época.',
       'Pagó con libras y preguntó por una capilla donde se casan miembros de la realeza.',
-      'Quería ver el castillo habitado más antiguo y grande del mundo, residencia de fin de semana del rey.'
+      'Quería ver la fortaleza habitada más antigua y grande del mundo, residencia de fin de semana del rey.'
     ],
     en: [
       'They were going to a riverside town an hour west of a huge capital.',
       'They said their destination faces a famous private school where many prime ministers studied.',
       'They wanted to see guard horses and have tea in a period tearoom.',
       'They paid in pounds and asked about a chapel where royals get married.',
-      "They wanted to see the oldest and largest inhabited castle in the world, the king's weekend residence."
+      "They wanted to see the oldest and largest inhabited fortress in the world, the king's weekend residence."
     ]
   },
   'Baños romanos de Bath': {
@@ -2072,14 +2072,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene calles georgianas en forma de medialuna, en un valle verde.',
       'Quería leer una novela de Jane Austen, que vivió ahí, y tomar el té con un bollo enorme.',
       'Pagó con libras y preguntó por unas termas modernas con piscina en la terraza.',
-      'Quería ver unas termas romanas con agua que brota naturalmente a unos 46 grados.'
+      'Quería ver unas termas de la época imperial con agua que brota naturalmente a unos 46 grados.'
     ],
     en: [
       'They were going to the southwest of a large northwestern European island, to a honey-colored stone city.',
       'They said their destination has crescent-shaped Georgian streets in a green valley.',
       'They wanted to read a Jane Austen novel, who lived there, and have tea with a huge bun.',
       'They paid in pounds and asked about a modern spa with a rooftop pool.',
-      'They wanted to see Roman baths with water that springs naturally at about 46 degrees.'
+      'They wanted to see imperial-era hot springs with water that rises naturally at about 46 degrees.'
     ]
   },
   'Radcliffe Camera (Oxford)': {
@@ -2103,15 +2103,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba al sureste de una gran isla del noroeste de Europa, cerca de unos acantilados blancos.',
       'Dijo que su destino es una ciudad medieval amurallada, meta de unos famosos cuentos de peregrinos.',
       'Quería tomar una sidra de la región y comer un pastel de carne.',
-      'Pagó con libras y preguntó por un arzobispo asesinado dentro de la catedral en 1170.',
-      'Quería ver la catedral madre de la iglesia anglicana.'
+      'Pagó con libras y preguntó por un arzobispo asesinado frente al altar en 1170.',
+      'Quería ver el templo madre de la iglesia anglicana, meta de los peregrinos de Chaucer.'
     ],
     en: [
       'They were going to the southeast of a large northwestern European island, near some white cliffs.',
       "They said their destination is a walled medieval city, the goal of some famous pilgrims' tales.",
       'They wanted to drink a local cider and eat a meat pie.',
-      'They paid in pounds and asked about an archbishop murdered inside the cathedral in 1170.',
-      'They wanted to see the mother cathedral of the Anglican Church.'
+      'They paid in pounds and asked about an archbishop murdered at the altar in 1170.',
+      "They wanted to see the mother church of the Anglican Communion, the goal of Chaucer's pilgrims."
     ]
   },
   'York Minster': {
@@ -2136,14 +2136,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está sobre una colina rodeada por un meandro del río.',
       'Quería probar un pan de jengibre y un guiso de la región minera cercana.',
       'Pagó con libras y preguntó por la tumba de un monje historiador del siglo VIII.',
-      'Quería ver una catedral normanda del siglo XI con columnas enormes talladas en zigzag.'
+      'Quería ver un templo normando del siglo XI con columnas enormes talladas en zigzag.'
     ],
     en: [
       'They were going to the northeast of a large northwestern European island, to a university city on a river.',
       'They said their destination sits on a hill wrapped by a bend of the river.',
       'They wanted to try gingerbread and a stew from the nearby mining region.',
       'They paid in pounds and asked about the tomb of an 8th-century monk historian.',
-      'They wanted to see an 11th-century Norman cathedral with huge columns carved in zigzags.'
+      'They wanted to see an 11th-century Norman church with huge columns carved in zigzags.'
     ]
   },
   'Blackpool Tower': {
@@ -2152,14 +2152,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene tres muelles con atracciones y tranvías antiguos por la costanera.',
       'Quería comer pescado frito con papas y caramelos de palito con el nombre del pueblo adentro.',
       'Pagó con libras y preguntó por unas iluminaciones que encienden la costa cada otoño.',
-      'Quería subir a una torre de 1894 inspirada en la Torre Eiffel, con un salón de baile.'
+      'Quería subir a una estructura de hierro de 1894 inspirada en la de París, con un salón de baile.'
     ],
     en: [
       'They were going to the northwest coast of a large northwestern European island, to a popular seaside resort.',
       'They said their destination has three piers with rides and old trams along the seafront.',
       "They wanted fish and chips and sticks of rock candy with the town's name running through them.",
       'They paid in pounds and asked about the illuminations that light up the seafront every autumn.',
-      'They wanted to go up an 1894 tower inspired by the Eiffel Tower, with a ballroom.'
+      'They wanted to go up an 1894 iron structure inspired by the one in Paris, with a ballroom.'
     ]
   },
   'Castillo de Edimburgo': {
@@ -2168,46 +2168,46 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que en su destino hace frío y viento incluso en verano.',
       'Quería escuchar gaitas, ver hombres con kilt y probar un whisky de malta.',
       'Pagó con libras y preguntó por un festival de teatro que en agosto llena la ciudad.',
-      'Quería ver un castillo sobre un volcán extinto donde se dispara un cañonazo a la una de la tarde.'
+      'Quería ver una fortaleza sobre un volcán extinto donde se dispara un cañonazo a la una de la tarde.'
     ],
     en: [
       'They were going to the north of a large North Atlantic island, to a capital of hills and cobbled alleys.',
       'They mentioned it is cold and windy there even in summer.',
       'They wanted to hear bagpipes, see men in kilts and taste a single malt whisky.',
       'They paid in pounds and asked about a theater festival that fills the city every August.',
-      'They wanted to see a castle on an extinct volcano where a cannon is fired at one in the afternoon.'
+      'They wanted to see a fortress on an extinct volcano where a cannon is fired at one in the afternoon.'
     ]
   },
   'Puente ferroviario del Forth': {
     es: [
       'Iba a la costa este de una gran isla del Atlántico Norte, a un estuario cerca de una capital.',
-      'Dijo que su destino es un pueblo junto al agua desde donde se ven tres puentes de tres siglos distintos.',
+      'Dijo que su destino es un pueblo junto al agua desde donde se ven tres cruces de tres siglos distintos sobre un estuario.',
       'Quería probar un whisky de malta y una galleta de manteca.',
       'Pagó con libras y preguntó por los barcos que pasean por el estuario.',
-      'Quería ver un puente ferroviario de acero rojo de 1890, con tres enormes estructuras en voladizo.'
+      'Quería ver una estructura de acero rojo de 1890 por la que pasan trenes, con tres enormes voladizos.'
     ],
     en: [
       'They were going to the east coast of a large North Atlantic island, to an estuary near a capital.',
-      'They said their destination is a waterside village from which you can see three bridges from three different centuries.',
+      'They said their destination is a waterside village from which you can see three crossings from three different centuries over an estuary.',
       'They wanted to try a malt whisky and a shortbread biscuit.',
       'They paid in pounds and asked about boat trips on the estuary.',
-      'They wanted to see a red steel railway bridge from 1890, with three huge cantilever structures.'
+      'They wanted to see a red steel structure from 1890 that trains run across, with three huge cantilevers.'
     ]
   },
   'Castillo de Urquhart (Lago Ness)': {
     es: [
       'Iba a las Tierras Altas del norte de una gran isla del Atlántico Norte.',
-      'Dijo que su destino está a orillas de un lago larguísimo y muy profundo, de agua oscura.',
+      'Dijo que su destino está a orillas de unas aguas larguísimas y muy profundas, de color oscuro.',
       'Quería comprar una manta de tartán y probar haggis.',
       'Pagó con libras y preguntó si alguien había visto al monstruo últimamente.',
-      'Quería ver las ruinas de un castillo a orillas de un lago donde dicen que vive un monstruo.'
+      'Quería ver unas ruinas medievales a orillas de unas aguas donde dicen que vive un monstruo.'
     ],
     en: [
       'They were going to the Highlands in the north of a large North Atlantic island.',
-      'They said their destination is on a very long, very deep lake of dark water.',
+      'They said their destination is on the shore of very long, very deep dark waters.',
       'They wanted to buy a tartan blanket and try haggis.',
       'They paid in pounds and asked whether anyone had seen the monster lately.',
-      'They wanted to see the ruins of a castle on a lake where a monster is said to live.'
+      'They wanted to see medieval ruins on the shore of waters where a monster is said to live.'
     ]
   },
   'Viaducto de Glenfinnan': {
@@ -2216,14 +2216,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un valle con un lago, un monumento a un levantamiento de 1745 y mucha lluvia.',
       'Quería escuchar gaitas y probar un whisky de una destilería de la costa oeste.',
       'Pagó con libras y preguntó a qué hora pasa el tren de vapor.',
-      'Quería ver un viaducto curvo de 21 arcos que aparece en las películas de un joven mago.'
+      'Quería ver una estructura ferroviaria curva de 21 arcos que aparece en las películas de un joven mago.'
     ],
     en: [
       'They were going to the Highlands, near the highest mountain of a large North Atlantic island.',
       'They said their destination is a valley with a lake, a monument to a 1745 uprising and lots of rain.',
       'They wanted to hear bagpipes and taste a whisky from a west coast distillery.',
       'They paid in pounds and asked what time the steam train goes by.',
-      'They wanted to see a curved 21-arch viaduct that appears in the films of a young wizard.'
+      'They wanted to see a curved 21-arch railway structure that appears in the films of a young wizard.'
     ]
   },
   'Old Man of Storr (Skye)': {
@@ -2246,14 +2246,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
     es: [
       'Iba a la costa norte de una isla muy verde del Atlántico Norte, frente a un mar frío.',
       'Comentó que en su destino hay acantilados, ovejas y lluvias frecuentes.',
-      'Contó la leyenda de un gigante que construyó un camino de piedra para cruzar el mar y pelear con otro.',
+      'Contó la leyenda de un ser enorme que construyó un camino de piedra para cruzar el mar y pelear con un rival escocés.',
       'Pagó con libras, aunque dijo que a pocos kilómetros, cruzando una frontera, se usan euros.',
       'Quería caminar sobre unas 40.000 columnas hexagonales de basalto formadas por una antigua erupción.'
     ],
     en: [
       'They were going to the north coast of a very green North Atlantic island, facing a cold sea.',
       'They mentioned there are cliffs, sheep and frequent rain there.',
-      'They told the legend of a giant who built a stone path across the sea to fight another giant.',
+      'They told the legend of a huge being who built a stone path across the sea to fight a Scottish rival.',
       'They paid in pounds, though they said that a few kilometers away, across a border, people use euros.',
       'They wanted to walk on about 40,000 hexagonal basalt columns formed by an ancient eruption.'
     ]
@@ -2263,15 +2263,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba a la costa sur de una gran isla del noroeste de Europa, frente al Canal de la Mancha.',
       'Dijo que su destino está cerca de un balneario con un muelle y un pabellón de estilo oriental.',
       'Quería caminar por un sendero costero y tomar un té con scones.',
-      'Pagó con libras y preguntó por un faro rojo y blanco al pie de unos acantilados.',
-      'Quería ver una fila de acantilados blancos de tiza que se suceden como olas sobre el mar.'
+      'Pagó con libras y preguntó por un faro rojo y blanco al pie de unas paredes de tiza.',
+      'Quería ver una fila de paredes blancas de tiza que suben y bajan como olas sobre el mar.'
     ],
     en: [
       'They were going to the south coast of a large northwestern European island, facing the English Channel.',
       'They said their destination is near a seaside resort with a pier and an oriental-style pavilion.',
       'They wanted to walk a coastal path and have tea with scones.',
-      'They paid in pounds and asked about a red and white lighthouse at the foot of the cliffs.',
-      'They wanted to see a row of white chalk cliffs rising and falling like waves over the sea.'
+      'They paid in pounds and asked about a red and white lighthouse at the foot of some chalk walls.',
+      'They wanted to see a row of white chalk walls rising and falling like waves over the sea.'
     ]
   },
   Portmeirion: {
@@ -2296,14 +2296,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un valle glaciar con canteras de pizarra y lagos.',
       'Quería probar un guiso de cordero y ver carteles con palabras larguísimas llenas de consonantes.',
       'Pagó con libras y preguntó por un tren de cremallera que sube a la cumbre.',
-      'Quería subir por un paso de montaña al pico más alto de su región, de 1085 metros.'
+      'Quería subir entre montañas hasta el pico más alto de su región, de 1085 metros.'
     ],
     en: [
       'They were going to the northwest of a large northwestern European island, to a mountainous region where a Celtic language is spoken.',
       'They said their destination is a glacial valley with slate quarries and lakes.',
       'They wanted to try a lamb stew and see signs with very long words full of consonants.',
       'They paid in pounds and asked about a rack railway to the summit.',
-      'They wanted to climb through a mountain pass to the highest peak in the region, 1,085 meters high.'
+      'They wanted to climb between mountains to the highest peak in the region, 1,085 meters high.'
     ]
   },
   'Acantilados de Moher': {
@@ -2312,14 +2312,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino llueve mucho y el viento del océano sopla fuerte.',
       'Quería escuchar música tradicional con violines y tambores en un pub.',
       'Pagó con euros y preguntó cómo se festeja el día de San Patricio.',
-      'Quería ver acantilados de hasta 214 metros sobre el Atlántico, llenos de frailecillos en primavera.'
+      'Quería ver paredes de roca de hasta 214 metros sobre el Atlántico, llenas de frailecillos en primavera.'
     ],
     en: [
       'They were going to the west coast of a very green North Atlantic island.',
       'They said it rains a lot there and the ocean wind blows hard.',
       'They wanted to hear traditional music with fiddles and drums in a pub.',
       "They paid in euros and asked how St. Patrick's Day is celebrated.",
-      'They wanted to see cliffs up to 214 meters above the Atlantic, full of puffins in spring.'
+      'They wanted to see rock walls up to 214 meters above the Atlantic, full of puffins in spring.'
     ]
   },
   'Trinity College (Dublín)': {
@@ -2360,14 +2360,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue la sede de los reyes de una región antes de la invasión normanda.',
       'Quería probar un pan de soda y un queso azul de la zona.',
       'Pagó con euros y preguntó por la leyenda de un santo que convirtió allí al rey local.',
-      'Quería ver un conjunto de ruinas medievales con una torre redonda y una catedral sobre una roca.'
+      'Quería ver un conjunto de ruinas medievales con una torre redonda y una catedral sobre un promontorio de piedra caliza.'
     ],
     en: [
       'They were going to the south of a very green North Atlantic island, to a plain of fields and cows.',
       'They said their destination was the seat of the kings of a region before the Norman invasion.',
       'They wanted to try soda bread and a local blue cheese.',
       'They paid in euros and asked about the legend of a saint who converted the local king there.',
-      'They wanted to see a group of medieval ruins with a round tower and a cathedral on a rock.'
+      'They wanted to see a group of medieval ruins with a round tower and a cathedral on a limestone outcrop.'
     ]
   },
   'Slea Head (Dingle)': {
@@ -2440,14 +2440,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que su destino es una ciudad plana con más bicicletas que habitantes.',
       'Quería probar arenque crudo con cebolla y comprar un queso redondo de cáscara amarilla.',
       'Pagó con euros y quería ver un museo con muchos cuadros de Rembrandt.',
-      'Quería visitar la casa junto a un canal donde una adolescente escribió su famoso diario, escondida durante la Segunda Guerra Mundial.'
+      'Quería visitar el escondite junto a un canal donde una adolescente escribió su famoso diario durante la Segunda Guerra Mundial.'
     ],
     en: [
       'They were going to a northwestern European capital with canals laid out in rings.',
       'They mentioned their destination is a flat city with more bicycles than people.',
       'They wanted to try raw herring with onions and buy a round cheese with a yellow rind.',
       'They paid in euros and wanted to see a museum full of Rembrandt paintings.',
-      'They wanted to visit the canal house where a teenage girl wrote her famous diary while hiding during World War II.'
+      'They wanted to visit the hiding place by a canal where a teenage girl wrote her famous diary during World War II.'
     ]
   },
   Rijksmuseum: {
@@ -2472,14 +2472,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una zona de canales y pólderes cerca de uno de los puertos más grandes de Europa.',
       'Quería probar unos waffles finitos rellenos de caramelo y recorrer todo en bicicleta.',
       'Pagó con euros y preguntó por los zuecos de madera.',
-      'Quería ver 19 molinos de viento del siglo XVIII que sacaban el agua de las tierras bajas.'
+      'Quería ver 19 construcciones del siglo XVIII con aspas que sacaban el agua de las tierras bajas.'
     ],
     en: [
       'They were going to a very flat country in northwestern Europe, with much of its land below sea level.',
       'They said their destination is an area of canals and polders near one of the biggest ports in Europe.',
       'They wanted to try thin caramel-filled waffles and ride a bike everywhere.',
       'They paid in euros and asked about wooden clogs.',
-      'They wanted to see 19 18th-century windmills that pumped the water out of the lowlands.'
+      'They wanted to see 19 18th-century structures with sails that pumped the water out of the lowlands.'
     ]
   },
   'Zaanse Schans': {
@@ -2500,14 +2500,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Campos de tulipanes de Keukenhof': {
     es: [
-      'Iba a un país muy plano del noroeste de Europa, a una franja costera de dunas y campos de flores.',
+      'Iba a un país muy plano del noroeste de Europa, a una franja costera de dunas y cultivos de flores.',
       'Dijo que su destino está entre dos grandes ciudades y cerca de un aeropuerto enorme.',
       'Quería alquilar una bicicleta y comer papas fritas con salsa de maní.',
       'Pagó con euros y preguntó por la temporada, que dura apenas dos meses en primavera.',
       'Quería ver un parque con unos 7 millones de bulbos de flores en primavera.'
     ],
     en: [
-      'They were going to a very flat country in northwestern Europe, to a coastal strip of dunes and flower fields.',
+      'They were going to a very flat country in northwestern Europe, to a coastal strip of dunes and flower farms.',
       'They said their destination is between two big cities and near a huge airport.',
       'They wanted to rent a bike and eat fries with peanut sauce.',
       'They paid in euros and asked about the season, which lasts only two months in spring.',
@@ -2520,14 +2520,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene un balneario cercano con un muelle y una playa ancha.',
       'Quería comer arenque crudo en un puesto callejero.',
       'Pagó con euros y preguntó por un museo con La joven de la perla.',
-      'Quería ver el palacio de 1913 donde funciona la Corte Internacional de Justicia.'
+      'Quería ver el edificio neogótico de 1913, financiado por Andrew Carnegie, donde funciona la Corte Internacional de Justicia.'
     ],
     en: [
       'They were going to the North Sea coast of a very flat country, to a city that is the seat of government but not the capital.',
       'They said their destination has a nearby seaside resort with a pier and a wide beach.',
       'They wanted to eat raw herring at a street stall.',
       'They paid in euros and asked about a museum with the Girl with a Pearl Earring.',
-      'They wanted to see the 1913 palace that houses the International Court of Justice.'
+      'They wanted to see the 1913 neo-Gothic building, funded by Andrew Carnegie, that houses the International Court of Justice.'
     ]
   },
   Atomium: {
@@ -2568,14 +2568,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue uno de los puertos comerciales más ricos de la Edad Media.',
       'Quería comprar encaje hecho a mano y probar una cerveza de abadía.',
       'Pagó con euros y preguntó por paseos en bote por los canales.',
-      'Quería subir a un campanario medieval de 83 metros que domina la plaza principal.'
+      'Quería subir a un campanario medieval de 83 metros que domina el corazón de la ciudad, rodeado de casas de frontones escalonados.'
     ],
     en: [
       'They were going to a medieval city of canals in northwestern Europe, near the North Sea.',
       'They said their destination was one of the richest trading ports of the Middle Ages.',
       'They wanted to buy handmade lace and try an abbey beer.',
       'They paid in euros and asked about boat rides along the canals.',
-      'They wanted to climb an 83-meter medieval belfry towering over the main square.'
+      'They wanted to climb an 83-meter medieval belfry towering over the heart of the city, surrounded by step-gabled houses.'
     ]
   },
   'Castillo de los Condes de Flandes (Gante)': {
@@ -2584,14 +2584,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad universitaria con muelles de casas gremiales.',
       'Quería probar unos caramelos violetas en forma de cono y un guiso de pollo con crema.',
       'Pagó con euros y preguntó por un retablo de los hermanos Van Eyck llamado La adoración del cordero místico.',
-      'Quería ver un castillo medieval de piedra gris con almenas en pleno centro de la ciudad.'
+      'Quería ver una fortaleza medieval de piedra gris con almenas y foso en pleno centro de la ciudad.'
     ],
     en: [
       'They were going to northwestern Europe, to a medieval city of canals between two rivers.',
       'They said their destination is a university city with quays of guild houses.',
       'They wanted to try purple cone-shaped candies and a creamy chicken stew.',
       'They paid in euros and asked about an altarpiece by the Van Eyck brothers called the Adoration of the Mystic Lamb.',
-      'They wanted to see a gray stone medieval castle with battlements right in the city center.'
+      'They wanted to see a gray stone medieval stronghold with battlements and a moat right in the city center.'
     ]
   },
   'Catedral de Amberes': {
@@ -2600,14 +2600,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la capital mundial del comercio de diamantes.',
       'Quería probar galletas con forma de mano y una cerveza en copa.',
       'Pagó con euros y preguntó por la casa del pintor Rubens.',
-      'Quería ver una catedral gótica con una torre de 123 metros y cuadros de Rubens adentro.'
+      'Quería ver un templo gótico con una torre de 123 metros y cuadros de Rubens adentro.'
     ],
     en: [
       'They were going to a big port city in northwestern Europe, on the Scheldt river.',
       'They said their destination is the world capital of the diamond trade.',
       'They wanted to try hand-shaped biscuits and a beer in a goblet.',
       "They paid in euros and asked about the painter Rubens's house.",
-      'They wanted to see a Gothic cathedral with a 123-meter tower and paintings by Rubens inside.'
+      'They wanted to see a Gothic church with a 123-meter tower and paintings by Rubens inside.'
     ]
   },
   'Ciudad vieja de Luxemburgo': {
@@ -2632,14 +2632,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que desde su destino salen barcos a vapor y trenes que suben a montañas cercanas.',
       'Quería comprar un reloj de alta precisión y chocolate con leche.',
       'Pagó con francos y preguntó por la estatua de un león tallado en la roca.',
-      'Quería cruzar un puente de madera cubierto del siglo XIV, con pinturas en el techo y una torre octogonal en el agua.'
+      'Quería cruzar una pasarela de madera cubierta del siglo XIV, con pinturas en el techo y una torre octogonal en el agua.'
     ],
     en: [
       'They were going to a city on a lake surrounded by mountains, in the center of an Alpine country.',
       'They mentioned steamboats and mountain trains leave from their destination.',
       'They wanted to buy a precision watch and some milk chocolate.',
       'They paid in francs and asked about the statue of a lion carved into the rock.',
-      'They wanted to cross a 14th-century covered wooden bridge with paintings on its roof and an octagonal tower in the water.'
+      'They wanted to cross a 14th-century covered wooden walkway with paintings on its roof and an octagonal tower in the water.'
     ]
   },
   'Zermatt y el Matterhorn': {
@@ -2664,26 +2664,26 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está entre viñedos en terrazas que bajan hasta el agua.',
       'Quería ir a un famoso festival de jazz que se hace en esa costa cada julio.',
       'Pagó con francos y preguntó por la estatua de un cantante de rock frente al lago.',
-      'Quería ver un castillo medieval sobre un islote del lago, que inspiró un poema de Lord Byron.'
+      'Quería ver una fortaleza medieval sobre un islote junto a la orilla, que inspiró un poema de Lord Byron.'
     ],
     en: [
       'They were going to the shore of a large lake in the Alps, in an area where the language of Molière is spoken.',
       'They said their destination is among terraced vineyards that go down to the water.',
       'They wanted to go to a famous jazz festival held on that shore every July.',
       'They paid in francs and asked about the statue of a rock singer facing the lake.',
-      'They wanted to see a medieval castle on an islet in the lake, which inspired a poem by Lord Byron.'
+      'They wanted to see a medieval stronghold on an islet by the shore, which inspired a poem by Lord Byron.'
     ]
   },
   'Valle de Lauterbrunnen': {
     es: [
-      'Iba a los Alpes, a un valle glaciar en el centro de un país sin salida al mar.',
+      'Iba a los Alpes, a una hondonada de origen glaciar en el centro de un país sin salida al mar.',
       'Dijo que su destino tiene 72 cascadas y paredes de roca verticales a los lados.',
       'Quería comer papas ralladas fritas con queso y un chocolate.',
       'Pagó con francos y preguntó por un tren que sube a la estación más alta de Europa.',
       'Quería ver una cascada de casi 300 metros que cae junto a un pueblo de casas de madera.'
     ],
     en: [
-      'They were going to the Alps, to a glacial valley in the middle of a landlocked country.',
+      'They were going to the Alps, to a glacier-carved hollow in the middle of a landlocked country.',
       'They said their destination has 72 waterfalls and sheer rock walls on both sides.',
       'They wanted to eat fried grated potatoes with cheese and some chocolate.',
       'They paid in francs and asked about a train up to the highest station in Europe.',
@@ -2695,15 +2695,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba al norte de un país alpino, cerca de la frontera con un gran vecino del norte.',
       'Dijo que su destino está sobre un río que nace en los Alpes y termina en el Mar del Norte.',
       'Quería probar una salchicha asada y un pastel de cebolla.',
-      'Pagó con francos y preguntó por un bote que lleva a una roca en medio de la cascada.',
-      'Quería ver la cascada más caudalosa de Europa, de 150 metros de ancho.'
+      'Pagó con francos y preguntó por un bote que lleva a una roca en medio del agua que cae con estruendo.',
+      'Quería ver el salto de agua más caudaloso de Europa, de 150 metros de ancho.'
     ],
     en: [
       'They were going to the north of an Alpine country, near the border with a big northern neighbor.',
       'They said their destination is on a river that rises in the Alps and ends in the North Sea.',
       'They wanted to try a grilled sausage and an onion tart.',
-      'They paid in francs and asked about a boat to a rock in the middle of the falls.',
-      'They wanted to see the most powerful waterfall in Europe, 150 meters wide.'
+      'They paid in francs and asked about a boat to a rock in the middle of the thundering water.',
+      'They wanted to see the most powerful plunge of water in Europe, 150 meters wide.'
     ]
   },
   'Castillo de Gruyères': {
@@ -2712,14 +2712,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una región de vacas lecheras y chalets de madera.',
       'Quería comer un queso de pasta dura que lleva el nombre del pueblo y merengues con doble crema.',
       'Pagó con francos y preguntó por un museo de criaturas extrañas del artista que diseñó a un alien de cine.',
-      'Quería ver un castillo del siglo XIII en lo alto de un pueblo de una sola calle empedrada.'
+      'Quería ver una fortaleza del siglo XIII en lo alto de un pueblo de una sola calle empedrada.'
     ],
     en: [
       'They were going to a little medieval village on a green hill at the foot of the Alps, in a French-speaking area.',
       'They said their destination is a region of dairy cows and wooden chalets.',
       'They wanted to eat a hard cheese named after the village and meringues with double cream.',
       'They paid in francs and asked about a museum of strange creatures by the artist who designed a movie alien.',
-      'They wanted to see a 13th-century castle at the top of a village of a single cobbled street.'
+      'They wanted to see a 13th-century stronghold at the top of a village of a single cobbled street.'
     ]
   },
   'Palacio de Schönbrunn': {
@@ -2728,14 +2728,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino estuvo durante siglos en el centro de un gran imperio.',
       'Quería bailar un vals y comer una torta de chocolate con mermelada de damasco en un café histórico.',
       'Pagó con euros y quería escuchar un concierto de Mozart.',
-      'Quería visitar el palacio de verano de una dinastía imperial, con 1441 habitaciones y el zoológico más antiguo del mundo.'
+      'Quería visitar la residencia de verano de una dinastía imperial, con 1441 habitaciones y el zoológico más antiguo del mundo.'
     ],
     en: [
       'They were going to a Central European capital on the Danube.',
       'They said their destination was for centuries the center of a great empire.',
       'They wanted to dance a waltz and eat a chocolate cake with apricot jam in a historic café.',
       'They paid in euros and wanted to hear a Mozart concert.',
-      'They wanted to visit the summer palace of an imperial dynasty, with 1,441 rooms and the oldest zoo in the world.'
+      'They wanted to visit the summer residence of an imperial dynasty, with 1,441 rooms and the oldest zoo in the world.'
     ]
   },
   'Catedral de San Esteban (Viena)': {
@@ -2744,14 +2744,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue el centro de un imperio y la ciudad de Mozart, Beethoven y Freud.',
       'Quería comer un escalope de ternera empanado gigante y una torta de chocolate.',
       'Pagó con euros y preguntó por una vuelta al mundo en una noria de 1897 en un parque de diversiones.',
-      'Quería ver una catedral gótica con un techo de tejas de colores en zigzag y un águila de dos cabezas.'
+      'Quería ver un templo gótico con un techo de tejas de colores en zigzag y un águila de dos cabezas.'
     ],
     en: [
       'They were going to a Central European capital on the Danube, famous for its coffee houses.',
       'They said their destination was the center of an empire and the city of Mozart, Beethoven and Freud.',
       'They wanted to eat a giant breaded veal escalope and a chocolate cake.',
       'They paid in euros and asked about a ride on an 1897 Ferris wheel in an amusement park.',
-      'They wanted to see a Gothic cathedral with a zigzag roof of colored tiles and a double-headed eagle.'
+      'They wanted to see a Gothic church with a zigzag roof of colored tiles and a double-headed eagle.'
     ]
   },
   'Ópera Estatal de Viena': {
@@ -2759,15 +2759,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba a una capital de Europa central, en una avenida circular que rodea el centro histórico.',
       'Dijo que su destino es considerado la capital mundial de la música clásica.',
       'Quería ir a un baile de gala con vestidos largos y probar un strudel de manzana.',
-      'Pagó con euros y preguntó por las entradas para ver una ópera de pie por pocos euros.',
-      'Quería ver una ópera de 1869 que cada año se transforma en un salón para un famoso baile de debutantes.'
+      'Pagó con euros y preguntó por las entradas de pie para escuchar a Mozart o Verdi por pocos euros.',
+      'Quería ver un gran escenario lírico de 1869 que cada año se transforma en un salón para un famoso baile de debutantes.'
     ],
     en: [
       'They were going to a Central European capital, on a ring boulevard around the historic center.',
       'They said their destination is considered the world capital of classical music.',
       'They wanted to attend a gala ball in long gowns and try an apple strudel.',
-      'They paid in euros and asked about standing-room tickets to see an opera for a few euros.',
-      'They wanted to see an 1869 opera house that every year becomes a ballroom for a famous debutante ball.'
+      'They paid in euros and asked about standing-room tickets to hear Mozart or Verdi for a few euros.',
+      'They wanted to see a great 1869 lyric stage that every year becomes a ballroom for a famous debutante ball.'
     ]
   },
   'Palacio de Hofburg': {
@@ -2776,14 +2776,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene una escuela de equitación con caballos blancos que bailan.',
       'Quería tomar un café con crema batida y comer un bollo de crema.',
       'Pagó con euros y preguntó por una emperatriz muy famosa apodada Sissi.',
-      'Quería recorrer el enorme palacio de invierno de una dinastía que gobernó durante más de 600 años.'
+      'Quería recorrer la enorme residencia de invierno de una dinastía que gobernó durante más de 600 años.'
     ],
     en: [
       'They were going to an imperial Central European capital on the Danube.',
       'They said their destination has a riding school with dancing white horses.',
       'They wanted coffee with whipped cream and a cream bun.',
       'They paid in euros and asked about a very famous empress nicknamed Sisi.',
-      'They wanted to walk through the huge winter palace of a dynasty that ruled for more than 600 years.'
+      'They wanted to walk through the huge winter residence of a dynasty that ruled for more than 600 years.'
     ]
   },
   Hallstatt: {
@@ -2808,30 +2808,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la ciudad natal de un compositor genial del siglo XVIII.',
       'Quería comprar bombones de chocolate con mazapán envueltos con la cara de ese compositor.',
       'Pagó con euros y preguntó por un festival de música clásica cada verano.',
-      'Quería subir en funicular a una de las fortalezas medievales más grandes de Europa.'
+      'Quería subir en funicular a uno de los recintos amurallados medievales más grandes de Europa.'
     ],
     en: [
       'They were going to a baroque city at the foot of the Alps, on the Salzach river.',
       'They said their destination is the hometown of a brilliant 18th-century composer.',
       "They wanted to buy marzipan chocolates wrapped with that composer's face.",
       'They paid in euros and asked about a classical music festival every summer.',
-      'They wanted to ride a funicular up to one of the largest medieval fortresses in Europe.'
+      'They wanted to ride a funicular up to one of the largest medieval walled strongholds in Europe.'
     ]
   },
   'Carretera del Großglockner': {
     es: [
       'Iba a los Alpes orientales, al pie de la montaña más alta de un país de Europa central.',
-      'Dijo que su destino es una ruta de montaña que solo abre de mayo a noviembre.',
+      'Dijo que su destino es una ruta panorámica de alta montaña que solo abre de mayo a noviembre.',
       'Quería ver marmotas y probar un queso de montaña con pan negro.',
       'Pagó con euros y preguntó por el peaje para subir en auto.',
-      'Quería manejar por una carretera de 36 curvas cerradas hasta un mirador frente al glaciar más largo del país.'
+      'Quería manejar por 36 curvas cerradas hasta un mirador frente al glaciar más largo del país.'
     ],
     en: [
       'They were going to the Eastern Alps, at the foot of the highest mountain of a Central European country.',
-      'They said their destination is a mountain road open only from May to November.',
+      'They said their destination is a high-alpine scenic route open only from May to November.',
       'They wanted to see marmots and try a mountain cheese with black bread.',
       'They paid in euros and asked about the toll to drive up.',
-      "They wanted to drive a road of 36 hairpin bends to a viewpoint facing the country's longest glacier."
+      "They wanted to drive 36 hairpin bends up to a viewpoint facing the country's longest glacier."
     ]
   },
   'Castillo de Vaduz': {
@@ -2840,30 +2840,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una capital de unos 5000 habitantes en el valle del Rin.',
       'Comentó que el país es gran fabricante de dentaduras postizas y que no tiene ejército.',
       'Pagó con francos y preguntó si podía hacerse sellar el pasaporte como recuerdo.',
-      'Quería ver el castillo sobre la ladera donde vive la familia del príncipe.'
+      'Quería ver la fortaleza sobre la ladera donde vive la familia del príncipe.'
     ],
     en: [
       'They were going to a tiny landlocked Alpine country between two other Alpine countries.',
       'They said their destination is a capital of about 5,000 people in the Rhine valley.',
       'They mentioned the country is a big maker of false teeth and has no army.',
       'They paid in francs and asked whether they could get a souvenir passport stamp.',
-      "They wanted to see the castle on the hillside where the prince's family lives."
+      "They wanted to see the stronghold on the hillside where the prince's family lives."
     ]
   },
   'Castillo de Praga': {
     es: [
       'Iba a una capital de Europa central sobre un río, con más de cien torres.',
-      'Dijo que su destino es el conjunto de castillos antiguos más grande del mundo.',
+      'Dijo que su destino es el conjunto fortificado antiguo más grande del mundo.',
       'Quería tomar una cerveza rubia y probar un goulash dentro de un pan.',
       'Pagó con coronas y preguntó por un callejón de casitas de colores donde vivió Kafka.',
-      'Quería ver una catedral gótica dentro de un enorme castillo en la colina sobre la ciudad.'
+      'Quería ver una catedral gótica dentro de un enorme recinto real en la colina sobre la ciudad.'
     ],
     en: [
       'They were going to a Central European capital on a river, with more than a hundred spires.',
-      'They said their destination is the largest ancient castle complex in the world.',
+      'They said their destination is the largest ancient fortified complex in the world.',
       'They wanted a lager and a goulash served in a bread bowl.',
       'They paid in korunas and asked about a lane of colorful little houses where Kafka lived.',
-      'They wanted to see a Gothic cathedral inside a huge castle on the hill above the city.'
+      'They wanted to see a Gothic cathedral inside a huge royal compound on the hill above the city.'
     ]
   },
   'Puente de Carlos': {
@@ -2872,14 +2872,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que su destino es una ciudad de cien torres que se salvó de los bombardeos de la guerra.',
       'Dijo que ahí se toma de las cervezas más baratas y ricas del mundo, y quería probar un trdelník.',
       'Pagó con coronas y preguntó por un reloj astronómico medieval.',
-      'Quería cruzar un puente de piedra gótico del siglo XIV custodiado por 30 estatuas de santos.'
+      'Quería cruzar a pie el río por un paso de piedra gótico del siglo XIV custodiado por 30 estatuas de santos.'
     ],
     en: [
       'They were going to a Central European capital crossed by the Vltava river.',
       'They mentioned their destination is a city of a hundred spires that escaped wartime bombing.',
       'They said some of the cheapest and best beer in the world is drunk there, and wanted to try a trdelník.',
       'They paid in korunas and asked about a medieval astronomical clock.',
-      'They wanted to cross a 14th-century Gothic stone bridge guarded by 30 statues of saints.'
+      'They wanted to walk across the river on a 14th-century Gothic stone crossing guarded by 30 statues of saints.'
     ]
   },
   'Reloj Astronómico de Praga': {
@@ -2888,14 +2888,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una plaza medieval con una iglesia de dos torres puntiagudas.',
       'Quería ver un espectáculo de marionetas tradicionales y probar una masa dulce enrollada en un palo.',
       'Pagó con coronas y preguntó por la torre del ayuntamiento con vista a la plaza.',
-      'Quería ver un reloj astronómico de 1410 donde cada hora desfilan los apóstoles y un esqueleto toca una campana.'
+      'Quería ver un mecanismo medieval de 1410 en una torre, donde cada hora desfilan los apóstoles y un esqueleto toca una campana.'
     ],
     en: [
       'They were going to a Central European capital crossed by the Vltava river.',
       'They said their destination is a medieval square with a church with two pointed towers.',
       'They wanted to see a traditional puppet show and try a sweet dough rolled on a stick.',
       'They paid in korunas and asked about the town hall tower overlooking the square.',
-      'They wanted to see a 1410 astronomical clock where the apostles parade every hour and a skeleton rings a bell.'
+      'They wanted to see a 1410 medieval mechanism on a tower where the apostles parade every hour and a skeleton rings a bell.'
     ]
   },
   'Český Krumlov': {
@@ -2936,14 +2936,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene más de cien fuentes de aguas termales.',
       'Quería comer un gulash con mucho pimentón y bañarse en unas termas al aire libre.',
       'Pagó con florines y preguntó por un bastión con siete torres que parecen sombreros.',
-      'Quería ver un parlamento neogótico gigante a orillas del río, uno de los edificios más grandes del país.'
+      'Quería ver un edificio neogótico gigante a orillas del río, sede de la Asamblea Nacional y uno de los más grandes del país.'
     ],
     en: [
       'They were going to a capital split in two by the Danube: hills on one side and plains on the other.',
       'They said their destination has more than a hundred thermal springs.',
       'They wanted to eat goulash with lots of paprika and bathe in open-air thermal baths.',
       'They paid in forints and asked about a bastion with seven towers that look like hats.',
-      'They wanted to see a gigantic neo-Gothic parliament on the riverbank, one of the largest buildings in the country.'
+      'They wanted to see a gigantic neo-Gothic building on the riverbank, seat of the National Assembly and one of the largest in the country.'
     ]
   },
   'Bastión de los Pescadores': {
@@ -2968,14 +2968,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está al final de una avenida elegante bajo la cual corre uno de los metros más antiguos del mundo.',
       'Quería probar una torta frita con crema agria y queso rallado.',
       'Pagó con florines y preguntó por unas termas amarillas en el parque.',
-      'Quería ver una plaza con una columna coronada por un arcángel y estatuas de los jefes de las tribus fundadoras.'
+      'Quería ver un gran espacio abierto con una columna coronada por un arcángel y estatuas de los jefes de las tribus fundadoras.'
     ],
     en: [
       'They were going to a Central European capital on the Danube, at the entrance of a big city park.',
       'They said their destination is at the end of an elegant avenue under which runs one of the oldest metros in the world.',
       'They wanted to try a fried flatbread with sour cream and grated cheese.',
       'They paid in forints and asked about some yellow thermal baths in the park.',
-      'They wanted to see a square with a column topped by an archangel and statues of the leaders of the founding tribes.'
+      'They wanted to see a large open space with a column topped by an archangel and statues of the leaders of the founding tribes.'
     ]
   },
   'Baños Széchenyi': {
@@ -2984,30 +2984,30 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está dentro de un gran parque urbano con un castillo de cuento.',
       'Quería probar un goulash y un aguardiente de frutas.',
       'Pagó con florines y preguntó por las fiestas nocturnas con música en las piletas.',
-      'Quería bañarse en invierno en piletas al aire libre de agua caliente y ver a la gente jugar al ajedrez adentro.'
+      'Quería meterse en invierno en piletas al aire libre de agua caliente y ver a la gente jugar al ajedrez en el agua.'
     ],
     en: [
       'They were going to a Central European capital on the Danube, built on top of thermal springs.',
       'They said their destination is inside a big city park with a fairy-tale castle.',
       'They wanted to try a goulash and a fruit brandy.',
       'They paid in forints and asked about the night parties with music in the pools.',
-      'They wanted to bathe in winter in hot outdoor pools and watch people playing chess in the water.'
+      'They wanted to soak in winter in hot outdoor pools and watch people playing chess in the water.'
     ]
   },
   'Tihany (Lago Balatón)': {
     es: [
-      'Iba al lago más grande de Europa central, apodado el mar de su país.',
-      'Dijo que su destino es una península que entra en el lago, con campos de lavanda.',
+      'Iba a las aguas dulces más extensas de Europa central, apodadas el mar de su país.',
+      'Dijo que su destino es una península que entra en esas aguas, con campos de lavanda.',
       'Quería probar un vino blanco volcánico y una torta frita en la playa.',
       'Pagó con florines y preguntó por un eco famoso que repite las palabras.',
-      'Quería ver una abadía benedictina de dos torres sobre una colina que domina el lago.'
+      'Quería ver una abadía benedictina de dos torres sobre una colina que domina la orilla.'
     ],
     en: [
-      "They were going to the largest lake in Central Europe, nicknamed the country's sea.",
-      'They said their destination is a peninsula reaching into the lake, with lavender fields.',
+      "They were going to the largest body of fresh water in Central Europe, nicknamed the country's sea.",
+      'They said their destination is a peninsula reaching into those waters, with lavender fields.',
       'They wanted a volcanic white wine and a fried flatbread on the beach.',
       'They paid in forints and asked about a famous echo that repeats your words.',
-      'They wanted to see a two-towered Benedictine abbey on a hill overlooking the lake.'
+      'They wanted to see a two-towered Benedictine abbey on a hill overlooking the shore.'
     ]
   },
   'Castillo de Wawel': {
@@ -3016,14 +3016,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad medieval que se salvó de la destrucción en la Segunda Guerra.',
       'Quería comer pierogi y un pan trenzado en forma de rosca.',
       'Pagó con zlotys y preguntó por un dragón de metal que escupe fuego junto al río.',
-      'Quería ver el castillo real en la colina, con una catedral donde se coronaban los reyes del país.'
+      'Quería ver la residencia real fortificada en la colina, con una catedral donde se coronaban los reyes del país.'
     ],
     en: [
       'They were going to the south of a Central European country, to its old royal capital on the Vistula river.',
       'They said their destination is a medieval city spared from destruction in World War II.',
       'They wanted to eat pierogi and a braided bread ring.',
       'They paid in zlotys and asked about a metal dragon that breathes fire by the river.',
-      "They wanted to see the royal castle on the hill, with a cathedral where the country's kings were crowned."
+      "They wanted to see the fortified royal residence on the hill, with a cathedral where the country's kings were crowned."
     ]
   },
   'Plaza del Mercado de Cracovia': {
@@ -3032,14 +3032,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Comentó que su destino fue capital de su país durante siglos y tiene un castillo real sobre una colina.',
       'Quería comer pierogi rellenos y unas rosquillas de pan trenzado que se venden en la calle.',
       'Pagó con zlotys y preguntó por una mina de sal con capillas talladas bajo tierra.',
-      'Quería ver una de las plazas medievales más grandes de Europa, donde un trompetista toca desde una torre cada hora.'
+      'Quería ver uno de los espacios abiertos medievales más grandes de Europa, donde un trompetista toca desde una torre cada hora.'
     ],
     en: [
       'They were going to the south of a Central European country, to a city on the Vistula river.',
       "They mentioned their destination was the country's capital for centuries and has a royal castle on a hill.",
       'They wanted to eat stuffed pierogi and braided bread rings sold on the street.',
       'They paid in zlotys and asked about a salt mine with chapels carved underground.',
-      'They wanted to see one of the largest medieval squares in Europe, where a trumpeter plays from a tower every hour.'
+      'They wanted to see one of the largest medieval open spaces in Europe, where a trumpeter plays from a tower every hour.'
     ]
   },
   'Minas de sal de Wieliczka': {
@@ -3064,14 +3064,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue la capital de una orden de caballeros cruzados en el siglo XIV.',
       'Quería probar una sopa agria de centeno con huevo y salchicha.',
       'Pagó con zlotys y preguntó por los torneos medievales que se recrean cada verano.',
-      'Quería ver el castillo de ladrillo más grande del mundo, construido por los caballeros teutónicos.'
+      'Quería ver la fortaleza de ladrillo más grande del mundo, construida por los caballeros teutónicos.'
     ],
     en: [
       'They were going to the north of a Central European country, near the Baltic Sea, on a river.',
       'They said their destination was the capital of an order of crusader knights in the 14th century.',
       'They wanted to try a sour rye soup with egg and sausage.',
       'They paid in zlotys and asked about the medieval tournaments re-enacted every summer.',
-      'They wanted to see the largest brick castle in the world, built by the Teutonic Knights.'
+      'They wanted to see the largest brick fortress in the world, built by the Teutonic Knights.'
     ]
   },
   'Palacio de la Cultura (Varsovia)': {
@@ -3096,14 +3096,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue destruido casi por completo en 1944 y reconstruido usando cuadros del siglo XVIII.',
       'Quería comer pierogi y probar un vodka de hierbas.',
       'Pagó con zlotys y preguntó por la estatua de una sirena con espada, símbolo de la ciudad.',
-      'Quería ver un castillo real de ladrillo rojo con torre del reloj, frente a una plaza con una columna.'
+      'Quería ver una residencia real de ladrillo rojo con torre del reloj, reconstruida tras la guerra, frente a una columna con un rey.'
     ],
     en: [
       'They were going to a Central European capital on a wide river, with a colorful old town.',
       'They said their destination was almost completely destroyed in 1944 and rebuilt using 18th-century paintings.',
       'They wanted to eat pierogi and try a herbal vodka.',
       'They paid in zlotys and asked about the statue of a mermaid with a sword, symbol of the city.',
-      'They wanted to see a red brick royal castle with a clock tower, facing a square with a column.'
+      'They wanted to see a red brick royal residence with a clock tower, rebuilt after the war, facing a column with a king on top.'
     ]
   },
   'Castillo de Bratislava': {
@@ -3112,27 +3112,27 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está a una hora de otra capital, la más cercana entre dos capitales europeas.',
       'Quería comer ñoquis de papa con queso de oveja y panceta.',
       'Pagó con euros y preguntó por la estatua de un obrero que asoma de una alcantarilla.',
-      'Quería ver un castillo blanco rectangular con cuatro torres en una colina sobre el río.'
+      'Quería ver una fortaleza blanca rectangular con cuatro torres en una colina sobre el río.'
     ],
     en: [
       'They were going to a capital on the Danube, right on the borders with two other countries.',
       'They said their destination is an hour from another capital, the closest pair of capitals in Europe.',
       "They wanted to eat potato dumplings with sheep's cheese and bacon.",
       'They paid in euros and asked about the statue of a worker peeking out of a manhole.',
-      'They wanted to see a white rectangular castle with four towers on a hill over the river.'
+      'They wanted to see a white rectangular fortress with four towers on a hill over the river.'
     ]
   },
   'Lago Bled': {
     es: [
       'Iba a los Alpes Julianos, en un país pequeño de Europa central con un pedacito de costa en el Adriático.',
-      'Dijo que su destino es un lago alpino de aguas verdes rodeado de montañas y bosques.',
+      'Dijo que su destino es un espejo de agua alpino de color verde, rodeado de montañas y bosques.',
       'Quería probar un pastel de crema y hojaldre que se hace allí desde los años 50.',
       'Pagó con euros y preguntó por unos botes de madera con remeros de pie.',
       'Quería ir en bote hasta un islote con una iglesia y tocar su campana de los deseos.'
     ],
     en: [
       'They were going to the Julian Alps, in a small Central European country with a bit of Adriatic coast.',
-      'They said their destination is an Alpine lake with green water surrounded by mountains and forests.',
+      'They said their destination is an Alpine stretch of green water surrounded by mountains and forests.',
       'They wanted to try a cream and puff pastry cake made there since the 1950s.',
       'They paid in euros and asked about wooden boats rowed standing up.',
       'They wanted to row to an islet with a church and ring its wishing bell.'
@@ -3140,18 +3140,18 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Cueva de Postojna': {
     es: [
-      'Iba a una región de piedra caliza y cuevas entre los Alpes y el mar Adriático.',
+      'Iba a una región de piedra caliza llena de galerías subterráneas, entre los Alpes y el mar Adriático.',
       'Dijo que su destino está en un país pequeño de Europa central con mucho bosque.',
       'Quería probar una salchicha ahumada típica de la región y un vino de la costa.',
-      'Pagó con euros y preguntó por un castillo construido dentro de la boca de una cueva.',
-      'Quería recorrer en tren una cueva habitada por un anfibio ciego al que apodan "pez humano".'
+      'Pagó con euros y preguntó por un castillo construido dentro de la boca de una gruta.',
+      'Quería recorrer en tren galerías subterráneas habitadas por un anfibio ciego al que apodan "pez humano".'
     ],
     en: [
-      'They were going to a region of limestone and caves between the Alps and the Adriatic Sea.',
+      'They were going to a limestone region full of underground passages, between the Alps and the Adriatic Sea.',
       'They said their destination is in a small, heavily forested Central European country.',
       "They wanted to try the region's typical smoked sausage and a coastal wine.",
-      'They paid in euros and asked about a castle built in the mouth of a cave.',
-      'They wanted to ride a train through a cave inhabited by a blind amphibian nicknamed "human fish".'
+      'They paid in euros and asked about a castle built in the mouth of a grotto.',
+      'They wanted to ride a train through underground passages inhabited by a blind amphibian nicknamed "human fish".'
     ]
   },
   'Puente de los Dragones (Liubliana)': {
@@ -3159,15 +3159,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba a una capital pequeña de Europa central, entre los Alpes y el Adriático.',
       'Dijo que su destino tiene un centro peatonal a orillas de un río verde, con un castillo en la colina.',
       'Quería probar una torta enrollada de nueces y tomar algo en un bar junto al río.',
-      'Pagó con euros y preguntó por un arquitecto que diseñó casi toda la ciudad, incluido un triple puente.',
-      'Quería cruzar un puente art nouveau custodiado por cuatro dragones de bronce, símbolo de la ciudad.'
+      'Pagó con euros y preguntó por un arquitecto que diseñó casi toda la ciudad, incluido un triple cruce sobre el río.',
+      'Quería cruzar el río por una obra art nouveau de 1901 custodiada por cuatro criaturas aladas de bronce, símbolo de la ciudad.'
     ],
     en: [
       'They were going to a small Central European capital, between the Alps and the Adriatic.',
       'They said their destination has a pedestrian center on a green river, with a castle on the hill.',
       'They wanted to try a rolled walnut cake and have a drink at a riverside bar.',
-      'They paid in euros and asked about an architect who designed almost the whole city, including a triple bridge.',
-      'They wanted to cross an art nouveau bridge guarded by four bronze dragons, symbol of the city.'
+      'They paid in euros and asked about an architect who designed almost the whole city, including a triple river crossing.',
+      'They wanted to cross the river on a 1901 art nouveau structure guarded by four winged bronze creatures, symbol of the city.'
     ]
   },
   'Murallas de Dubrovnik': {
@@ -3176,14 +3176,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad de techos naranjas rodeada de islas.',
       'Comentó que ahí se filmó una famosa serie de fantasía con dragones y tronos.',
       'Pagó con euros y preguntó por un teleférico que sube a un monte con vista al mar.',
-      'Quería recorrer a pie casi dos kilómetros de murallas medievales que rodean el casco antiguo.'
+      'Quería recorrer a pie casi dos kilómetros de defensas medievales que rodean el casco antiguo.'
     ],
     en: [
       'They were going to the Adriatic coast, at the southern tip of a crescent-shaped country.',
       'They said their destination is a city of orange roofs surrounded by islands.',
       'They mentioned a famous fantasy series with dragons and thrones was filmed there.',
       'They paid in euros and asked about a cable car up a hill with sea views.',
-      'They wanted to walk almost two kilometers of medieval walls around the old town.'
+      'They wanted to walk almost two kilometers of medieval ramparts around the old town.'
     ]
   },
   'Lagos de Plitvice': {
@@ -3192,14 +3192,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un parque nacional con osos, lobos y nieve en invierno.',
       'Quería probar un strudel casero y una trucha a la parrilla.',
       'Pagó con euros y preguntó por las pasarelas de madera que cruzan el agua.',
-      'Quería ver 16 lagos turquesa escalonados, unidos entre sí por decenas de cascadas.'
+      'Quería ver 16 espejos de agua turquesa escalonados, unidos entre sí por decenas de cascadas.'
     ],
     en: [
       'They were going to the inland forests of a Balkan country, between the Adriatic coast and the capital.',
       'They said their destination is a national park with bears, wolves and snow in winter.',
       'They wanted to try homemade strudel and grilled trout.',
       'They paid in euros and asked about the wooden boardwalks that cross the water.',
-      'They wanted to see 16 terraced turquoise lakes linked by dozens of waterfalls.'
+      'They wanted to see 16 terraced turquoise pools linked by dozens of waterfalls.'
     ]
   },
   'Palacio de Diocleciano (Split)': {
@@ -3208,14 +3208,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que desde su destino salen los ferris a muchas islas del Adriático.',
       'Quería ver a la gente jugar a pasarse una pelotita en el agua sin dejarla caer.',
       'Pagó con euros y preguntó por la estatua de un obispo con un dedo gastado de tanto tocarlo.',
-      'Quería pasear por el palacio de un emperador romano del siglo IV donde hoy vive gente.'
+      'Quería pasear por la residencia de un emperador romano del siglo IV donde hoy vive gente.'
     ],
     en: [
       'They were going to the Dalmatian coast of the Adriatic, to a port city surrounded by islands.',
       'They said ferries leave from their destination to many Adriatic islands.',
       'They wanted to watch people play a game of passing a small ball in the water without dropping it.',
       'They paid in euros and asked about the statue of a bishop with a toe worn from being touched.',
-      'They wanted to walk around the palace of a 4th-century Roman emperor where people live today.'
+      'They wanted to walk around the residence of a 4th-century Roman emperor where people live today.'
     ]
   },
   Rovinj: {
@@ -3240,14 +3240,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está cerca de una ciudad costera con varias fortalezas y una catedral de piedra.',
       'Quería probar un jamón curado al viento y un queso de oveja de una isla.',
       'Pagó con euros y preguntó por una de las primeras centrales hidroeléctricas de corriente alterna del mundo.',
-      'Quería caminar por pasarelas junto a una gran cascada escalonada de travertino en un río.'
+      'Quería caminar por pasarelas junto a grandes saltos de agua escalonados de travertino en un río.'
     ],
     en: [
       'They were going to the Dalmatia region, near the Adriatic coast, to a national park.',
       'They said their destination is near a coastal town with several fortresses and a stone cathedral.',
       "They wanted to try a wind-cured ham and a sheep's cheese from an island.",
       'They paid in euros and asked about one of the first alternating-current hydroelectric plants in the world.',
-      'They wanted to walk on boardwalks beside a big stepped travertine waterfall on a river.'
+      'They wanted to walk on boardwalks beside big stepped travertine falls on a river.'
     ]
   },
   'Puente Viejo de Mostar': {
@@ -3256,14 +3256,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene minaretes, mercados de cobre y veranos muy calurosos.',
       'Quería tomar café preparado en una jarrita de cobre y comer ćevapi con pan.',
       'Pagó con marcos convertibles y preguntó por las cicatrices de la guerra de los años 90.',
-      'Quería ver un puente otomano del siglo XVI, reconstruido tras la guerra, desde donde los clavadistas saltan unos 20 metros.'
+      'Quería ver un arco otomano de piedra del siglo XVI, reconstruido tras la guerra, desde donde los clavadistas saltan unos 20 metros al río.'
     ],
     en: [
       'They were going to the Balkans, to a city in the valley of an emerald-green river.',
       'They said their destination has minarets, copper markets and very hot summers.',
       'They wanted coffee brewed in a little copper pot and ćevapi with bread.',
       'They paid in convertible marks and asked about the scars of the war of the 1990s.',
-      'They wanted to see a 16th-century Ottoman bridge, rebuilt after the war, from which divers jump about 20 meters.'
+      'They wanted to see a 16th-century Ottoman stone arch, rebuilt after the war, from which divers jump about 20 meters into the river.'
     ]
   },
   'Baščaršija (Sarajevo)': {
@@ -3284,14 +3284,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Bahía de Kotor': {
     es: [
-      'Iba al mar Adriático, a una bahía profunda entre montañas que parece un fiordo.',
+      'Iba al mar Adriático, a una entrada de mar profunda entre montañas que parece un fiordo.',
       'Dijo que su destino está en un país balcánico pequeño cuyo nombre habla de montañas oscuras.',
       'Comentó que ahí se paga con euros aunque el país no es parte de la Unión Europea.',
       'Quería probar jamón curado de montaña y ver los gatos que pasean por el casco antiguo.',
       'Quería subir los más de 1300 escalones que van de una ciudad amurallada medieval a una fortaleza en la montaña.'
     ],
     en: [
-      'They were going to the Adriatic Sea, to a deep bay between mountains that looks like a fjord.',
+      'They were going to the Adriatic Sea, to a deep inlet between mountains that looks like a fjord.',
       'They said their destination is in a small Balkan country whose name speaks of dark mountains.',
       'They mentioned people pay in euros there even though the country is not in the European Union.',
       'They wanted to try cured mountain ham and see the cats roaming the old town.',
@@ -3304,26 +3304,26 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una de las ciudades más antiguas de Europa, destruida y reconstruida decenas de veces.',
       'Quería tomar un aguardiente de ciruela y comer carne a la parrilla con una crema de pimientos.',
       'Pagó con dinares y preguntó por los bares flotantes sobre el río.',
-      'Quería ver una fortaleza en un parque sobre la confluencia de los dos ríos.'
+      'Quería ver un recinto amurallado en un parque sobre la confluencia de los dos ríos.'
     ],
     en: [
       'They were going to a Balkan capital where the Sava river flows into the Danube.',
       'They said their destination is one of the oldest cities in Europe, destroyed and rebuilt dozens of times.',
       'They wanted to drink a plum brandy and eat grilled meat with a pepper relish.',
       'They paid in dinars and asked about the floating bars on the river.',
-      'They wanted to see a fortress in a park overlooking the confluence of the two rivers.'
+      'They wanted to see a walled stronghold in a park overlooking the confluence of the two rivers.'
     ]
   },
   'Templo de San Sava': {
     es: [
-      'Iba a una capital de los Balcanes donde se juntan el Sava y el Danubio.',
+      'Iba a una capital de los Balcanes donde un afluente desemboca en el Danubio.',
       'Dijo que su destino tiene una vida nocturna famosa en bares flotantes sobre el río.',
       'Quería probar unas brochetas de carne picada con pan y una crema de pimientos rojos asados.',
       'Pagó con dinares y preguntó por la tumba de un mariscal que gobernó una gran federación.',
       'Quería ver una de las iglesias ortodoxas más grandes del mundo, de cúpula blanca y mosaicos dorados.'
     ],
     en: [
-      'They were going to a Balkan capital where the Sava meets the Danube.',
+      'They were going to a Balkan capital where a tributary flows into the Danube.',
       'They said their destination has famous nightlife on floating bars on the river.',
       'They wanted to try minced meat skewers with bread and a roasted red pepper spread.',
       'They paid in dinars and asked about the tomb of a marshal who ruled a great federation.',
@@ -3336,14 +3336,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un paso de montaña entre bosques con osos, en una región llamada Transilvania.',
       'Quería probar unos rollitos de carne a la parrilla y una sopa agria con crema.',
       'Pagó con lei y preguntó por la leyenda de un príncipe que empalaba a sus enemigos.',
-      'Quería visitar un castillo sobre una roca asociado a la leyenda del vampiro más famoso de la literatura.'
+      'Quería visitar una fortaleza sobre una roca asociada a la leyenda del vampiro más famoso de la literatura.'
     ],
     en: [
       'They were going to the Carpathian Mountains, in Eastern Europe.',
       'They said their destination is a mountain pass among forests with bears, in a region called Transylvania.',
       'They wanted to try grilled meat rolls and a sour soup with cream.',
       'They paid in lei and asked about the legend of a prince who impaled his enemies.',
-      'They wanted to visit a castle on a rock linked to the legend of the most famous vampire in literature.'
+      'They wanted to visit a stronghold on a rock linked to the legend of the most famous vampire in literature.'
     ]
   },
   'Palacio del Parlamento (Bucarest)': {
@@ -3368,14 +3368,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un centro de esquí a dos horas de la capital, en una región llamada Valaquia.',
       'Quería probar una sopa en un pan redondo y unos buñuelos con mermelada.',
       'Pagó con lei y preguntó por el primer rey del país, que vivió allí.',
-      'Quería ver un castillo neorrenacentista de cuento de 1883, uno de los primeros de Europa con luz eléctrica.'
+      'Quería ver una residencia real neorrenacentista de cuento de 1883, una de las primeras de Europa con luz eléctrica.'
     ],
     en: [
       'They were going to the Carpathian Mountains, to a mountain town in a wooded valley.',
       'They said their destination is a ski resort two hours from the capital, in a region called Wallachia.',
       'They wanted to try a soup in a round bread loaf and some fritters with jam.',
       "They paid in lei and asked about the country's first king, who lived there.",
-      'They wanted to see an 1883 fairy-tale neo-Renaissance castle, one of the first in Europe with electric light.'
+      'They wanted to see an 1883 fairy-tale neo-Renaissance royal residence, one of the first in Europe with electric light.'
     ]
   },
   Sighișoara: {
@@ -3400,14 +3400,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ruta de alta montaña que solo abre en verano.',
       'Quería probar queso ahumado envuelto en corteza de pino en un puesto al costado de la ruta.',
       'Pagó con lei y preguntó por un lago glaciar en la cima con una cabaña.',
-      'Quería manejar por una carretera de curvas cerradas que un famoso programa de autos llamó la mejor del mundo.'
+      'Quería manejar por un trazado de curvas cerradas que un famoso programa de autos llamó el mejor del mundo.'
     ],
     en: [
       'They were going to the Carpathian Mountains, in Eastern Europe, to the highest range of the region.',
-      'They said their destination is a high mountain road open only in summer.',
+      'They said their destination is a high mountain route open only in summer.',
       'They wanted to try smoked cheese wrapped in pine bark at a roadside stall.',
       'They paid in lei and asked about a glacial lake at the top with a chalet.',
-      'They wanted to drive a road of hairpin bends that a famous car show called the best in the world.'
+      'They wanted to drive a route of hairpin bends that a famous car show called the best in the world.'
     ]
   },
   'Catedral Alejandro Nevski': {
@@ -3416,14 +3416,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una de las capitales más antiguas de Europa, con ruinas romanas bajo el metro.',
       'Quería probar una ensalada con queso blanco y una sopa fría de yogur y pepino.',
       'Pagó con euros y preguntó por la montaña donde se esquía a media hora de la ciudad.',
-      'Quería ver una catedral ortodoxa neobizantina de cúpulas doradas y verdes.'
+      'Quería ver un templo ortodoxo neobizantino de cúpulas doradas y verdes.'
     ],
     en: [
       'They were going to a Balkan capital at the foot of a mountain, with hot springs in the center.',
       'They said their destination is one of the oldest capitals in Europe, with Roman ruins under the metro.',
       'They wanted to try a salad with white cheese and a cold yogurt and cucumber soup.',
       'They paid in euros and asked about the mountain where people ski half an hour from the city.',
-      'They wanted to see a neo-Byzantine Orthodox cathedral with gold and green domes.'
+      'They wanted to see a neo-Byzantine Orthodox church with gold and green domes.'
     ]
   },
   'Monasterio de Rila': {
@@ -3432,14 +3432,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está en un valle boscoso al pie del pico más alto de la península balcánica.',
       'Quería probar un yogur muy famoso de su país y una ensalada con queso blanco rallado.',
       'Pagó con euros, que el país adoptó en 2026, y comentó que en su destino se mueve la cabeza de lado a lado para decir que sí.',
-      'Quería ver un monasterio ortodoxo con arcos a rayas blancas y negras y paredes cubiertas de frescos.'
+      'Quería ver un complejo religioso ortodoxo con arcos a rayas blancas y negras y paredes cubiertas de frescos.'
     ],
     en: [
       'They were going to the mountains of the southern Balkans, two hours from a capital.',
       'They said their destination is in a wooded valley below the highest peak of the Balkan Peninsula.',
       "They wanted to try the country's famous yogurt and a salad topped with grated white cheese.",
       'They paid in euros, adopted by the country in 2026, and mentioned people there shake their head side to side to say yes.',
-      'They wanted to see an Orthodox monastery with black and white striped arches and walls covered in frescoes.'
+      'They wanted to see an Orthodox religious complex with black and white striped arches and walls covered in frescoes.'
     ]
   },
   'Casco antiguo de Tallin': {
@@ -3448,14 +3448,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es uno de los países más digitales del mundo, donde casi todo se hace por internet.',
       'Comentó que ahí se creó un famoso programa de videollamadas y quería probar pan negro de centeno.',
       'Pagó con euros y preguntó por un festival de canto con miles de voces.',
-      'Quería recorrer un casco medieval amurallado con torres de techos puntiagudos rojos.'
+      'Quería recorrer un centro medieval amurallado con torres de techos puntiagudos rojos.'
     ],
     en: [
       'They were going to the Baltic coast, to a capital about 80 kilometers by boat from another.',
       'They said their destination is one of the most digital countries in the world, where almost everything is done online.',
       'They mentioned a famous video call program was created there and wanted to try black rye bread.',
       'They paid in euros and asked about a song festival with thousands of voices.',
-      'They wanted to explore a walled medieval old town with pointed red-roofed towers.'
+      'They wanted to explore a walled medieval center with pointed red-roofed towers.'
     ]
   },
   'Casa de los Cabezas Negras (Riga)': {
@@ -3480,14 +3480,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un pueblo con una minoría turca de religión karaíta y sus casas de tres ventanas.',
       'Quería probar unas empanadas de carne de cordero de esa comunidad.',
       'Pagó con euros y preguntó por los paseos en velero por los lagos.',
-      'Quería ver un castillo de ladrillo rojo sobre una isla en medio de un lago.'
+      'Quería ver una fortaleza de ladrillo rojo sobre una isla en medio de un lago.'
     ],
     en: [
       'They were going to the southernmost Baltic state, to a lake district near the capital.',
       'They said their destination is a town with a Turkic Karaite minority and its three-windowed houses.',
       "They wanted to try that community's lamb pasties.",
       'They paid in euros and asked about sailing trips on the lakes.',
-      'They wanted to see a red brick castle on an island in the middle of a lake.'
+      'They wanted to see a red brick fortress on an island in the middle of a lake.'
     ]
   },
   'Colina de las Cruces': {
@@ -3496,14 +3496,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un lugar de peregrinación en el campo, cerca de una ciudad mediana.',
       'Quería probar unas albóndigas de papa rellenas de carne con forma de zepelín y ver básquet, el deporte nacional.',
       'Pagó con euros y preguntó por un papa que visitó el lugar en 1993.',
-      'Quería ver una colina cubierta por más de 100.000 cruces que la gente deja desde hace siglos.'
+      'Quería ver un montículo cubierto por más de 100.000 crucifijos que la gente deja desde hace siglos.'
     ],
     en: [
       'They were going to the northern plains of the southernmost of the Baltic states.',
       'They said their destination is a pilgrimage site in the countryside, near a mid-sized town.',
       'They wanted to try zeppelin-shaped potato dumplings filled with meat and watch basketball, the national sport.',
       'They paid in euros and asked about a pope who visited the place in 1993.',
-      'They wanted to see a hill covered with more than 100,000 crosses left by people for centuries.'
+      'They wanted to see a mound covered with more than 100,000 crucifixes left by people for centuries.'
     ]
   },
   'Plaza Roja': {
@@ -3528,14 +3528,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene tantos canales y puentes que la llaman la Venecia del norte.',
       'Quería ver cómo se abren los puentes levadizos de madrugada y probar blinis con caviar.',
       'Pagó con rublos y preguntó por la ciudad fundada por un zar en 1703.',
-      'Quería visitar uno de los museos más grandes del mundo, en el antiguo Palacio de Invierno de los zares.'
+      'Quería ver una de las colecciones de arte más grandes del mundo, en el antiguo Palacio de Invierno de los zares.'
     ],
     en: [
       'They were going to a big Eastern European city on the Baltic, with white nights in June.',
       'They said their destination has so many canals and bridges it is called the Venice of the North.',
       'They wanted to watch the drawbridges open at night and try blinis with caviar.',
       'They paid in rubles and asked about the city founded by a tsar in 1703.',
-      "They wanted to visit one of the largest museums in the world, in the tsars' former Winter Palace."
+      "They wanted to see one of the largest art collections in the world, in the tsars' former Winter Palace."
     ]
   },
   'Iglesia del Salvador sobre la Sangre': {
@@ -3544,14 +3544,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene canales, palacios y puentes que se levantan de noche.',
       'Quería ver un ballet clásico y probar una sopa de remolacha con crema.',
       'Pagó con rublos y preguntó por las noches blancas de junio.',
-      'Quería ver una iglesia de cúpulas de colores en forma de cebolla, construida donde mataron a un zar en 1881.'
+      'Quería ver un templo de cúpulas de colores en forma de cebolla, construido donde mataron a un zar en 1881.'
     ],
     en: [
       'They were going to a big city on the Baltic, founded by a tsar in 1703.',
       'They said their destination has canals, palaces and bridges that rise at night.',
       'They wanted to see a classical ballet and try a beetroot soup with sour cream.',
       'They paid in rubles and asked about the white nights of June.',
-      'They wanted to see a church with colorful onion domes, built where a tsar was killed in 1881.'
+      'They wanted to see a place of worship with colorful onion domes, built where a tsar was killed in 1881.'
     ]
   },
   'Acrópolis de Atenas': {
@@ -3608,14 +3608,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está a una hora de una capital antigua, entre dos golfos.',
       'Quería probar pasas de uva de una variedad que lleva el nombre de la ciudad cercana.',
       'Pagó con euros y preguntó por la gente que salta en bungee desde el puente.',
-      'Quería ver un canal angosto de 6 kilómetros excavado en la roca, con paredes de casi 90 metros.'
+      'Quería ver un paso de agua angosto de 6 kilómetros excavado en la roca, con paredes de casi 90 metros.'
     ],
     en: [
       'They were going to southeastern Europe, to the isthmus joining a southern peninsula to the mainland.',
       'They said their destination is an hour from an ancient capital, between two gulfs.',
       'They wanted to try raisins of a variety named after the nearby city.',
       'They paid in euros and asked about the people bungee jumping from the bridge.',
-      'They wanted to see a narrow 6-kilometer canal cut through the rock, with walls almost 90 meters high.'
+      'They wanted to see a narrow 6-kilometer waterway cut through the rock, with walls almost 90 meters high.'
     ]
   },
   Delfos: {
@@ -3672,14 +3672,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es la isla del sol, con más de 300 días soleados al año.',
       'Quería probar unos buñuelos de garbanzos y un vino de la isla.',
       'Pagó con euros y preguntó por una estatua gigante de la Antigüedad que se derrumbó en un terremoto.',
-      'Quería pasear por una ciudad amurallada de los Caballeros de San Juan, con una calle de antiguas posadas.'
+      'Quería pasear por un recinto amurallado de los Caballeros de San Juan, con una calle de antiguas posadas.'
     ],
     en: [
       'They were going to an Aegean island very close to the coast of Asia Minor.',
       'They said their destination is the island of the sun, with more than 300 sunny days a year.',
       'They wanted to try chickpea fritters and an island wine.',
       'They paid in euros and asked about a giant ancient statue that fell in an earthquake.',
-      'They wanted to walk through a city walled by the Knights of St. John, with a street of old inns.'
+      'They wanted to walk through a stronghold walled by the Knights of St. John, with a street of old inns.'
     ]
   },
   'Palacio de Cnosos': {
@@ -3688,14 +3688,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene playas, montañas y una de las civilizaciones más antiguas de Europa.',
       'Quería probar un aguardiente de orujo y una tostada de cebada con tomate y queso.',
       'Pagó con euros y preguntó por la leyenda de un monstruo mitad hombre, mitad toro.',
-      'Quería ver un palacio de hace unos 3500 años asociado al laberinto del Minotauro.'
+      'Quería ver unas ruinas minoicas de hace unos 3500 años asociadas al laberinto del Minotauro.'
     ],
     en: [
       'They were going to the largest island in the Aegean, south of a Mediterranean country.',
       'They said their destination has beaches, mountains and one of the oldest civilizations in Europe.',
       'They wanted to try a grape-pomace spirit and a barley rusk with tomato and cheese.',
       'They paid in euros and asked about the legend of a monster that was half man, half bull.',
-      'They wanted to see a palace about 3,500 years old linked to the labyrinth of the Minotaur.'
+      'They wanted to see Minoan ruins about 3,500 years old linked to the labyrinth of the Minotaur.'
     ]
   },
   'Templo de Poseidón (Sunión)': {
@@ -3704,14 +3704,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un cabo con vista al mar Egeo y a varias islas.',
       'Quería comer pescado a la parrilla en una taberna junto al mar y un postre de yogur con miel.',
       'Pagó con euros y preguntó por el nombre de Lord Byron tallado en una de las columnas.',
-      'Quería ver al atardecer las columnas de mármol de un templo al dios del mar, sobre un acantilado.'
+      'Quería ver al atardecer las columnas de mármol de un santuario al dios del mar, sobre un acantilado.'
     ],
     en: [
       'They were going to the southern tip of an Attic peninsula, an hour and a half from an ancient capital.',
       'They said their destination is a cape overlooking the Aegean Sea and several islands.',
       'They wanted grilled fish at a seaside tavern and yogurt with honey for dessert.',
       "They paid in euros and asked about Lord Byron's name carved into one of the columns.",
-      'They wanted to see at sunset the marble columns of a temple to the god of the sea, on a cliff.'
+      'They wanted to see at sunset the marble columns of a sanctuary to the god of the sea, on a cliff.'
     ]
   },
   'Santa Sofía': {
@@ -3736,14 +3736,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino fue capital de dos imperios durante más de 1500 años.',
       'Quería ir a un baño de vapor tradicional y comer roscas de pan con sésamo en la calle.',
       'Pagó con liras y preguntó por un bazar cubierto con miles de tiendas.',
-      'Quería ver una mezquita de seis minaretes cuyo interior está cubierto de azulejos azules.'
+      'Quería ver un templo de seis minaretes cuyo interior está cubierto de azulejos de Iznik.'
     ],
     en: [
       'They were going to a big city split between two continents by a strait.',
       'They said their destination was the capital of two empires for more than 1,500 years.',
       'They wanted to go to a traditional steam bath and eat sesame bread rings on the street.',
       'They paid in lira and asked about a covered bazaar with thousands of shops.',
-      'They wanted to see a mosque with six minarets whose interior is covered in blue tiles.'
+      'They wanted to see a place of worship with six minarets whose interior is covered in Iznik tiles.'
     ]
   },
   'Torre de Gálata': {
@@ -3751,15 +3751,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba a una gran ciudad entre dos continentes, a un barrio sobre una colina junto a un estuario.',
       'Dijo que su destino tiene un barrio de calles empinadas con un tranvía rojo antiguo y una avenida peatonal.',
       'Quería comer un sándwich de pescado en un bote junto a un puente y tomar té.',
-      'Pagó con liras y preguntó por un hombre que, según la leyenda, voló con alas desde la torre en el siglo XVII.',
-      'Quería subir a una torre de piedra medieval genovesa de techo cónico con vista al Cuerno de Oro.'
+      'Pagó con liras y preguntó por un hombre que, según la leyenda, voló con alas desde allí en el siglo XVII.',
+      'Quería subir a una construcción medieval genovesa de piedra, alta y de techo cónico, con vista al Cuerno de Oro.'
     ],
     en: [
       'They were going to a big city between two continents, to a hilltop district by an estuary.',
       'They said their destination has a district of steep streets with an old red tram and a pedestrian avenue.',
       'They wanted to eat a fish sandwich from a boat by a bridge and drink tea.',
-      'They paid in lira and asked about a man who, legend says, flew with wings from the tower in the 17th century.',
-      'They wanted to climb a medieval Genoese stone tower with a conical roof overlooking the Golden Horn.'
+      'They paid in lira and asked about a man who, legend says, flew with wings from there in the 17th century.',
+      'They wanted to climb a tall medieval Genoese stone structure with a conical roof overlooking the Golden Horn.'
     ]
   },
   'Palacio de Dolmabahçe': {
@@ -3767,15 +3767,15 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba a una gran ciudad entre dos continentes, a la orilla europea de un estrecho.',
       'Dijo que su destino fue la capital de un imperio que duró más de 600 años.',
       'Quería tomar un café espeso y comer unos dulces gelatinosos con pistacho.',
-      'Pagó con liras y preguntó por el fundador de la república, que murió en ese palacio.',
-      'Quería ver un palacio del siglo XIX junto al agua, con la lámpara de cristal más grande del mundo.'
+      'Pagó con liras y preguntó por el fundador de la república, que murió allí en 1938.',
+      'Quería ver la residencia de los sultanes del siglo XIX junto al agua, con la lámpara de cristal más grande del mundo.'
     ],
     en: [
       'They were going to a big city between two continents, to the European shore of a strait.',
       'They said their destination was the capital of an empire that lasted more than 600 years.',
       'They wanted a thick coffee and some jelly sweets with pistachios.',
-      'They paid in lira and asked about the founder of the republic, who died in that palace.',
-      'They wanted to see a 19th-century waterfront palace with the largest crystal chandelier in the world.'
+      'They paid in lira and asked about the founder of the republic, who died there in 1938.',
+      "They wanted to see the sultans' 19th-century waterfront residence with the largest crystal chandelier in the world."
     ]
   },
   'Puente del Bósforo': {
@@ -3784,14 +3784,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una megaciudad de más de 15 millones de habitantes con muchas mezquitas.',
       'Quería tomar un ferry entre continentes y comer mejillones rellenos de arroz.',
       'Pagó con liras y preguntó por la maratón que se corre de un continente al otro.',
-      'Quería cruzar un puente colgante de 1973 que une dos continentes y se ilumina de colores.'
+      'Quería cruzar una obra colgante de 1973 que une dos continentes y se ilumina de colores.'
     ],
     en: [
       'They were going to a city split by a strait that separates Europe from Asia.',
       'They said their destination is a megacity of more than 15 million people with many mosques.',
       'They wanted to take a ferry between continents and eat mussels stuffed with rice.',
       'They paid in lira and asked about the marathon run from one continent to the other.',
-      'They wanted to cross a 1973 suspension bridge that joins two continents and lights up in colors.'
+      'They wanted to cross a 1973 suspension span that joins two continents and lights up in colors.'
     ]
   },
   'Capadocia (Göreme)': {
@@ -3896,14 +3896,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino está cerca del aeropuerto internacional y de un volcán que entró en erupción varias veces desde 2021.',
       'Quería ponerse una mascarilla de barro de sílice blanco y tomar algo dentro del agua.',
       'Pagó con coronas y preguntó por la central geotérmica de al lado.',
-      'Quería bañarse en una laguna de agua caliente color celeste lechoso en medio de la lava.'
+      'Quería bañarse en aguas termales color celeste lechoso en medio de la lava.'
     ],
     en: [
       'They were going to a peninsula of lava fields in the southwest of a North Atlantic island.',
       'They said their destination is near the international airport and a volcano that has erupted several times since 2021.',
       'They wanted a white silica mud mask and a drink in the water.',
       'They paid in krónur and asked about the geothermal plant next door.',
-      'They wanted to bathe in a milky sky-blue hot lagoon in the middle of the lava.'
+      'They wanted to bathe in milky sky-blue geothermal waters in the middle of the lava.'
     ]
   },
   Skógafoss: {
@@ -4008,14 +4008,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que desde su destino, en días claros, se ve la costa del país vecino.',
       'Quería entender la palabra local que describe estar cómodo y a gusto con amigos y velas.',
       'Pagó con coronas y preguntó por los barcos que pagaban peaje para entrar al Báltico.',
-      'Quería ver el castillo renacentista donde Shakespeare ambientó Hamlet.'
+      'Quería ver la fortaleza renacentista donde Shakespeare ambientó Hamlet.'
     ],
     en: [
       'They were going to the narrowest point of a strait separating two Scandinavian countries.',
       'They said that on clear days you can see the coast of the neighboring country from there.',
       'They wanted to understand the local word for feeling cozy with friends and candles.',
       'They paid in kroner and asked about the ships that paid a toll to enter the Baltic.',
-      'They wanted to see the Renaissance castle where Shakespeare set Hamlet.'
+      'They wanted to see the Renaissance fortress where Shakespeare set Hamlet.'
     ]
   },
   'Jardines de Tivoli': {
@@ -4068,17 +4068,17 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Museo Vasa': {
     es: [
-      'Iba a una isla-parque de museos en una capital escandinava rodeada de agua.',
+      'Iba a una isla-parque llena de atracciones en una capital escandinava rodeada de agua.',
       'Dijo que su destino es una ciudad donde el sol casi no se pone a fines de junio.',
       'Quería festejar el solsticio de verano bailando alrededor de un palo con flores y comiendo arenque.',
-      'Pagó con coronas y preguntó por un museo de un famoso grupo de pop de los años 70.',
+      'Pagó con coronas y preguntó por una exhibición de un famoso grupo de pop de los años 70.',
       'Quería ver un barco de guerra de 1628 que se hundió en su viaje inaugural y fue rescatado casi intacto.'
     ],
     en: [
-      'They were going to a park island of museums in a Scandinavian capital surrounded by water.',
+      'They were going to a park island full of attractions in a Scandinavian capital surrounded by water.',
       'They said their destination is a city where the sun hardly sets in late June.',
       'They wanted to celebrate midsummer dancing around a flowered pole and eating herring.',
-      'They paid in kronor and asked about a museum of a famous 1970s pop group.',
+      'They paid in kronor and asked about an exhibition on a famous 1970s pop group.',
       'They wanted to see a 1628 warship that sank on its maiden voyage and was raised almost intact.'
     ]
   },
@@ -4088,14 +4088,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un pueblito al fondo de un brazo de mar al que llegan cruceros.',
       'Quería probar un queso marrón con sabor a caramelo y salmón ahumado.',
       'Pagó con coronas y preguntó por una ruta de montaña con curvas muy cerradas.',
-      'Quería navegar por un fiordo serpenteante con cascadas como las Siete Hermanas.'
+      'Quería navegar por un brazo de mar serpenteante entre paredes de roca, con cascadas como las Siete Hermanas.'
     ],
     en: [
       'They were going to the west coast of a Scandinavian country, where mountains drop sheer into the sea.',
       'They said their destination is a tiny village at the end of a sea inlet visited by cruise ships.',
       'They wanted to try a caramel-tasting brown cheese and smoked salmon.',
       'They paid in kroner and asked about a mountain road with hairpin bends.',
-      'They wanted to sail a winding fjord with waterfalls like the Seven Sisters.'
+      'They wanted to sail a winding arm of the sea between rock walls, with waterfalls like the Seven Sisters.'
     ]
   },
   'Bryggen (Bergen)': {
@@ -4120,14 +4120,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino tiene bosques y pistas de esquí al alcance del metro.',
       'Quería probar un queso marrón y salmón crudo, y visitar un museo de barcos vikingos.',
       'Pagó con coronas y preguntó por un museo con El grito de Munch.',
-      'Quería ver un parque con más de 200 esculturas humanas desnudas de un solo artista y un monolito de cuerpos entrelazados.'
+      'Quería ver más de 200 esculturas humanas desnudas de un solo artista al aire libre y un monolito de cuerpos entrelazados.'
     ],
     en: [
       'They were going to a Scandinavian capital at the end of a fjord.',
       'They said their destination has forests and ski slopes within reach of the metro.',
       'They wanted to try brown cheese and raw salmon, and visit a museum of Viking ships.',
       "They paid in kroner and asked about a museum with Munch's The Scream.",
-      'They wanted to see a park with more than 200 nude human sculptures by a single artist and a monolith of intertwined bodies.'
+      'They wanted to see more than 200 open-air nude human sculptures by a single artist and a monolith of intertwined bodies.'
     ]
   },
   'Ópera de Oslo': {
@@ -4136,14 +4136,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es una ciudad donde casi todos los autos nuevos son eléctricos.',
       'Quería tomar un sauna flotante en el puerto y probar un sándwich de camarones.',
       'Pagó con coronas y preguntó por la ceremonia del Premio Nobel de la Paz.',
-      'Quería caminar por el techo inclinado de mármol blanco de una ópera que parece un iceberg.'
+      'Quería caminar por el techo inclinado de mármol blanco de un edificio para espectáculos líricos que parece un iceberg.'
     ],
     en: [
       'They were going to a Scandinavian capital at the end of a fjord, with a revamped harbor.',
       'They said their destination is a city where almost all new cars are electric.',
       'They wanted to try a floating sauna in the harbor and a shrimp sandwich.',
       'They paid in kroner and asked about the Nobel Peace Prize ceremony.',
-      'They wanted to walk on the sloping white marble roof of an opera house that looks like an iceberg.'
+      'They wanted to walk on the sloping white marble roof of a lyric performance hall that looks like an iceberg.'
     ]
   },
   Trollstigen: {
@@ -4180,16 +4180,16 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
   },
   'Cabo Norte': {
     es: [
-      'Iba al extremo norte de Europa, a una isla del mar de Barents.',
+      'Iba a la punta más septentrional de Europa, a una isla del mar de Barents.',
       'Dijo que en su destino el sol no se pone entre mayo y julio.',
-      'Comentó que en la zona viven pastores de renos de un pueblo indígena del norte.',
+      'Comentó que en la zona viven pastores de renos de un pueblo indígena, los sami.',
       'Pagó con coronas y preguntó por el túnel submarino para llegar a la isla.',
       'Quería ver un globo terráqueo de metal sobre un acantilado de 307 metros frente al océano Ártico.'
     ],
     en: [
-      'They were going to the far north of Europe, to an island in the Barents Sea.',
+      'They were going to the northernmost tip of Europe, to an island in the Barents Sea.',
       'They said the sun does not set there between May and July.',
-      'They mentioned reindeer herders of an indigenous northern people live in the area.',
+      'They mentioned reindeer herders of an indigenous people, the Sámi, live in the area.',
       'They paid in kroner and asked about the undersea tunnel to reach the island.',
       'They wanted to see a metal globe on a 307-meter cliff facing the Arctic Ocean.'
     ]
@@ -4200,14 +4200,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que en su destino el mar se congela en invierno y hay más saunas que autos.',
       'Quería comprar muñecos de unos personajes de cuentos parecidos a hipopótamos blancos.',
       'Pagó con euros y preguntó por una fortaleza en unas islas frente al puerto.',
-      'Quería subir la escalinata de una catedral blanca de cúpulas verdes en la Plaza del Senado.'
+      'Quería subir la escalinata de un templo luterano blanco de cúpulas verdes en la Plaza del Senado.'
     ],
     en: [
       'They were going to a Nordic capital on a Baltic peninsula, surrounded by islands.',
       'They said the sea freezes there in winter and there are more saunas than cars.',
       'They wanted to buy toys of storybook characters that look like white hippos.',
       'They paid in euros and asked about a fortress on some islands off the harbor.',
-      'They wanted to climb the steps of a white cathedral with green domes on Senate Square.'
+      'They wanted to climb the steps of a white Lutheran church with green domes on Senate Square.'
     ]
   },
   'Fortaleza de Suomenlinna': {
@@ -4216,14 +4216,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un conjunto de islas habitadas con unos 800 vecinos.',
       'Quería probar unas empanaditas de centeno rellenas de arroz y un bollo de canela.',
       'Pagó con euros y preguntó por un submarino de la Segunda Guerra Mundial que se puede visitar.',
-      'Quería ver una fortaleza marítima del siglo XVIII construida sobre seis islas para defender la ciudad.'
+      'Quería ver un bastión marítimo del siglo XVIII construido sobre seis islas para defender la ciudad.'
     ],
     en: [
       'They were going to some islands off a Nordic Baltic capital, fifteen minutes by ferry.',
       'They said their destination is a group of inhabited islands with about 800 residents.',
       'They wanted to try little rye pasties filled with rice and a cinnamon bun.',
       'They paid in euros and asked about a World War II submarine you can visit.',
-      'They wanted to see an 18th-century sea fortress built on six islands to defend the city.'
+      'They wanted to see an 18th-century sea bastion built on six islands to defend the city.'
     ]
   },
   'Aldea de Papá Noel (Rovaniemi)': {
@@ -4247,14 +4247,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Iba a un archipiélago del Atlántico Norte, a mitad de camino entre Escocia e Islandia.',
       'Dijo que en su destino hay más ovejas que personas y casi no hay árboles.',
       'Comentó que el territorio pertenece a un reino escandinavo pero tiene su propio idioma.',
-      'Pagó con coronas y preguntó por los túneles submarinos que unen las islas.',
+      'Pagó con coronas y preguntó por los túneles submarinos que unen el archipiélago.',
       'Quería ver una cascada que cae directamente al mar desde un acantilado junto a una aldea.'
     ],
     en: [
       'They were going to a North Atlantic archipelago halfway between Scotland and Iceland.',
       'They said there are more sheep than people there and hardly any trees.',
       'They mentioned the territory belongs to a Scandinavian kingdom but has its own language.',
-      'They paid in krónur and asked about the undersea tunnels linking the islands.',
+      'They paid in krónur and asked about the undersea tunnels linking the archipelago.',
       'They wanted to see a waterfall that drops straight into the sea from a cliff next to a hamlet.'
     ]
   },
@@ -4296,14 +4296,14 @@ export const EUROPE_CLUES: Record<string, LandmarkClues> = {
       'Dijo que su destino es un territorio británico de ultramar donde se habla inglés.',
       'Comentó que ahí se paga con libras y los aviones aterrizan cruzando una avenida.',
       'Quería ver unos túneles excavados durante un asedio del siglo XVIII.',
-      'Quería subir a un peñón de piedra caliza donde viven monos sueltos.'
+      'Quería subir a un enorme promontorio de piedra caliza donde viven monos sueltos.'
     ],
     en: [
       'They were going to the southern tip of the Iberian Peninsula, facing the African coast.',
       'They said their destination is a British overseas territory where English is spoken.',
       'They mentioned people pay in pounds there and planes land across a main road.',
       'They wanted to see tunnels dug during an 18th-century siege.',
-      'They wanted to climb a limestone rock where free-roaming monkeys live.'
+      'They wanted to climb a huge limestone promontory where free-roaming monkeys live.'
     ]
   },
   'Andorra la Vella': {
