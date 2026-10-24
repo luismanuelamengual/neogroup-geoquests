@@ -844,8 +844,8 @@ export const es = {
     progress: '{value} / {target}',
     items: {
       firstTrip: { name: 'Primer viaje', description: 'Terminá tu primera partida' },
-      eagleEye: { name: 'Ojo de águila', description: 'Una ronda a menos de 100 m' },
-      bullseye: { name: 'Diana', description: 'Una ronda perfecta: 5.000 puntos' },
+      eagleEye: { name: 'Ojo de águila', description: 'Una ronda a menos de 1 km' },
+      bullseye: { name: 'Diana', description: 'Una ronda a menos de 100 m' },
       starGame: {
         name: 'Partida estrella',
         description: {

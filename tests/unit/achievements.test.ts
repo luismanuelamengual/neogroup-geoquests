@@ -64,8 +64,10 @@ describe('achievements', () => {
   })
 
   it('rewards close guesses and perfect games', () => {
-    expect(medals({ ...CLASSIC, guesses: [guess(99, 4990)] })).toEqual(['eagleEye'])
-    expect(medals({ ...CLASSIC, guesses: [guess(20, 5000)] })).toEqual(['eagleEye', 'bullseye'])
+    expect(medals({ ...CLASSIC, guesses: [guess(999, 4950)] })).toEqual(['eagleEye'])
+    expect(medals({ ...CLASSIC, guesses: [guess(99, 4990)] })).toEqual(['eagleEye', 'bullseye'])
+    // A perfect score doesn't matter, only the distance.
+    expect(medals({ ...CLASSIC, guesses: [guess(104, 5000)] })).toEqual(['eagleEye'])
     // A timed out round has no distance.
     expect(medals({ ...CLASSIC, guesses: [{ ...guess(0, 0), distanceMeters: null }, null] })).toEqual([])
     // 1 star: bronze; 2 stars: bronze and silver; 3 stars: all of them.

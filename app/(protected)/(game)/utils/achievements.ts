@@ -2,7 +2,7 @@ import { DetectiveDifficulty } from '@/app/(protected)/(game)/models/DetectiveDi
 import { GameGuess } from '@/app/(protected)/(game)/models/GameGuess'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
-import { getGameStars, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
+import { getGameStars } from '@/app/(protected)/(game)/utils/score'
 
 /**
  * Achievements of the players: a fixed catalog (like the game modes; names in
@@ -17,7 +17,10 @@ import { getGameStars, MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/sc
 export const XP_PER_ACHIEVEMENT = 50
 
 /** A guess closer than this (meters) earns "eagle eye". */
-export const EAGLE_EYE_METERS = 100
+export const EAGLE_EYE_METERS = 1000
+
+/** A guess closer than this (meters) earns "bullseye". */
+export const BULLSEYE_METERS = 100
 
 /** What a finished game says about one of its players, to check the achievements. */
 export interface AchievementGame {
@@ -109,7 +112,8 @@ export const ACHIEVEMENTS: Achievement[] = [
     id: 'bullseye',
     icon: '🎯',
     kind: 'game',
-    earned: (game) => guessed(game).some((guess) => guess.score >= MAX_ROUND_SCORE)
+    earned: (game) =>
+      guessed(game).some((guess) => guess.distanceMeters !== null && guess.distanceMeters < BULLSEYE_METERS)
   },
   {
     id: 'starGame',

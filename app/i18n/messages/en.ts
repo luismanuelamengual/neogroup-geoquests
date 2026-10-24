@@ -840,8 +840,8 @@ export const en: Messages = {
     progress: '{value} / {target}',
     items: {
       firstTrip: { name: 'First trip', description: 'Finish your first game' },
-      eagleEye: { name: 'Eagle eye', description: 'A round less than 100 m away' },
-      bullseye: { name: 'Bullseye', description: 'A perfect round: 5,000 points' },
+      eagleEye: { name: 'Eagle eye', description: 'A round less than 1 km away' },
+      bullseye: { name: 'Bullseye', description: 'A round less than 100 m away' },
       starGame: {
         name: 'Star game',
         description: { one: 'Finish a classic game with {count} star', other: 'Finish a classic game with {count} stars' }
