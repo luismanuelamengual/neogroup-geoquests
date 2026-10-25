@@ -109,6 +109,19 @@ export const theme = createTheme({
         }
       }
     },
+    MuiDialogActions: {
+      styleOverrides: {
+        // Chunky GameButtons don't fit side by side on narrow phones: let them
+        // wrap and, below the sm breakpoint, stretch to fill each row.
+        root: {
+          flexWrap: 'wrap',
+          '& > :not(style) ~ :not(style)': { marginLeft: 0 },
+          '@media (max-width: 599.95px)': {
+            '& > *': { flexGrow: 1 }
+          }
+        }
+      }
+    },
     MuiMenu: {
       styleOverrides: {
         paper: {
