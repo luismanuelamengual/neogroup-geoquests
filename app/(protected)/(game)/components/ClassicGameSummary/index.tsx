@@ -85,7 +85,11 @@ export default function ClassicGameSummary() {
     setStarting(true)
 
     try {
-      const created = await createGame(game.mapId, game.mode)
+      // Same rules as the game that just ended.
+      const created = await createGame(game.mapId, game.mode, {
+        rounds: view.roundsCount,
+        timeLimitSeconds: view.timeLimitSeconds
+      })
 
       router.push(`/game/${created.id}`)
     } catch {

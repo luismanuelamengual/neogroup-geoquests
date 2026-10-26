@@ -80,7 +80,13 @@ export default function BattleRoyaleGameSummary() {
     setStarting(true)
 
     try {
-      const created = await createGame(game.mapId, game.mode)
+      // Same rules (and visibility) as the game that just ended.
+      const created = await createGame(
+        game.mapId,
+        game.mode,
+        { timeLimitSeconds: view.timeLimitSeconds, roundsPerElimination: view.roundsPerElimination },
+        game.isPublic
+      )
 
       router.push(`/game/${created.id}`)
     } catch {
