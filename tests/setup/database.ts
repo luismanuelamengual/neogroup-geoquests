@@ -6,6 +6,7 @@ import progressAndDaily from '@/database/migrations/003-player-progress-and-dail
 import playerXp from '@/database/migrations/006-player-xp'
 import achievements from '@/database/migrations/007-achievements'
 import starGameBronze from '@/database/migrations/008-star-game-bronze'
+import moreAchievements from '@/database/migrations/009-more-achievements'
 
 const TABLES = [
   'user_achievements',
@@ -35,6 +36,7 @@ export async function resetDatabase(): Promise<void> {
   await playerXp.up()
   await achievements.up()
   await starGameBronze.up()
+  await moreAchievements.up()
 }
 
 /** Inserts a verified user and returns its id. */

@@ -10,6 +10,7 @@ import { getAchievements } from '@/app/(protected)/(game)/services/achievements'
 import { createGame, sendGameAction } from '@/app/(protected)/(game)/services/games'
 import { getMaps } from '@/app/(protected)/(game)/services/maps'
 import { backfillAchievements } from '@/database/migrations/007-achievements'
+import { backfillMoreAchievements } from '@/database/migrations/009-more-achievements'
 import { createUser, resetDatabase } from '@/tests/setup/database'
 import { FakePanoramaFinder } from '@/tests/setup/fakeFinder'
 
@@ -69,10 +70,13 @@ describe('achievements', () => {
     const medals = await getAchievements(userId)
     const medal = (key: string) => medals.find((candidate) => candidate.key === key)!
 
-    expect(medals).toHaveLength(24)
+    expect(medals).toHaveLength(47)
     expect(medal('firstTrip').unlockedAt).toBe('2026-03-01T12:00:00.000Z')
     expect(medal('eagleEye')).toMatchObject({ icon: '🦅', tier: null, target: null, value: null, unlockedAt: null })
-    expect(medal('againstTheClock.2')).toMatchObject({ tier: 2, tierName: 'gold', target: 8, value: null })
+    expect(medal('againstTheClock.2')).toMatchObject({ tier: 2, tierName: 'silver', target: 8, value: null })
+    expect(medal('againstTheClock.3')).toMatchObject({ tier: 3, tierName: 'gold', target: 10, value: null })
+    expect(medal('levels.1')).toMatchObject({ tierName: 'bronze', target: 10, value: 1 })
+    expect(medal('allContinents')).toMatchObject({ tier: null, target: 6, value: 0 })
     expect(medal('frequentTraveler.2')).toMatchObject({ tierName: 'silver' })
     expect(medal('frequentTraveler.1')).toMatchObject({ tier: 1, target: 10, value: 1, unlockedAt: null })
     expect(medal('frequentTraveler.3')).toMatchObject({ tier: 3, target: 500, value: 1 })
@@ -94,5 +98,27 @@ describe('achievements', () => {
     expect(keys).toEqual(['firstTrip', 'frequentTraveler.1', 'steady.1'])
     expect(progress!.mapsPlayed).toEqual(['famous-cities'])
     expect(progress!.xp).toBe(1000 + 3 * 50)
+  })
+
+  it('gives the players that already played the medals of their level and of 100 cases, and their XP', async () => {
+    await playGame('2026-03-01T12:00:00Z', false)
+    await DB.table('user_achievements').delete()
+    // Level 10 starts at 5400 XP: the XP of the medals takes the player there.
+    await DB.table('player_progress').where('userId', userId).update({ gamesPlayed: 1, casesSolved: 100, xp: 5200 })
+
+    await backfillMoreAchievements()
+
+    const keys = (await UserAchievement.where('userId', userId).get()).map((medal) => medal.key).sort()
+    const progress = await PlayerProgress.where('userId', userId).first()
+
+    expect(keys).toEqual([
+      'careerDetective.1',
+      'careerDetective.2',
+      'careerDetective.3',
+      'firstCase',
+      'firstTrip',
+      'levels.1'
+    ])
+    expect(progress!.xp).toBe(5200 + 6 * 50)
   })
 })

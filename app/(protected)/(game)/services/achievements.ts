@@ -10,6 +10,7 @@ import {
   getTiersCount,
   getTierTarget
 } from '@/app/(protected)/(game)/utils/achievements'
+import { getLevel } from '@/app/(protected)/(game)/utils/xp'
 
 /** Every medal of the catalog for the player ("Mi progreso"): the ones it won, and how far it is from the others. */
 export async function getAchievements(userId: number): Promise<MedalView[]> {
@@ -24,7 +25,9 @@ export async function getAchievements(userId: number): Promise<MedalView[]> {
     bestStreak: progress?.bestStreak ?? 0,
     casesSolved: progress?.casesSolved ?? 0,
     mapsPlayed: progress?.mapsPlayed?.length ?? 0,
-    mapsCount
+    mapsCount,
+    level: getLevel(progress?.xp ?? 0),
+    stats: progress?.achievementStats ?? {}
   }
 
   return ACHIEVEMENTS.flatMap((achievement): MedalView[] =>

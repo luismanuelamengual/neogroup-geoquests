@@ -867,7 +867,35 @@ export const es = {
       frequentTraveler: { name: 'Viajero frecuente', description: 'Terminá {count} partidas' },
       steady: { name: 'Constante', description: 'Llegá a una racha de {count} días' },
       careerDetective: { name: 'Detective de carrera', description: 'Resolvé {count} casos' },
-      globetrotter: { name: 'Trotamundos', description: 'Jugá en los {count} mapas' }
+      globetrotter: { name: 'Trotamundos', description: 'Jugá en los {count} mapas' },
+      justInTime: { name: 'Justo a tiempo', description: 'Atrapá al ladrón con el reloj exactamente en 0' },
+      quickCase: {
+        name: 'Relámpago',
+        description: 'Resolvé un caso en dificultad media o difícil en menos de {count} minutos'
+      },
+      noHints: {
+        name: 'Sexto sentido',
+        description: 'Resolvé un caso sin hablar con ningún testigo ni llamar a la central'
+      },
+      centralCaller: { name: 'Línea directa', description: 'Atrapá al ladrón habiendo llamado 2 veces a la central' },
+      levels: { name: 'Veterano', description: 'Llegá al nivel {count}' },
+      tracker: { name: 'Rastreador', description: 'Acertá el país en {count} rondas de Partidas Clásicas' },
+      allContinents: {
+        name: 'Seis continentes',
+        description: 'Acertá el país en rondas de los {count} continentes en Partidas Clásicas'
+      },
+      instinct: {
+        name: 'Instinto',
+        description: 'Acertá {count} veces el destino del ladrón sin hablar con testigos ni llamar a la central'
+      },
+      badLuck: { name: 'Mala suerte', description: 'Te tocaron 2 eventos malos en la misma parada {count} veces' },
+      goodLuck: { name: 'Buena suerte', description: 'Te tocaron 2 eventos buenos en la misma parada {count} veces' },
+      iconicPlaces: {
+        name: 'Postal',
+        description: 'Acertá {count} lugares icónicos a menos de 2 km (mapa Lugares icónicos)'
+      },
+      classicWithFriends: { name: 'Clásico entre amigos', description: 'Jugá {count} Partidas Clásicas multijugador' },
+      battleRoyalePlayer: { name: 'Gladiador', description: 'Jugá {count} partidas de Battle Royale' }
     }
   },
   streak: {

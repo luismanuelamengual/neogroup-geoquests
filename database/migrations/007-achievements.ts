@@ -74,7 +74,10 @@ export async function backfillAchievements(): Promise<void> {
       bestStreak: progress.bestStreak,
       casesSolved: progress.casesSolved,
       mapsPlayed: mapsPlayed.length,
-      mapsCount
+      mapsCount,
+      // The medals of the levels and of the other counters came later (see 009-more-achievements).
+      level: 1,
+      stats: {}
     })
 
     for (const key of medals) {

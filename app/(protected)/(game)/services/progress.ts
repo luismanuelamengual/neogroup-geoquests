@@ -2,21 +2,31 @@ import { DB } from '@neogroup/neorm'
 import { ClassicGameData } from '@/app/(protected)/(game)/models/ClassicGameData'
 import { DetectiveGameData } from '@/app/(protected)/(game)/models/DetectiveGameData'
 import { Game } from '@/app/(protected)/(game)/models/Game'
+import { GameGuess } from '@/app/(protected)/(game)/models/GameGuess'
 import { GameMode } from '@/app/(protected)/(game)/models/GameMode'
 import { GameOutcome } from '@/app/(protected)/(game)/models/GameOutcome'
 import { GamePlayer } from '@/app/(protected)/(game)/models/GamePlayer'
 import { GamePlayerResult } from '@/app/(protected)/(game)/models/GamePlayerResult'
+import { GameRound } from '@/app/(protected)/(game)/models/GameRound'
 import { Map as GameMap } from '@/app/(protected)/(game)/models/Map'
 import { MultiplayerRoundsData } from '@/app/(protected)/(game)/models/MultiplayerRoundsData'
 import { PlayerProgress } from '@/app/(protected)/(game)/models/PlayerProgress'
 import { PlayerStats } from '@/app/(protected)/(game)/models/PlayerStats'
 import { UserAchievement } from '@/app/(protected)/(game)/models/UserAchievement'
-import { AchievementGame, getEarnedMedals, XP_PER_ACHIEVEMENT } from '@/app/(protected)/(game)/utils/achievements'
+import {
+  AchievementGame,
+  AchievementProgress,
+  addGameStats,
+  getEarnedMedals,
+  XP_PER_ACHIEVEMENT
+} from '@/app/(protected)/(game)/utils/achievements'
+import { isRightCountry } from '@/app/(protected)/(game)/utils/countries'
 import { getDayKey } from '@/app/(protected)/(game)/utils/days'
 import { countMistakes } from '@/app/(protected)/(game)/utils/detective'
+import { getReachedStages, getStageEvents, isGoodEvent } from '@/app/(protected)/(game)/utils/detectiveEvents'
 import { MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
 import { EMPTY_STREAK, extendStreak, getCurrentStreak, StreakState } from '@/app/(protected)/(game)/utils/streak'
-import { getGameXp, getLevelProgress } from '@/app/(protected)/(game)/utils/xp'
+import { getGameXp, getLevel, getLevelProgress } from '@/app/(protected)/(game)/utils/xp'
 import { User } from '@/app/models/User'
 
 /**
@@ -37,12 +47,23 @@ export interface GameXpResult {
 }
 
 /** What the game says about the player of `result`, to check the achievements. */
-function toAchievementGame(game: Game, data: unknown, result: GamePlayerResult, playersCount: number): AchievementGame {
+function toAchievementGame(
+  game: Game,
+  data: unknown,
+  result: GamePlayerResult,
+  playersCount: number,
+  mapSlug: string | null,
+  now: Date
+): AchievementGame {
+  const startedAt = game.startedAt ?? game.createdAt
   const base: AchievementGame = {
     mode: game.mode,
     isDailyChallenge: game.dailyChallengeId != null,
     outcome: result.outcome,
     playersCount,
+    mapSlug,
+    rightCountries: [],
+    durationSeconds: startedAt ? Math.max(0, (now.getTime() - new Date(startedAt).getTime()) / 1000) : null,
     score: result.score,
     guesses: [],
     maxScore: null,
@@ -53,12 +74,27 @@ function toAchievementGame(game: Game, data: unknown, result: GamePlayerResult, 
     case GameMode.CLASSIC: {
       const classic = data as ClassicGameData
 
-      return { ...base, guesses: classic.guesses, maxScore: MAX_ROUND_SCORE * classic.rounds.length }
+      return {
+        ...base,
+        guesses: classic.guesses,
+        maxScore: MAX_ROUND_SCORE * classic.rounds.length,
+        rightCountries: getRightCountries(classic.rounds, classic.guesses)
+      }
     }
 
     case GameMode.CLASSIC_MULTIPLAYER:
-    case GameMode.BATTLE_ROYALE:
-      return { ...base, guesses: (data as MultiplayerRoundsData).guesses[String(result.userId)] ?? [] }
+
+    case GameMode.BATTLE_ROYALE: {
+      const rounds = data as MultiplayerRoundsData
+      const guesses = rounds.guesses[String(result.userId)] ?? []
+
+      return {
+        ...base,
+        guesses,
+        // Battle royale does not count for the countries ("tracker" and "six continents").
+        rightCountries: game.mode === GameMode.CLASSIC_MULTIPLAYER ? getRightCountries(rounds.rounds, guesses) : []
+      }
+    }
 
     case GameMode.DETECTIVE: {
       const detective = data as DetectiveGameData
@@ -69,7 +105,13 @@ function toAchievementGame(game: Game, data: unknown, result: GamePlayerResult, 
           difficulty: detective.settings.difficulty,
           mistakes: countMistakes(detective),
           elapsedMinutes: detective.elapsedMinutes,
-          timeLimitMinutes: detective.timeLimitMinutes
+          timeLimitMinutes: detective.timeLimitMinutes,
+          stages: getReachedStages(detective).map((stage) => ({
+            correct: stage.travel ? stage.travel.correct : null,
+            witnessesAsked: stage.askedWitnesses.length,
+            calls: stage.calls ?? 0,
+            events: getStageEvents(stage).map((event) => isGoodEvent(event.type))
+          }))
         }
       }
     }
@@ -77,6 +119,11 @@ function toAchievementGame(game: Game, data: unknown, result: GamePlayerResult, 
     default:
       return base
   }
+}
+
+/** The country of each round whose guess fell in it. */
+function getRightCountries(rounds: GameRound[], guesses: (GameGuess | null)[]): string[] {
+  return rounds.flatMap((round, index) => (isRightCountry(guesses[index] ?? null, round) ? [round.countryCode] : []))
 }
 
 function toStreakState(progress: PlayerProgress | null): StreakState {
@@ -132,13 +179,35 @@ export async function recordFinishedGame(
     const gamesPlayed = (progress?.gamesPlayed ?? 0) + 1
     const casesSolved =
       (progress?.casesSolved ?? 0) + (game.mode === GameMode.DETECTIVE && result.outcome === GameOutcome.WON ? 1 : 0)
-    const achievements = getEarnedMedals(toAchievementGame(game, data, result, results.length), {
-      gamesPlayed,
-      bestStreak: streak.bestStreak,
-      casesSolved,
-      mapsPlayed: mapsPlayed.length,
-      mapsCount
-    }).filter((key) => !owned.has(key))
+    const achievementGame = toAchievementGame(game, data, result, results.length, mapSlug, now)
+    const achievementStats = addGameStats(progress?.achievementStats ?? {}, achievementGame)
+
+    const medalsAt = (xp: number) => {
+      const state: AchievementProgress = {
+        gamesPlayed,
+        bestStreak: streak.bestStreak,
+        casesSolved,
+        mapsPlayed: mapsPlayed.length,
+        mapsCount,
+        level: getLevel(xp),
+        stats: achievementStats
+      }
+
+      return getEarnedMedals(achievementGame, state).filter((key) => !owned.has(key))
+    }
+
+    const xpBeforeMedals = (progress?.xp ?? 0) + xpEarned
+    let achievements = medalsAt(xpBeforeMedals)
+
+    // The XP of the medals may reach a new level, and so the medal of that level too.
+    for (
+      let next = medalsAt(xpBeforeMedals + achievements.length * XP_PER_ACHIEVEMENT);
+      next.length > achievements.length;
+      next = medalsAt(xpBeforeMedals + achievements.length * XP_PER_ACHIEVEMENT)
+    ) {
+      achievements = next
+    }
+
     const totalXpEarned = xpEarned + achievements.length * XP_PER_ACHIEVEMENT
     const xpTotal = (progress?.xp ?? 0) + totalXpEarned
     const values = {
@@ -150,6 +219,7 @@ export async function recordFinishedGame(
       ...streak,
       xp: xpTotal,
       mapsPlayed: JSON.stringify(mapsPlayed),
+      achievementStats: JSON.stringify(achievementStats),
       updatedAt: now
     }
 

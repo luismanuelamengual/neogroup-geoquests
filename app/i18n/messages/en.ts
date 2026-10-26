@@ -847,7 +847,10 @@ export const en: Messages = {
       bullseye: { name: 'Bullseye', description: 'A round less than 100 m away' },
       starGame: {
         name: 'Star game',
-        description: { one: 'Finish a classic game with {count} star', other: 'Finish a classic game with {count} stars' }
+        description: {
+          one: 'Finish a classic game with {count} star',
+          other: 'Finish a classic game with {count} stars'
+        }
       },
       earlyBird: { name: 'Early bird', description: 'Play your first daily challenge' },
       friendsChampion: { name: 'Champion among friends', description: 'Win a game with friends' },
@@ -863,7 +866,39 @@ export const en: Messages = {
       frequentTraveler: { name: 'Frequent traveler', description: 'Finish {count} games' },
       steady: { name: 'Steady', description: 'Reach a {count} day streak' },
       careerDetective: { name: 'Career detective', description: 'Solve {count} cases' },
-      globetrotter: { name: 'Globetrotter', description: 'Play in all {count} maps' }
+      globetrotter: { name: 'Globetrotter', description: 'Play in all {count} maps' },
+      justInTime: { name: 'Just in time', description: 'Catch the thief with the clock at exactly 0' },
+      quickCase: {
+        name: 'Lightning fast',
+        description: 'Solve a case on medium or hard difficulty in less than {count} minutes'
+      },
+      noHints: {
+        name: 'Sixth sense',
+        description: 'Solve a case without talking to any witness or calling the central office'
+      },
+      centralCaller: { name: 'Direct line', description: 'Catch the thief after calling the central office twice' },
+      levels: { name: 'Veteran', description: 'Reach level {count}' },
+      tracker: {
+        name: 'Tracker',
+        description: 'Guess the right country in {count} rounds of Classic games'
+      },
+      allContinents: {
+        name: 'Six continents',
+        description: 'Guess the right country in rounds of all {count} continents in Classic games'
+      },
+      instinct: {
+        name: 'Instinct',
+        description:
+          "Guess the thief's destination {count} times without talking to witnesses or calling the central office"
+      },
+      badLuck: { name: 'Bad luck', description: 'Get 2 bad events at the same stop {count} times' },
+      goodLuck: { name: 'Good luck', description: 'Get 2 good events at the same stop {count} times' },
+      iconicPlaces: {
+        name: 'Postcard',
+        description: 'Guess {count} iconic places less than 2 km away (Iconic places map)'
+      },
+      classicWithFriends: { name: 'Classic with friends', description: 'Play {count} multiplayer Classic games' },
+      battleRoyalePlayer: { name: 'Gladiator', description: 'Play {count} Battle Royale games' }
     }
   },
   streak: {

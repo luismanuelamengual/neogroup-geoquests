@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity } from '@neogroup/neorm'
+import { AchievementStats } from '@/app/(protected)/(game)/models/AchievementStats'
 
 /**
  * What a player built up over time (`player_progress`, one row per player):
@@ -45,6 +46,10 @@ export class PlayerProgress extends BaseEntity {
   /** Slugs of the maps the player finished a game in (the "globetrotter" achievement). */
   @Column({ cast: 'json' })
   mapsPlayed!: string[] | null
+
+  /** The other counters of the achievements (see AchievementStats). */
+  @Column({ cast: 'json' })
+  achievementStats!: AchievementStats | null
 
   /** Last day with a finished game (YYYY-MM-DD, in the player's time zone). */
   @Column()
