@@ -2,8 +2,7 @@ import { redirect } from 'next/navigation'
 import { ReactNode, Suspense } from 'react'
 import { auth } from '@/app/(auth)/services/auth'
 import AdsProvider from '@/app/(protected)/(ads)/components/AdsProvider'
-import { AdsConfig } from '@/app/(protected)/(ads)/models/AdsConfig'
-import { shouldShowAds } from '@/app/(protected)/(ads)/services/ads'
+import { getAdsConfig } from '@/app/(protected)/(ads)/services/ads'
 import { getPlayerStats } from '@/app/(protected)/(game)/services/games'
 import AppShell from '@/app/(protected)/components/AppShell'
 import TimeZoneSync from '@/app/(protected)/components/TimeZoneSync'
@@ -41,14 +40,9 @@ export default async function Layout({ children }: { children: ReactNode }) {
     displayName: dbUser.displayName
   }
   const stats = await getPlayerStats(dbUser.id)
-  const ads: AdsConfig = {
-    showAds: shouldShowAds(dbUser),
-    client: process.env.ADSENSE_CLIENT_ID || null,
-    slot: process.env.ADSENSE_SLOT_ID || null
-  }
 
   return (
-    <AdsProvider config={ads}>
+    <AdsProvider config={getAdsConfig(dbUser)}>
       <UserStoreHydrator user={user} />
       <TimeZoneSync timeZone={dbUser.timeZone} />
       <AppShell user={user} stats={stats}>

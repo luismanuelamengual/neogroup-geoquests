@@ -12,6 +12,7 @@ import { PWA_CONFIG } from '@/app/(pwa)/services/pwa'
 import ThemeRegistry from '@/app/components/ThemeRegistry'
 import I18nProvider from '@/app/i18n/I18nProvider'
 import { getLocale, getT } from '@/app/i18n/server'
+import { SITE_URL } from '@/app/utils/urls'
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
@@ -20,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const adsenseClient = process.env.ADSENSE_CLIENT_ID
 
   return {
+    metadataBase: new URL(SITE_URL),
     applicationName: PWA_CONFIG.name,
     title: {
       default: PWA_CONFIG.name,

@@ -1,0 +1,62 @@
+.article-view {
+  .breadcrumbs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    a:hover {
+      color: var(--color-text);
+      text-decoration: underline;
+    }
+  }
+
+  h1 .icon {
+    font-family: var(--font-body);
+  }
+
+  .meta {
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+
+  .lead {
+    color: var(--color-text);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .illustration {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 8px 0 16px;
+    border: 3px solid var(--color-panel-border);
+    border-radius: 14px;
+  }
+
+  ul {
+    margin: 0 0 12px;
+    padding-left: 22px;
+  }
+
+  li + li {
+    margin-top: 6px;
+  }
+
+  .article-ad {
+    margin: 24px 0;
+  }
+
+  .related {
+    margin-top: 32px;
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+  }
+}

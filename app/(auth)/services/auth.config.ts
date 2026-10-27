@@ -2,8 +2,11 @@ import type { NextAuthConfig } from 'next-auth'
 
 /** Pages reachable without a session. Signed-in users hitting one are sent to `/`. */
 const PUBLIC_PATHS = ['/login', '/register', '/verify-email', '/forgot-password', '/reset-password']
-/** Pages reachable by everybody, signed in or not (the legal pages linked from Google Play). */
-const OPEN_PATHS = ['/privacy', '/delete-account']
+/**
+ * Pages reachable by everybody, signed in or not: the public site (rules,
+ * guides, about, contact) and the legal pages (linked from Google Play too).
+ */
+const OPEN_PATHS = ['/how-to-play', '/guides', '/about', '/contact', '/privacy', '/terms', '/delete-account']
 // Session timeout in seconds. Defaults to 30 days if not set.
 const SESSION_MAX_AGE = process.env.AUTH_SESSION_MAX_AGE
   ? parseInt(process.env.AUTH_SESSION_MAX_AGE, 10)
@@ -26,7 +29,9 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       // The root path is always allowed: app/page.tsx renders the public landing
       // or redirects a signed-in player to the main menu.
-      if (nextUrl.pathname === '/' || OPEN_PATHS.includes(nextUrl.pathname)) {
+      const isOpenPath = OPEN_PATHS.some((path) => nextUrl.pathname === path || nextUrl.pathname.startsWith(`${path}/`))
+
+      if (nextUrl.pathname === '/' || isOpenPath) {
         return true
       }
 

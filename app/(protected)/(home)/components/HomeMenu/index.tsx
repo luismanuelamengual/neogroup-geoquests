@@ -1,7 +1,6 @@
 'use client'
 
 import './index.scss'
-import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBanner'
 import DailyChallengeCard from '@/app/(protected)/(game)/components/DailyChallengeCard'
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
@@ -56,7 +55,6 @@ export default function HomeMenu({ playerName, modes }: HomeMenuProps) {
         </section>
       )}
       {modes.length === 0 && <p className="no-modes">{t('home.noModes')}</p>}
-      <AdSlot />
     </div>
   )
 }

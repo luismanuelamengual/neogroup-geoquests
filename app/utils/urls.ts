@@ -1,4 +1,10 @@
 /**
+ * Public URL of the site, used for the canonical URLs, the sitemap and
+ * robots.txt (NEXT_PUBLIC_APP_URL, otherwise the production domain).
+ */
+export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || 'https://geoquests.app').replace(/\/$/, '')
+
+/**
  * Builds the app's own absolute base URL (e.g. "https://geoquests.app") from an
  * HTTP Host header value. Used to build absolute links sent by email (email
  * verification, password reset). Falls back to NEXT_PUBLIC_APP_URL when there

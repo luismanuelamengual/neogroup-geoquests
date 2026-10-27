@@ -86,7 +86,8 @@ app/
   hooks/                  Hooks compartidos (useRequests, useNotifications, useLoadingData, useInstallPrompt...)
   utils/                  Utilidades compartidas (api-server, email, urls, users, environment)
   (auth)/                 Módulo de autenticación (login, registro, verificación de email, recupero de contraseña)
-  (public)/               Landing pública
+  (public)/               Sitio público (sin sesión): landing, "Cómo jugar" por modo, guías, acerca de, contacto, privacidad y términos
+  sitemap.ts / robots.ts  /sitemap.xml y /robots.txt (las páginas públicas; el juego no se indexa)
   (pwa)/                  Manifest, service worker (Serwist), página offline, banner de instalación
   (protected)/            Módulos que requieren sesión (ver abajo)
 proxy.ts                  Protección de rutas (middleware de Next.js — tiene que estar en la raíz)
@@ -294,8 +295,15 @@ La app muestra anuncios de Google AdSense a los jugadores.
 
 - **Interruptor:** `ADS_ENABLED=true` los activa para todos. Con cualquier otro valor no se carga el script de AdSense, no se muestra ningún anuncio, no se agrega la meta de verificación y `/ads.txt` responde 404. Se lee en runtime (en Vercel hay que redeployar después de cambiarla).
 - **Excepción por jugador:** `users.adsDisabled = true` le quita los anuncios a un jugador en particular. Se cambia a mano en la base: `UPDATE users SET "adsDisabled" = true WHERE email = '...'`.
-- **Dónde:** `<AdSlot />` (un bloque responsive de AdSense) en el menú de un jugador, el de multijugador, el ranking y el resumen final de cada modo. Nunca durante una partida. Sin `ADSENSE_CLIENT_ID`/`ADSENSE_SLOT_ID`, fuera de producción muestra un recuadro que marca dónde va.
+- **Dónde:** `<AdSlot />` (un bloque responsive de AdSense) sólo en pantallas con contenido: las guías y las reglas de cada modo del sitio público (`ArticleView`: al final y, en las largas, en el medio), el ranking, Mi progreso, Logros y el resumen final de cada modo. **Nunca** en menús (Jugar, Multijugador), login/registro, errores, cargas ni durante una partida: AdSense lo prohíbe ("anuncios en pantallas sin contenido del editor"). El script de AdSense lo carga el propio `AdSlot`, así que no está en las páginas sin anuncios; dejar los **anuncios automáticos (Auto ads) apagados** en AdSense, porque los pondrían en cualquier pantalla. Sin `ADSENSE_CLIENT_ID`/`ADSENSE_SLOT_ID`, fuera de producción muestra un recuadro que marca dónde va.
 - **AdSense:** el layout raíz agrega la meta `google-adsense-account` (verificación del sitio) y `/ads.txt` se genera desde `ADSENSE_CLIENT_ID`. El service worker no cachea los dominios de anuncios.
+
+## Sitio público — `app/(public)`
+
+Lo que ve un visitante sin sesión (y los buscadores y el revisor de AdSense): la landing (`/`, `LandingPage`), "Cómo jugar" (`/how-to-play` y `/how-to-play/<modo>`), las guías (`/guides` y `/guides/<slug>`), `/about`, `/contact`, `/privacy`, `/terms` y `/delete-account`. Son públicas para todos (`OPEN_PATHS` en `auth.config.ts`, con sus subrutas) y comparten `PublicHeader` / `PublicFooter`.
+
+- **Contenido:** los artículos (guías y reglas de los modos) son datos en `data/guides/*.ts` y `data/modeGuides/*.ts` (`models/Article.ts`), con el texto en cada idioma; los textos cortos están en los diccionarios (`landing`, `publicSite`, `howToPlayPage`, `guidesPage`, `aboutPage`, `contactPage`, `legal.terms`). **Agregar una guía:** un archivo nuevo en `data/guides/` sumado a `GUIDES`; el sitemap, la landing y la lista la toman solos.
+- **SEO:** cada página tiene título, descripción, URL canónica y Open Graph (`utils/metadata.ts`, con `SITE_URL` de `app/utils/urls.ts`); las de login/registro llevan `noindex`. El idioma sigue la cookie / `Accept-Language` (los buscadores ven inglés); el visitante lo cambia con `LanguageSwitch`.
 
 ## Diseño (look & feel de videojuego)
 

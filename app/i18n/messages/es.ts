@@ -38,7 +38,19 @@ export const es = {
     offline: 'Sin conexión',
     profile: 'Mi perfil',
     privacy: 'Política de privacidad',
-    deleteAccount: 'Eliminar cuenta'
+    deleteAccount: 'Eliminar cuenta',
+    homeTitle: 'GeoQuests: juego de geografía con calles reales del mundo',
+    homeDescription:
+      'Juego de geografía gratuito: aparecés en una calle real del mundo y tenés que adivinar dónde estás. Modo clásico, desafío diario, partidas con amigos, Battle Royale y Detective.',
+    howToPlay: 'Cómo jugar',
+    guides: 'Guías',
+    about: 'Acerca de',
+    contact: 'Contacto',
+    terms: 'Términos de uso',
+    privacyDescription:
+      'Qué datos guarda GeoQuests, para qué los usa, con qué servicios los comparte y cómo podés borrarlos.',
+    termsDescription:
+      'Las condiciones de uso de GeoQuests: tu cuenta, el juego limpio, el contenido de terceros y la publicidad.'
   },
   pwa: {
     description: '¿Dónde estás? Explorá calles de ciudades del mundo y adiviná el lugar. Gratis.',
@@ -51,12 +63,158 @@ export const es = {
   landing: {
     tagline: '¿Dónde estás? Explorá las calles del mundo y adiviná el lugar.',
     playFree: 'Jugar gratis',
+    howToPlay: 'Cómo se juega',
+    intro: {
+      title: 'Un juego de geografía para descubrir el mundo',
+      p1: 'GeoQuests es un juego de geografía gratuito que se juega en el navegador o en el celular. En cada ronda aparecés en una calle real de algún lugar del mundo, con imágenes de Google Street View, y tenés que descubrir dónde estás mirando a tu alrededor: los carteles, el idioma, los autos, la vegetación, la arquitectura.',
+      p2: 'Podés jugar solo a tu ritmo, competir con tus amigos en tiempo real, sobrevivir en un Battle Royale o resolver casos en el modo Detective. Cada partida es distinta, y mientras jugás aprendés a reconocer países, ciudades y paisajes que quizás nunca habías visto.'
+    },
+    stepsTitle: 'Cómo es una ronda',
     steps: {
       look: { title: 'Mirá', text: 'Aparecés en una calle de algún lugar del mundo. Girá, acercate, caminá.' },
       mark: { title: 'Marcá', text: 'Buscá pistas (carteles, autos, arquitectura) y poné tu pin en el mapa.' },
-      score: { title: 'Sumá', text: 'Cuanto más cerca, más puntos. 5 rondas, hasta 25.000 puntos.' }
+      score: { title: 'Sumá', text: 'Cuanto más cerca, más puntos. Hasta 5.000 por ronda.' }
     },
+    modesTitle: 'Modos de juego',
+    modesIntro: 'Cinco formas de jugar, para un rato solo o para una noche con amigos.',
+    readRules: 'Ver las reglas',
+    mapsTitle: 'Mapas',
+    mapsIntro: 'Elegí dónde jugar: el mundo entero, un continente o un solo país.',
+    guidesTitle: 'Guías y consejos',
+    guidesIntro: 'Artículos originales para aprender a leer las pistas de la calle y sumar más puntos.',
+    seeAllGuides: 'Ver todas las guías',
+    faqTitle: 'Preguntas frecuentes',
+    faq: {
+      free: {
+        question: '¿GeoQuests es gratis?',
+        answer:
+          'Sí. Todos los modos y mapas se juegan gratis. El juego se financia con anuncios que se muestran fuera de las partidas.'
+      },
+      account: {
+        question: '¿Necesito una cuenta?',
+        answer:
+          'Sí, una cuenta gratuita, con email o con Google. Así se guardan tu progreso, tu racha, tus logros y tu puesto en el ranking diario.'
+      },
+      devices: {
+        question: '¿En qué dispositivos se puede jugar?',
+        answer:
+          'En cualquier navegador moderno, en la computadora, la tablet o el celular. En Android y en la mayoría de los navegadores también se puede instalar como app.'
+      },
+      friends: {
+        question: '¿Puedo jugar con amigos?',
+        answer:
+          'Sí. Creás una sala, compartís el código o el link y juegan de 2 a 8 personas las mismas rondas al mismo tiempo, en la Partida Clásica o en el Battle Royale.'
+      },
+      learn: {
+        question: '¿Sirve para aprender geografía?',
+        answer:
+          'Mucho. Para adivinar tenés que fijarte en idiomas, señales, climas y paisajes, y el resultado de cada ronda te muestra dónde estabas. En nuestras guías explicamos las pistas más útiles.'
+      }
+    },
+    ctaTitle: '¿Listo para tu primera ronda?',
+    ctaText: 'Creá tu cuenta gratis y empezá con el Desafío diario de hoy.',
     credits: 'Imágenes de calles © Google Street View · Mapas © OpenStreetMap / OpenFreeMap'
+  },
+  publicSite: {
+    nav: {
+      howToPlay: 'Cómo jugar',
+      guides: 'Guías',
+      about: 'Acerca de',
+      play: 'Jugar'
+    },
+    footer: {
+      tagline: 'Un juego de geografía para explorar las calles del mundo.',
+      game: 'El juego',
+      info: 'Información',
+      contact: 'Contacto',
+      terms: 'Términos de uso',
+      privacy: 'Política de privacidad',
+      deleteAccount: 'Eliminar cuenta'
+    },
+    language: 'Idioma',
+    home: 'Inicio',
+    readingTime: { one: '{count} minuto de lectura', other: '{count} minutos de lectura' },
+    updatedAt: 'Actualizado el {date}',
+    playThisMode: 'Jugar a este modo',
+    playNow: 'Jugar ahora',
+    keepReading: 'Seguí leyendo',
+    readGuide: 'Leer la guía',
+    allGuides: 'Todas las guías',
+    allModes: 'Todos los modos'
+  },
+  howToPlayPage: {
+    title: 'Cómo jugar a GeoQuests',
+    description:
+      'Las reglas de GeoQuests: cómo es una ronda, cómo se calcula el puntaje y cómo se juega cada modo, del Clásico al Detective.',
+    intro:
+      'GeoQuests te deja en una calle real de algún lugar del mundo y te desafía a descubrir dónde estás. Acá tenés lo básico para empezar y las reglas completas de cada modo de juego.',
+    basicsTitle: 'Lo básico',
+    basics: {
+      look: 'Al empezar cada ronda ves una panorámica de 360° con imágenes de Google Street View. Podés girar, acercarte y caminar por la calle.',
+      clues:
+        'Buscá pistas: de qué lado circulan los autos, el idioma de los carteles, la forma de las señales, la vegetación y la arquitectura.',
+      pin: 'Abrí el mapa, poné tu pin donde creas que estás y confirmá. Si se termina el tiempo, se envía el pin que tengas marcado.',
+      score:
+        'Se revela el lugar real y la distancia a tu pin. Cada ronda vale hasta 5.000 puntos: cuanto más cerca, más puntos.'
+    },
+    scoringTitle: 'El puntaje',
+    scoringText:
+      'Un pin a menos de 25 metros del lugar exacto vale los 5.000 puntos. A partir de ahí los puntos bajan de forma exponencial con la distancia: con la escala estándar, a 100 km sacás unos 3.680 puntos y a 1.000 km apenas unos 230. Por eso acertar el país y la región es lo que más suma.',
+    modesTitle: 'Los modos de juego',
+    progressTitle: 'Progreso, racha y logros',
+    progressText:
+      'Cada partida terminada te da experiencia para subir de nivel, cuenta para tu racha de días seguidos y puede desbloquear alguno de los 29 logros del juego. En la sección Ranking podés ver a los mejores del Desafío diario.'
+  },
+  guidesPage: {
+    title: 'Guías de geografía y consejos',
+    description:
+      'Guías originales para aprender a reconocer países por sus calles: carteles, idiomas, paisajes, estrategia de puntaje y planes de práctica.',
+    intro:
+      'Aprender a ubicarte en una calle desconocida es una habilidad que se entrena. En estas guías juntamos lo que aprendimos jugando y diseñando GeoQuests: qué pistas mirar, cómo interpretarlas y cómo practicar para mejorar.'
+  },
+  aboutPage: {
+    title: 'Acerca de GeoQuests',
+    description: 'Qué es GeoQuests, quién lo hace, de dónde salen las imágenes y cómo se financia el juego.',
+    intro:
+      'GeoQuests es un juego de geografía gratuito que nació de una idea simple: que aprender sobre el mundo sea tan divertido como un videojuego. Te ponemos en una calle real de cualquier rincón del planeta y te desafiamos a descubrir dónde estás.',
+    what: {
+      title: 'Qué es',
+      text: 'Un juego de navegador y de celular con cinco modos: el Clásico para jugar solo, el Desafío diario con las mismas calles para todos, la Partida Clásica con amigos, el Battle Royale y el modo Detective, en el que seguís el rastro de un ladrón por lugares icónicos del mundo. Hay mapas del mundo entero, de continentes y de países, y un sistema de niveles, rachas y logros para que siempre haya un motivo para volver.'
+    },
+    who: {
+      title: 'Quién lo hace',
+      text: 'GeoQuests es un proyecto independiente, diseñado y desarrollado por un equipo chico apasionado por la geografía y los videojuegos. Lo mantenemos activamente: agregamos mapas, modos, logros y guías nuevas, y corregimos lo que los jugadores nos cuentan.'
+    },
+    images: {
+      title: 'De dónde salen las imágenes y los mapas',
+      text: 'Las imágenes de las calles son de Google Street View y se muestran a través de las herramientas oficiales de Google. Los mapas en los que marcás tu respuesta usan datos de OpenStreetMap, con estilos de OpenFreeMap. Los lugares de cada mapa (ciudades, regiones y sitios icónicos) los seleccionamos a mano, y cada ubicación se elige al azar en cada partida.'
+    },
+    funding: {
+      title: 'Cómo se financia',
+      text: 'GeoQuests es gratis y se financia con anuncios de Google AdSense, que se muestran en páginas con contenido, como estas guías, y nunca durante una partida. Así podemos pagar el servidor y las imágenes sin cobrarles a los jugadores.'
+    },
+    contact: {
+      title: 'Hablemos',
+      text: 'Si tenés una idea, encontraste un error o querés usar GeoQuests en una clase, escribinos a {email}. Leemos todos los mensajes.'
+    }
+  },
+  contactPage: {
+    title: 'Contacto',
+    description: 'Cómo comunicarte con el equipo de GeoQuests para soporte, privacidad, sugerencias o propuestas.',
+    intro:
+      'Nos encanta saber de los jugadores. Escribinos a {email} y te respondemos lo antes posible, normalmente en unos pocos días hábiles.',
+    topicsTitle: 'Sobre qué podés escribirnos',
+    topics: {
+      support: 'Problemas con tu cuenta, con el inicio de sesión o con una partida.',
+      bugs: 'Errores en el juego: contanos qué pasó, en qué dispositivo y, si podés, mandanos una captura.',
+      ideas: 'Ideas de mapas, modos o logros nuevos.',
+      privacy: 'Consultas sobre tus datos personales o pedidos de eliminación de tu cuenta.',
+      education: 'Propuestas para usar GeoQuests en escuelas, clases o eventos.'
+    },
+    deleteTitle: 'Eliminar tu cuenta',
+    deleteText:
+      'Podés eliminar tu cuenta y todos tus datos vos mismo, en cualquier momento. Te explicamos cómo en la página para eliminar tu cuenta.',
+    deleteLink: 'Cómo eliminar tu cuenta'
   },
   auth: {
     email: 'Email',
@@ -152,6 +310,40 @@ export const es = {
   },
   legal: {
     privacyLink: 'Política de privacidad',
+    termsLink: 'Términos de uso',
+    terms: {
+      title: 'Términos de uso',
+      intro:
+        'Estos términos regulan el uso de GeoQuests, el juego de geografía disponible en este sitio y en su app. Al crear una cuenta o jugar, aceptás estos términos. Si no estás de acuerdo con ellos, por favor no uses el servicio.',
+      service: {
+        title: 'El servicio',
+        text: 'GeoQuests es un juego gratuito en el que tenés que adivinar ubicaciones del mundo a partir de imágenes de calles. Podemos agregar, cambiar o quitar modos, mapas y funciones en cualquier momento para mejorar el juego.'
+      },
+      account: {
+        title: 'Tu cuenta',
+        text: 'Para jugar necesitás una cuenta. Sos responsable de mantener tu contraseña en secreto y de la actividad de tu cuenta. Tenés que darnos un email válido y no podés crear cuentas en nombre de otras personas. Podés eliminar tu cuenta cuando quieras desde Mi perfil.'
+      },
+      conduct: {
+        title: 'Uso aceptable',
+        text: 'Te pedimos que juegues limpio: no uses programas, bots ni herramientas externas para obtener las respuestas, no intentes acceder a datos de otros jugadores ni alterar el funcionamiento del juego, y no uses nombres de jugador ofensivos, discriminatorios o que suplanten a otra persona. Podemos suspender o eliminar las cuentas que no respeten estas reglas.'
+      },
+      content: {
+        title: 'Contenido de terceros',
+        text: 'Las imágenes de las calles pertenecen a Google y a sus colaboradores, y se muestran mediante Google Street View según sus condiciones de uso. Los datos de los mapas son de OpenStreetMap y sus colaboradores. Los textos, el diseño, las guías y el resto del contenido de GeoQuests son nuestros y no se pueden copiar ni reutilizar sin permiso.'
+      },
+      ads: {
+        title: 'Publicidad',
+        text: 'GeoQuests se financia con anuncios de Google AdSense. Los anuncios los elige y los sirve Google según su propia política; no somos responsables de los productos o servicios que se anuncian.'
+      },
+      availability: {
+        title: 'Disponibilidad y responsabilidad',
+        text: 'Hacemos lo posible para que el juego funcione bien y esté siempre disponible, pero se ofrece "tal como está", sin garantías. Puede haber interrupciones, errores o pérdida de partidas en curso. En la medida en que lo permita la ley, no somos responsables de daños derivados del uso del juego.'
+      },
+      changes: {
+        title: 'Cambios y contacto',
+        text: 'Podemos actualizar estos términos; cuando lo hagamos, cambiaremos la fecha de arriba. Si seguís usando GeoQuests después de un cambio, aceptás los términos nuevos. Para cualquier consulta escribinos a {email}.'
+      }
+    },
     updatedAt: 'Última actualización: {date}',
     privacy: {
       title: 'Política de privacidad',
@@ -167,7 +359,7 @@ export const es = {
       },
       thirdParties: {
         title: 'Servicios de terceros',
-        text: 'Usamos Google para el inicio de sesión con Google, las imágenes de Google Street View, los anuncios que se muestran en los menús (Google AdSense) y las estadísticas de uso de la app (Google Analytics a través de Google Tag Manager); Vercel para alojar la aplicación; un proveedor de bases de datos PostgreSQL para guardar los datos; Resend para enviar los emails; y OpenStreetMap / OpenFreeMap para los mapas. Cada uno trata los datos según su propia política de privacidad.'
+        text: 'Usamos Google para el inicio de sesión con Google, las imágenes de Google Street View, los anuncios que se muestran en las guías, en algunas páginas del sitio y en los resúmenes de partida (Google AdSense, nunca durante una partida) y las estadísticas de uso de la app (Google Analytics a través de Google Tag Manager); Vercel para alojar la aplicación; un proveedor de bases de datos PostgreSQL para guardar los datos; Resend para enviar los emails; y OpenStreetMap / OpenFreeMap para los mapas. Cada uno trata los datos según su propia política de privacidad.'
       },
       storage: {
         title: 'Cookies y almacenamiento',

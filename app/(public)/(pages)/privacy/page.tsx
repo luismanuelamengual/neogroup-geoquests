@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { publicPageMetadata } from '@/app/(public)/utils/metadata'
 import { LOCALE_TAGS } from '@/app/i18n/config'
 import { getLocale, getT } from '@/app/i18n/server'
 import { CONTACT_EMAIL, PRIVACY_POLICY_UPDATED_AT } from '@/app/utils/legal'
@@ -16,7 +17,13 @@ const SECTIONS = [
 ] as const
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: (await getT())('metadata.privacy') }
+  const t = await getT()
+
+  return publicPageMetadata({
+    title: t('metadata.privacy'),
+    description: t('metadata.privacyDescription'),
+    path: '/privacy'
+  })
 }
 
 /** Privacy policy. Public (signed in or not): Google Play links to it. */

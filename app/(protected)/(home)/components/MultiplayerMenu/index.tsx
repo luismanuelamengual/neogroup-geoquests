@@ -2,7 +2,6 @@
 
 import './index.scss'
 import GroupsIcon from '@mui/icons-material/Groups'
-import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
 import ActiveGameBanner from '@/app/(protected)/(game)/components/ActiveGameBanner'
 import GameModeCard from '@/app/(protected)/(game)/components/GameModeCard'
 import JoinGameDialog from '@/app/(protected)/(game)/components/JoinGameDialog'
@@ -44,7 +43,6 @@ export default function MultiplayerMenu({ modes }: { modes: GameModeView[] }) {
         ))}
       </section>
       {modes.length === 0 && <p className="no-modes">{t('home.noModes')}</p>}
-      <AdSlot />
     </div>
   )
 }

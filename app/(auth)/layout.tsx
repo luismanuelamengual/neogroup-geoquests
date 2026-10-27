@@ -1,8 +1,12 @@
 import './layout.scss'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import GamePanel from '@/app/components/GamePanel'
 import Logo from '@/app/components/Logo'
+
+// Forms, not content: out of the search results (the links are still followed).
+export const metadata: Metadata = { robots: { index: false, follow: true } }
 
 /** Shared layout for every non authenticated page: the logo over a framed game panel. */
 export default function Layout({ children }: { children: ReactNode }) {
