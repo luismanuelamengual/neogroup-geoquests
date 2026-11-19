@@ -14,7 +14,7 @@ import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { GameView } from '@/app/(protected)/(game)/models/GameView'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import { MAX_ROUND_SCORE } from '@/app/(protected)/(game)/utils/score'
-import { useFocusDetector } from '@/app/hooks/useFocusDetector'
+import { useSustainedFocusLoss } from '@/app/hooks/useSustainedFocusLoss'
 
 function classicView(game: GameView): ClassicGameView {
   return game.modeView as ClassicGameView
@@ -44,8 +44,9 @@ function isRoundFrozen(gameId: number, roundNumber: number | null) {
  * sent.
  *
  * Anti-cheat: if the window loses the focus while guessing (e.g. to search the
- * place on Google or ask an AI), the guess map stays frozen until the round
- * ends; only the pin already placed can be sent (or the round skipped).
+ * place on Google or ask an AI) for longer than the grace period
+ * (FOCUS_LOSS_GRACE_MS), the guess map stays frozen until the round ends; only
+ * the pin already placed can be sent (or the round skipped).
  */
 export default function ClassicGamePlay() {
   const router = useRouter()
@@ -61,14 +62,15 @@ export default function ClassicGamePlay() {
   const submittingRef = useRef(false)
   const view = classicView(game)
   const { currentRoundNumber, timeLimitSeconds, roundTimeLeftMs } = view
-  const focused = useFocusDetector()
   const [frozenRound, setFrozenRound] = useState<number | null>(() =>
     isRoundFrozen(game.id, currentRoundNumber) ? currentRoundNumber : null
   )
   const guessing = phase === 'guessing' && currentRoundNumber != null
+  const focusLost = useSustainedFocusLoss(guessing, currentRoundNumber)
 
-  // Losing the focus mid-round freezes the map of that round (going back does not unfreeze it).
-  if (guessing && !focused && frozenRound !== currentRoundNumber) {
+  // Losing the focus mid-round (beyond the grace period) freezes the map of that round
+  // (going back does not unfreeze it).
+  if (focusLost && frozenRound !== currentRoundNumber) {
     setFrozenRound(currentRoundNumber)
   }
 

@@ -18,7 +18,7 @@ import { DetectiveGameView } from '@/app/(protected)/(game)/models/DetectiveGame
 import { GameStatus } from '@/app/(protected)/(game)/models/GameStatus'
 import { useGameStore } from '@/app/(protected)/(game)/stores/game'
 import GameButton from '@/app/components/GameButton'
-import { useFocusDetector } from '@/app/hooks/useFocusDetector'
+import { useSustainedFocusLoss } from '@/app/hooks/useSustainedFocusLoss'
 import { useT } from '@/app/i18n/I18nProvider'
 
 /**
@@ -32,7 +32,8 @@ import { useT } from '@/app/i18n/I18nProvider'
  * "result" again); then the summary, once the case is closed.
  *
  * Anti-cheat: if the window loses the focus while the case is open (e.g. to
- * search a clue on Google or ask an AI), the thief escapes: the case ends
+ * search a clue on Google or ask an AI) for longer than the grace period
+ * (FOCUS_LOSS_GRACE_MS), the thief escapes: the case ends
  * (lostFocus action) and, back in the app, the summary is shown. The briefing
  * of a new case does not count: the case has not started yet.
  */
@@ -46,7 +47,6 @@ export default function DetectiveGamePlay() {
   const setGame = useGameStore((state) => state.setGame)
   const showResult = useGameStore((state) => state.showResult)
   const closeResult = useGameStore((state) => state.closeResult)
-  const focused = useFocusDetector()
   /** Whether the lostFocus action was already sent (it is sent only once). */
   const lostFocusSentRef = useRef(false)
   const view = game.modeView as DetectiveGameView
@@ -56,10 +56,11 @@ export default function DetectiveGamePlay() {
   const fresh =
     view.currentStageNumber === 1 && view.elapsedMinutes === 0 && !!stage?.witnesses.every((witness) => !witness.asked)
   const investigating = view.outcome === null && !(fresh && !accepted)
+  const focusLost = useSustainedFocusLoss(investigating)
 
-  // Losing the focus while investigating: the thief escapes.
+  // Losing the focus while investigating (beyond the grace period): the thief escapes.
   useEffect(() => {
-    if (!investigating || focused || lostFocusSentRef.current) {
+    if (!focusLost || lostFocusSentRef.current) {
       return
     }
 
@@ -75,7 +76,7 @@ export default function DetectiveGamePlay() {
         // Tried again the next time the focus is lost.
         lostFocusSentRef.current = false
       })
-  }, [investigating, focused, game.id, sendGameAction, setGame, closeResult])
+  }, [focusLost, game.id, sendGameAction, setGame, closeResult])
   // Exiting cancels the case: it can not be resumed.
   const handleExit = useCallback(async () => {
     try {
