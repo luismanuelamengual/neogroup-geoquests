@@ -73,6 +73,10 @@ export default async function LandingPage() {
             <GameButton size="large" href="/login">
               {t('landing.playFree')}
             </GameButton>
+            {/* DEMO: trial game without an account (app/(demo)), temporary */}
+            <GameButton size="large" color="cyan" href="/demo">
+              {t('demo.cta')}
+            </GameButton>
             <GameButton size="large" color="ghost" href="/how-to-play">
               {t('landing.howToPlay')}
             </GameButton>
@@ -119,8 +123,10 @@ export default async function LandingPage() {
           <ul className="maps">
             {MAPS.map((slug) => (
               <li key={slug}>
-                <strong>{t(`maps.${slug}.name`)}</strong>
-                <span>{t(`maps.${slug}.description`)}</span>
+                <Link href={`/maps/${slug}`}>
+                  <strong>{t(`maps.${slug}.name`)}</strong>
+                  <span>{t(`maps.${slug}.description`)}</span>
+                </Link>
               </li>
             ))}
           </ul>
@@ -154,6 +160,12 @@ export default async function LandingPage() {
           <GameButton size="large" href="/register">
             {t('landing.playFree')}
           </GameButton>
+          {/* DEMO: trial game without an account (app/(demo)), temporary */}
+          <p className="demo-link">
+            <Link href="/demo" className="text-link">
+              {t('demo.ctaLong')}
+            </Link>
+          </p>
         </section>
       </main>
       <PublicFooter />

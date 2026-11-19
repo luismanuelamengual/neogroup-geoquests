@@ -1,11 +1,14 @@
 import type { MetadataRoute } from 'next'
 import { GUIDES } from '@/app/(public)/data/guides'
+import { MAP_GUIDES } from '@/app/(public)/data/mapGuides'
 import { MODE_GUIDES } from '@/app/(public)/data/modeGuides'
 import { PRIVACY_POLICY_UPDATED_AT, TERMS_UPDATED_AT } from '@/app/utils/legal'
 import { SITE_URL } from '@/app/utils/urls'
 
 /** Date of the last change of the pages without a date of their own (landing, about, contact...). */
 const SITE_UPDATED_AT = new Date('2026-10-26T00:00:00Z')
+/** Date of the last change of the maps page. */
+const MAPS_UPDATED_AT = new Date('2026-11-19T00:00:00Z')
 
 /** /sitemap.xml: every public, indexable page (the game itself needs a session). */
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -19,6 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page('/', SITE_UPDATED_AT, 1),
     page('/how-to-play', SITE_UPDATED_AT, 0.9),
     ...MODE_GUIDES.map((guide) => page(`/how-to-play/${guide.slug}`, new Date(guide.updatedAt), 0.8)),
+    page('/maps', MAPS_UPDATED_AT, 0.9),
+    ...MAP_GUIDES.map((guide) => page(`/maps/${guide.slug}`, new Date(guide.updatedAt), 0.8)),
     page('/guides', SITE_UPDATED_AT, 0.9),
     ...GUIDES.map((guide) => page(`/guides/${guide.slug}`, new Date(guide.updatedAt), 0.8)),
     page('/about', SITE_UPDATED_AT, 0.5),

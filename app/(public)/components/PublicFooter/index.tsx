@@ -17,6 +17,7 @@ export default async function PublicFooter() {
         <nav>
           <h2>{t('publicSite.footer.game')}</h2>
           <Link href="/how-to-play">{t('publicSite.nav.howToPlay')}</Link>
+          <Link href="/maps">{t('publicSite.nav.maps')}</Link>
           <Link href="/guides">{t('publicSite.nav.guides')}</Link>
           <Link href="/login">{t('publicSite.nav.play')}</Link>
         </nav>

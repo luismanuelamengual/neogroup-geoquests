@@ -86,7 +86,7 @@ app/
   hooks/                  Hooks compartidos (useRequests, useNotifications, useLoadingData, useInstallPrompt...)
   utils/                  Utilidades compartidas (api-server, email, urls, users, environment)
   (auth)/                 Módulo de autenticación (login, registro, verificación de email, recupero de contraseña)
-  (public)/               Sitio público (sin sesión): landing, "Cómo jugar" por modo, guías, acerca de, contacto, privacidad y términos
+  (public)/               Sitio público (sin sesión): landing, "Cómo jugar" por modo, una guía por mapa, guías, acerca de, contacto, privacidad y términos
   sitemap.ts / robots.ts  /sitemap.xml y /robots.txt (las páginas públicas; el juego no se indexa)
   (pwa)/                  Manifest, service worker (Serwist), página offline, banner de instalación
   (protected)/            Módulos que requieren sesión (ver abajo)
@@ -300,10 +300,16 @@ La app muestra anuncios de Google AdSense a los jugadores.
 
 ## Sitio público — `app/(public)`
 
-Lo que ve un visitante sin sesión (y los buscadores y el revisor de AdSense): la landing (`/`, `LandingPage`), "Cómo jugar" (`/how-to-play` y `/how-to-play/<modo>`), las guías (`/guides` y `/guides/<slug>`), `/about`, `/contact`, `/privacy`, `/terms` y `/delete-account`. Son públicas para todos (`OPEN_PATHS` en `auth.config.ts`, con sus subrutas) y comparten `PublicHeader` / `PublicFooter`.
+Lo que ve un visitante sin sesión (y los buscadores y el revisor de AdSense): la landing (`/`, `LandingPage`), "Cómo jugar" (`/how-to-play` y `/how-to-play/<modo>`), los mapas (`/maps` y `/maps/<slug>`, con las fotos de `MAP_PHOTOS` y sus créditos), las guías (`/guides` y `/guides/<slug>`), `/about`, `/contact`, `/privacy`, `/terms` y `/delete-account`. Son públicas para todos (`OPEN_PATHS` en `auth.config.ts`, con sus subrutas) y comparten `PublicHeader` / `PublicFooter`.
 
-- **Contenido:** los artículos (guías y reglas de los modos) son datos en `data/guides/*.ts` y `data/modeGuides/*.ts` (`models/Article.ts`), con el texto en cada idioma; los textos cortos están en los diccionarios (`landing`, `publicSite`, `howToPlayPage`, `guidesPage`, `aboutPage`, `contactPage`, `legal.terms`). **Agregar una guía:** un archivo nuevo en `data/guides/` sumado a `GUIDES`; el sitemap, la landing y la lista la toman solos.
+- **Contenido:** los artículos (guías y reglas de los modos) son datos en `data/guides/*.ts`, `data/modeGuides/*.ts` y `data/mapGuides/*.ts` (`models/Article.ts`), con el texto en cada idioma; los textos cortos están en los diccionarios (`landing`, `publicSite`, `howToPlayPage`, `guidesPage`, `aboutPage`, `contactPage`, `legal.terms`). **Agregar una guía:** un archivo nuevo en `data/guides/` sumado a `GUIDES`; el sitemap, la landing y la lista la toman solos.
 - **SEO:** cada página tiene título, descripción, URL canónica y Open Graph (`utils/metadata.ts`, con `SITE_URL` de `app/utils/urls.ts`); las de login/registro llevan `noindex`. El idioma sigue la cookie / `Accept-Language` (los buscadores ven inglés); el visitante lo cambia con `LanguageSwitch`.
+
+## Partida de prueba sin cuenta — `app/(demo)` (temporal)
+
+Para que los visitantes (y la revisión de AdSense) puedan probar el juego sin registrarse: `/demo` juega 3 rondas del mapa Ciudades famosas sin tiempo. `POST /api/getDemoRounds` (público) sólo elige las ubicaciones; las rondas, la distancia y el puntaje se calculan en el navegador y **no se guarda nada** (ni partida, ni progreso, ni ranking).
+
+**Para quitarla:** borrar la carpeta `app/(demo)` y buscar `DEMO:` en el código (los botones de la landing en `LandingPage`, `/demo` en `OPEN_PATHS` de `auth.config.ts` y el grupo `demo` de `es.ts` y `en.ts`), además de esta sección.
 
 ## Diseño (look & feel de videojuego)
 

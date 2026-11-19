@@ -37,6 +37,34 @@
     border-radius: 14px;
   }
 
+  .photos {
+    margin: 8px 0 20px;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .photo {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    figcaption {
+      margin-top: 6px;
+      color: var(--color-text-secondary);
+      font-size: 0.75rem;
+
+      a {
+        text-decoration: underline;
+      }
+    }
+  }
+
   ul {
     margin: 0 0 12px;
     padding-left: 22px;

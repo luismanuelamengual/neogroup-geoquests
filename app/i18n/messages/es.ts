@@ -43,6 +43,7 @@ export const es = {
     homeDescription:
       'Juego de geografía gratuito: aparecés en una calle real del mundo y tenés que adivinar dónde estás. Modo clásico, desafío diario, partidas con amigos, Battle Royale y Detective.',
     howToPlay: 'Cómo jugar',
+    maps: 'Mapas',
     guides: 'Guías',
     about: 'Acerca de',
     contact: 'Contacto',
@@ -115,9 +116,30 @@ export const es = {
     ctaText: 'Creá tu cuenta gratis y empezá con el Desafío diario de hoy.',
     credits: 'Imágenes de calles © Google Street View · Mapas © OpenStreetMap / OpenFreeMap'
   },
+  // DEMO: trial game without an account (app/(demo)), temporary
+  demo: {
+    title: 'Partida de prueba',
+    cta: 'Probar sin cuenta',
+    ctaLong: '¿Querés probar antes? Jugá una partida de prueba sin cuenta →',
+    badge: 'Prueba sin cuenta',
+    round: 'Ronda {number} de {total}',
+    preparing: 'Buscando calles en ciudades famosas…',
+    error: 'No pudimos preparar la partida de prueba. Probá de nuevo en un momento.',
+    retry: 'Reintentar',
+    points: '{points} puntos',
+    distance: 'Tu pin quedó a {distance}',
+    nextRound: 'Siguiente ronda',
+    seeSummary: 'Ver resultado',
+    summaryTitle: 'Tu resultado',
+    summaryText:
+      'Esto fue una partida de prueba de 3 rondas en Ciudades famosas. Con una cuenta gratis jugás todos los modos y mapas, el Desafío diario y con amigos, y guardás tu nivel, tu racha y tus logros.',
+    createAccount: 'Crear cuenta gratis',
+    playAgain: 'Jugar otra prueba'
+  },
   publicSite: {
     nav: {
       howToPlay: 'Cómo jugar',
+      maps: 'Mapas',
       guides: 'Guías',
       about: 'Acerca de',
       play: 'Jugar'
@@ -140,7 +162,9 @@ export const es = {
     keepReading: 'Seguí leyendo',
     readGuide: 'Leer la guía',
     allGuides: 'Todas las guías',
-    allModes: 'Todos los modos'
+    allModes: 'Todos los modos',
+    playThisMap: 'Jugar en este mapa',
+    photosCredits: 'Fotos de Wikimedia Commons:'
   },
   howToPlayPage: {
     title: 'Cómo jugar a GeoQuests',
@@ -164,6 +188,13 @@ export const es = {
     progressTitle: 'Progreso, racha y logros',
     progressText:
       'Cada partida terminada te da experiencia para subir de nivel, cuenta para tu racha de días seguidos y puede desbloquear alguno de los 29 logros del juego. En la sección Ranking podés ver a los mejores del Desafío diario.'
+  },
+  mapsPage: {
+    title: 'Los mapas de GeoQuests',
+    description:
+      'Guías de cada mapa de GeoQuests: qué lugares incluye, qué pistas sirven en cada región y cómo sumar más puntos.',
+    intro:
+      'Cada mapa es un desafío distinto: algunos te llevan a las ciudades más conocidas del planeta y otros a cualquier ruta perdida de un país. En estas guías te contamos qué incluye cada uno y qué pistas te van a servir para ubicarte.'
   },
   guidesPage: {
     title: 'Guías de geografía y consejos',

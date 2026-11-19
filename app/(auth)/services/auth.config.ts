@@ -6,7 +6,18 @@ const PUBLIC_PATHS = ['/login', '/register', '/verify-email', '/forgot-password'
  * Pages reachable by everybody, signed in or not: the public site (rules,
  * guides, about, contact) and the legal pages (linked from Google Play too).
  */
-const OPEN_PATHS = ['/how-to-play', '/guides', '/about', '/contact', '/privacy', '/terms', '/delete-account']
+const OPEN_PATHS = [
+  '/how-to-play',
+  '/maps',
+  '/guides',
+  '/about',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/delete-account',
+  // DEMO: trial game without an account (app/(demo)), temporary
+  '/demo'
+]
 // Session timeout in seconds. Defaults to 30 days if not set.
 const SESSION_MAX_AGE = process.env.AUTH_SESSION_MAX_AGE
   ? parseInt(process.env.AUTH_SESSION_MAX_AGE, 10)

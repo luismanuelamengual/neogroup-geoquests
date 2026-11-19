@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import AdSlot from '@/app/(protected)/(ads)/components/AdSlot'
+import { MapPhoto } from '@/app/(protected)/(game)/models/MapPhoto'
 import ArticleCard from '@/app/(public)/components/ArticleCard'
 import { Article } from '@/app/(public)/models/Article'
 import { formatArticleDate, getReadingMinutes } from '@/app/(public)/utils/articles'
@@ -21,6 +22,10 @@ interface ArticleViewProps {
   backLabelKey: MessageKey
   /** Other articles of the same list, linked at the end. */
   related: Article[]
+  /** Label of the button to play (the rules of a mode and the guide of a map have their own). */
+  playLabelKey?: MessageKey
+  /** Photos shown under the summary, with their credits (the guides of the maps). */
+  photos?: MapPhoto[]
 }
 
 /**
@@ -28,7 +33,14 @@ interface ArticleViewProps {
  * ones of the public site with ads (after the text, and in the middle of the
  * long ones).
  */
-export default async function ArticleView({ article, basePath, backLabelKey, related }: ArticleViewProps) {
+export default async function ArticleView({
+  article,
+  basePath,
+  backLabelKey,
+  related,
+  playLabelKey = 'publicSite.playThisMode',
+  photos = []
+}: ArticleViewProps) {
   const t = await getT()
   const locale = await getLocale()
   const text = article.text[locale]
@@ -67,6 +79,27 @@ export default async function ArticleView({ article, basePath, backLabelKey, rel
       {article.image && (
         <Image className="illustration" src={article.image} alt={text.title} width={800} height={400} priority />
       )}
+      {photos.length > 0 && (
+        <figure className="photos">
+          <div className="grid">
+            {photos.map((photo) => (
+              <Image key={photo.src} src={photo.src} alt={photo.title} width={400} height={300} className="photo" />
+            ))}
+          </div>
+          <figcaption>
+            {t('publicSite.photosCredits')}{' '}
+            {photos.map((photo, index) => (
+              <Fragment key={photo.src}>
+                {index > 0 && ' · '}
+                <a href={photo.url} target="_blank" rel="noopener noreferrer">
+                  {photo.author}
+                </a>{' '}
+                ({photo.license})
+              </Fragment>
+            ))}
+          </figcaption>
+        </figure>
+      )}
       {text.sections.map((section, index) => (
         <Fragment key={index}>
           <section>
@@ -87,7 +120,7 @@ export default async function ArticleView({ article, basePath, backLabelKey, rel
       ))}
       {article.playPath && (
         <div className="actions">
-          <GameButton href={article.playPath}>{t('publicSite.playThisMode')}</GameButton>
+          <GameButton href={article.playPath}>{t(playLabelKey)}</GameButton>
         </div>
       )}
       <AdSlot className="article-ad" />

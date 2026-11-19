@@ -40,6 +40,7 @@ export const en: Messages = {
     homeDescription:
       'Free geography game: you land on a real street somewhere in the world and have to guess where you are. Classic mode, daily challenge, games with friends, Battle Royale and Detective.',
     howToPlay: 'How to play',
+    maps: 'Maps',
     guides: 'Guides',
     about: 'About',
     contact: 'Contact',
@@ -111,9 +112,30 @@ export const en: Messages = {
     ctaText: "Create your free account and start with today's Daily challenge.",
     credits: 'Street imagery © Google Street View · Maps © OpenStreetMap / OpenFreeMap'
   },
+  // DEMO: trial game without an account (app/(demo)), temporary
+  demo: {
+    title: 'Trial game',
+    cta: 'Try it without an account',
+    ctaLong: 'Want to try first? Play a trial game without an account →',
+    badge: 'Trial, no account',
+    round: 'Round {number} of {total}',
+    preparing: 'Looking for streets in famous cities…',
+    error: 'We could not prepare the trial game. Please try again in a moment.',
+    retry: 'Try again',
+    points: '{points} points',
+    distance: 'Your pin was {distance} away',
+    nextRound: 'Next round',
+    seeSummary: 'See result',
+    summaryTitle: 'Your result',
+    summaryText:
+      'This was a 3-round trial game on Famous cities. With a free account you play every mode and map, the Daily challenge and with friends, and keep your level, streak and achievements.',
+    createAccount: 'Create a free account',
+    playAgain: 'Play another trial'
+  },
   publicSite: {
     nav: {
       howToPlay: 'How to play',
+      maps: 'Maps',
       guides: 'Guides',
       about: 'About',
       play: 'Play'
@@ -136,7 +158,9 @@ export const en: Messages = {
     keepReading: 'Keep reading',
     readGuide: 'Read the guide',
     allGuides: 'All guides',
-    allModes: 'All modes'
+    allModes: 'All modes',
+    playThisMap: 'Play this map',
+    photosCredits: 'Photos from Wikimedia Commons:'
   },
   howToPlayPage: {
     title: 'How to play GeoQuests',
@@ -160,6 +184,13 @@ export const en: Messages = {
     progressTitle: 'Progress, streaks and achievements',
     progressText:
       "Every finished game gives you experience to level up, counts towards your streak of consecutive days and can unlock one of the game's 29 achievements. The Ranking section shows the best players of the Daily challenge."
+  },
+  mapsPage: {
+    title: 'The maps of GeoQuests',
+    description:
+      'Guides to every GeoQuests map: which places it includes, which clues work in each region and how to score more points.',
+    intro:
+      'Every map is a different challenge: some take you to the best-known cities on the planet and others to any remote road in a country. In these guides we explain what each one includes and which clues will help you find your way.'
   },
   guidesPage: {
     title: 'Geography guides and tips',

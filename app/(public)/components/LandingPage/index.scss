@@ -148,10 +148,11 @@
     padding: 0;
     list-style: none;
 
-    li {
+    li a {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      height: 100%;
       padding: 14px 16px;
       border-left: 4px solid var(--color-cyan);
       border-radius: 8px;
@@ -214,6 +215,10 @@
 
     p {
       margin: 0 0 20px;
+    }
+
+    .demo-link {
+      margin: 16px 0 0;
     }
   }
 }

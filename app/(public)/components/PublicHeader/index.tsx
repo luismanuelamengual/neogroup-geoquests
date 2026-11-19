@@ -7,6 +7,7 @@ import { getLocale, getT } from '@/app/i18n/server'
 
 const LINKS = [
   { href: '/how-to-play', labelKey: 'publicSite.nav.howToPlay' },
+  { href: '/maps', labelKey: 'publicSite.nav.maps' },
   { href: '/guides', labelKey: 'publicSite.nav.guides' },
   { href: '/about', labelKey: 'publicSite.nav.about' }
 ] as const

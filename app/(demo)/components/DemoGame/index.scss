@@ -1,0 +1,165 @@
+// Immersive like the real game: the trial covers the whole viewport.
+.demo-game {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-night);
+
+  &.scrollable {
+    overflow-y: auto;
+  }
+
+  .demo-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: calc(10px + var(--safe-top)) 16px 10px;
+    background: linear-gradient(rgba(11, 16, 38, 0.9), rgba(11, 16, 38, 0));
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--color-magenta);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .round {
+      margin-left: auto;
+      color: var(--color-text);
+      font-weight: 800;
+    }
+  }
+
+  .centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 100%;
+    padding: 90px 16px 32px;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .summary {
+    .total {
+      margin: 8px 0 16px;
+      color: var(--color-gold);
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+
+      span {
+        color: var(--color-text-secondary);
+        font-size: 1rem;
+      }
+    }
+
+    .rounds {
+      margin: 0 0 16px;
+      padding-left: 22px;
+      text-align: left;
+
+      li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4px 12px;
+        padding: 6px 0;
+        color: var(--color-text-secondary);
+
+        strong {
+          color: var(--color-text);
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .links {
+      margin: 16px 0 0;
+    }
+  }
+
+  .guess-box {
+    position: absolute;
+    right: 16px;
+    bottom: calc(24px + var(--safe-bottom));
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 360px;
+
+    .map {
+      position: relative;
+      height: 240px;
+      overflow: hidden;
+      border: 3px solid var(--color-panel-border);
+      border-radius: 14px;
+    }
+  }
+
+  .result-map {
+    position: absolute;
+    inset: 0;
+  }
+
+  .result-panel {
+    position: absolute;
+    left: 50%;
+    bottom: calc(24px + var(--safe-bottom));
+    z-index: 2;
+    width: min(420px, calc(100% - 32px));
+    transform: translateX(-50%);
+    text-align: center;
+
+    p {
+      margin: 0 0 8px;
+    }
+
+    .place {
+      color: var(--color-text);
+      font-weight: 800;
+    }
+
+    .score {
+      color: var(--color-gold);
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+    }
+
+    .distance {
+      color: var(--color-text-secondary);
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .demo-game .guess-box {
+    left: 16px;
+    width: auto;
+
+    .map {
+      height: 38vh;
+    }
+  }
+}
